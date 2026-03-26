@@ -1590,11 +1590,11 @@ function EventEditor({ ev, onUpdate, onBack }) {
           <p style={{ color:C.muted, fontSize:13, marginBottom:20 }}>Partagez ce QR code avec vos invités pour qu'ils renseignent leurs préférences.</p>
           <div style={{ display:"flex", justifyContent:"center", marginBottom:20 }}>
             <div style={{ padding:16,background:C.cream,borderRadius:16,border:`2px solid ${C.border}`,display:"inline-block" }}>
-              <QRCodeWidget value={`https://tablema.fr/join/${ev.id}`} size={180}/>
+              <QRCodeWidget value={`https://tableplan-seven.vercel.app/?join=${ev.id}`} size={180}/>
             </div>
           </div>
           <div style={{ background:C.mid,borderRadius:8,padding:"8px 16px",fontSize:12,color:C.muted,marginBottom:20,fontFamily:"monospace" }}>
-            tablema.fr/join/{ev.id}
+            tableplan-seven.vercel.app/?join={ev.id}
           </div>
           <div style={{ display:"flex", gap:10, justifyContent:"center", flexWrap:"wrap" }}>
             <Btn small onClick={()=>{const c=document.querySelector("#qr-modal canvas");if(!c){alert("QR non disponible");return;}const l=document.createElement("a");l.download=`QR-${ev.name}.png`;l.href=c.toDataURL("image/png");l.click();}}>⬇ PNG</Btn>
