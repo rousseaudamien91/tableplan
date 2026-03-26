@@ -48,6 +48,24 @@ const INITIAL_USERS = [
   { id: "u2", email: "demo@tablema.fr",    password: "demo",     role: "admin",      name: "Demo User",     avatar: "DU", projectIds: [2] },
 ];
 
+// ═══════════════════════════════════════════════════════════════
+// PLANS & VOUCHERS
+// ═══════════════════════════════════════════════════════════════
+
+const PLANS = {
+  free:   { label: "Gratuit", price: 0,    maxEvents: 1,   maxGuests: 30,  color: "#8A7355", icon: "🆓" },
+  pro:    { label: "Pro",     price: 9.90, maxEvents: 999, maxGuests: 999, color: "#C9973A", icon: "⭐" },
+  agence: { label: "Agence",  price: 29,   maxEvents: 999, maxGuests: 999, color: "#2A1A0e", icon: "🏢" },
+};
+
+const VOUCHERS = {
+  "BIENVENUE":   { discount: 100, type: "percent", plan: "pro", description: "1 mois Pro offert 🎁",    maxUses: 999 },
+  "MARIAGE2026": { discount: 50,  type: "percent", plan: "pro", description: "-50% sur le plan Pro 💍", maxUses: 100 },
+  "PARTENAIRE":  { discount: 30,  type: "percent", plan: "pro", description: "-30% partenaire 🤝",      maxUses: 50  },
+  "VIP100":      { discount: 100, type: "percent", plan: "pro", description: "Accès VIP gratuit 👑",    maxUses: 10  },
+};
+
+
 const INITIAL_EVENTS = [
   {
     id: 1, ownerId: "u1",
@@ -1374,7 +1392,7 @@ function EventEditor({ ev, onUpdate, onBack }) {
                       </div>
                     )}
                     {table ? <Badge color={C.gold}>Table {table.number}</Badge> : <Badge color={C.red}>Non placé</Badge>}
-                    <select value={g.tableId||""} onChange={e=>{const tid=e.target.value?parseInt(e.target.value):null;updateEv(ev=>({...ev,guests:ev.guests.map(x=>x.id===g.id?{...x,tableId:tid}:x)}))}}>>
+                    <select value={g.tableId||""} onChange={e=>{const tid=e.target.value?parseInt(e.target.value):null;updateEv(ev=>({...ev,guests:ev.guests.map(x=>x.id===g.id?{...x,tableId:tid}:x)}))}}>
                       style={{ background:C.mid,border:`1px solid ${C.border}`,borderRadius:8,color:C.cream,padding:"4px 8px",fontSize:12,cursor:"pointer",fontFamily:"inherit" }}>
                       <option value="">— Non placé —</option>
                       {ev.tables.map(t=><option key={t.id} value={t.id}>Table {t.number}{t.label?" ("+t.label+")":""}</option>)}
@@ -1607,11 +1625,91 @@ function EventEditor({ ev, onUpdate, onBack }) {
 }
 
 // ═══════════════════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════════════════
+// VOUCHER MODAL
+// ═══════════════════════════════════════════════════════════════
+
+function VoucherModal({ onClose, onApply }) {
+  const [code, setCode] = useState("");
+  const [msg, setMsg] = useState(null);
+  const [success, setSuccess] = useState(false);
+
+  const handleApply = () => {
+    const v = VOUCHERS[code.trim().toUpperCase()];
+    if (!v) {
+      setMsg({ type: "error", text: "❌ Code invalide ou expiré" });
+      return;
+    }
+    setSuccess(true);
+    setMsg({ type: "success", text: `✅ Code appliqué : ${v.description}` });
+    setTimeout(() => { onApply(code.trim().toUpperCase(), v); onClose(); }, 1800);
+  };
+
+  return (
+    <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.75)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:2000 }}>
+      <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:20, padding:40, width:380, textAlign:"center", boxShadow:"0 20px 60px rgba(0,0,0,0.5)" }}>
+        <div style={{ fontSize:48, marginBottom:12 }}>🎟️</div>
+        <h2 style={{ color:C.gold, margin:"0 0 8px", fontSize:22, fontWeight:400, letterSpacing:1 }}>Code promotionnel</h2>
+        <p style={{ color:C.muted, fontSize:13, margin:"0 0 24px", lineHeight:1.6 }}>
+          Entrez votre bon de réduction pour activer votre offre
+        </p>
+        <input
+          value={code}
+          onChange={e => setCode(e.target.value.toUpperCase())}
+          onKeyDown={e => e.key === "Enter" && !success && handleApply()}
+          placeholder="EX: MARIAGE2026"
+          autoFocus
+          style={{
+            width:"100%", padding:"14px 16px", background:C.mid,
+            border:`1px solid ${success ? C.green : msg?.type==="error" ? C.red : C.border}`,
+            borderRadius:10, color:C.cream, fontSize:18, letterSpacing:4,
+            textAlign:"center", outline:"none", boxSizing:"border-box",
+            fontFamily:"monospace", transition:"border-color 0.2s"
+          }}
+        />
+        {msg && (
+          <div style={{
+            marginTop:12, padding:"10px 14px", borderRadius:8,
+            background: msg.type==="error" ? C.red+"22" : C.green+"22",
+            color: msg.type==="error" ? C.red : C.green,
+            fontSize:13, fontWeight:500
+          }}>
+            {msg.text}
+          </div>
+        )}
+        <div style={{ display:"flex", gap:12, marginTop:24 }}>
+          <button
+            onClick={onClose}
+            style={{ flex:1, padding:"12px", background:"none", border:`1px solid ${C.border}`, borderRadius:10, color:C.muted, cursor:"pointer", fontSize:14, fontFamily:"Georgia,serif" }}
+          >
+            Annuler
+          </button>
+          <button
+            onClick={handleApply}
+            disabled={!code || success}
+            style={{
+              flex:2, padding:"12px", background: success ? C.green : C.gold,
+              border:"none", borderRadius:10, color:C.dark, cursor: !code||success ? "default" : "pointer",
+              fontWeight:700, fontSize:14, fontFamily:"Georgia,serif",
+              opacity: !code ? 0.5 : 1, transition:"all 0.2s"
+            }}
+          >
+            {success ? "✓ Appliqué !" : "Appliquer le code"}
+          </button>
+        </div>
+        <div style={{ marginTop:20, fontSize:11, color:C.muted, lineHeight:1.8 }}>
+          Codes actifs : <span style={{color:C.gold}}>BIENVENUE</span> · <span style={{color:C.gold}}>MARIAGE2026</span> · <span style={{color:C.gold}}>PARTENAIRE</span> · <span style={{color:C.gold}}>VIP100</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // DASHBOARD (Admin view)
 // ═══════════════════════════════════════════════════════════════
 
 function Dashboard({ user, events, setEvents, onLogout, onOpenEvent }) {
-  const [showNew, setShowNew] = useState(false);
+  const [appliedVoucher, setAppliedVoucher] = useState(null);
   const [newEv, setNewEv] = useState({ name:"", date:"", type:"mariage" });
 
   const myEvents = events.filter(e => e.ownerId === user.id);
@@ -1621,7 +1719,7 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent }) {
     const ev = {
       id: Date.now(), ownerId: user.id,
       name: newEv.name, date: newEv.date || new Date().toISOString().slice(0,10),
-      type: newEv.type, plan: "pro",
+      type: newEv.type, plan: appliedVoucher ? "pro" : "free",
       roomShape:[{x:60,y:60},{x:740,y:60},{x:740,y:520},{x:60,y:520}],
       tables:[], guests:[], constraints:[], menu:null,
     };
@@ -1629,6 +1727,11 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent }) {
     onOpenEvent(ev.id);
     setShowNew(false);
   }
+
+  const handleApplyVoucher = (code, voucher) => {
+    setAppliedVoucher({ code, ...voucher });
+  };
+
 
   return (
     <div style={{ minHeight:"100vh", background:`radial-gradient(ellipse at 20% 30%,#2a1a0e,${C.dark})`, fontFamily:"Georgia,serif", color:C.cream }}>
@@ -1641,6 +1744,12 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent }) {
             {user.avatar}
           </div>
           <span style={{ color:C.muted, fontSize:13 }}>{user.name}</span>
+          <button
+            onClick={() => setShowVoucher(true)}
+            style={{ padding:"6px 14px", background:"none", border:`1px solid ${C.gold}`, borderRadius:8, color:C.gold, cursor:"pointer", fontSize:12, fontFamily:"Georgia,serif", display:"flex", alignItems:"center", gap:6 }}
+          >
+            🎟️ Code promo{appliedVoucher && <span style={{background:C.gold,color:C.dark,borderRadius:4,padding:"1px 6px",fontSize:11,fontWeight:700}}>✓</span>}
+          </button>
           <Btn variant="muted" small onClick={onLogout}>Déconnexion</Btn>
         </div>
       </div>
@@ -1695,6 +1804,17 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent }) {
         </div>
       </div>
 
+      {showVoucher && <VoucherModal onClose={() => setShowVoucher(false)} onApply={handleApplyVoucher} />}
+      {appliedVoucher && (
+        <div style={{ position:"fixed", bottom:24, right:24, background:C.card, border:`1px solid ${C.green}`, borderRadius:12, padding:"12px 20px", zIndex:500, display:"flex", alignItems:"center", gap:10, boxShadow:"0 4px 20px rgba(0,0,0,0.4)" }}>
+          <span style={{fontSize:18}}>🎟️</span>
+          <div>
+            <div style={{color:C.green, fontSize:12, fontWeight:700}}>Code appliqué : {appliedVoucher.code}</div>
+            <div style={{color:C.muted, fontSize:11}}>{appliedVoucher.description}</div>
+          </div>
+          <button onClick={() => setAppliedVoucher(null)} style={{background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:16,padding:0}}>×</button>
+        </div>
+      )}
       <Modal open={showNew} onClose={()=>setShowNew(false)} title="Nouvel événement">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <Field label="NOM DE L'ÉVÉNEMENT *"><Input value={newEv.name} onChange={e=>setNewEv({...newEv,name:e.target.value})} placeholder="Mariage Dupont × Martin"/></Field>
