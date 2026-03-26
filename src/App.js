@@ -1710,6 +1710,8 @@ function VoucherModal({ onClose, onApply }) {
 
 function Dashboard({ user, events, setEvents, onLogout, onOpenEvent }) {
   const [appliedVoucher, setAppliedVoucher] = useState(null);
+  const [showVoucher, setShowVoucher] = useState(false);
+  const [showNew, setShowNew] = useState(false);
   const [newEv, setNewEv] = useState({ name:"", date:"", type:"mariage" });
 
   const myEvents = events.filter(e => e.ownerId === user.id);
