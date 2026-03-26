@@ -1374,7 +1374,7 @@ function EventEditor({ ev, onUpdate, onBack }) {
                       </div>
                     )}
                     {table ? <Badge color={C.gold}>Table {table.number}</Badge> : <Badge color={C.red}>Non placé</Badge>}
-                    <select value={g.tableId||""} onChange={e=>{const tid=e.target.value?parseInt(e.target.value):null;updateEv(ev=>({...ev,guests:ev.guests.map(x=>x.id===g.id?{...x,tableId:tid}:x)}))};
+                    <select value={g.tableId||""} onChange={e=>{const tid=e.target.value?parseInt(e.target.value):null;updateEv(ev=>({...ev,guests:ev.guests.map(x=>x.id===g.id?{...x,tableId:tid}:x)}))};}
                       style={{ background:C.mid,border:`1px solid ${C.border}`,borderRadius:8,color:C.cream,padding:"4px 8px",fontSize:12,cursor:"pointer",fontFamily:"inherit" }}>
                       <option value="">— Non placé —</option>
                       {ev.tables.map(t=><option key={t.id} value={t.id}>Table {t.number}{t.label?" ("+t.label+")":""}</option>)}
