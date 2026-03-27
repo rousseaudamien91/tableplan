@@ -473,7 +473,7 @@ function detectLang() {
 
 // Hook i18n
 function useI18n() {
-  const [lang, setLangState] = React.useState(detectLang);
+  const [lang, setLangState] = useState(detectLang);
   const setLang = (l) => {
     localStorage.setItem('tableMaitreLang', l);
     setLangState(l);
