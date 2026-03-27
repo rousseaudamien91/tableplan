@@ -1943,7 +1943,13 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
         guests: ev.guests.map(function(g){ return { id: g.id, name: g.name, diet: g.diet, allergies: g.allergies||[] }; }),
         constraints: ev.constraints || [],
       };
-      const prompt = "Tu es un assistant de plans de table. Tables: " + JSON.stringify(context.tables) + ". Invités: " + JSON.stringify(context.guests) + ". Contraintes: " + JSON.stringify(context.constraints) + ". Assigne chaque invité à une table en respectant la capacité, les contraintes ensemble/séparés, et en regroupant les régimes similaires. Réponds UNIQUEMENT en JSON: {"assignments": [{"guestId": "...", "tableId": "..."}], "explanation": "explication courte en français"}";
+      const prompt = `Tu es un assistant de plans de table.
+Tables disponibles: ${JSON.stringify(context.tables)}
+Invités: ${JSON.stringify(context.guests)}
+Contraintes: ${JSON.stringify(context.constraints)}
+Assigne chaque invité à une table en respectant la capacité max, les contraintes ensemble/séparés, et en regroupant les régimes alimentaires similaires.
+Réponds UNIQUEMENT en JSON valide avec ce format exact:
+{"assignments": [{"guestId": "id_ici", "tableId": "id_table_ici"}], "explanation": "explication courte en français de tes choix"}`;
       const response = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
