@@ -2302,67 +2302,192 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
 
         {/* ── DIET TAB ── */}
         {tab==="diet" && (
-          <div style={{ maxWidth:900 }}>
-            <div style={{ display:"flex", alignItems:"center", marginBottom:24, gap:12 }}>
+          <div style={{ maxWidth:960, display:"flex", flexDirection:"column", gap:24 }}>
+
+            {/* ── HEADER ── */}
+            <div style={{ display:"flex", alignItems:"center", gap:12 }}>
               <h3 style={{ margin:0, fontWeight:400, fontSize:20 }}>Gestion alimentaire</h3>
               <div style={{flex:1}}/>
-              <Btn small onClick={()=>printDietSummary(ev)}>🖨 Imprimer récapitulatif</Btn>
+              <Btn small onClick={function(){ printDietSummary(ev); }}>🖨 Imprimer récapitulatif</Btn>
             </div>
 
-            {/* Summary cards */}
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))", gap:14, marginBottom:32 }}>
-              {DIET_OPTIONS.map(function(ditem){
-                const count=ev.guests.filter(function(gitem){ return gitem.diet===ditem.id||(gitem.allergies||[]).includes(ditem.id); }).length;
+            {/* ── COMPTEURS RÉGIMES ── */}
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(110px,1fr))", gap:12 }}>
+              {DIET_OPTIONS.map(function(dopt){
+                var count = ev.guests.filter(function(g){ return g.diet===dopt.id || (g.allergies||[]).includes(dopt.id); }).length;
                 return (
-                  <div key={ditem.id} style={{ background:C.card,border:`1px solid ${count>0?ditem.color+"44":C.border}`,borderRadius:14,padding:"16px 18px",opacity:count===0?.4:1 }}>
-                    <div style={{ fontSize:24, marginBottom:6 }}>{ditem.icon}</div>
-                    <div style={{ color:count>0?ditem.color:C.muted, fontSize:22, fontWeight:700 }}>{count}</div>
-                    <div style={{ color:C.muted, fontSize:11 }}>{ditem.label}</div>
+                  <div key={dopt.id} style={{ background:count>0?dopt.color+"22":C.card, border:"1px solid "+(count>0?dopt.color:C.border), borderRadius:12, padding:"14px 10px", textAlign:"center" }}>
+                    <div style={{ fontSize:28 }}>{dopt.icon}</div>
+                    <div style={{ color:count>0?dopt.color:C.muted, fontSize:22, fontWeight:700 }}>{count}</div>
+                    <div style={{ color:C.muted, fontSize:11, marginTop:2 }}>{dopt.label}</div>
                   </div>
                 );
               })}
             </div>
 
-            {/* Menu editor */}
-            <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:16, padding:24 }}>
-              <h4 style={{ color:C.gold, margin:"0 0 20px", fontWeight:400, fontSize:16 }}>🍽 Menu de l'événement</h4>
-              <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
-                {[["starter","Entrée"],["main","Plat principal"],["dessert","Dessert"],["vegOption","Option végétarienne"]].map(([k,l])=>(
-                  <Field key={k} label={l.toUpperCase()}>
-                    <Input value={ev.menu?.[k]||""} onChange={e=>updateEv(evUp=>({...evUp,menu:{...(evUp.menu||{}),starter:"",main:"",dessert:"",vegOption:"",...evUp.menu,[k]:e.target.value}}))} placeholder={`ex: ${l}`}/>
-                  </Field>
-                ))}
+            {/* ── MENU MULTI-COURS ── */}
+            <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
+              <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:20 }}>
+                <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>🍽 Menu de l'événement</h4>
+                <Btn small variant="muted" onClick={function(){
+                  // IA génère le menu
+                  var diets = DIET_OPTIONS.filter(function(d){ return d.id!=="standard"; }).map(function(d){
+                    var n = ev.guests.filter(function(g){ return g.diet===d.id || (g.allergies||[]).includes(d.id); }).length;
+                    return n > 0 ? n+" "+d.label : null;
+                  }).filter(Boolean);
+                  var prompt = "Tu es un chef cuisinier expert. " +
+                  "Genere un menu pour " + (ev.name||"un evenement") + " de type " + (ev.type||"mariage") + " avec " + ev.guests.length + " invites" + (diets.length ? " dont: " + diets.join(", ") : "") + ". " +
+                  "Propose un aperitif, une entree, un plat principal, un fromage, un dessert et une option vegetarienne. " +
+                  "Reponds UNIQUEMENT en JSON valide: {appetizer:\"..\",starter:\"..\",main:\"..\",cheese:\"..\",dessert:\"..\",vegOption:\"..\",note:\"conseil\"}";
+                  fetch("https://api.anthropic.com/v1/messages", {
+                    method:"POST", headers:{"Content-Type":"application/json"},
+                    body:JSON.stringify({ model:"claude-sonnet-4-20250514", max_tokens:800, messages:[{role:"user",content:prompt}] })
+                  }).then(function(r){ return r.json(); }).then(function(d){
+                    var text = d.content&&d.content[0]&&d.content[0].text||"";
+                    var clean = text.replace(/```json|```/g,"").trim();
+                    try {
+                      var menu = JSON.parse(clean);
+                      updateEv(function(ev2){ return {...ev2, menu:{...ev2.menu, ...menu}}; });
+                    } catch(e) { console.error("Menu IA:", e); }
+                  }).catch(function(e){ console.error(e); });
+                }}>✨ Générer avec l'IA</Btn>
+              </div>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))", gap:14 }}>
+                {[
+                  ["appetizer","🥂 Apéritif","ex: Verrines saumon, mini-quiches"],
+                  ["starter","🥗 Entrée","ex: Velouté de butternut"],
+                  ["main","🍖 Plat principal","ex: Filet de bœuf sauce bordelaise"],
+                  ["cheese","🧀 Fromage","ex: Plateau affiné (optionnel)"],
+                  ["dessert","🍰 Dessert","ex: Pièce montée"],
+                  ["vegOption","🌱 Option végétarienne","ex: Risotto aux champignons"],
+                ].map(function(item){
+                  var key = item[0]; var label = item[1]; var ph = item[2];
+                  return (
+                    <div key={key}>
+                      <label style={{ color:C.muted, fontSize:11, letterSpacing:1, display:"block", marginBottom:6 }}>{label.toUpperCase()}</label>
+                      <input
+                        value={(ev.menu&&ev.menu[key])||""}
+                        onChange={function(e){ var v=e.target.value; updateEv(function(ev2){ return {...ev2, menu:{...(ev2.menu||{}), [key]:v}}; }); }}
+                        placeholder={ph}
+                        style={{ width:"100%", padding:"8px 12px", background:"#fff1", border:"1px solid "+C.border, borderRadius:8, color:C.cream, fontSize:13, fontFamily:"inherit", boxSizing:"border-box" }}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+              {ev.menu&&ev.menu.note && (
+                <div style={{ marginTop:14, background:C.gold+"11", border:"1px solid "+C.gold+"44", borderRadius:10, padding:"10px 16px", color:C.gold, fontSize:13, fontStyle:"italic" }}>
+                  💡 {ev.menu.note}
+                </div>
+              )}
+            </div>
+
+            {/* ── SYNTHÈSE TRAITEUR ── */}
+            <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
+              <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:20 }}>
+                <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>📊 Synthèse traiteur</h4>
+                <div style={{ display:"flex", gap:8, marginLeft:"auto" }}>
+                  <Btn small variant="ghost" onClick={function(){
+                    // Export CSV traiteur
+                    var rows = ["Table,Nom,Régime,Allergies,Notes"];
+                    ev.tables.forEach(function(tbl){
+                      var tGuests = ev.guests.filter(function(g){ return g.tableId===tbl.id; });
+                      tGuests.forEach(function(g){
+                        var dinfo = dietInfo(g.diet);
+                        rows.push(["Table "+tbl.number+(tbl.label?" - "+tbl.label:""), g.name, dinfo.label, (g.allergies||[]).join("+"), g.notes||""].map(function(v){ return '"'+String(v).replace(/"/g,'""')+'"'; }).join(","));
+                      });
+                    });
+                    var blob = new Blob([rows.join("\n")], {type:"text/csv"});
+                    var a = document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="synthese_traiteur.csv"; a.click();
+                  }}>⬇ CSV Traiteur</Btn>
+                  <Btn small variant="ghost" onClick={function(){ printDietSummary(ev); }}>🖨 PDF</Btn>
+                </div>
+              </div>
+
+              {/* Par table */}
+              <h5 style={{ color:C.muted, fontSize:12, letterSpacing:1, marginBottom:12 }}>PAR TABLE</h5>
+              <div style={{ display:"flex", flexDirection:"column", gap:8, marginBottom:24 }}>
+                {ev.tables.map(function(tbl){
+                  var tGuests = ev.guests.filter(function(g){ return g.tableId===tbl.id; });
+                  if (!tGuests.length) return null;
+                  var specials = tGuests.filter(function(g){ return g.diet!=="standard" || (g.allergies||[]).length>0; });
+                  return (
+                    <div key={tbl.id} style={{ background:C.mid+"44", border:"1px solid "+C.border, borderRadius:10, padding:"12px 16px", display:"flex", alignItems:"center", gap:12, flexWrap:"wrap" }}>
+                      <span style={{ color:tbl.color||C.gold, fontWeight:700, minWidth:80 }}>Table {tbl.number}{tbl.label?" — "+tbl.label:""}</span>
+                      <span style={{ color:C.muted, fontSize:12 }}>{tGuests.length} couverts</span>
+                      <div style={{ flex:1, display:"flex", flexWrap:"wrap", gap:6 }}>
+                        {specials.length===0 ? (
+                          <span style={{ color:C.muted, fontSize:12, fontStyle:"italic" }}>Tous standard</span>
+                        ) : specials.map(function(g){
+                          var dinfo = dietInfo(g.diet);
+                          return (
+                            <span key={g.id} style={{ background:dinfo.color+"22", border:"1px solid "+dinfo.color+"44", borderRadius:99, padding:"2px 10px", fontSize:11, color:dinfo.color }}>
+                              {g.name} — {dinfo.icon} {dinfo.label}{(g.allergies||[]).map(function(a){ var ai=dietInfo(a); return " +"+ai.icon; }).join("")}
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                }).filter(Boolean)}
+              </div>
+
+              {/* Par régime */}
+              <h5 style={{ color:C.muted, fontSize:12, letterSpacing:1, marginBottom:12 }}>PAR RÉGIME</h5>
+              <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+                {DIET_OPTIONS.filter(function(d){ return d.id!=="standard"; }).map(function(dopt){
+                  var concerned = ev.guests.filter(function(g){ return g.diet===dopt.id || (g.allergies||[]).includes(dopt.id); });
+                  if (!concerned.length) return null;
+                  return (
+                    <div key={dopt.id} style={{ background:dopt.color+"11", border:"1px solid "+dopt.color+"33", borderRadius:10, padding:"12px 16px", display:"flex", alignItems:"center", gap:12, flexWrap:"wrap" }}>
+                      <span style={{ fontSize:20 }}>{dopt.icon}</span>
+                      <span style={{ color:dopt.color, fontWeight:700, minWidth:120 }}>{dopt.label} ({concerned.length})</span>
+                      <div style={{ flex:1, display:"flex", flexWrap:"wrap", gap:6 }}>
+                        {concerned.map(function(g){
+                          var tbl = ev.tables.find(function(tb){ return tb.id===g.tableId; });
+                          return (
+                            <span key={g.id} style={{ background:C.card, border:"1px solid "+C.border, borderRadius:99, padding:"2px 10px", fontSize:11, color:C.cream }}>
+                              {g.name}{tbl?" (T."+tbl.number+")":""} 
+                            </span>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                }).filter(Boolean)}
               </div>
             </div>
 
-            {/* Guests with special diet */}
-            {dietStats.length>0 && (
-              <div style={{ marginTop:24 }}>
-                <h4 style={{ color:C.muted, fontWeight:400, fontSize:14, marginBottom:16, letterSpacing:1 }}>INVITÉS AVEC RÉGIME SPÉCIAL</h4>
+            {/* ── INVITÉS AVEC RÉGIME SPÉCIAL ── */}
+            {ev.guests.filter(function(g){ return g.diet!=="standard"||(g.allergies||[]).length>0; }).length > 0 && (
+              <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
+                <h4 style={{ margin:"0 0 16px", color:C.gold, fontWeight:400, fontSize:16 }}>⚠ Invités avec besoins spécifiques</h4>
                 <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-                  {ev.guests.filter(g=>g.diet!=="standard"||g.allergies?.length>0).map(g=>{
-                    const d=dietInfo(g.diet);
-                    const table=ev.tables.find(t=>t.id===g.tableId);
+                  {ev.guests.filter(function(g){ return g.diet!=="standard"||(g.allergies||[]).length>0; }).map(function(g){
+                    var dinfo = dietInfo(g.diet);
+                    var tbl = ev.tables.find(function(tb){ return tb.id===g.tableId; });
                     return (
-                      <div key={g.id} style={{ background:C.card,border:`1px solid ${d.color}33`,borderRadius:12,padding:"12px 16px",display:"flex",alignItems:"center",gap:12 }}>
-                        <span style={{ fontSize:20 }}>{d.icon}</span>
-                        <div style={{flex:1}}>
-                          <span style={{ color:C.cream, fontSize:14 }}>{g.name}</span>
-                          {g.notes && <span style={{ color:C.muted, fontSize:12, marginLeft:8 }}>— {g.notes}</span>}
+                      <div key={g.id} style={{ background:dinfo.color+"11", border:"1px solid "+dinfo.color+"33", borderRadius:10, padding:"10px 16px", display:"flex", alignItems:"center", gap:12 }}>
+                        <span style={{ fontSize:22 }}>{dinfo.icon}</span>
+                        <div style={{ flex:1 }}>
+                          <div style={{ color:C.cream, fontWeight:600 }}>{g.name}</div>
+                          <div style={{ color:C.muted, fontSize:12 }}>
+                            {dinfo.label}
+                            {(g.allergies||[]).map(function(a){ var ai=dietInfo(a); return " · "+ai.icon+" "+ai.label; }).join("")}
+                            {g.notes ? " · "+g.notes : ""}
+                          </div>
                         </div>
-                        <Badge color={d.color}>{d.label}</Badge>
-                        {g.allergies?.map(a=>{const ai=dietInfo(a);return <Badge key={a} color={ai.color}>{ai.icon}</Badge>;})}
-                        {table ? <Badge color={C.gold}>T.{table.number}</Badge> : <Badge color={C.red}>Non placé</Badge>}
+                        {tbl && <span style={{ color:tbl.color||C.gold, fontSize:12, fontWeight:700 }}>Table {tbl.number}</span>}
                       </div>
                     );
                   })}
                 </div>
               </div>
             )}
+
           </div>
         )}
 
-        {/* ── CONSTRAINTS TAB ── */}
         {tab==="constraints" && (
           <div style={{ maxWidth:700 }}>
             <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:24 }}>
@@ -3114,17 +3239,59 @@ function GuestJoinPage({ eventId }) {
             <div style={{ marginTop:16, background:"#0a2a0a", border:"1px solid #2a5a2a", borderRadius:12, padding:16 }}>
               <p style={{ color:"#81C784", fontWeight:700, fontSize:16, margin:"0 0 8px" }}>✅ Bonjour {found.name} !</p>
               {myTable ? (
-                <>
+                <div>
                   <p style={{ color:"#A5D6A7", margin:"0 0 4px" }}>
                     Vous êtes à la <strong style={{ color:"#C9973A" }}>Table {myTable.number}{myTable.label ? ` — ${myTable.label}` : ""}</strong>
                   </p>
-                  <p style={{ color:"#6a8a6a", fontSize:12 }}>
-                    {(ev.guests||[]).filter(g => g.tableId === myTable.id).length} personnes à cette table
+                  <p style={{ color:"#6a8a6a", fontSize:12, marginBottom:12 }}>
+                    {(ev.guests||[]).filter(function(g){ return g.tableId === myTable.id; }).length} personnes à cette table
                   </p>
-                </>
+                </div>
               ) : (
-                <p style={{ color:"#E8845A", fontSize:14 }}>Votre placement n'est pas encore défini</p>
+                <p style={{ color:"#E8845A", fontSize:14, marginBottom:12 }}>Votre placement n'est pas encore défini</p>
               )}
+
+              {/* Formulaire régime alimentaire */}
+              <div style={{ borderTop:"1px solid #2a5a2a", paddingTop:12, marginTop:4 }}>
+                <p style={{ color:"#A5D6A7", fontSize:13, marginBottom:8 }}>🍽 Votre régime alimentaire</p>
+                <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginBottom:12 }}>
+                  {["standard","vegetarien","vegan","sans-gluten","halal","casher","sans-lactose"].map(function(dietId){
+                    var icons = {"standard":"🍽","vegetarien":"🥗","vegan":"🌱","sans-gluten":"🌾","halal":"☪️","casher":"✡️","sans-lactose":"🥛"};
+                    var labels = {"standard":"Standard","vegetarien":"Végétarien","vegan":"Vegan","sans-gluten":"Sans gluten","halal":"Halal","casher":"Casher","sans-lactose":"Sans lactose"};
+                    var isSelected = found.diet === dietId;
+                    return (
+                      <button key={dietId}
+                        onClick={function(){
+                          // Sauvegarder dans Firestore
+                          var fb = window.getFirebase ? window.getFirebase() : null;
+                          if (fb && ev._ownerId && ev.id) {
+                            fb.db.collection("users").doc(ev._ownerId).collection("events").doc(String(ev.id)).update({
+                              guests: (ev.guests||[]).map(function(g){ return g.id===found.id ? {...g, diet:dietId} : g; })
+                            }).catch(function(e){ console.error(e); });
+                          }
+                        }}
+                        style={{ background:isSelected?"#C9973A22":"#1a2a1a", border:"1px solid "+(isSelected?"#C9973A":"#2a5a2a"), borderRadius:99, padding:"6px 14px", cursor:"pointer", color:isSelected?"#C9973A":"#A5D6A7", fontSize:12, fontFamily:"Georgia,serif" }}
+                      >{icons[dietId]} {labels[dietId]}</button>
+                    );
+                  })}
+                </div>
+                <textarea
+                  placeholder="Notes spéciales (allergie sévère, handicap, siège bébé...)"
+                  defaultValue={found.notes||""}
+                  rows={2}
+                  style={{ width:"100%", padding:"8px 12px", background:"#1a2a1a", border:"1px solid #2a5a2a", borderRadius:8, color:"#A5D6A7", fontSize:12, fontFamily:"Georgia,serif", resize:"vertical", boxSizing:"border-box" }}
+                  onBlur={function(e){
+                    var notes = e.target.value;
+                    var fb = window.getFirebase ? window.getFirebase() : null;
+                    if (fb && ev._ownerId && ev.id) {
+                      fb.db.collection("users").doc(ev._ownerId).collection("events").doc(String(ev.id)).update({
+                        guests: (ev.guests||[]).map(function(g){ return g.id===found.id ? {...g, notes:notes} : g; })
+                      }).catch(function(e){ console.error(e); });
+                    }
+                  }}
+                />
+                <p style={{ color:"#4a7a4a", fontSize:11, marginTop:6 }}>Vos préférences seront transmises à l'organisateur</p>
+              </div>
             </div>
           )}
         </div>
