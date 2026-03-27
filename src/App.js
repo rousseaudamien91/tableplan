@@ -124,10 +124,10 @@ const TRANSLATIONS = {
     noTable: "-- Non placé --",
     // Login
     loginGoogle: "Se connecter avec Google",
-    loginSubtitle: "{t.loginSubtitle}",
+    loginSubtitle: "GESTION DE PLANS DE TABLE",
     // Notifications
-    savedCloud: "{t.savedCloud}",
-    savedAuto: "{t.savedAuto}",
+    savedCloud: "☁️ Sauvegardé dans le cloud",
+    savedAuto: "☁️ Sauvegardé automatiquement",
     // Voucher
     voucherTitle: "Code promotionnel",
     voucherApplied: "✓ Code appliqué !",
