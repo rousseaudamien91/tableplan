@@ -1621,7 +1621,7 @@ function EventEditor({ ev, onUpdate, onBack, saveToast }) {
                       </div>
                     )}
                     {table ? <Badge color={C.gold}>Table {table.number}</Badge> : <Badge color={C.red}>Non placé</Badge>}
-                    <select value={g.tableId||""} onChange={e=>{const tid=e.target.value?parseInt(e.target.value):null;updateEv(ev=>({...ev,guests:ev.guests.map(x=>x.id===g.id?{...x,tableId:tid}:x)}))}}>
+                    <select value={g.tableId||""} onChange={evt=>{const tid=evt.target.value?parseInt(evt.target.value):null;updateEv(evUp=>({...evUp,guests:evUp.guests.map(x=>x.id===g.id?{...x,tableId:tid}:x)}))}}>
                       style={{ background:C.mid,border:`1px solid ${C.border}`,borderRadius:8,color:C.cream,padding:"4px 8px",fontSize:12,cursor:"pointer",fontFamily:"inherit" }}>
                       <option value="">— Non placé —</option>
                       {ev.tables.map(t=><option key={t.id} value={t.id}>Table {t.number}{t.label?" ("+t.label+")":""}</option>)}
@@ -1665,7 +1665,7 @@ function EventEditor({ ev, onUpdate, onBack, saveToast }) {
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
                 {[["starter","Entrée"],["main","Plat principal"],["dessert","Dessert"],["vegOption","Option végétarienne"]].map(([k,l])=>(
                   <Field key={k} label={l.toUpperCase()}>
-                    <Input value={ev.menu?.[k]||""} onChange={e=>updateEv(ev=>({...ev,menu:{...(ev.menu||{}),starter:"",main:"",dessert:"",vegOption:"",...ev.menu,[k]:e.target.value}}))} placeholder={`ex: ${l}`}/>
+                    <Input value={ev.menu?.[k]||""} onChange={e=>updateEv(evUp=>({...evUp,menu:{...(evUp.menu||{}),starter:"",main:"",dessert:"",vegOption:"",...evUp.menu,[k]:e.target.value}}))} placeholder={`ex: ${l}`}/>
                   </Field>
                 ))}
               </div>
@@ -1884,17 +1884,17 @@ function EventEditor({ ev, onUpdate, onBack, saveToast }) {
 
       <Modal open={showSettings} onClose={()=>setShowSettings(false)} title="Paramètres de l'événement">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label="NOM"><Input value={ev.name} onChange={e=>updateEv(ev=>({...ev,name:e.target.value}))}/></Field>
-          <Field label="DATE"><Input type="date" value={ev.date} onChange={e=>updateEv(ev=>({...ev,date:e.target.value}))}/></Field>
+          <Field label="NOM"><Input value={ev.name} onChange={e=>updateEv(evUp=>({...evUp,name:e.target.value}))}/></Field>
+          <Field label="DATE"><Input type="date" value={ev.date} onChange={e=>updateEv(evUp=>({...evUp,date:e.target.value}))}/></Field>
           <Field label="LIEU / NOTES INTERNES">
-            <textarea value={ev.notes||""} onChange={e=>updateEv(ev=>({...ev,notes:e.target.value}))} rows={3}
+            <textarea value={ev.notes||""} onChange={e=>updateEv(evUp=>({...evUp,notes:e.target.value}))} rows={3}
               placeholder="Salle des fêtes, traiteur, prestataires..."
               style={{...inputStyle, resize:"vertical", lineHeight:1.6}}/>
           </Field>
           <Field label="TYPE">
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:6 }}>
               {Object.entries(THEMES_CONFIG).map(([k,v])=>(
-                <button key={k} onClick={()=>updateEv(ev=>({...ev,type:k}))} style={{
+                <button key={k} onClick={()=>updateEv(evUp=>({...evUp,type:k}))} style={{
                   padding:"8px 6px", borderRadius:10, border:`2px solid ${ev.type===k?v.color:C.border}`,
                   background:ev.type===k?v.color+"22":C.mid, cursor:"pointer",
                   color:ev.type===k?v.color:C.muted, fontFamily:"inherit", fontSize:11, fontWeight:700,
