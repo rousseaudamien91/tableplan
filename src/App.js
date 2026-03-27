@@ -2330,6 +2330,9 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
               <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:20 }}>
                 <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>🍽 Menu de l'événement</h4>
                 <Btn small variant="muted" onClick={function(){
+                  var btn = event.currentTarget;
+                  btn.disabled = true;
+                  btn.textContent = "⏳ Génération...";
                   // IA génère le menu
                   var diets = DIET_OPTIONS.filter(function(d){ return d.id!=="standard"; }).map(function(d){
                     var n = ev.guests.filter(function(g){ return g.diet===d.id || (g.allergies||[]).includes(d.id); }).length;
@@ -2348,8 +2351,20 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
                     try {
                       var menu = JSON.parse(clean);
                       updateEv(function(ev2){ return {...ev2, menu:{...ev2.menu, ...menu}}; });
-                    } catch(e) { console.error("Menu IA:", e); }
-                  }).catch(function(e){ console.error(e); });
+                      btn.disabled = false;
+                      btn.textContent = "✅ Menu généré !";
+                      setTimeout(function(){ btn.textContent = "✨ Générer avec l\'IA"; }, 3000);
+                    } catch(e) {
+                      console.error("Menu IA parse:", e);
+                      btn.disabled = false;
+                      btn.textContent = "✨ Générer avec l\'IA";
+                    }
+                  }).catch(function(e){
+                    console.error("Menu IA fetch:", e);
+                    btn.disabled = false;
+                    btn.textContent = "✨ Générer avec l\'IA";
+                    alert("Génération IA indisponible depuis cette interface. Saisissez le menu manuellement.");
+                  });
                 }}>✨ Générer avec l'IA</Btn>
               </div>
               <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))", gap:14 }}>
