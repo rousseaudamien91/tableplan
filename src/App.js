@@ -53,10 +53,10 @@ const TRANSLATIONS = {
   fr: {
     // Navbar
     appName: "TableMaître",
-    logout: "Déconnexion",
+    logout: t.logout,
     lightMode: "Passer en mode clair",
     darkMode: "Passer en mode sombre",
-    codePromo: "Code promo",
+    codePromo: t.codePromo,
     // Dashboard
     myEvents: "Mes événements",
     welcome: "Bienvenue",
@@ -70,8 +70,8 @@ const TRANSLATIONS = {
     placement: "Placement",
     guestsFound: "invité(s) trouvé(s)",
     duplicate: "Dupliquer cet événement",
-    daysAgo: "passé",
-    today: "Aujourd'hui !",
+    daysAgo: t.daysAgoLabel,
+    today: t.todayLabel,
     inDays: "Dans",
     days: "j",
     // Event types
@@ -105,23 +105,23 @@ const TRANSLATIONS = {
     importCSV: "⬆ Import CSV",
     // Table form
     tableNumber: "NUMÉRO",
-    tableCapacity: "CAPACITÉ",
-    tableShape: "FORME",
+    tableCapacity: t.fieldCapacity,
+    tableShape: t.fieldShape,
     tableLabel: "ÉTIQUETTE",
     tableColor: "COULEUR",
-    createTable: "Créer la table",
-    deleteTable: "Supprimer la table",
-    round: "Ronde",
-    rectangular: "Rectangulaire",
+    createTable: t.createTableBtn,
+    deleteTable: t.deleteTableBtn,
+    round: t.shapeRound,
+    rectangular: t.shapeRect,
     // Guest form
-    guestName: "NOM *",
-    guestEmail: "EMAIL",
-    guestDiet: "RÉGIME",
-    guestAllergies: "ALLERGIES",
-    guestTable: "TABLE",
-    guestNotes: "NOTES",
-    addGuestBtn: "Ajouter l'invité",
-    noTable: "-- Non placé --",
+    guestName: t.fieldName,
+    guestEmail: t.fieldEmail,
+    guestDiet: t.fieldDiet,
+    guestAllergies: t.fieldAllergies,
+    guestTable: t.fieldTable,
+    guestNotes: t.fieldNotes,
+    addGuestBtn: t.addGuestBtn,
+    noTable: t.notSeated,
     // Login
     loginGoogle: "Se connecter avec Google",
     loginSubtitle: "GESTION DE PLANS DE TABLE",
@@ -135,10 +135,40 @@ const TRANSLATIONS = {
     loading: "Chargement…",
     skipToMain: "Passer au contenu principal",
     note: "📝",
-    eventNotes: "LIEU / NOTES INTERNES",
-    eventName: "NOM",
-    eventDate: "DATE",
-    eventType: "TYPE",
+    eventNotes: t.eventNotes,
+    eventName: t.settingName,
+    eventDate: t.settingDate,
+    eventType: t.settingType,
+    // Stats bar
+    statTables: t.statTables,
+    statGuests: t.statGuests,
+    statSeated: t.statSeated,
+    statWaiting: t.statWaiting,
+    statDiets: t.statDiets,
+    // Countdown
+    daysAgoLabel: t.daysAgoLabel,
+    todayLabel: t.todayLabel,
+    // Form labels
+    fieldName: t.fieldName,
+    fieldEmail: t.fieldEmail,
+    fieldTable: t.fieldTable,
+    fieldNotes: t.fieldNotes,
+    fieldDiet: t.fieldDiet,
+    fieldAllergies: t.fieldAllergies,
+    fieldNumber: "NUMÉRO",
+    fieldCapacity: t.fieldCapacity,
+    fieldShape: t.fieldShape,
+    fieldLabel: "ÉTIQUETTE",
+    fieldColor: "COULEUR",
+    shapeRound: t.shapeRound,
+    shapeRect: t.shapeRect,
+    notSeated: "Non placé",
+    addGuestBtn: t.addGuestBtn,
+    createTableBtn: t.createTableBtn,
+    deleteTableBtn: t.deleteTableBtn,
+    settingName: t.settingName,
+    settingDate: t.settingDate,
+    settingType: t.settingType,
   },
 
   en: {
@@ -199,11 +229,11 @@ const TRANSLATIONS = {
     round: "Round",
     rectangular: "Rectangular",
     guestName: "NAME *",
-    guestEmail: "EMAIL",
+    guestEmail: t.fieldEmail,
     guestDiet: "DIET",
-    guestAllergies: "ALLERGIES",
-    guestTable: "TABLE",
-    guestNotes: "NOTES",
+    guestAllergies: t.fieldAllergies,
+    guestTable: t.fieldTable,
+    guestNotes: t.fieldNotes,
     addGuestBtn: "Add guest",
     noTable: "-- Not seated --",
     loginGoogle: "Sign in with Google",
@@ -217,8 +247,38 @@ const TRANSLATIONS = {
     note: "📝",
     eventNotes: "VENUE / INTERNAL NOTES",
     eventName: "NAME",
-    eventDate: "DATE",
-    eventType: "TYPE",
+    eventDate: t.settingDate,
+    eventType: t.settingType,
+    // Stats bar
+    statTables: t.statTables,
+    statGuests: "Guests",
+    statSeated: "Seated",
+    statWaiting: "Waiting",
+    statDiets: "Special diets",
+    // Countdown
+    daysAgoLabel: "past",
+    todayLabel: "Today!",
+    // Form labels
+    fieldName: "NAME *",
+    fieldEmail: t.fieldEmail,
+    fieldTable: t.fieldTable,
+    fieldNotes: t.fieldNotes,
+    fieldDiet: "DIET",
+    fieldAllergies: t.fieldAllergies,
+    fieldNumber: "NUMBER",
+    fieldCapacity: "CAPACITY",
+    fieldShape: "SHAPE",
+    fieldLabel: "LABEL",
+    fieldColor: "COLOR",
+    shapeRound: "Round",
+    shapeRect: "Rectangular",
+    notSeated: "Not seated",
+    addGuestBtn: "Add guest",
+    createTableBtn: "Create table",
+    deleteTableBtn: "Delete table",
+    settingName: "NAME",
+    settingDate: t.settingDate,
+    settingType: t.settingType,
   },
 
   es: {
@@ -279,7 +339,7 @@ const TRANSLATIONS = {
     round: "Redonda",
     rectangular: "Rectangular",
     guestName: "NOMBRE *",
-    guestEmail: "EMAIL",
+    guestEmail: t.fieldEmail,
     guestDiet: "DIETA",
     guestAllergies: "ALERGIAS",
     guestTable: "MESA",
@@ -299,6 +359,34 @@ const TRANSLATIONS = {
     eventName: "NOMBRE",
     eventDate: "FECHA",
     eventType: "TIPO",
+    // Stats bar
+    statTables: "Mesas",
+    statGuests: "Invitados",
+    statSeated: "Sentados",
+    statWaiting: "En espera",
+    statDiets: "Dietas especiales",
+    daysAgoLabel: "pasado",
+    todayLabel: "¡Hoy!",
+    fieldName: "NOMBRE *",
+    fieldEmail: t.fieldEmail,
+    fieldTable: "MESA",
+    fieldNotes: "NOTAS",
+    fieldDiet: "DIETA",
+    fieldAllergies: "ALERGIAS",
+    fieldNumber: "NÚMERO",
+    fieldCapacity: "CAPACIDAD",
+    fieldShape: "FORMA",
+    fieldLabel: "ETIQUETA",
+    fieldColor: "COLOR",
+    shapeRound: "Redonda",
+    shapeRect: "Rectangular",
+    notSeated: "Sin asignar",
+    addGuestBtn: "Añadir invitado",
+    createTableBtn: "Crear mesa",
+    deleteTableBtn: "Eliminar mesa",
+    settingName: "NOMBRE",
+    settingDate: "FECHA",
+    settingType: "TIPO",
   },
 
   de: {
@@ -379,6 +467,34 @@ const TRANSLATIONS = {
     eventName: "NAME",
     eventDate: "DATUM",
     eventType: "TYP",
+    // Stats bar
+    statTables: "Tische",
+    statGuests: "Gäste",
+    statSeated: "Platziert",
+    statWaiting: "Wartend",
+    statDiets: "Spezialdiäten",
+    daysAgoLabel: "vergangen",
+    todayLabel: "Heute!",
+    fieldName: "NAME *",
+    fieldEmail: "E-MAIL",
+    fieldTable: "TISCH",
+    fieldNotes: "NOTIZEN",
+    fieldDiet: "ERNÄHRUNG",
+    fieldAllergies: "ALLERGIEN",
+    fieldNumber: "NUMMER",
+    fieldCapacity: "KAPAZITÄT",
+    fieldShape: "FORM",
+    fieldLabel: "BEZEICHNUNG",
+    fieldColor: "FARBE",
+    shapeRound: "Rund",
+    shapeRect: "Rechteckig",
+    notSeated: "Nicht platziert",
+    addGuestBtn: "Gast hinzufügen",
+    createTableBtn: "Tisch erstellen",
+    deleteTableBtn: "Tisch löschen",
+    settingName: "NAME",
+    settingDate: "DATUM",
+    settingType: "TYP",
   },
 
   it: {
@@ -439,7 +555,7 @@ const TRANSLATIONS = {
     round: "Rotondo",
     rectangular: "Rettangolare",
     guestName: "NOME *",
-    guestEmail: "EMAIL",
+    guestEmail: t.fieldEmail,
     guestDiet: "DIETA",
     guestAllergies: "ALLERGIE",
     guestTable: "TAVOLO",
@@ -459,7 +575,35 @@ const TRANSLATIONS = {
     eventName: "NOME",
     eventDate: "DATA",
     eventType: "TIPO",
-  },
+  },    // Stats bar
+    statTables: "Tavoli",
+    statGuests: "Ospiti",
+    statSeated: "Sistemati",
+    statWaiting: "In attesa",
+    statDiets: "Diete speciali",
+    daysAgoLabel: "passato",
+    todayLabel: "Oggi!",
+    fieldName: "NOME *",
+    fieldEmail: t.fieldEmail,
+    fieldTable: "TAVOLO",
+    fieldNotes: "NOTE",
+    fieldDiet: "DIETA",
+    fieldAllergies: "ALLERGIE",
+    fieldNumber: "NUMERO",
+    fieldCapacity: "CAPACITÀ",
+    fieldShape: "FORMA",
+    fieldLabel: "ETICHETTA",
+    fieldColor: "COLORE",
+    shapeRound: "Rotondo",
+    shapeRect: "Rettangolare",
+    notSeated: "Non assegnato",
+    addGuestBtn: "Aggiungi ospite",
+    createTableBtn: "Crea tavolo",
+    deleteTableBtn: "Elimina tavolo",
+    settingName: "NOME",
+    settingDate: "DATA",
+    settingType: "TIPO",
+
 };
 
 // Détecter la langue du navigateur / pays
@@ -1500,7 +1644,7 @@ function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
                 { label:"Projets total", val:events.length, icon:"📁", color:C.gold },
                 { label:"Utilisateurs", val:users.length, icon:"👥", color:C.blue },
                 { label:"Invités total", val:events.reduce((s,e)=>s+e.guests.length,0), icon:"👤", color:C.green },
-                { label:"Tables total", val:events.reduce((s,e)=>s+e.tables.length,0), icon:"🪑", color:C.gold },
+                { label:"Tables", val:events.reduce((s,e)=>s+e.tables.length,0), icon:"🪑", color:C.gold },
                 { label:"Projets Pro", val:events.filter(e=>e.plan==="pro").length, icon:"⭐", color:"#E8845A" },
                 { label:"Projets Free", val:events.filter(e=>e.plan==="free").length, icon:"🆓", color:C.muted },
               ].map(s => (
@@ -1568,7 +1712,7 @@ function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
           <Field label="NOM DE L'ÉVÉNEMENT *">
             <Input value={newProject.name} onChange={e=>setNewProject({...newProject,name:e.target.value})} placeholder="Mariage Dupont × Martin"/>
           </Field>
-          <Field label="DATE">
+          <Field label={t.settingDate}>
             <Input type="date" value={newProject.date} onChange={e=>setNewProject({...newProject,date:e.target.value})}/>
           </Field>
           <Field label="TYPE D'ÉVÉNEMENT">
@@ -1659,7 +1803,7 @@ function GuestForm({ event, onBack }) {
               <input value={form.name} onChange={e=>setForm({...form,name:e.target.value})}
                 style={{ ...inputStyle, background:"#fff", color:C.dark, border:`1px solid #ddd` }} placeholder="Prénom Nom"/>
             </Field>
-            <Field label="EMAIL">
+            <Field label={t.fieldEmail}>
               <input value={form.email} onChange={e=>setForm({...form,email:e.target.value})}
                 style={{ ...inputStyle, background:"#fff", color:C.dark, border:`1px solid #ddd` }} type="email" placeholder="votre@email.fr"/>
             </Field>
@@ -1844,11 +1988,11 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
       {/* Stats bar */}
       <div style={{ background:C.mid+"55", borderBottom:`1px solid ${C.border}`, padding:"10px 24px", display:"flex", gap:24, overflowX:"auto" }}>
         {[
-          {label:"Tables",    val:ev.tables.length,  color:C.gold},
-          {label:"Invités",   val:ev.guests.length,  color:C.gold},
-          {label:"Placés",    val:seated.length,     color:C.green},
-          {label:"En attente",val:unseated.length,   color:unseated.length>0?C.red:C.green},
-          {label:"Régimes spéciaux", val:dietStats.reduce((s,d)=>s+d.count,0), color:C.blue},
+          {label:t.statTables,    val:ev.tables.length,  color:C.gold},
+          {label:t.statGuests,   val:ev.guests.length,  color:C.gold},
+          {label:t.statSeated,    val:seated.length,     color:C.green},
+          {label:t.statWaiting,val:unseated.length,   color:unseated.length>0?C.red:C.green},
+          {label:t.statDiets, val:dietStats.reduce((s,d)=>s+d.count,0), color:C.blue},
         ].map(s=>(
           <div key={s.label} style={{ textAlign:"center", minWidth:80 }}>
             <div style={{ fontSize:20, fontWeight:700, color:s.color }}>{s.val}</div>
@@ -2132,7 +2276,7 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
             </div>
             <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:20 }}>
               <p style={{ color:C.muted, margin:0, fontSize:13, lineHeight:1.8 }}>
-                <strong style={{ color:C.gold }}>🤝 Ensemble :</strong> ces invités seront à la même table.<br/>
+                <strong style={{ color:C.gold }}>🤝 {t && t.lang === "fr" ? "Ensemble" : "Together"} :</strong> {t && t.lang === "fr" ? "ces invités seront à la même table" : "these guests will be at the same table"}.<br/>
                 <strong style={{ color:C.gold }}>⚡ Séparés :</strong> ces invités seront à des tables différentes.<br/>
                 Cliquez <strong style={{ color:C.gold }}>{t.autoPlace}</strong> pour appliquer automatiquement.
               </p>
@@ -2189,8 +2333,8 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
 
       <Modal open={showAddGuest} onClose={()=>setShowAddGuest(false)} title="Ajouter un invité">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label="NOM *"><Input value={newGuest.name} onChange={e=>setNewGuest({...newGuest,name:e.target.value})} placeholder="Prénom Nom"/></Field>
-          <Field label="EMAIL"><Input type="email" value={newGuest.email} onChange={e=>setNewGuest({...newGuest,email:e.target.value})} placeholder="email@example.fr"/></Field>
+          <Field label={t.fieldName}><Input value={newGuest.name} onChange={e=>setNewGuest({...newGuest,name:e.target.value})} placeholder="Prénom Nom"/></Field>
+          <Field label={t.fieldEmail}><Input type="email" value={newGuest.email} onChange={e=>setNewGuest({...newGuest,email:e.target.value})} placeholder="email@example.fr"/></Field>
           <Field label="RÉGIME ALIMENTAIRE">
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:6 }}>
               {DIET_OPTIONS.map(function(ditem){ return (
@@ -2210,9 +2354,9 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
 
       <Modal open={showAddTable} onClose={()=>setShowAddTable(false)} title="Ajouter une table">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label={`NUMÉRO (auto: ${nextTableNumber})`}><Input type="number" value={newTable.number} onChange={e=>setNewTable({...newTable,number:e.target.value})} placeholder={String(nextTableNumber)}/></Field>
-          <Field label="CAPACITÉ"><Input type="number" value={newTable.capacity} onChange={e=>setNewTable({...newTable,capacity:e.target.value})}/></Field>
-          <Field label="FORME">
+          <Field label={`${t.fieldNumber} (auto: ${nextTableNumber})`}><Input type="number" value={newTable.number} onChange={e=>setNewTable({...newTable,number:e.target.value})} placeholder={String(nextTableNumber)}/></Field>
+          <Field label={t.fieldCapacity}><Input type="number" value={newTable.capacity} onChange={e=>setNewTable({...newTable,capacity:e.target.value})}/></Field>
+          <Field label={t.fieldShape}>
             <div style={{ display:"flex", gap:8 }}>
               {[["round","⬤ Ronde"],["rect","▬ Rectangle"]].map(([v,l])=>(
                 <button key={v} onClick={()=>setNewTable({...newTable,shape:v})} style={{
@@ -2223,8 +2367,8 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
               ))}
             </div>
           </Field>
-          <Field label="ÉTIQUETTE (optionnel)"><Input value={newTable.label} onChange={e=>setNewTable({...newTable,label:e.target.value})} placeholder="ex: Famille, Amis…"/></Field>
-          <Field label="COULEUR (optionnel)">
+          <Field label={`${t.fieldLabel} (optionnel)`}><Input value={newTable.label} onChange={e=>setNewTable({...newTable,label:e.target.value})} placeholder="ex: Famille, Amis…"/></Field>
+          <Field label={`${t.fieldColor} (optionnel)`}>
             <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
               {["#C9973A","#E84A6A","#4CAF50","#2196F3","#9C27B0","#FF9800","#8B7EC8","#E8845A"].map(col=>(
                 <button key={col} onClick={()=>setNewTable({...newTable,color:col})} style={{
@@ -2247,7 +2391,7 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
               {ev.guests.map(g=><option key={g.id} value={g.id}>{g.name}</option>)}
             </Select>
           </Field>
-          <Field label="TYPE">
+          <Field label={t.settingType}>
             <div style={{ display:"flex", gap:8 }}>
               {[["together","🤝 Ensemble",C.green],["apart","⚡ Séparés",C.red]].map(([v,l,col])=>(
                 <button key={v} onClick={()=>setConstraint({...constraint,type:v})} style={{
@@ -2290,14 +2434,14 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
 
       <Modal open={showSettings} onClose={()=>setShowSettings(false)} title="Paramètres de l'événement">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label="NOM"><Input value={ev.name} onChange={e=>updateEv(evUp=>({...evUp,name:e.target.value}))}/></Field>
-          <Field label="DATE"><Input type="date" value={ev.date} onChange={e=>updateEv(evUp=>({...evUp,date:e.target.value}))}/></Field>
-          <Field label="LIEU / NOTES INTERNES">
+          <Field label={t.settingName}><Input value={ev.name} onChange={e=>updateEv(evUp=>({...evUp,name:e.target.value}))}/></Field>
+          <Field label={t.settingDate}><Input type="date" value={ev.date} onChange={e=>updateEv(evUp=>({...evUp,date:e.target.value}))}/></Field>
+          <Field label={t.eventNotes}>
             <textarea value={ev.notes||""} onChange={e=>updateEv(evUp=>({...evUp,notes:e.target.value}))} rows={3}
               placeholder="Salle des fêtes, traiteur, prestataires..."
               style={{...inputStyle, resize:"vertical", lineHeight:1.6}}/>
           </Field>
-          <Field label="TYPE">
+          <Field label={t.settingType}>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:6 }}>
               {Object.entries(THEMES_CONFIG).map(([k,v])=>(
                 <button key={k} onClick={()=>updateEv(evUp=>({...evUp,type:k}))} style={{
@@ -2488,8 +2632,8 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
       <div style={{ maxWidth:1000, margin:"0 auto", padding:"48px 20px" }}>
         {/* Hero */}
         <div style={{ marginBottom:48, textAlign:"center" }}>
-          <h1 style={{ fontSize:36, fontWeight:400, margin:"0 0 8px", letterSpacing:1 }}>Mes événements</h1>
-          <p style={{ color:C.muted, margin:0, fontSize:14 }}>Bienvenue, {user.name}</p>
+          <h1 style={{ fontSize:36, fontWeight:400, margin:"0 0 8px", letterSpacing:1 }}>{t.myEvents}</h1>
+          <p style={{ color:C.muted, margin:0, fontSize:14 }}>{t.welcome}, {user.name}</p>
         </div>
 
         <div style={{ display:"flex", gap:12, marginBottom:24, alignItems:"center" }}>
@@ -2551,9 +2695,9 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
                   })()}
                 </p>
                 <div style={{ display:"flex", gap:16, fontSize:12, color:C.muted }}>
-                  <span>🪑 {ev.tables.length} tables</span>
-                  <span>👤 {ev.guests.length} invités</span>
-                  {unseated>0 && <span style={{ color:C.red }}>⚠ {unseated} non placés</span>}
+                  <span>🪑 {ev.tables.length} {t.tables}</span>
+                  <span>👤 {ev.guests.length} {t.guests}</span>
+                  {unseated>0 && <span style={{ color:C.red }}>⚠ {unseated} {t.unseated}</span>}
                   {globalSearch && ev.guests.some(g3=>g3.name.toLowerCase().includes(globalSearch.toLowerCase())) && (
                     <span style={{color:C.gold}}>✦ {ev.guests.filter(g3=>g3.name.toLowerCase().includes(globalSearch.toLowerCase())).length} invité(s) trouvé(s)</span>
                   )}
@@ -2628,7 +2772,7 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
       <Modal open={showNew} onClose={()=>setShowNew(false)} title="Nouvel événement">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <Field label="NOM DE L'ÉVÉNEMENT *"><Input value={newEv.name} onChange={e=>setNewEv({...newEv,name:e.target.value})} placeholder="Mariage Dupont × Martin"/></Field>
-          <Field label="DATE"><Input type="date" value={newEv.date} onChange={e=>setNewEv({...newEv,date:e.target.value})}/></Field>
+          <Field label={t.settingDate}><Input type="date" value={newEv.date} onChange={e=>setNewEv({...newEv,date:e.target.value})}/></Field>
           <Field label="TYPE D'ÉVÉNEMENT">
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
               {Object.entries(THEMES_CONFIG).map(([k,v])=>(
