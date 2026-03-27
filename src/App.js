@@ -1287,13 +1287,13 @@ function GuestForm({ event, onBack }) {
             </Field>
             <Field label="ALLERGIES SPÉCIFIQUES">
               <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
-                {DIET_OPTIONS.filter(function(ditem){ return ditem.id.startsWith("sans-")||ditem.id==="vegan"; }).map(function(ditem){
-                  <button key={d.id} onClick={()=>toggleAllergy(d.id)} style={{
-                    padding:"4px 12px", borderRadius:99, border:`1px solid ${form.allergies.includes(d.id)?d.color:"#ddd"}`,
-                    background:form.allergies.includes(d.id)?d.color+"22":"#fff",
-                    cursor:"pointer", fontSize:11, fontFamily:"inherit", color:form.allergies.includes(d.id)?d.color:C.mid,
-                  }}>{d.icon} {d.label}</button>
-                ))}
+                {DIET_OPTIONS.filter(function(ditem){ return ditem.id.startsWith("sans-")||ditem.id==="vegan"; }).map(function(ditem){ return (
+                  <button key={ditem.id} onClick={()=>toggleAllergy(ditem.id)} style={{
+                    padding:"4px 12px", borderRadius:99, border:`1px solid ${form.allergies.includes(ditem.id)?ditem.color:"#ddd"}`,
+                    background:form.allergies.includes(ditem.id)?ditem.color+"22":"#fff",
+                    cursor:"pointer", fontSize:11, fontFamily:"inherit", color:form.allergies.includes(ditem.id)?ditem.color:C.mid,
+                  }}>{ditem.icon} {ditem.label}</button>
+                );})}
               </div>
             </Field>
             <Field label="NOTES / PRÉCISIONS">
@@ -1659,7 +1659,7 @@ function EventEditor({ ev, onUpdate, onBack, saveToast }) {
               })}
             </div>
 
-            {/* Menu editor */
+            {/* Menu editor */}
             <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:16, padding:24 }}>
               <h4 style={{ color:C.gold, margin:"0 0 20px", fontWeight:400, fontSize:16 }}>🍽 Menu de l'événement</h4>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
