@@ -2349,8 +2349,6 @@ export default function App() {
   };
 
   // Création d'événement avec sauvegarde
-  const showSaveToast = () => { setSaveToast(true); setTimeout(()=>setSaveToast(false), 2000); };
-
   const handleSetEvents = (updater) => {
     setEvents(prev => {
       const next = typeof updater === "function" ? updater(prev) : updater;
@@ -2367,7 +2365,7 @@ export default function App() {
         prev.forEach(ev => {
           if (!nextIds.has(ev.id)) deleteEventFromFirestore(fbUser.uid, ev.id);
         });
-        setTimeout(showSaveToast, 300);
+        // sauvegarde cloud notifiée dans Dashboard
       }
       return next;
     });
