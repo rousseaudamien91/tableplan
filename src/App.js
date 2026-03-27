@@ -1930,33 +1930,61 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
     setConstraint({a:"",b:"",type:"together"});
     setShowConstraint(false);
   }
-  function autoPlace() {
-    updateEv(e=>{
-      const guests=[...e.guests];
-      const tables=[...e.tables];
-      const groups=[];
-      e.constraints.filter(c=>c.type==="together").forEach(c=>{
-        const ex=groups.find(g=>g.includes(c.a)||g.includes(c.b));
-        if(ex){if(!ex.includes(c.a))ex.push(c.a);if(!ex.includes(c.b))ex.push(c.b);}
-        else groups.push([c.a,c.b]);
+  const [aiPlacing, setAiPlacing] = useState(false);
+  const [aiExplanation, setAiExplanation] = useState("");
+
+  async function autoPlace() {
+    if (ev.tables.length === 0 || ev.guests.length === 0) return;
+    setAiPlacing(true);
+    setAiExplanation("");
+    try {
+      const context = {
+        tables: ev.tables.map(function(tbl){ return { id: tbl.id, number: tbl.number, capacity: tbl.capacity, label: tbl.label||"" }; }),
+        guests: ev.guests.map(function(g){ return { id: g.id, name: g.name, diet: g.diet, allergies: g.allergies||[] }; }),
+        constraints: ev.constraints || [],
+      };
+      const prompt = "Tu es un assistant de plans de table. Tables: " + JSON.stringify(context.tables) + ". Invités: " + JSON.stringify(context.guests) + ". Contraintes: " + JSON.stringify(context.constraints) + ". Assigne chaque invité à une table en respectant la capacité, les contraintes ensemble/séparés, et en regroupant les régimes similaires. Réponds UNIQUEMENT en JSON: {"assignments": [{"guestId": "...", "tableId": "..."}], "explanation": "explication courte en français"}";
+      const response = await fetch("https://api.anthropic.com/v1/messages", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ model: "claude-sonnet-4-20250514", max_tokens: 1000, messages: [{ role: "user", content: prompt }] })
       });
-      const newG=guests.map(g=>({...g,tableId:null}));
-      const assigned=new Set();
-      let ti=0;
-      groups.forEach(group=>{
-        if(ti>=tables.length)return;
-        group.forEach(gId=>{const g=newG.find(x=>x.id===gId);if(g){g.tableId=tables[ti].id;assigned.add(gId);}});
-        ti++;
+      const data = await response.json();
+      const text = (data.content && data.content[0] && data.content[0].text) || "";
+      const clean = text.replace(/```json|```/g, "").trim();
+      const result = JSON.parse(clean);
+      const newGuests = ev.guests.map(function(g) {
+        const assignment = result.assignments.find(function(a){ return String(a.guestId) === String(g.id); });
+        return assignment ? { ...g, tableId: assignment.tableId } : g;
       });
-      newG.filter(g=>!assigned.has(g.id)).forEach(g=>{
-        while(ti<tables.length){
-          const s=newG.filter(x=>x.tableId===tables[ti].id).length;
-          if(s<tables[ti].capacity){g.tableId=tables[ti].id;break;}
+      updateEv(function(evUp){ return { ...evUp, guests: newGuests }; });
+      setAiExplanation(result.explanation || "Placement optimisé !");
+    } catch (e) {
+      // Fallback simple
+      updateEv(function(evState){
+        const newG = evState.guests.map(function(g){ return {...g, tableId:null}; });
+        const tables = evState.tables;
+        const groups = [];
+        (evState.constraints||[]).filter(function(c){ return c.type==="together"; }).forEach(function(c){
+          const ex = groups.find(function(g){ return g.includes(c.a)||g.includes(c.b); });
+          if(ex){if(!ex.includes(c.a))ex.push(c.a);if(!ex.includes(c.b))ex.push(c.b);}
+          else groups.push([c.a,c.b]);
+        });
+        const assigned = new Set();
+        var ti = 0;
+        groups.forEach(function(group){
+          if(ti>=tables.length)return;
+          group.forEach(function(gId){ const g=newG.find(function(x){ return x.id===gId; }); if(g){g.tableId=tables[ti].id;assigned.add(gId);} });
           ti++;
-        }
+        });
+        newG.filter(function(g){ return !assigned.has(g.id); }).forEach(function(g){
+          while(ti<tables.length){ const s=newG.filter(function(x){ return x.tableId===tables[ti].id; }).length; if(s<tables[ti].capacity){g.tableId=tables[ti].id;break;} ti++; }
+        });
+        return {...evState, guests:newG};
       });
-      return {...e,guests:newG};
-    });
+      setAiExplanation("Placement automatique (IA indisponible)");
+    }
+    setAiPlacing(false);
   }
 
   const TABS = [
