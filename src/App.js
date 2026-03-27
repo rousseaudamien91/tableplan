@@ -1542,6 +1542,7 @@ function LoginScreen({ onLogin, t: tProp }) {
 
 
 function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
+  const { t } = useI18n();
   const [tab, setTab] = useState("projects"); // projects | users
   const [showNewProject, setShowNewProject] = useState(false);
   const [showNewUser, setShowNewUser] = useState(false);
@@ -1760,6 +1761,7 @@ function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
 // ═══════════════════════════════════════════════════════════════
 
 function GuestForm({ event, onBack }) {
+  const { t } = useI18n();
   const [step, setStep] = useState(0);
   const [form, setForm] = useState({ name:"", email:"", diet:"standard", notes:"", plus1:false, allergies:[] });
   const [done, setDone] = useState(false);
