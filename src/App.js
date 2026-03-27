@@ -571,6 +571,8 @@ function FloorPlan({ ev, onUpdateTables, onSelectTable, selectedTable, highlight
   return (
     <svg
       ref={svgRef}
+      role="img"
+      aria-label={`Plan de table de l'événement. ${ev.tables.length} tables, ${ev.guests.filter(g=>g.tableId).length} invités placés sur ${ev.guests.length} au total.`}
       viewBox={`0 0 ${CANVAS_W} ${CANVAS_H}`}
       style={{ width:"100%", display:"block", background:"#0a0604", borderRadius:12, border:`1px solid ${C.border}`, cursor:"default", userSelect:"none" }}
       onMouseMove={handleMouseMove}
@@ -2041,9 +2043,11 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
             </div>
           )}
           <span style={{ color:C.muted, fontSize:13 }}>{user.name.split(" ")[0]}</span>
-          <button onClick={onToggleTheme} title={lightMode?"Mode sombre":"Mode clair"}
+          <button onClick={onToggleTheme}
+            title={lightMode?"Passer en mode sombre":"Passer en mode clair"}
+            aria-label={lightMode?"Passer en mode sombre":"Passer en mode clair"}
             style={{ padding:"6px 10px", background:"none", border:`1px solid ${C.border}`, borderRadius:8, color:C.muted, cursor:"pointer", fontSize:16 }}>
-            {lightMode ? "🌙" : "☀️"}
+            <span aria-hidden="true">{lightMode ? "🌙" : "☀️"}</span>
           </button>
           <button
             onClick={() => setShowVoucher(true)}
@@ -2063,8 +2067,12 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
         </div>
 
         <div style={{ display:"flex", gap:12, marginBottom:24, alignItems:"center" }}>
-          <input value={globalSearch} onChange={e=>setGlobalSearch(e.target.value)}
-            placeholder="🔍 Rechercher un événement ou un invité..."
+          <input
+            value={globalSearch}
+            onChange={e=>setGlobalSearch(e.target.value)}
+            placeholder="Rechercher un événement ou un invité..."
+            aria-label="Rechercher un événement ou un invité"
+            role="searchbox"
             style={{ flex:1, padding:"10px 16px", background:C.card, border:`1px solid ${C.border}`, borderRadius:12, color:C.cream, fontSize:14, fontFamily:"Georgia,serif", outline:"none" }}
           />
           <Btn onClick={()=>setShowNew(true)}>+ Nouvel événement</Btn>
@@ -2098,9 +2106,11 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
                 </div>
                 <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:4 }}>
                   <h3 style={{ color:C.cream, margin:0, fontSize:18, fontWeight:400 }}>{ev.name}</h3>
-                  <button onClick={e=>{e.stopPropagation();const copy={...ev,id:Date.now(),name:ev.name+" (copie)",ownerId:user.id};setEvents(prev=>[...prev,copy]);}} title="Dupliquer"
+                  <button onClick={e=>{e.stopPropagation();const copy={...ev,id:Date.now(),name:ev.name+" (copie)",ownerId:user.id};setEvents(prev=>[...prev,copy]);}}
+                    title="Dupliquer cet événement"
+                    aria-label={`Dupliquer l'événement ${ev.name}`}
                     style={{background:"none",border:`1px solid ${C.border}`,borderRadius:8,color:C.muted,cursor:"pointer",fontSize:12,padding:"3px 8px",fontFamily:"inherit"}}>
-                    ⧉
+                    <span aria-hidden="true">⧉</span>
                   </button>
                 </div>
                 <p style={{ color:C.muted, margin:"0 0 16px", fontSize:12 }}>
@@ -2145,11 +2155,13 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
       </div>
 
       {showVoucher && <VoucherModal onClose={() => setShowVoucher(false)} onApply={handleApplyVoucher} />}
-      {saveToast && (
-        <div style={{ position:"fixed", bottom:24, left:"50%", transform:"translateX(-50%)", background:"#1E1208", border:`1px solid ${C.green}`, borderRadius:10, padding:"10px 20px", zIndex:9999, display:"flex", alignItems:"center", gap:8, boxShadow:"0 4px 20px rgba(0,0,0,0.4)", fontSize:13, color:C.green, pointerEvents:"none" }}>
-          ☁️ Sauvegardé dans le cloud
-        </div>
-      )}
+      <div aria-live="polite" aria-atomic="true" style={{ position:"fixed", bottom:24, left:"50%", transform:"translateX(-50%)", zIndex:9999, pointerEvents:"none" }}>
+        {saveToast && (
+          <div style={{ background:"#1E1208", border:`1px solid ${C.green}`, borderRadius:10, padding:"10px 20px", display:"flex", alignItems:"center", gap:8, boxShadow:"0 4px 20px rgba(0,0,0,0.4)", fontSize:13, color:C.green }}>
+            ☁️ Sauvegardé dans le cloud
+          </div>
+        )}
+      </div>
       {showUpgrade && (
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.8)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:2000 }}>
           <div style={{ background:C.card, border:`1px solid ${C.gold}`, borderRadius:20, padding:40, width:400, textAlign:"center", boxShadow:"0 20px 60px rgba(0,0,0,0.5)" }}>
@@ -2293,6 +2305,24 @@ export default function App() {
   useEffect(() => {
     document.body.style.background = lightMode ? "#F5F0E8" : "#120C08";
     document.body.style.color = lightMode ? "#2A1A0E" : "#F5EAD4";
+    // Accessibilité : focus visible pour navigation clavier
+    const styleId = 'a11y-focus-style';
+    if (!document.getElementById(styleId)) {
+      const style = document.createElement('style');
+      style.id = styleId;
+      style.textContent = `
+        *:focus-visible {
+          outline: 3px solid #C9973A !important;
+          outline-offset: 3px !important;
+          border-radius: 4px;
+        }
+        button:focus-visible, a:focus-visible {
+          outline: 3px solid #C9973A !important;
+          outline-offset: 3px !important;
+        }
+      `;
+      document.head.appendChild(style);
+    }
   }, [lightMode]);
 
   // Charger les événements depuis Firestore quand l'utilisateur se connecte
