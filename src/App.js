@@ -748,7 +748,7 @@ function uid() { return Date.now() + Math.random().toString(36).slice(2); }
 function printFloorPlan(ev) {
   const theme = THEMES_CONFIG[ev.type] || THEMES_CONFIG.autre;
   const seated = ev.guests.filter(g => g.tableId);
-  const tableRows = ev.tables.map(t => {
+  const tableRows = ev.tables.map(function(tbl) {
     const guestsSec = ev.guests.filter(g => g.tableId === t.id);
     return `
       <div class="table-block">
@@ -811,7 +811,7 @@ function printFloorPlan(ev) {
 function exportGuestsCSV(ev) {
   const headers = ["Nom", "Email", "Table", "Régime", "Allergies", "Notes"];
   const rows = ev.guests.map(g => {
-    const table = ev.tables.find(t => t.id === g.tableId);
+    const table = ev.tables.find(function(tbl2){ return tbl2.id === g.tableId; });
     const diet = dietInfo(g.diet);
     return [
       g.name,
@@ -1147,11 +1147,12 @@ function FloorPlan({ ev, onUpdateTables, onSelectTable, selectedTable, highlight
   const handleMouseMove = useCallback((e) => {
     if (!dragging) return;
     const pt = getSVGPoint(e);
-    onUpdateTables(ev.tables.map(t =>
-      t.id === dragging.tableId
-        ? { ...t, x: Math.max(50, Math.min(CANVAS_W-50, pt.x - dragging.offsetX)), y: Math.max(50, Math.min(CANVAS_H-50, pt.y - dragging.offsetY)) }
-        : t
-    ));
+    onUpdateTables(ev.tables.map(function(tbl){
+      if (tbl.id === dragging.tableId) {
+        return { ...tbl, x: Math.max(50, Math.min(CANVAS_W-50, pt.x - dragging.offsetX)), y: Math.max(50, Math.min(CANVAS_H-50, pt.y - dragging.offsetY)) };
+      }
+      return tbl;
+    }));
   }, [dragging, ev.tables, getSVGPoint, onUpdateTables]);
 
   const handleMouseUp = useCallback(() => setDragging(null), []);
@@ -1183,7 +1184,7 @@ function FloorPlan({ ev, onUpdateTables, onSelectTable, selectedTable, highlight
       )}
 
       {/* Tables */}
-      {ev.tables.map(t => {
+      {ev.tables.map(function(tbl) {
         const seated = ev.guests.filter(g => g.tableId === t.id);
         const full = seated.length >= t.capacity;
         const sel = selectedTable === t.id;
@@ -1249,7 +1250,7 @@ function printPlaceCards(ev) {
   const accentColor = theme.color;
 
   const cardsHTML = guests.map(g => {
-    const table = ev.tables.find(t => t.id === g.tableId);
+    const table = ev.tables.find(function(tbl2){ return tbl2.id === g.tableId; });
     const diet = dietInfo(g.diet);
     return `
       <div class="card">
@@ -2013,6 +2014,11 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
         <Badge color={theme.color}>{theme.label}</Badge>
         <div style={{flex:1}}/>
         <Btn small variant="ghost" onClick={()=>setShowQR(true)}>📱 QR Code</Btn>
+        <Btn small variant="ghost" onClick={() => {
+          var url = window.location.origin + "/?join=" + ev.id;
+          if (navigator.share) { navigator.share({ title: ev.name, url: url }); }
+          else { navigator.clipboard.writeText(url).then(() => setEditorSaveToast(true)); }
+        }}>🔗 Partager</Btn>
         <Btn small variant="success" onClick={()=>printPlaceCards(ev)}>{t.placeCards}</Btn>
         <Btn small variant="ghost" onClick={()=>printFloorPlan(ev)}>{t.floorPlan}</Btn>
         <Btn small onClick={autoPlace} style={{opacity:aiPlacing?0.7:1}}>{aiPlacing?"🤖 IA en cours...":t.autoPlace}</Btn>
@@ -2043,12 +2049,12 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
 
       {/* Tab bar */}
       <div style={{ background:C.card+"dd", borderBottom:`1px solid ${C.border}`, padding:"0 24px", display:"flex", gap:0, overflowX:"auto" }}>
-        {TABS.map(t=>(
-          <button key={t.id} onClick={()=>setTab(t.id)} style={{
-            background:"none", border:"none", borderBottom:`2px solid ${tab===t.id?C.gold:"transparent"}`,
-            color:tab===t.id?C.gold:C.muted, padding:"14px 18px",
-            cursor:"pointer", fontFamily:"inherit", fontSize:13, fontWeight:tab===t.id?700:400, whiteSpace:"nowrap",
-          }}>{t.icon} {t.label}</button>
+        {TABS.map(tabItem=>(
+          <button key={tabItem.id} onClick={()=>setTab(tabItem.id)} style={{
+            background:"none", border:"none", borderBottom:`2px solid ${tab===tabItem.id?C.gold:"transparent"}`,
+            color:tab===tabItem.id?C.gold:C.muted, padding:"14px 18px",
+            cursor:"pointer", fontFamily:"inherit", fontSize:13, fontWeight:tab===tabItem.id?700:400, whiteSpace:"nowrap",
+          }}>{tabItem.icon} {tabItem.label}</button>
         ))}
       </div>
 
@@ -2169,6 +2175,64 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
         )}
 
         {/* ── GUESTS TAB ── */}
+        
+        {tab==="list" && (
+          <div style={{ padding:"0 24px" }}>
+            <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:20 }}>
+              <h3 style={{ color:C.gold, fontWeight:400, fontSize:18 }}>📋 Plan par tables</h3>
+              <Btn small variant="ghost" onClick={function(){ exportGuestsCSV(ev); }}>⬇ Export CSV</Btn>
+            </div>
+            <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
+              {ev.tables.map(function(tbl) {
+                var tblGuests = ev.guests.filter(function(g){ return g.tableId === tbl.id; });
+                return (
+                  <div key={tbl.id} style={{ background:C.card, border:"1px solid " + (tbl.color||C.border) + "44", borderRadius:14, overflow:"hidden" }}>
+                    <div style={{ background:(tbl.color||C.gold)+"22", padding:"12px 20px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
+                      <span style={{ color:tbl.color||C.gold, fontWeight:700, fontSize:15 }}>
+                        Table {tbl.number}{tbl.label ? " — " + tbl.label : ""}
+                      </span>
+                      <span style={{ color:C.muted, fontSize:12 }}>{tblGuests.length}/{tbl.capacity} places</span>
+                    </div>
+                    {tblGuests.length === 0 ? (
+                      <p style={{ color:C.muted, fontSize:13, padding:"12px 20px", fontStyle:"italic" }}>— Vide —</p>
+                    ) : (
+                      <table style={{ width:"100%", borderCollapse:"collapse" }}>
+                        <thead>
+                          <tr style={{ borderBottom:"1px solid " + C.border }}>
+                            {["Nom","Régime","Notes"].map(function(h){ return <th key={h} style={{ padding:"8px 20px", color:C.muted, fontSize:11, textAlign:"left", letterSpacing:1 }}>{h}</th>; })}
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {tblGuests.map(function(g, idx) {
+                            var dinfo = dietInfo(g.diet);
+                            return (
+                              <tr key={g.id} style={{ borderBottom:idx<tblGuests.length-1?"1px solid "+C.border+"33":"none", background:idx%2===0?"transparent":C.mid+"33" }}>
+                                <td style={{ padding:"10px 20px", color:C.cream, fontSize:14 }}>{g.name}</td>
+                                <td style={{ padding:"10px 20px", fontSize:13, color:dinfo.color }}>{dinfo.icon} {dinfo.label}</td>
+                                <td style={{ padding:"10px 20px", color:C.muted, fontSize:12, fontStyle:"italic" }}>{g.notes||""}</td>
+                              </tr>
+                            );
+                          })}
+                        </tbody>
+                      </table>
+                    )}
+                  </div>
+                );
+              })}
+              {ev.guests.filter(function(g){ return !g.tableId; }).length > 0 && (
+                <div style={{ background:C.red+"11", border:"1px solid "+C.red+"44", borderRadius:14, padding:"12px 20px" }}>
+                  <p style={{ color:C.red, fontSize:13, fontWeight:700, marginBottom:8 }}>⚠ Non placés ({ev.guests.filter(function(g){ return !g.tableId; }).length})</p>
+                  <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
+                    {ev.guests.filter(function(g){ return !g.tableId; }).map(function(g){
+                      return <span key={g.id} style={{ background:C.red+"22", borderRadius:99, padding:"4px 12px", fontSize:12, color:C.cream }}>{g.name}</span>;
+                    })}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
         {tab==="guests" && (
           <div style={{ maxWidth:860 }}>
             <div style={{ display:"flex", gap:12, marginBottom:20 }}>
@@ -2214,7 +2278,7 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
                     <select value={g.tableId||""} onChange={evt=>{const tid=evt.target.value?parseInt(evt.target.value):null;updateEv(evUp=>({...evUp,guests:evUp.guests.map(x=>x.id===g.id?{...x,tableId:tid}:x)}))}}>
                       style={{ background:C.mid,border:`1px solid ${C.border}`,borderRadius:8,color:C.cream,padding:"4px 8px",fontSize:12,cursor:"pointer",fontFamily:"inherit" }}>
                       <option value="">— Non placé —</option>
-                      {ev.tables.map(t=><option key={t.id} value={t.id}>Table {t.number}{t.label?" ("+t.label+")":""}</option>)}
+                      {ev.tables.map(function(tbl){return <option key={tbl.id} value={tbl.id}>Table {tbl.number}{tbl.label?" ("+tbl.label+")":""}</option>;})}
                     </select>
                     <button onClick={()=>updateEv(e=>({...e,guests:e.guests.filter(x=>x.id!==g.id)}))}
                       style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:16 }}>🗑</button>
@@ -2328,6 +2392,25 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
         {tab==="room" && (
           <div style={{ maxWidth:900 }}>
             <h3 style={{ fontWeight:400, fontSize:20, marginBottom:20 }}>Forme de la salle</h3>
+            <div style={{ marginBottom:20 }}>
+              <h4 style={{ color:C.gold, fontWeight:400, fontSize:13, letterSpacing:1, marginBottom:10 }}>TEMPLATES RAPIDES</h4>
+              <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
+                {[
+                  { name:"Rectangle", icon:"⬛", pts:[{x:60,y:60},{x:900,y:60},{x:900,y:560},{x:60,y:560}] },
+                  { name:"Forme L", icon:"🔲", pts:[{x:60,y:60},{x:500,y:60},{x:500,y:300},{x:900,y:300},{x:900,y:560},{x:60,y:560}] },
+                  { name:"Forme U", icon:"🔳", pts:[{x:60,y:60},{x:300,y:60},{x:300,y:380},{x:640,y:380},{x:640,y:60},{x:900,y:60},{x:900,y:560},{x:60,y:560}] },
+                  { name:"Hexagone", icon:"⬡", pts:(function(){ var p=[]; for(var i=0;i<6;i++){var a=i*Math.PI*2/6-Math.PI/6;p.push({x:Math.round(480+280*Math.cos(a)),y:Math.round(310+220*Math.sin(a))});} return p; })() },
+                  { name:"Rond", icon:"⭕", pts:(function(){ var p=[]; for(var i=0;i<16;i++){var a=i*Math.PI*2/16;p.push({x:Math.round(480+300*Math.cos(a)),y:Math.round(310+230*Math.sin(a))});} return p; })() },
+                ].map(function(tmpl){ return (
+                  <button key={tmpl.name}
+                    onClick={function(){ updateEv(function(evUp){ return {...evUp, roomShape:tmpl.pts}; }); }}
+                    style={{ background:C.card, border:"1px solid "+C.border, borderRadius:8, padding:"8px 14px", cursor:"pointer", color:C.cream, fontFamily:"inherit", fontSize:12, display:"flex", alignItems:"center", gap:6 }}
+                  >
+                    <span>{tmpl.icon}</span><span>{tmpl.name}</span>
+                  </button>
+                ); })}
+              </div>
+            </div>
             <RoomShapeEditor shape={ev.roomShape||[]} onChange={shape=>updateEv(e=>({...e,roomShape:shape}))}/>
           </div>
         )}
@@ -3069,9 +3152,39 @@ export default function App() {
   const [selectedEventId, setSelectedEventId] = useState(null);
   const [view, setView] = useState("dashboard");
   const [lightMode, setLightMode] = useState(false);
+
+  // PWA Service Worker
+  useEffect(() => {
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/sw.js").catch(() => {});
+    }
+  }, []);
   const { t, lang, setLang } = useI18n();
 
   // Thème
+  // Rappel J-7 — notifications browser
+  useEffect(() => {
+    if (!events || !events.length) return;
+    if (!("Notification" in window)) return;
+    if (Notification.permission === "default") Notification.requestPermission();
+    var today = new Date();
+    events.forEach(function(ev) {
+      if (!ev.date) return;
+      var diffDays = Math.round((new Date(ev.date) - today) / (1000*60*60*24));
+      if (diffDays === 7 || diffDays === 3 || diffDays === 1) {
+        var key = "notif_" + ev.id + "_d" + diffDays;
+        if (!localStorage.getItem(key)) {
+          localStorage.setItem(key, "1");
+          if (Notification.permission === "granted") {
+            new Notification("🪑 TableMaître — " + ev.name, {
+              body: diffDays === 1 ? "C'est demain ! Votre plan est-il prêt ?" : "Dans " + diffDays + " jours — Finalisez votre plan de table.",
+            });
+          }
+        }
+      }
+    });
+  }, [events]);
+
   useEffect(() => {
     document.body.style.background = lightMode ? "#F5F0E8" : "#120C08";
     document.body.style.color = lightMode ? "#2A1A0E" : "#F5EAD4";
@@ -3188,6 +3301,10 @@ export default function App() {
     role: fbUser.email === "admin@tablema.fr" ? "superadmin" : "admin",
     projectIds: events.map(e => e.id),
   } : null;
+
+  // Page publique invité (?join=eventId) — accessible sans connexion
+  var joinId = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("join") : null;
+  if (joinId) return <GuestJoinPage eventId={joinId} />;
 
   // États de chargement
   if (fbUser === undefined) return <LoadingScreen />;
