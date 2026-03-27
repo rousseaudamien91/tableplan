@@ -2285,8 +2285,8 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
                       </div>
                     )}
                     {table ? <Badge color={C.gold}>Table {table.number}</Badge> : <Badge color={C.red}>Non placé</Badge>}
-                    <select value={g.tableId||""} onChange={evt=>{const tid=evt.target.value?parseInt(evt.target.value):null;updateEv(evUp=>({...evUp,guests:evUp.guests.map(x=>x.id===g.id?{...x,tableId:tid}:x)}))}}>
-                      style={{ background:C.mid,border:`1px solid ${C.border}`,borderRadius:8,color:C.cream,padding:"4px 8px",fontSize:12,cursor:"pointer",fontFamily:"inherit" }}>
+                    <select value={g.tableId||""} onChange={function(evt){ var tid=evt.target.value?parseInt(evt.target.value):null; updateEv(function(evUp){ return {...evUp,guests:evUp.guests.map(function(x){ return x.id===g.id?{...x,tableId:tid}:x; })}; }); }}
+                      style={{ background:C.mid,border:"1px solid "+C.border,borderRadius:8,color:C.cream,padding:"4px 8px",fontSize:12,cursor:"pointer",fontFamily:"inherit" }}>
                       <option value="">— Non placé —</option>
                       {ev.tables.map(function(tbl){return <option key={tbl.id} value={tbl.id}>Table {tbl.number}{tbl.label?" ("+tbl.label+")":""}</option>;})}
                     </select>
