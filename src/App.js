@@ -1957,11 +1957,11 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
   }
 
   const TABS = [
-    {id:"plan",    icon:"🗺",  label:"Plan"},
-    {id:"guests",  icon:"👥",  label:`Invités (${ev.guests.length})`},
-    {id:"diet",    icon:"🍽️",  label:"Alimentation"},
-    {id:"constraints",icon:"⚙",label:"Contraintes"},
-    {id:"room",    icon:"📐",  label:"Salle"},
+    {id:"plan",         icon:"🗺",  label: t ? t.tabPlan.replace(/^\S+\s/,"") : "Plan"},
+    {id:"guests",       icon:"👥",  label:`${t ? t.tabGuests.replace(/^\S+\s/,"") : "Guests"} (${ev.guests.length})`},
+    {id:"diet",         icon:"🍽️",  label: t ? t.tabFood.replace(/^\S+\s/,"") : "Dietary"},
+    {id:"constraints",  icon:"⚙",  label: t ? t.tabConstraints.replace(/^\S+\s/,"") : "Constraints"},
+    {id:"room",         icon:"📐",  label: t ? t.tabRoom.replace(/^\S+\s/,"") : "Room"},
   ];
 
   return (
@@ -2691,9 +2691,9 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
                     const days = Math.ceil((new Date(ev.date) - new Date()) / 86400000);
                     if (days < 0) return <span style={{color:C.muted,marginLeft:8}}>— passé</span>;
                     if (days === 0) return <span style={{color:C.green,marginLeft:8,fontWeight:700}}>• Aujourd'hui !</span>;
-                    if (days <= 7) return <span style={{color:C.red,marginLeft:8,fontWeight:700}}>• Dans {days}j</span>;
-                    if (days <= 30) return <span style={{color:"#E8845A",marginLeft:8}}>• Dans {days}j</span>;
-                    return <span style={{color:C.muted,marginLeft:8}}>• Dans {days}j</span>;
+                    if (days <= 7) return <span style={{color:C.red,marginLeft:8,fontWeight:700}}>• {t ? t.inDays : "In"} {days}{t ? t.days : "d"}</span>;
+                    if (days <= 30) return <span style={{color:"#E8845A",marginLeft:8}}>• {t ? t.inDays : "In"} {days}{t ? t.days : "d"}</span>;
+                    return <span style={{color:C.muted,marginLeft:8}}>• {t ? t.inDays : "In"} {days}{t ? t.days : "d"}</span>;
                   })()}
                 </p>
                 <div style={{ display:"flex", gap:16, fontSize:12, color:C.muted }}>
