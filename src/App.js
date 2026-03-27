@@ -115,6 +115,30 @@ const dietInfo = (id) => DIET_OPTIONS.find(d => d.id === id) || DIET_OPTIONS[0];
 
 function uid() { return Date.now() + Math.random().toString(36).slice(2); }
 
+function exportGuestsCSV(ev) {
+  const headers = ["Nom", "Email", "Table", "Régime", "Allergies", "Notes"];
+  const rows = ev.guests.map(g => {
+    const table = ev.tables.find(t => t.id === g.tableId);
+    const diet = dietInfo(g.diet);
+    return [
+      g.name,
+      g.email || "",
+      table ? `Table ${table.number}${table.label ? " - " + table.label : ""}` : "Non placé",
+      diet.label,
+      (g.allergies || []).map(a => dietInfo(a).label).join(" | "),
+      g.notes || ""
+    ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(",");
+  });
+  const csv = [headers.join(","), ...rows].join("\n");
+  const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${ev.name.replace(/[^a-z0-9]/gi, "_")}_invités.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 // ═══════════════════════════════════════════════════════════════
 // SHARED UI COMPONENTS
 // ═══════════════════════════════════════════════════════════════
@@ -405,7 +429,7 @@ const TABLE_R = 44;
 const TABLE_RECT_W = 80;
 const TABLE_RECT_H = 44;
 
-function FloorPlan({ ev, onUpdateTables, onSelectTable, selectedTable }) {
+function FloorPlan({ ev, onUpdateTables, onSelectTable, selectedTable, highlightAvailable }) {
   const svgRef = useRef(null);
   const [dragging, setDragging] = useState(null); // { tableId, offsetX, offsetY }
 
@@ -468,11 +492,13 @@ function FloorPlan({ ev, onUpdateTables, onSelectTable, selectedTable }) {
         const seated = ev.guests.filter(g => g.tableId === t.id);
         const full = seated.length >= t.capacity;
         const sel = selectedTable === t.id;
-        const col = sel ? C.gold : full ? C.green : theme.color;
+        const available = highlightAvailable && !full;
+        const col = sel ? C.gold : full ? C.green : available ? "#4CAF50" : theme.color;
+        const glowStyle = available ? { filter:"drop-shadow(0 0 8px #4CAF5066)" } : {};
         const diets = seated.filter(g => g.diet !== "standard");
 
         return (
-          <g key={t.id} style={{ cursor: "grab" }} onMouseDown={e => handleMouseDown(e, t.id)} onClick={() => onSelectTable(t.id === selectedTable ? null : t.id)}>
+          <g key={t.id} style={{ cursor: "grab", ...glowStyle }} onMouseDown={e => handleMouseDown(e, t.id)} onClick={() => onSelectTable(t.id === selectedTable ? null : t.id)}>
             {t.shape === "rect" ? (
               <rect
                 x={t.x - TABLE_RECT_W/2} y={t.y - TABLE_RECT_H/2}
@@ -484,6 +510,20 @@ function FloorPlan({ ev, onUpdateTables, onSelectTable, selectedTable }) {
             )}
             {sel && <circle cx={t.x} cy={t.y} r={TABLE_R+8} fill="none" stroke={col} strokeWidth="1" strokeDasharray="4,3" opacity=".5"/>}
 
+            {/* Arc de remplissage */}
+            {(() => {
+              const pct = t.capacity > 0 ? seated.length / t.capacity : 0;
+              const r = TABLE_R + 6;
+              const circ = 2 * Math.PI * r;
+              const dash = pct * circ;
+              const fillCol = pct >= 1 ? C.green : pct > 0.7 ? "#E8845A" : col;
+              return t.shape !== "rect" && pct > 0 ? (
+                <circle cx={t.x} cy={t.y} r={r} fill="none" stroke={fillCol} strokeWidth="3"
+                  strokeDasharray={`${dash} ${circ - dash}`}
+                  strokeDashoffset={circ * 0.25}
+                  strokeLinecap="round" opacity=".7" style={{pointerEvents:"none"}}/>
+              ) : null;
+            })()}
             <text x={t.x} y={t.y-4} textAnchor="middle" fill={col} fontSize="15" fontWeight="700" fontFamily="Georgia,serif" style={{pointerEvents:"none"}}>{t.number}</text>
             <text x={t.x} y={t.y+13} textAnchor="middle" fill={col} fontSize="10" fontFamily="Georgia,serif" opacity=".8" style={{pointerEvents:"none"}}>{seated.length}/{t.capacity}</text>
             {t.label && <text x={t.x} y={t.y+27} textAnchor="middle" fill={col} fontSize="9" fontFamily="Georgia,serif" opacity=".6" style={{pointerEvents:"none"}}>{t.label}</text>}
@@ -890,11 +930,11 @@ function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
         <span style={{ fontSize:20, color:C.gold, letterSpacing:1 }}>🪑 TableMaître</span>
         <Badge color={C.red} style={{marginLeft:10}}>Super Admin</Badge>
         <div style={{flex:1}}/>
-        {["projects","users"].map(t=>(
+        {[["projects","📁 Projets"],["users","👥 Utilisateurs"],["stats","📊 Stats"]].map(([t,l])=>(
           <button key={t} onClick={()=>setTab(t)} style={{
             background:tab===t?C.gold+"22":"none", border:"none", color:tab===t?C.gold:C.muted,
             padding:"8px 16px", borderRadius:8, cursor:"pointer", fontSize:13, fontWeight:600, fontFamily:"inherit",
-          }}>{t==="projects"?"📁 Projets":"👥 Utilisateurs"}</button>
+          }}>{l}</button>
         ))}
         <div style={{width:1,height:24,background:C.border,margin:"0 12px"}}/>
         <Btn variant="muted" small onClick={onLogout}>Déconnexion</Btn>
@@ -943,6 +983,42 @@ function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
               })}
             </div>
           </>
+        )}
+
+        {/* STATS */}
+        {tab==="stats" && (
+          <div>
+            <h2 style={{ margin:"0 0 28px", fontSize:26, fontWeight:400 }}>Tableau de bord</h2>
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))", gap:16, marginBottom:32 }}>
+              {[
+                { label:"Projets total", val:events.length, icon:"📁", color:C.gold },
+                { label:"Utilisateurs", val:users.length, icon:"👥", color:C.blue },
+                { label:"Invités total", val:events.reduce((s,e)=>s+e.guests.length,0), icon:"👤", color:C.green },
+                { label:"Tables total", val:events.reduce((s,e)=>s+e.tables.length,0), icon:"🪑", color:C.gold },
+                { label:"Projets Pro", val:events.filter(e=>e.plan==="pro").length, icon:"⭐", color:"#E8845A" },
+                { label:"Projets Free", val:events.filter(e=>e.plan==="free").length, icon:"🆓", color:C.muted },
+              ].map(s => (
+                <div key={s.label} style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:14, padding:"20px 24px" }}>
+                  <div style={{ fontSize:28, marginBottom:8 }}>{s.icon}</div>
+                  <div style={{ fontSize:28, fontWeight:700, color:s.color }}>{s.val}</div>
+                  <div style={{ color:C.muted, fontSize:12, marginTop:4 }}>{s.label}</div>
+                </div>
+              ))}
+            </div>
+            <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:16, padding:24 }}>
+              <h3 style={{ color:C.gold, margin:"0 0 16px", fontWeight:400, fontSize:16 }}>🎟️ Codes promotionnels actifs</h3>
+              <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+                {Object.entries(VOUCHERS).map(([code, v]) => (
+                  <div key={code} style={{ display:"flex", alignItems:"center", gap:12, padding:"12px 16px", background:C.mid, borderRadius:10 }}>
+                    <span style={{ fontFamily:"monospace", color:C.gold, fontWeight:700, fontSize:14, minWidth:120 }}>{code}</span>
+                    <span style={{ color:C.cream, fontSize:13, flex:1 }}>{v.description}</span>
+                    <span style={{ color:C.muted, fontSize:12 }}>-{v.discount}%</span>
+                    <span style={{ color:C.muted, fontSize:12 }}>max {v.maxUses} utilisations</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         )}
 
         {/* USERS */}
@@ -1148,8 +1224,21 @@ function EventEditor({ ev, onUpdate, onBack }) {
   const [showSettings, setShowSettings] = useState(false);
   const [newGuest, setNewGuest] = useState({ name:"", email:"", diet:"standard", notes:"", allergies:[] });
   const [newTable, setNewTable] = useState({ number:"", capacity:8, shape:"round", label:"" });
+  // Auto-numérotation
+  const nextTableNumber = ev.tables.length > 0 ? Math.max(...ev.tables.map(t => t.number)) + 1 : 1;
   const [constraint, setConstraint] = useState({ a:"", b:"", type:"together" });
   const [search, setSearch] = useState("");
+  const [showImportCSV, setShowImportCSV] = useState(false);
+  const [highlightTables, setHighlightTables] = useState(false);
+  const [selectedUnseatedGuest, setSelectedUnseatedGuest] = useState(null);
+  const [tablesHistory, setTablesHistory] = useState([]);
+  const pushHistory = (tables) => setTablesHistory(h => [...h.slice(-9), tables]);
+  const undoTables = () => {
+    if (tablesHistory.length === 0) return;
+    const prev = tablesHistory[tablesHistory.length - 1];
+    setTablesHistory(h => h.slice(0, -1));
+    updateEv(e => ({ ...e, tables: prev }));
+  };
 
   const theme = THEMES_CONFIG[ev.type]||THEMES_CONFIG.autre;
   const seated = ev.guests.filter(g=>g.tableId);
@@ -1171,8 +1260,7 @@ function EventEditor({ ev, onUpdate, onBack }) {
     setShowAddGuest(false);
   }
   function addTable() {
-    if (!newTable.number) return;
-    const n = parseInt(newTable.number);
+    const n = newTable.number ? parseInt(newTable.number) : nextTableNumber;
     const x = 150 + (ev.tables.length % 5)*130;
     const y = 160 + Math.floor(ev.tables.length/5)*140;
     updateEv(e=>({ ...e, tables:[...e.tables,{id:Date.now(),number:n,capacity:parseInt(newTable.capacity),shape:newTable.shape,label:newTable.label,x,y}] }));
@@ -1274,24 +1362,54 @@ function EventEditor({ ev, onUpdate, onBack }) {
               <div style={{ display:"flex", gap:10, marginBottom:16, flexWrap:"wrap" }}>
                 <Btn small variant="ghost" onClick={()=>setShowAddTable(true)}>+ Table</Btn>
                 <Btn small variant="muted" onClick={()=>setShowAddGuest(true)}>+ Invité</Btn>
+                {tablesHistory.length > 0 && <Btn small variant="muted" onClick={undoTables}>↩ Annuler</Btn>}
                 <div style={{flex:1}}/>
                 <Btn small variant="ghost" onClick={()=>printDietSummary(ev)}>📋 Récap alimentaire</Btn>
               </div>
               <FloorPlan
                 ev={ev}
-                onUpdateTables={tables=>updateEv(e=>({...e,tables}))}
-                onSelectTable={setSelectedTable}
+                onUpdateTables={tables=>{pushHistory(ev.tables); updateEv(e=>({...e,tables}));}}
+                onSelectTable={(tableId) => {
+                  if (selectedUnseatedGuest && tableId) {
+                    const t = ev.tables.find(x => x.id === tableId);
+                    const seated = ev.guests.filter(g => g.tableId === tableId).length;
+                    if (t && seated < t.capacity) {
+                      updateEv(e => ({ ...e, guests: e.guests.map(g => g.id === selectedUnseatedGuest.id ? { ...g, tableId } : g) }));
+                      setSelectedUnseatedGuest(null);
+                      return;
+                    }
+                  }
+                  setSelectedTable(tableId);
+                }}
                 selectedTable={selectedTable}
+                highlightAvailable={highlightTables || !!selectedUnseatedGuest}
               />
               {unseated.length>0 && (
                 <div style={{ marginTop:16, background:C.red+"11", border:`1px solid ${C.red}33`, borderRadius:12, padding:"12px 16px" }}>
-                  <div style={{ color:C.red, fontSize:12, letterSpacing:.5, marginBottom:8 }}>⚠ NON PLACÉS ({unseated.length})</div>
+                  <div style={{ display:"flex", alignItems:"center", marginBottom:8 }}>
+                    <div style={{ color:C.red, fontSize:12, letterSpacing:.5, flex:1 }}>⚠ NON PLACÉS ({unseated.length})</div>
+                    <button onClick={()=>setHighlightTables(h=>!h)} style={{ background:highlightTables?C.gold:"none", border:`1px solid ${highlightTables?C.gold:C.border}`, borderRadius:6, color:highlightTables?C.dark:C.muted, fontSize:11, padding:"3px 10px", cursor:"pointer", fontFamily:"inherit" }}>
+                      {highlightTables ? "✓ Tables visibles" : "👁 Voir places libres"}
+                    </button>
+                  </div>
                   <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
                     {unseated.map(g=>(
-                      <span key={g.id} style={{ background:C.red+"22",border:`1px solid ${C.red}44`,borderRadius:99,padding:"3px 12px",color:C.cream,fontSize:12 }}>
-                        {g.name}
+                      <span key={g.id}
+                        onClick={()=>setSelectedUnseatedGuest(selectedUnseatedGuest?.id===g.id?null:g)}
+                        style={{
+                          background:selectedUnseatedGuest?.id===g.id?C.gold+"44":C.red+"22",
+                          border:`1px solid ${selectedUnseatedGuest?.id===g.id?C.gold:C.red}44`,
+                          borderRadius:99, padding:"3px 12px", color:C.cream, fontSize:12, cursor:"pointer",
+                          fontWeight:selectedUnseatedGuest?.id===g.id?700:400
+                        }}>
+                        {selectedUnseatedGuest?.id===g.id ? "→ " : ""}{g.name}
                       </span>
                     ))}
+                    {selectedUnseatedGuest && (
+                      <div style={{width:"100%",marginTop:6,fontSize:11,color:C.gold}}>
+                        👆 Cliquez sur une table pour y placer {selectedUnseatedGuest.name}
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -1357,6 +1475,8 @@ function EventEditor({ ev, onUpdate, onBack }) {
             <div style={{ display:"flex", gap:12, marginBottom:20 }}>
               <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Rechercher un invité…"
                 style={{ ...inputStyle, flex:1 }}/>
+              <Btn variant="ghost" onClick={()=>exportGuestsCSV(ev)}>⬇ Export CSV</Btn>
+              <Btn variant="ghost" onClick={()=>setShowImportCSV(true)}>⬆ Import CSV</Btn>
               <Btn onClick={()=>setShowAddGuest(true)}>+ Invité</Btn>
             </div>
 
@@ -1515,6 +1635,43 @@ function EventEditor({ ev, onUpdate, onBack }) {
       </div>
 
       {/* ── MODALS ── */}
+      <Modal open={showImportCSV} onClose={()=>setShowImportCSV(false)} title="Importer des invités (CSV)" width={500}>
+        <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
+          <div style={{ background:C.mid, borderRadius:10, padding:"12px 16px", fontSize:12, color:C.muted, lineHeight:1.8 }}>
+            <strong style={{color:C.gold}}>Format attendu (1 invité par ligne) :</strong><br/>
+            <code style={{color:C.cream}}>Prénom Nom, email@example.fr, standard</code><br/>
+            Régimes : standard, vegetarien, vegan, sans-gluten, halal, casher, sans-lactose, sans-noix, diabetique
+          </div>
+          <textarea
+            rows={10}
+            placeholder={"Marie Martin, marie@test.com, vegetarien\nJean Dupont, jean@test.com, standard\nSophie Laurent, , vegan"}
+            id="csv-import-area"
+            style={{ ...inputStyle, resize:"vertical", fontFamily:"monospace", fontSize:12, lineHeight:1.6 }}
+          />
+          <Btn onClick={() => {
+            const raw = document.getElementById("csv-import-area").value;
+            const lines = raw.split("\n").filter(l => l.trim());
+            const newGuests = lines.map(line => {
+              const parts = line.split(",").map(p => p.trim());
+              const validDiets = ["standard","vegetarien","vegan","sans-gluten","halal","casher","sans-lactose","sans-noix","diabetique"];
+              return {
+                id: Date.now() + Math.random(),
+                name: parts[0] || "Invité",
+                email: parts[1] || "",
+                diet: validDiets.includes(parts[2]) ? parts[2] : "standard",
+                notes: parts[3] || "",
+                allergies: [],
+                tableId: null
+              };
+            }).filter(g => g.name);
+            updateEv(e => ({ ...e, guests: [...e.guests, ...newGuests] }));
+            setShowImportCSV(false);
+          }} style={{marginTop:4}}>
+            ⬆ Importer {""} invités
+          </Btn>
+        </div>
+      </Modal>
+
       <Modal open={showAddGuest} onClose={()=>setShowAddGuest(false)} title="Ajouter un invité">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <Field label="NOM *"><Input value={newGuest.name} onChange={e=>setNewGuest({...newGuest,name:e.target.value})} placeholder="Prénom Nom"/></Field>
@@ -1538,7 +1695,7 @@ function EventEditor({ ev, onUpdate, onBack }) {
 
       <Modal open={showAddTable} onClose={()=>setShowAddTable(false)} title="Ajouter une table">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label="NUMÉRO *"><Input type="number" value={newTable.number} onChange={e=>setNewTable({...newTable,number:e.target.value})} placeholder="1"/></Field>
+          <Field label={`NUMÉRO (auto: ${nextTableNumber})`}><Input type="number" value={newTable.number} onChange={e=>setNewTable({...newTable,number:e.target.value})} placeholder={String(nextTableNumber)}/></Field>
           <Field label="CAPACITÉ"><Input type="number" value={newTable.capacity} onChange={e=>setNewTable({...newTable,capacity:e.target.value})}/></Field>
           <Field label="FORME">
             <div style={{ display:"flex", gap:8 }}>
@@ -1708,7 +1865,7 @@ function VoucherModal({ onClose, onApply }) {
 // DASHBOARD (Admin view)
 // ═══════════════════════════════════════════════════════════════
 
-function Dashboard({ user, events, setEvents, onLogout, onOpenEvent }) {
+function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, onToggleTheme }) {
   const [appliedVoucher, setAppliedVoucher] = useState(null);
   const [showVoucher, setShowVoucher] = useState(false);
   const [showNew, setShowNew] = useState(false);
@@ -1716,8 +1873,16 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent }) {
 
   const myEvents = events.filter(e => e.ownerId === user.id);
 
+  const [showUpgrade, setShowUpgrade] = useState(false);
+
   function createEvent() {
     if (!newEv.name) return;
+    // Limite freemium : 1 événement sans voucher
+    if (!appliedVoucher && myEvents.length >= 1) {
+      setShowNew(false);
+      setShowUpgrade(true);
+      return;
+    }
     const ev = {
       id: Date.now(), ownerId: user.id,
       name: newEv.name, date: newEv.date || new Date().toISOString().slice(0,10),
@@ -1746,6 +1911,10 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent }) {
             {user.avatar}
           </div>
           <span style={{ color:C.muted, fontSize:13 }}>{user.name}</span>
+          <button onClick={onToggleTheme} title={lightMode?"Mode sombre":"Mode clair"}
+            style={{ padding:"6px 10px", background:"none", border:`1px solid ${C.border}`, borderRadius:8, color:C.muted, cursor:"pointer", fontSize:16 }}>
+            {lightMode ? "🌙" : "☀️"}
+          </button>
           <button
             onClick={() => setShowVoucher(true)}
             style={{ padding:"6px 14px", background:"none", border:`1px solid ${C.gold}`, borderRadius:8, color:C.gold, cursor:"pointer", fontSize:12, fontFamily:"Georgia,serif", display:"flex", alignItems:"center", gap:6 }}
@@ -1800,6 +1969,22 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent }) {
                   <span>👤 {ev.guests.length} invités</span>
                   {unseated>0 && <span style={{ color:C.red }}>⚠ {unseated} non placés</span>}
                 </div>
+                {ev.guests.length > 0 && (() => {
+                  const placed = ev.guests.filter(g => g.tableId).length;
+                  const pct = Math.round(placed / ev.guests.length * 100);
+                  const barCol = pct === 100 ? C.green : pct > 50 ? C.gold : C.red;
+                  return (
+                    <div style={{ marginTop:12 }}>
+                      <div style={{ display:"flex", justifyContent:"space-between", fontSize:10, color:C.muted, marginBottom:4 }}>
+                        <span>Placement</span>
+                        <span style={{color:barCol, fontWeight:700}}>{pct}%</span>
+                      </div>
+                      <div style={{ height:4, background:C.mid, borderRadius:99 }}>
+                        <div style={{ height:"100%", width:`${pct}%`, background:barCol, borderRadius:99, transition:"width .4s" }}/>
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
             );
           })}
@@ -1807,6 +1992,33 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent }) {
       </div>
 
       {showVoucher && <VoucherModal onClose={() => setShowVoucher(false)} onApply={handleApplyVoucher} />}
+      {showUpgrade && (
+        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.8)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:2000 }}>
+          <div style={{ background:C.card, border:`1px solid ${C.gold}`, borderRadius:20, padding:40, width:400, textAlign:"center", boxShadow:"0 20px 60px rgba(0,0,0,0.5)" }}>
+            <div style={{ fontSize:48, marginBottom:12 }}>⭐</div>
+            <h2 style={{ color:C.gold, margin:"0 0 8px", fontSize:22, fontWeight:400 }}>Passez au plan Pro</h2>
+            <p style={{ color:C.muted, fontSize:13, margin:"0 0 20px", lineHeight:1.7 }}>
+              Le plan gratuit est limité à <strong style={{color:C.cream}}>1 événement</strong>.<br/>
+              Activez un code promo ou passez Pro pour des événements illimités.
+            </p>
+            <div style={{ background:C.mid, borderRadius:12, padding:"16px 20px", marginBottom:20, textAlign:"left" }}>
+              {["Événements illimités","Invités illimités","Export CSV","QR codes","Chevalets imprimables"].map(f => (
+                <div key={f} style={{ display:"flex", alignItems:"center", gap:8, color:C.cream, fontSize:13, marginBottom:6 }}>
+                  <span style={{color:C.green}}>✓</span> {f}
+                </div>
+              ))}
+            </div>
+            <div style={{ display:"flex", gap:10 }}>
+              <button onClick={() => setShowUpgrade(false)} style={{ flex:1, padding:"12px", background:"none", border:`1px solid ${C.border}`, borderRadius:10, color:C.muted, cursor:"pointer", fontSize:13, fontFamily:"Georgia,serif" }}>
+                Rester gratuit
+              </button>
+              <button onClick={() => { setShowUpgrade(false); setShowVoucher(true); }} style={{ flex:2, padding:"12px", background:`linear-gradient(135deg,${C.gold},${C.gold2})`, border:"none", borderRadius:10, color:C.dark, cursor:"pointer", fontWeight:700, fontSize:14, fontFamily:"Georgia,serif" }}>
+                🎟️ Entrer un code promo
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {appliedVoucher && (
         <div style={{ position:"fixed", bottom:24, right:24, background:C.card, border:`1px solid ${C.green}`, borderRadius:12, padding:"12px 20px", zIndex:500, display:"flex", alignItems:"center", gap:10, boxShadow:"0 4px 20px rgba(0,0,0,0.4)" }}>
           <span style={{fontSize:18}}>🎟️</span>
@@ -1850,6 +2062,13 @@ export default function App() {
   const [events, setEvents] = useState(INITIAL_EVENTS);
   const [selectedEventId, setSelectedEventId] = useState(null);
   const [view, setView] = useState("dashboard"); // dashboard | event | guestForm
+  const [lightMode, setLightMode] = useState(false);
+
+  // Injecter le thème clair via CSS vars
+  useEffect(() => {
+    document.body.style.background = lightMode ? "#F5F0E8" : "#120C08";
+    document.body.style.color = lightMode ? "#2A1A0E" : "#F5EAD4";
+  }, [lightMode]);
 
   const selectedEvent = events.find(e=>e.id===selectedEventId);
 
@@ -1889,6 +2108,8 @@ export default function App() {
       setEvents={setEvents}
       onLogout={handleLogout}
       onOpenEvent={handleOpenEvent}
+      lightMode={lightMode}
+      onToggleTheme={()=>setLightMode(l=>!l)}
     />
   );
 }
