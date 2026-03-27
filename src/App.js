@@ -141,7 +141,7 @@ const INITIAL_EVENTS = [
 // UTILS
 // ═══════════════════════════════════════════════════════════════
 
-const dietInfo = (id) => DIET_OPTIONS.find(d => d.id === id) || DIET_OPTIONS[0];
+function dietInfo(id) { return DIET_OPTIONS.find(function(ditem){ return ditem.id === id; }) || DIET_OPTIONS[0]; }
 
 function uid() { return Date.now() + Math.random().toString(36).slice(2); }
 
@@ -156,7 +156,7 @@ function printFloorPlan(ev) {
         <div class="table-count">${guests.length}/${t.capacity} places</div>
         <ul class="guest-list">
           ${guests.map(g => {
-            const d = DIET_OPTIONS.find(d=>d.id===g.diet)||DIET_OPTIONS[0];
+            const d = DIET_OPTIONS.find(function(ditem){ return ditem.id===g.diet; })||DIET_OPTIONS[0];
             return `<li>${g.name}${g.diet!=="standard"?` <span class="diet">${d.icon}</span>`:""}${g.notes?` <span class="note">${g.notes}</span>`:""}</li>`;
           }).join("")}
           ${guests.length === 0 ? '<li class="empty">— Vide —</li>' : ""}
@@ -1273,21 +1273,21 @@ function GuestForm({ event, onBack }) {
           <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
             <Field label="RÉGIME ALIMENTAIRE">
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
-                {DIET_OPTIONS.map(d=>(
-                  <button key={d.id} onClick={()=>setForm({...form,diet:d.id})} style={{
-                    padding:"8px 10px", borderRadius:10, border:`2px solid ${form.diet===d.id?d.color:"#ddd"}`,
-                    background:form.diet===d.id?d.color+"22":"#fff", cursor:"pointer",
-                    fontSize:12, fontWeight:700, fontFamily:"inherit", color:form.diet===d.id?d.color:C.mid,
+                {DIET_OPTIONS.map(function(ditem){ return (
+                  <button key={ditem.id} onClick={()=>setForm({...form,diet:ditem.id})} style={{
+                    padding:"8px 10px", borderRadius:10, border:`2px solid ${form.diet===ditem.id?ditem.color:"#ddd"}`,
+                    background:form.diet===ditem.id?ditem.color+"22":"#fff", cursor:"pointer",
+                    fontSize:12, fontWeight:700, fontFamily:"inherit", color:form.diet===ditem.id?ditem.color:C.mid,
                     display:"flex", alignItems:"center", gap:6,
                   }}>
-                    <span>{d.icon}</span><span>{d.label}</span>
+                    <span>{ditem.icon}</span><span>{ditem.label}</span>
                   </button>
-                ))}
+                );})}
               </div>
             </Field>
             <Field label="ALLERGIES SPÉCIFIQUES">
               <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
-                {DIET_OPTIONS.filter(d=>d.id.startsWith("sans-")||d.id==="vegan").map(d=>(
+                {DIET_OPTIONS.filter(function(ditem){ return ditem.id.startsWith("sans-")||ditem.id==="vegan"; }).map(function(ditem){
                   <button key={d.id} onClick={()=>toggleAllergy(d.id)} style={{
                     padding:"4px 12px", borderRadius:99, border:`1px solid ${form.allergies.includes(d.id)?d.color:"#ddd"}`,
                     background:form.allergies.includes(d.id)?d.color+"22":"#fff",
@@ -1647,19 +1647,19 @@ function EventEditor({ ev, onUpdate, onBack, saveToast }) {
 
             {/* Summary cards */}
             <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))", gap:14, marginBottom:32 }}>
-              {DIET_OPTIONS.map(d=>{
-                const count=ev.guests.filter(g=>g.diet===d.id||g.allergies?.includes(d.id)).length;
+              {DIET_OPTIONS.map(function(ditem){
+                const count=ev.guests.filter(function(gitem){ return gitem.diet===ditem.id||(gitem.allergies||[]).includes(ditem.id); }).length;
                 return (
-                  <div key={d.id} style={{ background:C.card,border:`1px solid ${count>0?d.color+"44":C.border}`,borderRadius:14,padding:"16px 18px",opacity:count===0?.4:1 }}>
-                    <div style={{ fontSize:24, marginBottom:6 }}>{d.icon}</div>
-                    <div style={{ color:count>0?d.color:C.muted, fontSize:22, fontWeight:700 }}>{count}</div>
-                    <div style={{ color:C.muted, fontSize:11 }}>{d.label}</div>
+                  <div key={ditem.id} style={{ background:C.card,border:`1px solid ${count>0?ditem.color+"44":C.border}`,borderRadius:14,padding:"16px 18px",opacity:count===0?.4:1 }}>
+                    <div style={{ fontSize:24, marginBottom:6 }}>{ditem.icon}</div>
+                    <div style={{ color:count>0?ditem.color:C.muted, fontSize:22, fontWeight:700 }}>{count}</div>
+                    <div style={{ color:C.muted, fontSize:11 }}>{ditem.label}</div>
                   </div>
                 );
               })}
             </div>
 
-            {/* Menu editor */}
+            {/* Menu editor */
             <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:16, padding:24 }}>
               <h4 style={{ color:C.gold, margin:"0 0 20px", fontWeight:400, fontSize:16 }}>🍽 Menu de l'événement</h4>
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
@@ -1787,14 +1787,14 @@ function EventEditor({ ev, onUpdate, onBack, saveToast }) {
           <Field label="EMAIL"><Input type="email" value={newGuest.email} onChange={e=>setNewGuest({...newGuest,email:e.target.value})} placeholder="email@example.fr"/></Field>
           <Field label="RÉGIME ALIMENTAIRE">
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:6 }}>
-              {DIET_OPTIONS.map(d=>(
-                <button key={d.id} onClick={()=>setNewGuest({...newGuest,diet:d.id})} style={{
-                  padding:"7px 10px", borderRadius:8, border:`2px solid ${newGuest.diet===d.id?d.color:C.border}`,
-                  background:newGuest.diet===d.id?d.color+"22":C.mid, cursor:"pointer", fontSize:12,
-                  fontWeight:700, fontFamily:"inherit", color:newGuest.diet===d.id?d.color:C.muted,
+              {DIET_OPTIONS.map(function(ditem){ return (
+                <button key={ditem.id} onClick={()=>setNewGuest({...newGuest,diet:ditem.id})} style={{
+                  padding:"7px 10px", borderRadius:8, border:`2px solid ${newGuest.diet===ditem.id?ditem.color:C.border}`,
+                  background:newGuest.diet===ditem.id?ditem.color+"22":C.mid, cursor:"pointer", fontSize:12,
+                  fontWeight:700, fontFamily:"inherit", color:newGuest.diet===ditem.id?ditem.color:C.muted,
                   display:"flex", alignItems:"center", gap:6,
-                }}>{d.icon} {d.label}</button>
-              ))}
+                }}>{ditem.icon} {ditem.label}</button>
+              );})}
             </div>
           </Field>
           <Field label="NOTES / ALLERGIES"><Input value={newGuest.notes} onChange={e=>setNewGuest({...newGuest,notes:e.target.value})} placeholder="Allergies, mobilité réduite…"/></Field>
