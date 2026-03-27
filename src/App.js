@@ -3262,12 +3262,16 @@ function GuestJoinPage({ eventId }) {
                     return (
                       <button key={dietId}
                         onClick={function(){
+                          // Mettre à jour le state local immédiatement
+                          var updatedGuests = (ev.guests||[]).map(function(g){ return g.id===found.id ? {...g, diet:dietId} : g; });
+                          setEv(function(prev){ return {...prev, guests: updatedGuests}; });
+                          setFound(function(prev){ return {...prev, diet: dietId}; });
                           // Sauvegarder dans Firestore
-                          var fb = window.getFirebase ? window.getFirebase() : null;
+                          var fb = getFirebase();
                           if (fb && ev._ownerId && ev.id) {
                             fb.db.collection("users").doc(ev._ownerId).collection("events").doc(String(ev.id)).update({
-                              guests: (ev.guests||[]).map(function(g){ return g.id===found.id ? {...g, diet:dietId} : g; })
-                            }).catch(function(e){ console.error(e); });
+                              guests: updatedGuests
+                            }).catch(function(e){ console.error("Firestore write:", e); });
                           }
                         }}
                         style={{ background:isSelected?"#C9973A22":"#1a2a1a", border:"1px solid "+(isSelected?"#C9973A":"#2a5a2a"), borderRadius:99, padding:"6px 14px", cursor:"pointer", color:isSelected?"#C9973A":"#A5D6A7", fontSize:12, fontFamily:"Georgia,serif" }}
@@ -3280,17 +3284,28 @@ function GuestJoinPage({ eventId }) {
                   defaultValue={found.notes||""}
                   rows={2}
                   style={{ width:"100%", padding:"8px 12px", background:"#1a2a1a", border:"1px solid #2a5a2a", borderRadius:8, color:"#A5D6A7", fontSize:12, fontFamily:"Georgia,serif", resize:"vertical", boxSizing:"border-box" }}
+                  onChange={function(e){
+                    var notes = e.target.value;
+                    setFound(function(prev){ return {...prev, notes: notes}; });
+                  }}
                   onBlur={function(e){
                     var notes = e.target.value;
-                    var fb = window.getFirebase ? window.getFirebase() : null;
+                    var updatedGuests = (ev.guests||[]).map(function(g){ return g.id===found.id ? {...g, notes:notes} : g; });
+                    setEv(function(prev){ return {...prev, guests: updatedGuests}; });
+                    var fb = getFirebase();
                     if (fb && ev._ownerId && ev.id) {
                       fb.db.collection("users").doc(ev._ownerId).collection("events").doc(String(ev.id)).update({
-                        guests: (ev.guests||[]).map(function(g){ return g.id===found.id ? {...g, notes:notes} : g; })
-                      }).catch(function(e){ console.error(e); });
+                        guests: updatedGuests
+                      }).then(function(){ 
+                        // Afficher confirmation
+                      }).catch(function(e){ console.error("Firestore write:", e); });
                     }
                   }}
                 />
-                <p style={{ color:"#4a7a4a", fontSize:11, marginTop:6 }}>Vos préférences seront transmises à l'organisateur</p>
+                <p style={{ color:"#4a7a4a", fontSize:11, marginTop:6 }}>
+                  {found.diet && found.diet !== "standard" ? "✅ Régime enregistré — " : ""}
+                  Vos préférences seront transmises à l'organisateur
+                </p>
               </div>
             </div>
           )}
