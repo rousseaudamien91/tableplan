@@ -2015,9 +2015,19 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
         <div style={{flex:1}}/>
         <Btn small variant="ghost" onClick={()=>setShowQR(true)}>📱 QR Code</Btn>
         <Btn small variant="ghost" onClick={() => {
-          var url = window.location.origin + "/?join=" + ev.id;
-          if (navigator.share) { navigator.share({ title: ev.name, url: url }); }
-          else { navigator.clipboard.writeText(url).then(() => setEditorSaveToast(true)); }
+          // Inclure userId dans l'URL pour permettre la lecture sans auth
+          var fb = getFirebase();
+          var uid = fb && fb.auth && fb.auth.currentUser ? fb.auth.currentUser.uid : "";
+          var joinParam = uid ? uid + "___" + ev.id : ev.id;
+          var url = window.location.origin + "/?join=" + joinParam;
+          if (navigator.share) {
+            navigator.share({ title: ev.name, url: url }).catch(function() {
+              // User cancelled or share failed - fallback to clipboard
+              navigator.clipboard.writeText(url).then(function(){ setEditorSaveToast(true); });
+            });
+          } else { 
+            navigator.clipboard.writeText(url).then(function(){ setEditorSaveToast(true); }); 
+          }
         }}>🔗 Partager</Btn>
         <Btn small variant="success" onClick={()=>printPlaceCards(ev)}>{t.placeCards}</Btn>
         <Btn small variant="ghost" onClick={()=>printFloorPlan(ev)}>{t.floorPlan}</Btn>
@@ -2403,7 +2413,11 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
                   { name:"Rond", icon:"⭕", pts:(function(){ var p=[]; for(var i=0;i<16;i++){var a=i*Math.PI*2/16;p.push({x:Math.round(480+300*Math.cos(a)),y:Math.round(310+230*Math.sin(a))});} return p; })() },
                 ].map(function(tmpl){ return (
                   <button key={tmpl.name}
-                    onClick={function(){ updateEv(function(evUp){ return {...evUp, roomShape:tmpl.pts}; }); }}
+                    onClick={function(){ 
+                      if (tmpl.pts && Array.isArray(tmpl.pts)) {
+                        updateEv(function(evUp){ return {...evUp, roomShape: tmpl.pts.map(function(p){ return {x:p.x, y:p.y}; })}; });
+                      }
+                    }}
                     style={{ background:C.card, border:"1px solid "+C.border, borderRadius:8, padding:"8px 14px", cursor:"pointer", color:C.cream, fontFamily:"inherit", fontSize:12, display:"flex", alignItems:"center", gap:6 }}
                   >
                     <span>{tmpl.icon}</span><span>{tmpl.name}</span>
@@ -2540,16 +2554,16 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
           <p style={{ color:C.muted, fontSize:13, marginBottom:20 }}>Partagez ce QR code avec vos invités pour qu'ils renseignent leurs préférences.</p>
           <div style={{ display:"flex", justifyContent:"center", marginBottom:20 }}>
             <div style={{ padding:16,background:C.cream,borderRadius:16,border:`2px solid ${C.border}`,display:"inline-block" }}>
-              <QRCodeWidget value={`https://tableplan-seven.vercel.app/?join=${ev.id}`} size={180}/>
+              <QRCodeWidget value={`https://tableplan-seven.vercel.app/?join=${(window.firebase?.auth?.().currentUser?.uid||"")}___${ev.id}`} size={180}/>
             </div>
           </div>
           <div style={{ background:C.mid,borderRadius:8,padding:"8px 16px",fontSize:12,color:C.muted,marginBottom:20,fontFamily:"monospace",cursor:"pointer",display:"flex",alignItems:"center",gap:8 }}
-            onClick={()=>{navigator.clipboard.writeText(`https://tableplan-seven.vercel.app/?join=${ev.id}`);}} title="Cliquer pour copier">
-            tableplan-seven.vercel.app/?join={ev.id} <span style={{fontSize:10}}>📋</span>
+            onClick={()=>{navigator.clipboard.writeText(`https://tableplan-seven.vercel.app/?join=${(window.firebase?.auth?.().currentUser?.uid||"")}___${ev.id}`);}} title="Cliquer pour copier">
+            tableplan-seven.vercel.app/?join={ev.id} (🔗 via Partager) <span style={{fontSize:10}}>📋</span>
           </div>
           <div style={{ display:"flex", gap:10, justifyContent:"center", flexWrap:"wrap" }}>
             <Btn small onClick={()=>{const c=document.querySelector("#qr-modal canvas");if(!c){alert("QR non disponible");return;}const l=document.createElement("a");l.download=`QR-${ev.name}.png`;l.href=c.toDataURL("image/png");l.click();}}>⬇ PNG</Btn>
-            <Btn small variant="ghost" onClick={()=>{navigator.clipboard.writeText(`https://tableplan-seven.vercel.app/?join=${ev.id}`);alert("Lien copié !")}}>📋 Copier le lien</Btn>
+            <Btn small variant="ghost" onClick={()=>{navigator.clipboard.writeText(`https://tableplan-seven.vercel.app/?join=${(window.firebase?.auth?.().currentUser?.uid||"")}___${ev.id}`).then(()=>alert("Lien copié !"))}}>📋 Copier le lien</Btn>
             <Btn small variant="muted" onClick={()=>setShowSettings(false)}>🖨 Imprimer</Btn>
           </div>
         </div>
@@ -3002,10 +3016,22 @@ function GuestJoinPage({ eventId }) {
       const fb = getFirebase();
       if (!fb) { setLoading(false); return; }
       try {
-        // Chercher dans tous les users (collection group query)
-        const snap = await fb.db.collectionGroup("events").where("id","==",eventId).limit(1).get();
-        if (!snap.empty) {
-          setEv(snap.docs[0].data());
+        // Format du join ID: "userId___eventId" ou juste "eventId"
+        if (eventId.includes("___")) {
+          // Nouveau format avec userId
+          var parts = eventId.split("___");
+          var userId = parts[0];
+          var evId = parts[1];
+          var doc = await fb.db.collection("users").doc(userId).collection("events").doc(evId).get();
+          if (doc.exists) setEv(doc.data());
+        } else {
+          // Ancien format: collectionGroup (peut échouer si règles restrictives)
+          try {
+            var snap = await fb.db.collectionGroup("events").where("id","==",eventId).limit(1).get();
+            if (!snap.empty) setEv(snap.docs[0].data());
+          } catch(e2) {
+            console.log("collectionGroup non disponible, essai lecture directe...");
+          }
         }
       } catch(e) {
         console.error("Erreur chargement event public:", e);
@@ -3022,10 +3048,12 @@ function GuestJoinPage({ eventId }) {
   );
 
   if (!ev) return (
-    <div style={{ minHeight:"100vh", background:"#120C08", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", fontFamily:"Georgia,serif" }}>
+    <div style={{ minHeight:"100vh", background:"#120C08", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", fontFamily:"Georgia,serif", padding:20, textAlign:"center" }}>
       <div style={{ fontSize:48, marginBottom:16 }}>🔍</div>
       <h2 style={{ color:"#C9973A", fontWeight:400 }}>Événement introuvable</h2>
-      <p style={{ color:"#8A7355" }}>Le lien est peut-être expiré ou invalide.</p>
+      <p style={{ color:"#8A7355", marginBottom:8 }}>Le lien est peut-être expiré ou invalide.</p>
+      <p style={{ color:"#5a3a1a", fontSize:12 }}>Demandez à l'organisateur de partager le lien via le bouton "🔗 Partager" de l'application.</p>
+      <a href="/" style={{ marginTop:24, color:"#C9973A", fontSize:14 }}>← Retour à TableMaître</a>
     </div>
   );
 
