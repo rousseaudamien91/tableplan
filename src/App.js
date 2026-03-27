@@ -1998,12 +1998,12 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
   const [showNew, setShowNew] = useState(false);
   const [newEv, setNewEv] = useState({ name:"", date:"", type:"mariage" });
 
-  const myEvents = events.filter(e => e.ownerId === user.id).filter(e => {
-    if (!globalSearch) return true;
+  const myEventsRaw = events.filter(ev2 => ev2.ownerId === user.id);
+  const myEvents = !globalSearch ? myEventsRaw : myEventsRaw.filter(ev2 => {
     const q = globalSearch.toLowerCase();
-    return e.name.toLowerCase().includes(q) ||
-      e.date?.includes(q) ||
-      (e.guests||[]).some(g => g.name.toLowerCase().includes(q) || g.email?.toLowerCase().includes(q));
+    return ev2.name.toLowerCase().includes(q) ||
+      ev2.date?.includes(q) ||
+      (ev2.guests||[]).some(g2 => g2.name.toLowerCase().includes(q) || g2.email?.toLowerCase().includes(q));
   });
 
   const [showUpgrade, setShowUpgrade] = useState(false);
@@ -2127,8 +2127,8 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
                   <span>🪑 {ev.tables.length} tables</span>
                   <span>👤 {ev.guests.length} invités</span>
                   {unseated>0 && <span style={{ color:C.red }}>⚠ {unseated} non placés</span>}
-                  {globalSearch && ev.guests.some(g=>g.name.toLowerCase().includes(globalSearch.toLowerCase())) && (
-                    <span style={{color:C.gold}}>✦ {ev.guests.filter(g=>g.name.toLowerCase().includes(globalSearch.toLowerCase())).length} invité(s) trouvé(s)</span>
+                  {globalSearch && ev.guests.some(g3=>g3.name.toLowerCase().includes(globalSearch.toLowerCase())) && (
+                    <span style={{color:C.gold}}>✦ {ev.guests.filter(g3=>g3.name.toLowerCase().includes(globalSearch.toLowerCase())).length} invité(s) trouvé(s)</span>
                   )}
                 </div>
                 {ev.guests.length > 0 && (() => {
