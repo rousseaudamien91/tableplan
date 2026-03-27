@@ -1,6 +1,36 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 
 // ═══════════════════════════════════════════════════════════════
+// FIREBASE CONFIG
+// ═══════════════════════════════════════════════════════════════
+
+// Firebase chargé via CDN dans public/index.html
+// Les variables firebase, db, auth sont globales (window.firebase...)
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAtDeOELj6om9-9mEdKVRbXMPG-i13szSo",
+  authDomain: "tableplan-c4a6b.firebaseapp.com",
+  projectId: "tableplan-c4a6b",
+  storageBucket: "tableplan-c4a6b.firebasestorage.app",
+  messagingSenderId: "659977410619",
+  appId: "1:659977410619:web:ae761fbf149f923990641e",
+};
+
+// Init Firebase (via CDN compat)
+let _app, _auth, _db;
+function getFirebase() {
+  if (typeof window === "undefined" || !window.firebase) return null;
+  if (!_app) {
+    try {
+      _app = window.firebase.apps.length ? window.firebase.apps[0] : window.firebase.initializeApp(firebaseConfig);
+      _auth = window.firebase.auth();
+      _db = window.firebase.firestore();
+    } catch(e) { console.error("Firebase init error:", e); return null; }
+  }
+  return { auth: _auth, db: _db };
+}
+
+// ═══════════════════════════════════════════════════════════════
 // CONSTANTS & DATA
 // ═══════════════════════════════════════════════════════════════
 
@@ -865,15 +895,21 @@ function LoginScreen({ onLogin }) {
               <Input type="password" value={form.password} onChange={e=>setForm({...form,password:e.target.value})} placeholder="••••••••"/>
             </Field>
             {error && <div style={{color:C.red,fontSize:12,textAlign:"center"}}>{error}</div>}
-            <Btn onClick={authView==="login"?handleLogin:handleRegister} style={{marginTop:4,width:"100%",padding:"14px",fontSize:15,letterSpacing:1}}>
-              {authView==="login" ? "Se connecter" : "Créer mon compte"}
-            </Btn>
-            <Btn variant="muted" onClick={()=>onLogin({id:"sa",email:"admin@tablema.fr",password:"admin123",role:"superadmin",name:"Super Admin",avatar:"SA"})} style={{width:"100%"}}>
-              → Démo Super Admin
-            </Btn>
-            <Btn variant="muted" onClick={()=>onLogin(INITIAL_USERS[1])} style={{width:"100%"}}>
-              → Démo Admin Projet
-            </Btn>
+            <button onClick={onLogin} style={{
+              marginTop:4, width:"100%", padding:"14px", fontSize:15, letterSpacing:1,
+              background:"#fff", border:"none", borderRadius:12, cursor:"pointer",
+              display:"flex", alignItems:"center", justifyContent:"center", gap:12,
+              fontFamily:"Georgia,serif", fontWeight:700, color:"#2A1A0E",
+              boxShadow:"0 2px 8px rgba(0,0,0,0.3)"
+            }}>
+              <svg width="20" height="20" viewBox="0 0 48 48">
+                <path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34.5 6.5 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/>
+                <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16.1 19 13 24 13c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34.5 6.5 29.5 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
+                <path fill="#4CAF50" d="M24 44c5.2 0 9.9-1.9 13.5-5l-6.2-5.2C29.4 35.5 26.8 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.7 39.6 16.3 44 24 44z"/>
+                <path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.3-2.4 4.3-4.5 5.7l6.2 5.2C41.1 36.2 44 30.6 44 24c0-1.3-.1-2.6-.4-3.9z"/>
+              </svg>
+              Se connecter avec Google
+            </button>
           </div>
         </div>
 
@@ -2056,48 +2092,177 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
 // ROOT APP
 // ═══════════════════════════════════════════════════════════════
 
+// ═══════════════════════════════════════════════════════════════
+// FIREBASE HOOKS
+// ═══════════════════════════════════════════════════════════════
+
+function useFirebaseAuth() {
+  const [fbUser, setFbUser] = useState(undefined); // undefined = chargement, null = déconnecté
+  useEffect(() => {
+    let unsub;
+    // Attendre que Firebase soit disponible (scripts CDN chargés)
+    const tryInit = () => {
+      const fb = getFirebase();
+      if (!fb) {
+        // Firebase pas encore prêt, réessayer dans 200ms
+        setTimeout(tryInit, 200);
+        return;
+      }
+      unsub = fb.auth.onAuthStateChanged(u => setFbUser(u ?? null));
+    };
+    tryInit();
+    return () => { if (unsub) unsub(); };
+  }, []);
+  return fbUser;
+}
+
+async function saveEventToFirestore(userId, ev) {
+  try {
+    const fb = getFirebase();
+    if (!fb) return;
+    await fb.db.collection("users").doc(userId).collection("events").doc(String(ev.id)).set(ev);
+  } catch(e) { console.error("Save error:", e); }
+}
+
+async function deleteEventFromFirestore(userId, evId) {
+  try {
+    const fb = getFirebase();
+    if (!fb) return;
+    await fb.db.collection("users").doc(userId).collection("events").doc(String(evId)).delete();
+  } catch(e) { console.error("Delete error:", e); }
+}
+
+async function loadEventsFromFirestore(userId) {
+  try {
+    const fb = getFirebase();
+    if (!fb) return [];
+    const snap = await fb.db.collection("users").doc(userId).collection("events").get();
+    return snap.docs.map(d => d.data());
+  } catch(e) { console.error("Load error:", e); return []; }
+}
+
+// ═══════════════════════════════════════════════════════════════
+// LOADING SCREEN
+// ═══════════════════════════════════════════════════════════════
+
+function LoadingScreen() {
+  return (
+    <div style={{ minHeight:"100vh", background:`radial-gradient(ellipse at 30% 40%, #2a1a0e, #120C08)`, display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column", gap:16 }}>
+      <div style={{ fontSize:48 }}>🪑</div>
+      <div style={{ color:"#C9973A", fontSize:18, letterSpacing:2, fontFamily:"Georgia,serif" }}>TableMaître</div>
+      <div style={{ color:"#8A7355", fontSize:13 }}>Chargement…</div>
+    </div>
+  );
+}
+
+// ═══════════════════════════════════════════════════════════════
+// ROOT APP
+// ═══════════════════════════════════════════════════════════════
+
 export default function App() {
-  const [user, setUser] = useState(null);
-  const [users, setUsers] = useState(INITIAL_USERS);
-  const [events, setEvents] = useState(INITIAL_EVENTS);
+  const fbUser = useFirebaseAuth();
+  const [events, setEvents] = useState([]);
+  const [eventsLoaded, setEventsLoaded] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState(null);
-  const [view, setView] = useState("dashboard"); // dashboard | event | guestForm
+  const [view, setView] = useState("dashboard");
   const [lightMode, setLightMode] = useState(false);
 
-  // Injecter le thème clair via CSS vars
+  // Thème
   useEffect(() => {
     document.body.style.background = lightMode ? "#F5F0E8" : "#120C08";
     document.body.style.color = lightMode ? "#2A1A0E" : "#F5EAD4";
   }, [lightMode]);
 
-  const selectedEvent = events.find(e=>e.id===selectedEventId);
+  // Charger les événements depuis Firestore quand l'utilisateur se connecte
+  useEffect(() => {
+    if (!fbUser) { setEvents([]); setEventsLoaded(false); return; }
+    setEventsLoaded(false);
+    loadEventsFromFirestore(fbUser.uid).then(evs => {
+      setEvents(evs.length > 0 ? evs : []);
+      setEventsLoaded(true);
+    });
+  }, [fbUser]);
 
-  const handleLogin = (u) => { setUser(u); };
-  const handleLogout = () => { setUser(null); setSelectedEventId(null); setView("dashboard"); };
-  const handleOpenEvent = (id) => { setSelectedEventId(id); setView("event"); };
-  const handleUpdateEvent = (updatedEv) => {
-    setEvents(prev=>prev.map(e=>e.id===updatedEv.id?updatedEv:e));
+  const selectedEvent = events.find(e => e.id === selectedEventId);
+
+  // Connexion Google
+  const handleGoogleLogin = async () => {
+    const fb = getFirebase();
+    if (!fb) { alert("Firebase non disponible"); return; }
+    try {
+      await fb.auth.signInWithPopup(new window.firebase.auth.GoogleAuthProvider());
+    } catch(e) { console.error("Login error:", e); }
   };
 
-  if (!user) return <LoginScreen onLogin={handleLogin}/>;
+  // Déconnexion
+  const handleLogout = async () => {
+    const fb = getFirebase();
+    if (fb) await fb.auth.signOut();
+    setSelectedEventId(null);
+    setView("dashboard");
+    setEvents([]);
+  };
 
-  if (user.role==="superadmin") return (
-    <SuperAdminPanel
-      events={events} setEvents={setEvents}
-      users={users} setUsers={setUsers}
-      onLogout={handleLogout}
-    />
+  // Ouvrir un événement
+  const handleOpenEvent = (id) => { setSelectedEventId(id); setView("event"); };
+
+  // Mise à jour + sauvegarde auto Firestore
+  const handleUpdateEvent = (updatedEv) => {
+    setEvents(prev => prev.map(e => e.id === updatedEv.id ? updatedEv : e));
+    if (fbUser) saveEventToFirestore(fbUser.uid, updatedEv);
+  };
+
+  // Création d'événement avec sauvegarde
+  const handleSetEvents = (updater) => {
+    setEvents(prev => {
+      const next = typeof updater === "function" ? updater(prev) : updater;
+      // Sauvegarder les nouveaux/modifiés
+      if (fbUser) {
+        const prevIds = new Set(prev.map(e => e.id));
+        next.forEach(ev => {
+          if (!prevIds.has(ev.id) || JSON.stringify(prev.find(e=>e.id===ev.id)) !== JSON.stringify(ev)) {
+            saveEventToFirestore(fbUser.uid, ev);
+          }
+        });
+        // Supprimer les supprimés
+        const nextIds = new Set(next.map(e => e.id));
+        prev.forEach(ev => {
+          if (!nextIds.has(ev.id)) deleteEventFromFirestore(fbUser.uid, ev.id);
+        });
+      }
+      return next;
+    });
+  };
+
+  // Construire l'objet user à partir de fbUser
+  const user = fbUser ? {
+    id: fbUser.uid,
+    email: fbUser.email,
+    name: fbUser.displayName || fbUser.email,
+    avatar: (fbUser.displayName || fbUser.email || "?").slice(0,2).toUpperCase(),
+    photoURL: fbUser.photoURL,
+    role: fbUser.email === "admin@tablema.fr" ? "superadmin" : "admin",
+    projectIds: events.map(e => e.id),
+  } : null;
+
+  // États de chargement
+  if (fbUser === undefined) return <LoadingScreen />;
+
+  // Non connecté → écran de connexion Google
+  if (!fbUser) return <LoginScreen onLogin={handleGoogleLogin} />;
+
+  // Chargement des events en cours
+  if (!eventsLoaded) return <LoadingScreen />;
+
+  if (view === "guestForm" && selectedEvent) return (
+    <GuestForm event={selectedEvent} onBack={() => setView("event")} />
   );
 
-  if (view==="guestForm" && selectedEvent) return (
-    <GuestForm event={selectedEvent} onBack={()=>setView("event")}/>
-  );
-
-  if (view==="event" && selectedEvent) return (
+  if (view === "event" && selectedEvent) return (
     <EventEditor
       ev={selectedEvent}
       onUpdate={handleUpdateEvent}
-      onBack={()=>{ setView("dashboard"); setSelectedEventId(null); }}
+      onBack={() => { setView("dashboard"); setSelectedEventId(null); }}
     />
   );
 
@@ -2105,11 +2270,11 @@ export default function App() {
     <Dashboard
       user={user}
       events={events}
-      setEvents={setEvents}
+      setEvents={handleSetEvents}
       onLogout={handleLogout}
       onOpenEvent={handleOpenEvent}
       lightMode={lightMode}
-      onToggleTheme={()=>setLightMode(l=>!l)}
+      onToggleTheme={() => setLightMode(l => !l)}
     />
   );
 }
