@@ -1327,7 +1327,7 @@ function EventEditor({ ev, onUpdate, onBack, saveToast }) {
   const [newGuest, setNewGuest] = useState({ name:"", email:"", diet:"standard", notes:"", allergies:[] });
   const [newTable, setNewTable] = useState({ number:"", capacity:8, shape:"round", label:"" });
   // Auto-numérotation
-  const nextTableNumber = ev.tables.length > 0 ? Math.max(...ev.tables.map(t => t.number)) + 1 : 1;
+  const nextTableNumber = ev.tables.reduce((mx, tbl) => Math.max(mx, tbl.number), 0) + 1;
   const [constraint, setConstraint] = useState({ a:"", b:"", type:"together" });
   const [search, setSearch] = useState("");
   const [showImportCSV, setShowImportCSV] = useState(false);
@@ -1343,16 +1343,16 @@ function EventEditor({ ev, onUpdate, onBack, saveToast }) {
   };
 
   const theme = THEMES_CONFIG[ev.type]||THEMES_CONFIG.autre;
-  const seated = ev.guests.filter(g=>g.tableId);
-  const unseated = ev.guests.filter(g=>!g.tableId);
+  const seated = ev.guests.filter(function(gst){ return !!gst.tableId; });
+  const unseated = ev.guests.filter(function(gst){ return !gst.tableId; });
   const tableSel = ev.tables.find(t=>t.id===selectedTable);
-  const tableGuests = tableSel ? ev.guests.filter(g=>g.tableId===selectedTable) : [];
-  const filtered = ev.guests.filter(g=>g.name.toLowerCase().includes(search.toLowerCase()));
+  const tableGuests = tableSel ? ev.guests.filter(function(gst){ return gst.tableId===selectedTable; }) : [];
+  const filtered = ev.guests.filter(function(gst){ return gst.name.toLowerCase().includes(search.toLowerCase()); });
 
   // Diet stats
-  const dietStats = DIET_OPTIONS.filter(d=>d.id!=="standard").map(d=>({
-    ...d, count:ev.guests.filter(g=>g.diet===d.id||g.allergies?.includes(d.id)).length
-  })).filter(d=>d.count>0);
+  const dietStats = DIET_OPTIONS.filter(function(dopt){ return dopt.id!=="standard"; }).map(function(dopt){
+    return {...dopt, count: ev.guests.filter(function(gst){ return gst.diet===dopt.id || (gst.allergies||[]).includes(dopt.id); }).length};
+  }).filter(function(dopt){ return dopt.count > 0; });
 
   function updateEv(fn) { onUpdate(fn(ev)); }
   function addGuest() {
@@ -1998,12 +1998,12 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
   const [showNew, setShowNew] = useState(false);
   const [newEv, setNewEv] = useState({ name:"", date:"", type:"mariage" });
 
-  const myEventsRaw = events.filter(ev2 => ev2.ownerId === user.id);
-  const myEvents = !globalSearch ? myEventsRaw : myEventsRaw.filter(ev2 => {
-    const q = globalSearch.toLowerCase();
+  const myEventsRaw = events.filter(function(ev2){ return ev2.ownerId === user.id; });
+  const myEvents = !globalSearch ? myEventsRaw : myEventsRaw.filter(function(ev2){
+    var q = globalSearch.toLowerCase();
     return ev2.name.toLowerCase().includes(q) ||
-      ev2.date?.includes(q) ||
-      (ev2.guests||[]).some(g2 => g2.name.toLowerCase().includes(q) || g2.email?.toLowerCase().includes(q));
+      (ev2.date||"").includes(q) ||
+      (ev2.guests||[]).some(function(g2){ return g2.name.toLowerCase().includes(q) || (g2.email||"").toLowerCase().includes(q); });
   });
 
   const [showUpgrade, setShowUpgrade] = useState(false);
