@@ -45,6 +45,450 @@ function escapeHtml(str) {
     .replace(/'/g, "&#039;");
 }
 
+// ═══════════════════════════════════════════════════════════════
+// INTERNATIONALISATION (i18n)
+// ═══════════════════════════════════════════════════════════════
+
+const TRANSLATIONS = {
+  fr: {
+    // Navbar
+    appName: "TableMaître",
+    logout: "Déconnexion",
+    lightMode: "Passer en mode clair",
+    darkMode: "Passer en mode sombre",
+    codePromo: "Code promo",
+    // Dashboard
+    myEvents: "Mes événements",
+    welcome: "Bienvenue",
+    searchPlaceholder: "Rechercher un événement ou un invité...",
+    newEvent: "+ Nouvel événement",
+    noEvents: "Aucun événement pour le moment",
+    createFirst: "Créer mon premier événement",
+    tables: "tables",
+    guests: "invités",
+    unseated: "non placés",
+    placement: "Placement",
+    guestsFound: "invité(s) trouvé(s)",
+    duplicate: "Dupliquer cet événement",
+    daysAgo: "passé",
+    today: "Aujourd'hui !",
+    inDays: "Dans",
+    days: "j",
+    // Event types
+    mariage: "Mariage",
+    gala: "Gala / Soirée",
+    anniversaire: "Anniversaire",
+    conference: "Conférence",
+    autre: "Autre",
+    // Event Editor
+    back: "← Projets",
+    autoPlace: "✨ Auto-placer",
+    placeCards: "🖨 Chevalets",
+    floorPlan: "📄 Plan PDF",
+    qrCode: "QR Code",
+    tabPlan: "🗺 Plan",
+    tabGuests: "👥 Invités",
+    tabFood: "🍽 Alimentation",
+    tabConstraints: "⊘ Contraintes",
+    tabRoom: "⬡ Salle",
+    addTable: "+ Table",
+    addGuest: "+ Invité",
+    dietSummary: "📋 Récap alimentaire",
+    unseatedList: "⚠ NON PLACÉS",
+    seeAvailable: "👁 Voir places libres",
+    tablesVisible: "✓ Tables visibles",
+    clickToPlace: "👆 Cliquez sur une table pour y placer",
+    undo: "↩ Annuler",
+    // Guests
+    search: "Rechercher un invité…",
+    exportCSV: "⬇ Export CSV",
+    importCSV: "⬆ Import CSV",
+    // Table form
+    tableNumber: "NUMÉRO",
+    tableCapacity: "CAPACITÉ",
+    tableShape: "FORME",
+    tableLabel: "ÉTIQUETTE",
+    tableColor: "COULEUR",
+    createTable: "Créer la table",
+    deleteTable: "Supprimer la table",
+    round: "Ronde",
+    rectangular: "Rectangulaire",
+    // Guest form
+    guestName: "NOM *",
+    guestEmail: "EMAIL",
+    guestDiet: "RÉGIME",
+    guestAllergies: "ALLERGIES",
+    guestTable: "TABLE",
+    guestNotes: "NOTES",
+    addGuestBtn: "Ajouter l'invité",
+    noTable: "-- Non placé --",
+    // Login
+    loginGoogle: "Se connecter avec Google",
+    loginSubtitle: "{t.loginSubtitle}",
+    // Notifications
+    savedCloud: "{t.savedCloud}",
+    savedAuto: "{t.savedAuto}",
+    // Voucher
+    voucherTitle: "Code promotionnel",
+    voucherApplied: "✓ Code appliqué !",
+    // Misc
+    loading: "Chargement…",
+    skipToMain: "Passer au contenu principal",
+    note: "📝",
+    eventNotes: "LIEU / NOTES INTERNES",
+    eventName: "NOM",
+    eventDate: "DATE",
+    eventType: "TYPE",
+  },
+
+  en: {
+    appName: "TableMaître",
+    logout: "Sign out",
+    lightMode: "Switch to light mode",
+    darkMode: "Switch to dark mode",
+    codePromo: "Promo code",
+    myEvents: "My events",
+    welcome: "Welcome",
+    searchPlaceholder: "Search an event or a guest...",
+    newEvent: "+ New event",
+    noEvents: "No events yet",
+    createFirst: "Create my first event",
+    tables: "tables",
+    guests: "guests",
+    unseated: "unseated",
+    placement: "Seating",
+    guestsFound: "guest(s) found",
+    duplicate: "Duplicate this event",
+    daysAgo: "past",
+    today: "Today!",
+    inDays: "In",
+    days: "d",
+    mariage: "Wedding",
+    gala: "Gala / Party",
+    anniversaire: "Birthday",
+    conference: "Conference",
+    autre: "Other",
+    back: "← Projects",
+    autoPlace: "✨ Auto-seat",
+    placeCards: "🖨 Place cards",
+    floorPlan: "📄 Floor plan PDF",
+    qrCode: "QR Code",
+    tabPlan: "🗺 Plan",
+    tabGuests: "👥 Guests",
+    tabFood: "🍽 Dietary",
+    tabConstraints: "⊘ Constraints",
+    tabRoom: "⬡ Room",
+    addTable: "+ Table",
+    addGuest: "+ Guest",
+    dietSummary: "📋 Dietary summary",
+    unseatedList: "⚠ UNSEATED",
+    seeAvailable: "👁 Show available seats",
+    tablesVisible: "✓ Tables highlighted",
+    clickToPlace: "👆 Click a table to seat",
+    undo: "↩ Undo",
+    search: "Search a guest…",
+    exportCSV: "⬇ Export CSV",
+    importCSV: "⬆ Import CSV",
+    tableNumber: "NUMBER",
+    tableCapacity: "CAPACITY",
+    tableShape: "SHAPE",
+    tableLabel: "LABEL",
+    tableColor: "COLOR",
+    createTable: "Create table",
+    deleteTable: "Delete table",
+    round: "Round",
+    rectangular: "Rectangular",
+    guestName: "NAME *",
+    guestEmail: "EMAIL",
+    guestDiet: "DIET",
+    guestAllergies: "ALLERGIES",
+    guestTable: "TABLE",
+    guestNotes: "NOTES",
+    addGuestBtn: "Add guest",
+    noTable: "-- Not seated --",
+    loginGoogle: "Sign in with Google",
+    loginSubtitle: "TABLE PLAN MANAGEMENT",
+    savedCloud: "☁️ Saved to cloud",
+    savedAuto: "☁️ Auto-saved",
+    voucherTitle: "Promotional code",
+    voucherApplied: "✓ Code applied!",
+    loading: "Loading…",
+    skipToMain: "Skip to main content",
+    note: "📝",
+    eventNotes: "VENUE / INTERNAL NOTES",
+    eventName: "NAME",
+    eventDate: "DATE",
+    eventType: "TYPE",
+  },
+
+  es: {
+    appName: "TableMaître",
+    logout: "Cerrar sesión",
+    lightMode: "Cambiar a modo claro",
+    darkMode: "Cambiar a modo oscuro",
+    codePromo: "Código promocional",
+    myEvents: "Mis eventos",
+    welcome: "Bienvenido",
+    searchPlaceholder: "Buscar un evento o un invitado...",
+    newEvent: "+ Nuevo evento",
+    noEvents: "No hay eventos por el momento",
+    createFirst: "Crear mi primer evento",
+    tables: "mesas",
+    guests: "invitados",
+    unseated: "sin asiento",
+    placement: "Asignación",
+    guestsFound: "invitado(s) encontrado(s)",
+    duplicate: "Duplicar este evento",
+    daysAgo: "pasado",
+    today: "¡Hoy!",
+    inDays: "En",
+    days: "d",
+    mariage: "Boda",
+    gala: "Gala / Fiesta",
+    anniversaire: "Cumpleaños",
+    conference: "Conferencia",
+    autre: "Otro",
+    back: "← Proyectos",
+    autoPlace: "✨ Auto-sentar",
+    placeCards: "🖨 Tarjetas",
+    floorPlan: "📄 Plano PDF",
+    qrCode: "Código QR",
+    tabPlan: "🗺 Plano",
+    tabGuests: "👥 Invitados",
+    tabFood: "🍽 Alimentación",
+    tabConstraints: "⊘ Restricciones",
+    tabRoom: "⬡ Sala",
+    addTable: "+ Mesa",
+    addGuest: "+ Invitado",
+    dietSummary: "📋 Resumen dietético",
+    unseatedList: "⚠ SIN ASIENTO",
+    seeAvailable: "👁 Ver asientos libres",
+    tablesVisible: "✓ Mesas destacadas",
+    clickToPlace: "👆 Haz clic en una mesa para sentar",
+    undo: "↩ Deshacer",
+    search: "Buscar un invitado…",
+    exportCSV: "⬇ Exportar CSV",
+    importCSV: "⬆ Importar CSV",
+    tableNumber: "NÚMERO",
+    tableCapacity: "CAPACIDAD",
+    tableShape: "FORMA",
+    tableLabel: "ETIQUETA",
+    tableColor: "COLOR",
+    createTable: "Crear mesa",
+    deleteTable: "Eliminar mesa",
+    round: "Redonda",
+    rectangular: "Rectangular",
+    guestName: "NOMBRE *",
+    guestEmail: "EMAIL",
+    guestDiet: "DIETA",
+    guestAllergies: "ALERGIAS",
+    guestTable: "MESA",
+    guestNotes: "NOTAS",
+    addGuestBtn: "Añadir invitado",
+    noTable: "-- Sin asignar --",
+    loginGoogle: "Iniciar sesión con Google",
+    loginSubtitle: "GESTIÓN DE PLANES DE MESA",
+    savedCloud: "☁️ Guardado en la nube",
+    savedAuto: "☁️ Guardado automáticamente",
+    voucherTitle: "Código promocional",
+    voucherApplied: "✓ ¡Código aplicado!",
+    loading: "Cargando…",
+    skipToMain: "Ir al contenido principal",
+    note: "📝",
+    eventNotes: "LUGAR / NOTAS INTERNAS",
+    eventName: "NOMBRE",
+    eventDate: "FECHA",
+    eventType: "TIPO",
+  },
+
+  de: {
+    appName: "TableMaître",
+    logout: "Abmelden",
+    lightMode: "Zum hellen Modus wechseln",
+    darkMode: "Zum dunklen Modus wechseln",
+    codePromo: "Aktionscode",
+    myEvents: "Meine Veranstaltungen",
+    welcome: "Willkommen",
+    searchPlaceholder: "Veranstaltung oder Gast suchen...",
+    newEvent: "+ Neue Veranstaltung",
+    noEvents: "Noch keine Veranstaltungen",
+    createFirst: "Meine erste Veranstaltung erstellen",
+    tables: "Tische",
+    guests: "Gäste",
+    unseated: "ohne Platz",
+    placement: "Platzierung",
+    guestsFound: "Gast/Gäste gefunden",
+    duplicate: "Veranstaltung duplizieren",
+    daysAgo: "vergangen",
+    today: "Heute!",
+    inDays: "In",
+    days: "T",
+    mariage: "Hochzeit",
+    gala: "Gala / Party",
+    anniversaire: "Geburtstag",
+    conference: "Konferenz",
+    autre: "Sonstiges",
+    back: "← Projekte",
+    autoPlace: "✨ Auto-Platzierung",
+    placeCards: "🖨 Tischkarten",
+    floorPlan: "📄 Saalplan PDF",
+    qrCode: "QR-Code",
+    tabPlan: "🗺 Plan",
+    tabGuests: "👥 Gäste",
+    tabFood: "🍽 Ernährung",
+    tabConstraints: "⊘ Einschränkungen",
+    tabRoom: "⬡ Saal",
+    addTable: "+ Tisch",
+    addGuest: "+ Gast",
+    dietSummary: "📋 Ernährungsübersicht",
+    unseatedList: "⚠ OHNE PLATZ",
+    seeAvailable: "👁 Freie Plätze anzeigen",
+    tablesVisible: "✓ Tische hervorgehoben",
+    clickToPlace: "👆 Klicke einen Tisch zum Platzieren",
+    undo: "↩ Rückgängig",
+    search: "Gast suchen…",
+    exportCSV: "⬇ CSV exportieren",
+    importCSV: "⬆ CSV importieren",
+    tableNumber: "NUMMER",
+    tableCapacity: "KAPAZITÄT",
+    tableShape: "FORM",
+    tableLabel: "BEZEICHNUNG",
+    tableColor: "FARBE",
+    createTable: "Tisch erstellen",
+    deleteTable: "Tisch löschen",
+    round: "Rund",
+    rectangular: "Rechteckig",
+    guestName: "NAME *",
+    guestEmail: "E-MAIL",
+    guestDiet: "ERNÄHRUNG",
+    guestAllergies: "ALLERGIEN",
+    guestTable: "TISCH",
+    guestNotes: "NOTIZEN",
+    addGuestBtn: "Gast hinzufügen",
+    noTable: "-- Nicht platziert --",
+    loginGoogle: "Mit Google anmelden",
+    loginSubtitle: "TISCHPLAN-VERWALTUNG",
+    savedCloud: "☁️ In der Cloud gespeichert",
+    savedAuto: "☁️ Automatisch gespeichert",
+    voucherTitle: "Aktionscode",
+    voucherApplied: "✓ Code angewendet!",
+    loading: "Wird geladen…",
+    skipToMain: "Zum Hauptinhalt springen",
+    note: "📝",
+    eventNotes: "ORT / INTERNE NOTIZEN",
+    eventName: "NAME",
+    eventDate: "DATUM",
+    eventType: "TYP",
+  },
+
+  it: {
+    appName: "TableMaître",
+    logout: "Disconnetti",
+    lightMode: "Passa alla modalità chiara",
+    darkMode: "Passa alla modalità scura",
+    codePromo: "Codice promozionale",
+    myEvents: "I miei eventi",
+    welcome: "Benvenuto",
+    searchPlaceholder: "Cerca un evento o un ospite...",
+    newEvent: "+ Nuovo evento",
+    noEvents: "Nessun evento al momento",
+    createFirst: "Crea il mio primo evento",
+    tables: "tavoli",
+    guests: "ospiti",
+    unseated: "senza posto",
+    placement: "Sistemazione",
+    guestsFound: "ospite/i trovato/i",
+    duplicate: "Duplica questo evento",
+    daysAgo: "passato",
+    today: "Oggi!",
+    inDays: "Tra",
+    days: "g",
+    mariage: "Matrimonio",
+    gala: "Gala / Serata",
+    anniversaire: "Compleanno",
+    conference: "Conferenza",
+    autre: "Altro",
+    back: "← Progetti",
+    autoPlace: "✨ Disponi automaticamente",
+    placeCards: "🖨 Segnaposto",
+    floorPlan: "📄 Piano PDF",
+    qrCode: "Codice QR",
+    tabPlan: "🗺 Piano",
+    tabGuests: "👥 Ospiti",
+    tabFood: "🍽 Alimentazione",
+    tabConstraints: "⊘ Vincoli",
+    tabRoom: "⬡ Sala",
+    addTable: "+ Tavolo",
+    addGuest: "+ Ospite",
+    dietSummary: "📋 Riepilogo dietetico",
+    unseatedList: "⚠ SENZA POSTO",
+    seeAvailable: "👁 Vedi posti liberi",
+    tablesVisible: "✓ Tavoli evidenziati",
+    clickToPlace: "👆 Clicca un tavolo per sistemare",
+    undo: "↩ Annulla",
+    search: "Cerca un ospite…",
+    exportCSV: "⬇ Esporta CSV",
+    importCSV: "⬆ Importa CSV",
+    tableNumber: "NUMERO",
+    tableCapacity: "CAPACITÀ",
+    tableShape: "FORMA",
+    tableLabel: "ETICHETTA",
+    tableColor: "COLORE",
+    createTable: "Crea tavolo",
+    deleteTable: "Elimina tavolo",
+    round: "Rotondo",
+    rectangular: "Rettangolare",
+    guestName: "NOME *",
+    guestEmail: "EMAIL",
+    guestDiet: "DIETA",
+    guestAllergies: "ALLERGIE",
+    guestTable: "TAVOLO",
+    guestNotes: "NOTE",
+    addGuestBtn: "Aggiungi ospite",
+    noTable: "-- Non assegnato --",
+    loginGoogle: "Accedi con Google",
+    loginSubtitle: "GESTIONE PIANI TAVOLA",
+    savedCloud: "☁️ Salvato nel cloud",
+    savedAuto: "☁️ Salvato automaticamente",
+    voucherTitle: "Codice promozionale",
+    voucherApplied: "✓ Codice applicato!",
+    loading: "Caricamento…",
+    skipToMain: "Vai al contenuto principale",
+    note: "📝",
+    eventNotes: "LUOGO / NOTE INTERNE",
+    eventName: "NOME",
+    eventDate: "DATA",
+    eventType: "TIPO",
+  },
+};
+
+// Détecter la langue du navigateur / pays
+function detectLang() {
+  const saved = localStorage.getItem('tableMaitreLang');
+  if (saved && TRANSLATIONS[saved]) return saved;
+  const nav = navigator.language || navigator.languages?.[0] || 'fr';
+  const code = nav.slice(0, 2).toLowerCase();
+  return TRANSLATIONS[code] ? code : 'en';
+}
+
+// Hook i18n
+function useI18n() {
+  const [lang, setLangState] = React.useState(detectLang);
+  const setLang = (l) => {
+    localStorage.setItem('tableMaitreLang', l);
+    setLangState(l);
+    document.documentElement.lang = l;
+  };
+  const t = TRANSLATIONS[lang] || TRANSLATIONS.fr;
+  return { t, lang, setLang };
+}
+
+// Drapeaux pour le sélecteur
+const LANG_FLAGS = { fr: '🇫🇷', en: '🇬🇧', es: '🇪🇸', de: '🇩🇪', it: '🇮🇹' };
+const LANG_NAMES = { fr: 'Français', en: 'English', es: 'Español', de: 'Deutsch', it: 'Italiano' };
+
+
+
 
 const C = {
   dark:   "#120C08",
@@ -898,7 +1342,9 @@ function printDietSummary(ev) {
 // LOGIN SCREEN
 // ═══════════════════════════════════════════════════════════════
 
-function LoginScreen({ onLogin }) {
+function LoginScreen({ onLogin, t: tProp }) {
+  const { t: tHook } = useI18n();
+  const t = tProp || tHook;
 
   return (
     <div style={{
@@ -1309,7 +1755,9 @@ function GuestForm({ event, onBack }) {
 // EVENT EDITOR
 // ═══════════════════════════════════════════════════════════════
 
-function EventEditor({ ev, onUpdate, onBack, saveToast }) {
+function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
+  const { t: tHook } = useI18n();
+  const t = tProp || tHook;
   const [tab, setTab] = useState("plan");
   const [selectedTable, setSelectedTable] = useState(null);
   const [showAddGuest, setShowAddGuest] = useState(false);
@@ -1409,23 +1857,23 @@ function EventEditor({ ev, onUpdate, onBack, saveToast }) {
     <div style={{ minHeight:"100vh", background:`linear-gradient(160deg,${C.dark},#1a0e08)`, fontFamily:"Georgia,serif", color:C.cream }}>
       {/* Header */}
       <div style={{ background:C.card, borderBottom:`1px solid ${C.border}`, padding:"0 24px", display:"flex", alignItems:"center", height:56, position:"sticky", top:0, zIndex:100, gap:12, flexWrap:"wrap" }}>
-        <button onClick={onBack} style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:13,fontFamily:"inherit" }}>← Projets</button>
+        <button onClick={onBack} style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:13,fontFamily:"inherit" }}>{t.back}</button>
         <span style={{ color:C.border }}>|</span>
         <span style={{ fontSize:20 }}>{theme.icon}</span>
         <span style={{ color:C.cream, fontSize:16, fontWeight:400 }}>{ev.name}</span>
         <Badge color={theme.color}>{theme.label}</Badge>
         <div style={{flex:1}}/>
         <Btn small variant="ghost" onClick={()=>setShowQR(true)}>📱 QR Code</Btn>
-        <Btn small variant="success" onClick={()=>printPlaceCards(ev)}>🖨 Chevalets</Btn>
-        <Btn small variant="ghost" onClick={()=>printFloorPlan(ev)}>📄 Plan PDF</Btn>
-        <Btn small onClick={autoPlace}>✨ Auto-placer</Btn>
+        <Btn small variant="success" onClick={()=>printPlaceCards(ev)}>{t.placeCards}</Btn>
+        <Btn small variant="ghost" onClick={()=>printFloorPlan(ev)}>{t.floorPlan}</Btn>
+        <Btn small onClick={autoPlace}>{t.autoPlace}</Btn>
         <button onClick={()=>setShowSettings(true)} style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:18 }}>⚙</button>
       </div>
 
       {/* Notes bar */}
       {ev.notes && (
         <div style={{ background:C.gold+"11", borderBottom:`1px solid ${C.gold}22`, padding:"8px 24px", fontSize:12, color:C.muted, fontStyle:"italic" }}>
-          📝 {ev.notes}
+          {t.note} {ev.notes}
         </div>
       )}
       {/* Stats bar */}
@@ -1462,11 +1910,11 @@ function EventEditor({ ev, onUpdate, onBack, saveToast }) {
           <div style={{ display:"flex", gap:20, alignItems:"start", flexWrap:"wrap" }}>
             <div style={{ flex:"1 1 600px", minWidth:0 }}>
               <div style={{ display:"flex", gap:10, marginBottom:16, flexWrap:"wrap" }}>
-                <Btn small variant="ghost" onClick={()=>setShowAddTable(true)}>+ Table</Btn>
-                <Btn small variant="muted" onClick={()=>setShowAddGuest(true)}>+ Invité</Btn>
-                {tablesHistory.length > 0 && <Btn small variant="muted" onClick={undoTables}>↩ Annuler</Btn>}
+                <Btn small variant="ghost" onClick={()=>setShowAddTable(true)}>{t.addTable}</Btn>
+                <Btn small variant="muted" onClick={()=>setShowAddGuest(true)}>{t.addGuest}</Btn>
+                {tablesHistory.length > 0 && <Btn small variant="muted" onClick={undoTables}>{t.undo}</Btn>}
                 <div style={{flex:1}}/>
-                <Btn small variant="ghost" onClick={()=>printDietSummary(ev)}>📋 Récap alimentaire</Btn>
+                <Btn small variant="ghost" onClick={()=>printDietSummary(ev)}>{t.dietSummary}</Btn>
               </div>
               <FloorPlan
                 ev={ev}
@@ -1489,7 +1937,7 @@ function EventEditor({ ev, onUpdate, onBack, saveToast }) {
               {unseated.length>0 && (
                 <div style={{ marginTop:16, background:C.red+"11", border:`1px solid ${C.red}33`, borderRadius:12, padding:"12px 16px" }}>
                   <div style={{ display:"flex", alignItems:"center", marginBottom:8 }}>
-                    <div style={{ color:C.red, fontSize:12, letterSpacing:.5, flex:1 }}>⚠ NON PLACÉS ({unseated.length})</div>
+                    <div style={{ color:C.red, fontSize:12, letterSpacing:.5, flex:1 }}>{t.unseatedList} ({unseated.length})</div>
                     <button onClick={()=>setHighlightTables(h=>!h)} style={{ background:highlightTables?C.gold:"none", border:`1px solid ${highlightTables?C.gold:C.border}`, borderRadius:6, color:highlightTables?C.dark:C.muted, fontSize:11, padding:"3px 10px", cursor:"pointer", fontFamily:"inherit" }}>
                       {highlightTables ? "✓ Tables visibles" : "👁 Voir places libres"}
                     </button>
@@ -1721,7 +2169,7 @@ function EventEditor({ ev, onUpdate, onBack, saveToast }) {
               <p style={{ color:C.muted, margin:0, fontSize:13, lineHeight:1.8 }}>
                 <strong style={{ color:C.gold }}>🤝 Ensemble :</strong> ces invités seront à la même table.<br/>
                 <strong style={{ color:C.gold }}>⚡ Séparés :</strong> ces invités seront à des tables différentes.<br/>
-                Cliquez <strong style={{ color:C.gold }}>✨ Auto-placer</strong> pour appliquer automatiquement.
+                Cliquez <strong style={{ color:C.gold }}>{t.autoPlace}</strong> pour appliquer automatiquement.
               </p>
             </div>
           </div>
@@ -1985,7 +2433,7 @@ function VoucherModal({ onClose, onApply }) {
 // DASHBOARD (Admin view)
 // ═══════════════════════════════════════════════════════════════
 
-function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, onToggleTheme }) {
+function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, onToggleTheme, t, lang, setLang }) {
   const [appliedVoucher, setAppliedVoucher] = useState(null);
   const [showVoucher, setShowVoucher] = useState(false);
   const [showNew, setShowNew] = useState(false);
@@ -2043,9 +2491,22 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
             </div>
           )}
           <span style={{ color:C.muted, fontSize:13 }}>{user.name.split(" ")[0]}</span>
+          {/* Sélecteur de langue */}
+          <div style={{ position:"relative" }}>
+            <select
+              value={lang}
+              onChange={e => setLang(e.target.value)}
+              aria-label="Language / Langue"
+              style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:8, color:C.muted, cursor:"pointer", fontSize:13, padding:"6px 8px", fontFamily:"inherit", outline:"none" }}
+            >
+              {Object.entries(LANG_FLAGS).map(([code, flag]) => (
+                <option key={code} value={code}>{flag} {LANG_NAMES[code]}</option>
+              ))}
+            </select>
+          </div>
           <button onClick={onToggleTheme}
-            title={lightMode?"Passer en mode sombre":"Passer en mode clair"}
-            aria-label={lightMode?"Passer en mode sombre":"Passer en mode clair"}
+            title={lightMode?t.darkMode:t.lightMode}
+            aria-label={lightMode?t.darkMode:t.lightMode}
             style={{ padding:"6px 10px", background:"none", border:`1px solid ${C.border}`, borderRadius:8, color:C.muted, cursor:"pointer", fontSize:16 }}>
             <span aria-hidden="true">{lightMode ? "🌙" : "☀️"}</span>
           </button>
@@ -2070,12 +2531,12 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
           <input
             value={globalSearch}
             onChange={e=>setGlobalSearch(e.target.value)}
-            placeholder="Rechercher un événement ou un invité..."
-            aria-label="Rechercher un événement ou un invité"
+            placeholder={t.searchPlaceholder}
+            aria-label={t.searchPlaceholder}
             role="searchbox"
             style={{ flex:1, padding:"10px 16px", background:C.card, border:`1px solid ${C.border}`, borderRadius:12, color:C.cream, fontSize:14, fontFamily:"Georgia,serif", outline:"none" }}
           />
-          <Btn onClick={()=>setShowNew(true)}>+ Nouvel événement</Btn>
+          <Btn onClick={()=>setShowNew(true)}>{t.newEvent}</Btn>
         </div>
 
         {myEvents.length===0 && (
@@ -2139,7 +2600,7 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
                   return (
                     <div style={{ marginTop:12 }}>
                       <div style={{ display:"flex", justifyContent:"space-between", fontSize:10, color:C.muted, marginBottom:4 }}>
-                        <span>Placement</span>
+                        <span>{t.placement}</span>
                         <span style={{color:barCol, fontWeight:700}}>{pct}%</span>
                       </div>
                       <div style={{ height:4, background:C.mid, borderRadius:99 }}>
@@ -2158,7 +2619,7 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
       <div aria-live="polite" aria-atomic="true" style={{ position:"fixed", bottom:24, left:"50%", transform:"translateX(-50%)", zIndex:9999, pointerEvents:"none" }}>
         {saveToast && (
           <div style={{ background:"#1E1208", border:`1px solid ${C.green}`, borderRadius:10, padding:"10px 20px", display:"flex", alignItems:"center", gap:8, boxShadow:"0 4px 20px rgba(0,0,0,0.4)", fontSize:13, color:C.green }}>
-            ☁️ Sauvegardé dans le cloud
+            {t.savedCloud}
           </div>
         )}
       </div>
@@ -2284,7 +2745,7 @@ function LoadingScreen() {
     <div style={{ minHeight:"100vh", background:`radial-gradient(ellipse at 30% 40%, #2a1a0e, #120C08)`, display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column", gap:16 }}>
       <div style={{ fontSize:48 }}>🪑</div>
       <div style={{ color:"#C9973A", fontSize:18, letterSpacing:2, fontFamily:"Georgia,serif" }}>TableMaître</div>
-      <div style={{ color:"#8A7355", fontSize:13 }}>Chargement…</div>
+      <div style={{ color:"#8A7355", fontSize:13 }}>Loading…</div>
     </div>
   );
 }
@@ -2300,6 +2761,7 @@ export default function App() {
   const [selectedEventId, setSelectedEventId] = useState(null);
   const [view, setView] = useState("dashboard");
   const [lightMode, setLightMode] = useState(false);
+  const { t, lang, setLang } = useI18n();
 
   // Thème
   useEffect(() => {
@@ -2422,6 +2884,7 @@ export default function App() {
       onUpdate={handleUpdateEvent}
       onBack={() => { setView("dashboard"); setSelectedEventId(null); }}
       saveToast={editorSaveToast}
+      t={t}
     />
   );
 
@@ -2434,6 +2897,9 @@ export default function App() {
       onOpenEvent={handleOpenEvent}
       lightMode={lightMode}
       onToggleTheme={() => setLightMode(l => !l)}
+      t={t}
+      lang={lang}
+      setLang={setLang}
     />
   );
 }
