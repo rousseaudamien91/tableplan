@@ -1999,6 +1999,7 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
   const [showNew, setShowNew] = useState(false);
   const [newEv, setNewEv] = useState({ name:"", date:"", type:"mariage" });
 
+  const [globalSearch, setGlobalSearch] = useState("");
   var myEventsRaw = events.filter(function(ev2){ return ev2.ownerId === user.id; });
   var myEvents = !globalSearch ? myEventsRaw : myEventsRaw.filter(function(ev2){
     var q = globalSearch.toLowerCase();
@@ -2008,7 +2009,6 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
   });
 
   const [showUpgrade, setShowUpgrade] = useState(false);
-  const [globalSearch, setGlobalSearch] = useState("");
   const [saveToast, setSaveToast] = useState(false);
 
   function createEvent() {
