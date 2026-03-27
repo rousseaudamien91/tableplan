@@ -1140,7 +1140,7 @@ function FloorPlan({ ev, onUpdateTables, onSelectTable, selectedTable, highlight
   const handleMouseDown = (e, tableId) => {
     e.stopPropagation();
     const pt = getSVGPoint(e);
-    const table = ev.tables.find(t => t.id === tableId);
+    const table = ev.tables.find(function(tbl2){ return tbl2.id === tableId; });
     setDragging({ tableId, offsetX: pt.x - table.x, offsetY: pt.y - table.y });
   };
 
@@ -1185,53 +1185,53 @@ function FloorPlan({ ev, onUpdateTables, onSelectTable, selectedTable, highlight
 
       {/* Tables */}
       {ev.tables.map(function(tbl) {
-        const seated = ev.guests.filter(g => g.tableId === t.id);
-        const full = seated.length >= t.capacity;
-        const sel = selectedTable === t.id;
+        const seated = ev.guests.filter(g => g.tableId === tbl.id);
+        const full = seated.length >= tbl.capacity;
+        const sel = selectedTable === tbl.id;
         const available = highlightAvailable && !full;
-        const col = sel ? C.gold : full ? C.green : available ? "#4CAF50" : (t.color || theme.color);
+        const col = sel ? C.gold : full ? C.green : available ? "#4CAF50" : (tbl.color || theme.color);
         const glowStyle = available ? { filter:"drop-shadow(0 0 8px #4CAF5066)" } : {};
         const diets = seated.filter(g => g.diet !== "standard");
 
         return (
-          <g key={t.id} style={{ cursor: "grab", ...glowStyle }} onMouseDown={e => handleMouseDown(e, t.id)} onClick={() => onSelectTable(t.id === selectedTable ? null : t.id)}>
-            <title>{`Table ${t.number}${t.label ? " — " + t.label : ""}
+          <g key={tbl.id} style={{ cursor: "grab", ...glowStyle }} onMouseDown={e => handleMouseDown(e, tbl.id)} onClick={() => onSelectTable(tbl.id === selectedTable ? null : tbl.id)}>
+            <title>{`Table ${tbl.number}${tbl.label ? " — " + tbl.label : ""}
 ${seated.map(g=>g.name).join(", ") || "Vide"}
-${seated.length}/${t.capacity} places`}</title>
-            {t.shape === "rect" ? (
+${seated.length}/${tbl.capacity} places`}</title>
+            {tbl.shape === "rect" ? (
               <rect
-                x={t.x - TABLE_RECT_W/2} y={t.y - TABLE_RECT_H/2}
+                x={tbl.x - TABLE_RECT_W/2} y={tbl.y - TABLE_RECT_H/2}
                 width={TABLE_RECT_W} height={TABLE_RECT_H}
                 rx="8" fill={col + "22"} stroke={col} strokeWidth={sel?3:1.5}
               />
             ) : (
-              <circle cx={t.x} cy={t.y} r={TABLE_R} fill={col + "22"} stroke={col} strokeWidth={sel?3:1.5}/>
+              <circle cx={tbl.x} cy={tbl.y} r={TABLE_R} fill={col + "22"} stroke={col} strokeWidth={sel?3:1.5}/>
             )}
-            {sel && <circle cx={t.x} cy={t.y} r={TABLE_R+8} fill="none" stroke={col} strokeWidth="1" strokeDasharray="4,3" opacity=".5"/>}
+            {sel && <circle cx={tbl.x} cy={tbl.y} r={TABLE_R+8} fill="none" stroke={col} strokeWidth="1" strokeDasharray="4,3" opacity=".5"/>}
 
             {/* Arc de remplissage */}
             {(() => {
-              const pct = t.capacity > 0 ? seated.length / t.capacity : 0;
+              const pct = tbl.capacity > 0 ? seated.length / tbl.capacity : 0;
               const r = TABLE_R + 6;
               const circ = 2 * Math.PI * r;
               const dash = pct * circ;
               const fillCol = pct >= 1 ? C.green : pct > 0.7 ? "#E8845A" : col;
-              return t.shape !== "rect" && pct > 0 ? (
-                <circle cx={t.x} cy={t.y} r={r} fill="none" stroke={fillCol} strokeWidth="3"
+              return tbl.shape !== "rect" && pct > 0 ? (
+                <circle cx={tbl.x} cy={tbl.y} r={r} fill="none" stroke={fillCol} strokeWidth="3"
                   strokeDasharray={`${dash} ${circ - dash}`}
                   strokeDashoffset={circ * 0.25}
                   strokeLinecap="round" opacity=".7" style={{pointerEvents:"none"}}/>
               ) : null;
             })()}
-            <text x={t.x} y={t.y-4} textAnchor="middle" fill={col} fontSize="15" fontWeight="700" fontFamily="Georgia,serif" style={{pointerEvents:"none"}}>{t.number}</text>
-            <text x={t.x} y={t.y+13} textAnchor="middle" fill={col} fontSize="10" fontFamily="Georgia,serif" opacity=".8" style={{pointerEvents:"none"}}>{seated.length}/{t.capacity}</text>
-            {t.label && <text x={t.x} y={t.y+27} textAnchor="middle" fill={col} fontSize="9" fontFamily="Georgia,serif" opacity=".6" style={{pointerEvents:"none"}}>{t.label}</text>}
+            <text x={tbl.x} y={tbl.y-4} textAnchor="middle" fill={col} fontSize="15" fontWeight="700" fontFamily="Georgia,serif" style={{pointerEvents:"none"}}>{tbl.number}</text>
+            <text x={tbl.x} y={tbl.y+13} textAnchor="middle" fill={col} fontSize="10" fontFamily="Georgia,serif" opacity=".8" style={{pointerEvents:"none"}}>{seated.length}/{tbl.capacity}</text>
+            {tbl.label && <text x={tbl.x} y={tbl.y+27} textAnchor="middle" fill={col} fontSize="9" fontFamily="Georgia,serif" opacity=".6" style={{pointerEvents:"none"}}>{tbl.label}</text>}
 
             {/* Diet dots */}
             {diets.slice(0,4).map((g,i) => {
               const d = dietInfo(g.diet);
               const a = (i/4)*2*Math.PI - Math.PI/2;
-              return <circle key={g.id} cx={t.x + (TABLE_R+10)*Math.cos(a)} cy={t.y + (TABLE_R+10)*Math.sin(a)} r="5" fill={d.color} stroke={C.dark} strokeWidth="1"/>;
+              return <circle key={g.id} cx={tbl.x + (TABLE_R+10)*Math.cos(a)} cy={tbl.y + (TABLE_R+10)*Math.sin(a)} r="5" fill={d.color} stroke={C.dark} strokeWidth="1"/>;
             })}
           </g>
         );
