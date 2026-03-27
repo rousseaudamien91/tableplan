@@ -35,6 +35,17 @@ function getFirebase() {
 // CONSTANTS & DATA
 // ═══════════════════════════════════════════════════════════════
 
+// Échapper les caractères HTML pour éviter les injections XSS
+function escapeHtml(str) {
+  return String(str || "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+
 const C = {
   dark:   "#120C08",
   mid:    "#2A1A0E",
@@ -73,11 +84,8 @@ const DIET_OPTIONS = [
   { id: "diabetique",   label: "Diabétique",        icon: "💊", color: "#607D8B" },
 ];
 
-const INITIAL_USERS = [
-  { id: "sa", email: "admin@tablema.fr",   password: "admin123", role: "superadmin", name: "Super Admin", avatar: "SA" },
-  { id: "u1", email: "sophie@example.fr",  password: "demo",     role: "admin",      name: "Sophie Martin", avatar: "SM", projectIds: [1] },
-  { id: "u2", email: "demo@tablema.fr",    password: "demo",     role: "admin",      name: "Demo User",     avatar: "DU", projectIds: [2] },
-];
+// Auth 100% Firebase Google — aucun identifiant stocké dans le code
+const INITIAL_USERS = [];
 
 // ═══════════════════════════════════════════════════════════════
 // PLANS & VOUCHERS
@@ -150,15 +158,15 @@ function printFloorPlan(ev) {
   const theme = THEMES_CONFIG[ev.type] || THEMES_CONFIG.autre;
   const seated = ev.guests.filter(g => g.tableId);
   const tableRows = ev.tables.map(t => {
-    const guests = ev.guests.filter(g => g.tableId === t.id);
+    const guestsSec = ev.guests.filter(g => g.tableId === t.id);
     return `
       <div class="table-block">
-        <div class="table-title">Table ${t.number}${t.label ? ` — ${t.label}` : ""}</div>
-        <div class="table-count">${guests.length}/${t.capacity} places</div>
+        <div class="table-title">Table ${escapeHtml(String(t.number))}${t.label ? ` — ${escapeHtml(t.label)}` : ""}</div>
+        <div class="table-count">${guestsSec.length}/${t.capacity} places</div>
         <ul class="guest-list">
-          ${guests.map(g => {
+          ${guestsSec.map(g => {
             const d = DIET_OPTIONS.find(function(ditem){ return ditem.id===g.diet; })||DIET_OPTIONS[0];
-            return `<li>${g.name}${g.diet!=="standard"?` <span class="diet">${d.icon}</span>`:""}${g.notes?` <span class="note">${g.notes}</span>`:""}</li>`;
+            return `<li>${escapeHtml(g.name)}${g.diet!=="standard"?` <span class="diet">${d.icon}</span>`:""}${g.notes?` <span class="note">${escapeHtml(g.notes)}</span>`:""}</li>`;
           }).join("")}
           ${guests.length === 0 ? '<li class="empty">— Vide —</li>' : ""}
         </ul>
@@ -167,7 +175,7 @@ function printFloorPlan(ev) {
 
   const w = window.open("", "_blank");
   w.document.write(`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
-  <title>Plan de table — ${ev.name}</title>
+  <title>Plan de table — ${escapeHtml(ev.name)}</title>
   <style>
     @page { size: A4; margin: 15mm; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -193,9 +201,9 @@ function printFloorPlan(ev) {
     <button onclick="window.print()" style="padding:10px 28px;background:${theme.color};border:none;border-radius:99px;font-family:Georgia;font-size:14px;cursor:pointer;font-weight:700;color:white;">🖨 Imprimer / Exporter PDF</button>
   </div>
   <div class="header">
-    <h1>${ev.name}</h1>
-    <p>${ev.date} · ${ev.tables.length} tables · ${ev.guests.length} invités · ${seated.length} placés</p>
-    ${ev.notes ? `<p style="margin-top:6px;font-style:italic">${ev.notes}</p>` : ""}
+    <h1>${escapeHtml(ev.name)}</h1>
+    <p>${escapeHtml(ev.date)} · ${ev.tables.length} tables · ${ev.guests.length} invités · ${seated.length} placés</p>
+    ${ev.notes ? `<p style="margin-top:6px;font-style:italic">${escapeHtml(ev.notes)}</p>` : ""}
   </div>
   <div class="stats">
     <span>🪑 ${ev.tables.length} tables</span>
@@ -889,24 +897,6 @@ function printDietSummary(ev) {
 // ═══════════════════════════════════════════════════════════════
 
 function LoginScreen({ onLogin }) {
-  const [form, setForm] = useState({ email: "", password: "", name: "" });
-  const [authView, setAuthView] = useState("login");
-  const [users, setUsers] = useState(INITIAL_USERS);
-  const [error, setError] = useState("");
-
-  const handleLogin = () => {
-    const u = users.find(x => x.email === form.email && x.password === form.password);
-    if (u) { setError(""); onLogin(u); }
-    else setError("Email ou mot de passe incorrect");
-  };
-
-  const handleRegister = () => {
-    if (!form.name || !form.email || !form.password) { setError("Tous les champs sont requis"); return; }
-    if (users.find(u => u.email === form.email)) { setError("Email déjà utilisé"); return; }
-    const nu = { id: uid(), email: form.email, password: form.password, role: "admin", name: form.name, avatar: form.name.slice(0,2).toUpperCase(), projectIds: [] };
-    setUsers(prev => [...prev, nu]);
-    onLogin(nu);
-  };
 
   return (
     <div style={{
