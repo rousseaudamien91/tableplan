@@ -1194,7 +1194,10 @@ function FloorPlan({ ev, onUpdateTables, onSelectTable, selectedTable, highlight
         const diets = seated.filter(g => g.diet !== "standard");
 
         return (
-          <g key={tbl.id} style={{ cursor: "grab", ...glowStyle }} onMouseDown={e => handleMouseDown(e, tbl.id)} onClick={() => onSelectTable(tbl.id === selectedTable ? null : tbl.id)}>
+          <g key={tbl.id} style={{ cursor: "grab", ...glowStyle }} onMouseDown={e => handleMouseDown(e, tbl.id)} onClick={() => onSelectTable(tbl.id === selectedTable ? null : tbl.id)}
+            onDragOver={function(e){ e.preventDefault(); e.currentTarget.style.filter="drop-shadow(0 0 12px #C9973A88)"; }}
+            onDragLeave={function(e){ e.currentTarget.style.filter=""; }}
+            onDrop={function(e){ e.preventDefault(); e.currentTarget.style.filter=""; var gId=e.dataTransfer.getData("guestId"); if(gId && onDropGuestToTable) onDropGuestToTable(gId, tbl.id); }}>
             <title>{`Table ${tbl.number}${tbl.label ? " — " + tbl.label : ""}
 ${seated.map(g=>g.name).join(", ") || "Vide"}
 ${seated.length}/${tbl.capacity} places`}</title>
@@ -2001,6 +2004,7 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
     {id:"diet",         icon:"🍽️",  label: t ? t.tabFood.replace(/^\S+\s/,"") : "Dietary"},
     {id:"constraints",  icon:"⚙",  label: t ? t.tabConstraints.replace(/^\S+\s/,"") : "Constraints"},
     {id:"room",         icon:"📐",  label: t ? t.tabRoom.replace(/^\S+\s/,"") : "Room"},
+    {id:"logistique",   icon:"🗂",  label:"Logistique"},
   ];
 
   return (
@@ -2110,6 +2114,9 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
                   <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
                     {unseated.map(g=>(
                       <span key={g.id}
+                        draggable={true}
+                        onDragStart={function(e){ e.dataTransfer.setData("guestId", String(g.id)); e.dataTransfer.effectAllowed="move"; }}
+                        title="Glisser vers une table sur le plan"
                         onClick={()=>setSelectedUnseatedGuest(selectedUnseatedGuest?.id===g.id?null:g)}
                         style={{
                           background:selectedUnseatedGuest?.id===g.id?C.gold+"44":C.red+"22",
@@ -2209,7 +2216,7 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
                       <table style={{ width:"100%", borderCollapse:"collapse" }}>
                         <thead>
                           <tr style={{ borderBottom:"1px solid " + C.border }}>
-                            {["Nom","Régime","Notes"].map(function(h){ return <th key={h} style={{ padding:"8px 20px", color:C.muted, fontSize:11, textAlign:"left", letterSpacing:1 }}>{h}</th>; })}
+                            {["Nom","Rôle","Régime","Notes"].map(function(h){ return <th key={h} style={{ padding:"8px 20px", color:C.muted, fontSize:11, textAlign:"left", letterSpacing:1 }}>{h}</th>; })}
                           </tr>
                         </thead>
                         <tbody>
@@ -2217,7 +2224,12 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
                             var dinfo = dietInfo(g.diet);
                             return (
                               <tr key={g.id} style={{ borderBottom:idx<tblGuests.length-1?"1px solid "+C.border+"33":"none", background:idx%2===0?"transparent":C.mid+"33" }}>
-                                <td style={{ padding:"10px 20px", color:C.cream, fontSize:14 }}>{g.name}</td>
+                                <td style={{ padding:"10px 20px", color:C.cream, fontSize:14 }}>
+                                  {g.name}
+                                  {g.role && <span style={{ marginLeft:6, background:C.gold+"22", border:"1px solid "+C.gold+"44", borderRadius:99, padding:"1px 8px", fontSize:10, color:C.gold }}>
+                                    {{"marie1":"💍","marie2":"💍","temoin":"🎖","famille_proche":"👨‍👩‍👧","ami_proche":"⭐","enfant":"🧒","vip":"🌟","prestataire":"🔧"}[g.role]||""} {{"marie1":"Marié(e)","marie2":"Marié(e)","temoin":"Témoin","famille_proche":"Famille","ami_proche":"Ami proche","enfant":"Enfant","vip":"VIP","prestataire":"Prestataire"}[g.role]||g.role}
+                                  </span>}
+                                </td>
                                 <td style={{ padding:"10px 20px", fontSize:13, color:dinfo.color }}>{dinfo.icon} {dinfo.label}</td>
                                 <td style={{ padding:"10px 20px", color:C.muted, fontSize:12, fontStyle:"italic" }}>{g.notes||""}</td>
                               </tr>
@@ -2397,6 +2409,45 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
               )}
             </div>
 
+            {/* ── BOISSONS ── */}
+            <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
+              <h4 style={{ margin:"0 0 16px", color:C.gold, fontWeight:400, fontSize:16 }}>🍷 Boissons</h4>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))", gap:12 }}>
+                {[
+                  ["champagne","🥂 Champagne/Prosecco","ex: Veuve Clicquot Brut"],
+                  ["vin_blanc","🍾 Vin blanc","ex: Sancerre 2022"],
+                  ["vin_rouge","🍷 Vin rouge","ex: Bordeaux Saint-Émilion"],
+                  ["eau","💧 Eau","ex: Évian, San Pellegrino"],
+                  ["softs","🥤 Softs / Jus","ex: Orange, Citron, Cola"],
+                  ["cocktail","🍹 Cocktail de bienvenue","ex: Kir Royal"],
+                  ["biere","🍺 Bière","ex: IPA artisanale"],
+                  ["cafe","☕ Café / Thé","ex: Nespresso + Thé Mariage Frères"],
+                ].map(function(item){
+                  var key = item[0]; var label = item[1]; var ph = item[2];
+                  return (
+                    <div key={key}>
+                      <label style={{ color:C.muted, fontSize:11, letterSpacing:1, display:"block", marginBottom:4 }}>{label.toUpperCase()}</label>
+                      <input
+                        value={(ev.drinks&&ev.drinks[key])||""}
+                        onChange={function(e){ var v=e.target.value; updateEv(function(ev2){ return {...ev2, drinks:{...(ev2.drinks||{}), [key]:v}}; }); }}
+                        placeholder={ph}
+                        style={{ width:"100%", padding:"7px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:12, fontFamily:"inherit", boxSizing:"border-box" }}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+              <div style={{ marginTop:14 }}>
+                <label style={{ color:C.muted, fontSize:11, letterSpacing:1, display:"block", marginBottom:4 }}>NOTES BOISSONS</label>
+                <input
+                  value={(ev.drinks&&ev.drinks.notes)||""}
+                  onChange={function(e){ var v=e.target.value; updateEv(function(ev2){ return {...ev2, drinks:{...(ev2.drinks||{}), notes:v}}; }); }}
+                  placeholder="Ex: Pas d'alcool sur les tables enfants, service champagne à l'arrivée..."
+                  style={{ width:"100%", padding:"8px 12px", background:"#fff1", border:"1px solid "+C.border, borderRadius:8, color:C.cream, fontSize:13, fontFamily:"inherit", boxSizing:"border-box" }}
+                />
+              </div>
+            </div>
+
             {/* ── SYNTHÈSE TRAITEUR ── */}
             <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
               <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:20 }}>
@@ -2539,7 +2590,132 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
         )}
 
         {/* ── ROOM TAB ── */}
-        {tab==="room" && (
+        {tab==="logistique" && (
+          <div style={{ maxWidth:900, display:"flex", flexDirection:"column", gap:24 }}>
+
+            {/* ── LIEUX & ADRESSES ── */}
+            <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
+              <h4 style={{ margin:"0 0 16px", color:C.gold, fontWeight:400, fontSize:16 }}>📍 Lieux & Rendez-vous</h4>
+              <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
+                {(ev.venues||[]).map(function(venue, vi){ return (
+                  <div key={vi} style={{ background:C.mid+"44", border:"1px solid "+C.border, borderRadius:12, padding:16, display:"flex", flexDirection:"column", gap:8 }}>
+                    <div style={{ display:"flex", alignItems:"center", gap:8 }}>
+                      <span style={{ fontSize:20 }}>{venue.icon||"📍"}</span>
+                      <input
+                        value={venue.name||""}
+                        onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var vens=[...(evUp.venues||[])]; vens[vi]={...vens[vi],name:v}; return {...evUp,venues:vens}; }); }}
+                        placeholder="Nom du lieu (ex: Mairie, Église, Salle des fêtes...)"
+                        style={{ flex:1, padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:14, fontFamily:"inherit" }}
+                      />
+                      <button onClick={function(){ updateEv(function(evUp){ return {...evUp, venues:(evUp.venues||[]).filter(function(_,i){ return i!==vi; })}; }); }}
+                        style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:16 }}>🗑</button>
+                    </div>
+                    <input
+                      value={venue.address||""}
+                      onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var vens=[...(evUp.venues||[])]; vens[vi]={...vens[vi],address:v}; return {...evUp,venues:vens}; }); }}
+                      placeholder="Adresse complète"
+                      style={{ padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:13, fontFamily:"inherit" }}
+                    />
+                    <div style={{ display:"flex", gap:8, alignItems:"center", flexWrap:"wrap" }}>
+                      <input
+                        value={venue.time||""}
+                        onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var vens=[...(evUp.venues||[])]; vens[vi]={...vens[vi],time:v}; return {...evUp,venues:vens}; }); }}
+                        placeholder="Heure (ex: 14h00)"
+                        style={{ width:120, padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:12, fontFamily:"inherit" }}
+                      />
+                      <input
+                        value={venue.notes||""}
+                        onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var vens=[...(evUp.venues||[])]; vens[vi]={...vens[vi],notes:v}; return {...evUp,venues:vens}; }); }}
+                        placeholder="Notes (parking, code entrée...)"
+                        style={{ flex:1, padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:12, fontFamily:"inherit" }}
+                      />
+                      {venue.address && (
+                        <a href={"https://maps.google.com/?q="+encodeURIComponent(venue.address)}
+                          target="_blank" rel="noopener noreferrer"
+                          style={{ background:C.gold+"22", border:"1px solid "+C.gold+"44", borderRadius:6, padding:"6px 12px", color:C.gold, fontSize:12, textDecoration:"none" }}>
+                          🗺 Voir sur Maps
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                ); })}
+                <button onClick={function(){
+                  var icons = ["⛪","🏛","🏩","🌿","🏠","🍽","🎉","🏟","🌊","🌄"];
+                  updateEv(function(evUp){ return {...evUp, venues:[...(evUp.venues||[]), {name:"",address:"",time:"",notes:"",icon:icons[Math.floor(Math.random()*icons.length)]}]}; });
+                }} style={{ background:C.card, border:"1px dashed "+C.border, borderRadius:10, padding:"12px", cursor:"pointer", color:C.muted, fontFamily:"inherit", fontSize:13 }}>
+                  + Ajouter un lieu
+                </button>
+              </div>
+            </div>
+
+            {/* ── LISTE DE CADEAUX ── */}
+            <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
+              <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:16 }}>
+                <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>🎁 Liste de cadeaux</h4>
+                <div style={{ flex:1 }}/>
+                <button onClick={function(){
+                  var url = ev.giftList && ev.giftList.url;
+                  if (url) { window.open(url, "_blank"); }
+                }} style={{ background:C.gold+"22", border:"1px solid "+C.gold+"44", borderRadius:8, padding:"6px 14px", cursor:"pointer", color:C.gold, fontFamily:"inherit", fontSize:12, display:ev.giftList&&ev.giftList.url?"flex":"none", alignItems:"center", gap:6 }}>
+                  🔗 Voir la liste en ligne
+                </button>
+              </div>
+              <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+                <div>
+                  <label style={{ color:C.muted, fontSize:11, letterSpacing:1, display:"block", marginBottom:4 }}>LIEN LISTE DE MARIAGE (Amazon, Marche de Mariage...)</label>
+                  <input
+                    value={(ev.giftList&&ev.giftList.url)||""}
+                    onChange={function(e){ var v=e.target.value; updateEv(function(ev2){ return {...ev2, giftList:{...(ev2.giftList||{}), url:v}}; }); }}
+                    placeholder="https://www.wishlist.fr/..."
+                    style={{ width:"100%", padding:"8px 12px", background:"#fff1", border:"1px solid "+C.border, borderRadius:8, color:C.cream, fontSize:13, fontFamily:"inherit", boxSizing:"border-box" }}
+                  />
+                </div>
+                <div>
+                  <label style={{ color:C.muted, fontSize:11, letterSpacing:1, display:"block", marginBottom:4 }}>MESSAGE POUR LES INVITÉS</label>
+                  <input
+                    value={(ev.giftList&&ev.giftList.message)||""}
+                    onChange={function(e){ var v=e.target.value; updateEv(function(ev2){ return {...ev2, giftList:{...(ev2.giftList||{}), message:v}}; }); }}
+                    placeholder="Ex: Votre présence est le plus beau cadeau. Si vous souhaitez néanmoins nous gâter..."
+                    style={{ width:"100%", padding:"8px 12px", background:"#fff1", border:"1px solid "+C.border, borderRadius:8, color:C.cream, fontSize:13, fontFamily:"inherit", boxSizing:"border-box" }}
+                  />
+                </div>
+                <div>
+                  <label style={{ color:C.muted, fontSize:11, letterSpacing:1, display:"block", marginBottom:8 }}>CADEAUX REÇUS</label>
+                  {(ev.gifts||[]).map(function(gift, gi){ return (
+                    <div key={gi} style={{ display:"flex", gap:8, marginBottom:6, alignItems:"center" }}>
+                      <span style={{ color:gift.received?"#4CAF50":C.muted, fontSize:18, cursor:"pointer" }}
+                        onClick={function(){ updateEv(function(evUp){ var gifts=[...(evUp.gifts||[])]; gifts[gi]={...gifts[gi],received:!gifts[gi].received}; return {...evUp,gifts}; }); }}>
+                        {gift.received?"✅":"⬜"}
+                      </span>
+                      <input
+                        value={gift.name||""}
+                        onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var gifts=[...(evUp.gifts||[])]; gifts[gi]={...gifts[gi],name:v}; return {...evUp,gifts}; }); }}
+                        placeholder="Nom du cadeau ou de l'expéditeur"
+                        style={{ flex:1, padding:"6px 10px", background:gift.received?"#0a2a0a":"#fff1", border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:13, fontFamily:"inherit", textDecoration:gift.received?"line-through":"none" }}
+                      />
+                      <input
+                        value={gift.from||""}
+                        onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var gifts=[...(evUp.gifts||[])]; gifts[gi]={...gifts[gi],from:v}; return {...evUp,gifts}; }); }}
+                        placeholder="De la part de..."
+                        style={{ width:150, padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:12, fontFamily:"inherit" }}
+                      />
+                      <button onClick={function(){ updateEv(function(evUp){ return {...evUp,gifts:(evUp.gifts||[]).filter(function(_,i){ return i!==gi; })}; }); }}
+                        style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:14 }}>🗑</button>
+                    </div>
+                  ); })}
+                  <button onClick={function(){
+                    updateEv(function(evUp){ return {...evUp, gifts:[...(evUp.gifts||[]), {name:"",from:"",received:false}]}; });
+                  }} style={{ background:C.card, border:"1px dashed "+C.border, borderRadius:6, padding:"6px 12px", cursor:"pointer", color:C.muted, fontFamily:"inherit", fontSize:12 }}>
+                    + Ajouter un cadeau
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        )}
+
+                {tab==="room" && (
           <div style={{ maxWidth:900 }}>
             <h3 style={{ fontWeight:400, fontSize:20, marginBottom:20 }}>Forme de la salle</h3>
             <div style={{ marginBottom:20 }}>
@@ -2566,6 +2742,36 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
               </div>
             </div>
             <RoomShapeEditor shape={ev.roomShape||[]} onChange={shape=>updateEv(e=>({...e,roomShape:shape}))}/>
+
+            {/* Zones spéciales */}
+            <div style={{ marginTop:20 }}>
+              <h4 style={{ color:C.gold, fontWeight:400, fontSize:13, letterSpacing:1, marginBottom:10 }}>ZONES SPÉCIALES</h4>
+              <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginBottom:12 }}>
+                {(ev.zones||[]).map(function(zone, zi){ return (
+                  <div key={zi} style={{ background:zone.color+"22", border:"1px solid "+zone.color+"66", borderRadius:8, padding:"6px 14px", display:"flex", alignItems:"center", gap:8 }}>
+                    <span style={{ fontSize:16 }}>{zone.icon}</span>
+                    <span style={{ color:zone.color, fontSize:13 }}>{zone.label}</span>
+                    <button onClick={function(){ updateEv(function(evUp){ return {...evUp, zones:(evUp.zones||[]).filter(function(_,i){ return i!==zi; })}; }); }}
+                      style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:14, padding:0 }}>✕</button>
+                  </div>
+                ); })}
+                <button onClick={function(){
+                  var label = prompt("Nom de la zone (ex: Estrade, Scène, Bar, Dancefloor, Photo Booth...)");
+                  if (!label) return;
+                  var icons = {"estrade":"🎭","scène":"🎭","bar":"🍹","dancefloor":"💃","piste":"💃","photo":"📸","enfants":"🧒","fumeurs":"🚬","terrasse":"🌿","buffet":"🍽","cocktail":"🥂"};
+                  var colors = ["#C9973A","#4CAF50","#E8845A","#81C784","#9575CD","#64B5F6","#FF8A65"];
+                  var lc = label.toLowerCase();
+                  var icon = Object.keys(icons).find(function(k){ return lc.includes(k); });
+                  var color = colors[Math.floor(Math.random()*colors.length)];
+                  updateEv(function(evUp){ return {...evUp, zones:[...(evUp.zones||[]), {label:label, icon:icon?icons[icon]:"📍", color:color}]}; });
+                }} style={{ background:C.card, border:"1px dashed "+C.border, borderRadius:8, padding:"6px 14px", cursor:"pointer", color:C.muted, fontFamily:"inherit", fontSize:12 }}>
+                  + Ajouter une zone
+                </button>
+              </div>
+              <p style={{ color:C.muted, fontSize:11, fontStyle:"italic" }}>
+                Les zones apparaissent dans les exports PDF et sur les chevalets. Exemples : Estrade, Scène, Bar, Dancefloor, Photo Booth...
+              </p>
+            </div>
           </div>
         )}
       </div>
@@ -2623,6 +2829,20 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
                 }}>{ditem.icon} {ditem.label}</button>
               );})}
             </div>
+          </Field>
+          <Field label="RÔLE / FONCTION">
+            <select value={newGuest.role||""} onChange={e=>setNewGuest({...newGuest,role:e.target.value})}
+              style={{ width:"100%", padding:"8px 12px", background:C.mid, border:"1px solid "+C.border, borderRadius:8, color:C.cream, fontSize:13, fontFamily:"inherit" }}>
+              <option value="">— Aucun rôle spécial —</option>
+              <option value="marie1">💍 Marié(e) 1</option>
+              <option value="marie2">💍 Marié(e) 2</option>
+              <option value="temoin">🎖 Témoin</option>
+              <option value="famille_proche">👨‍👩‍👧 Famille proche</option>
+              <option value="ami_proche">⭐ Ami proche</option>
+              <option value="enfant">🧒 Enfant</option>
+              <option value="vip">🌟 VIP</option>
+              <option value="prestataire">🔧 Prestataire</option>
+            </select>
           </Field>
           <Field label="NOTES / ALLERGIES"><Input value={newGuest.notes} onChange={e=>setNewGuest({...newGuest,notes:e.target.value})} placeholder="Allergies, mobilité réduite…"/></Field>
           <Btn onClick={addGuest} style={{marginTop:4}}>Ajouter l'invité</Btn>
@@ -3252,7 +3472,9 @@ function GuestJoinPage({ eventId }) {
 
           {found && (
             <div style={{ marginTop:16, background:"#0a2a0a", border:"1px solid #2a5a2a", borderRadius:12, padding:16 }}>
-              <p style={{ color:"#81C784", fontWeight:700, fontSize:16, margin:"0 0 8px" }}>✅ Bonjour {found.name} !</p>
+              <p style={{ color:"#81C784", fontWeight:700, fontSize:16, margin:"0 0 8px" }}>
+                ✅ Bonjour {found.name}{found.role && found.role === "temoin" ? " 🎖 (Témoin)" : found.role === "marie1" || found.role === "marie2" ? " 💍 (Marié(e))" : ""} !
+              </p>
               {myTable ? (
                 <div>
                   <p style={{ color:"#A5D6A7", margin:"0 0 4px" }}>
