@@ -1354,7 +1354,6 @@ function LoginScreen({ onLogin, t: tProp }) {
       display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:20,
       position:"relative", overflow:"hidden",
     }}>
-      {/* Decorative rings */}
       {[...Array(5)].map((_,i) => (
         <div key={i} style={{
           position:"absolute", borderRadius:"50%",
@@ -1364,63 +1363,32 @@ function LoginScreen({ onLogin, t: tProp }) {
           pointerEvents:"none",
         }}/>
       ))}
-
-      <div style={{ position:"relative", width:"100%", maxWidth:420, textAlign:"center" }}>
-        {/* Logo */}
-        <div style={{ fontSize:48, marginBottom:8 }}>🪑</div>
-        <h1 style={{ fontSize:38, color:C.cream, margin:"0 0 4px", fontWeight:400, letterSpacing:3 }}>TableMaître</h1>
-        <p style={{ color:C.gold, fontSize:12, letterSpacing:5, textTransform:"uppercase", margin:"0 0 36px" }}>
-          Gestion de plans de table
-        </p>
-
-        {/* Card */}
-        <div style={{ background:C.card, borderRadius:20, padding:32, border:`1px solid ${C.border}`, boxShadow:`0 32px 80px #000d` }}>
-          {/* Tabs */}
-          <div style={{ display:"flex", background:C.mid, borderRadius:99, padding:3, marginBottom:24 }}>
-            {[["login","Connexion"],["register","Inscription"]].map(([v,l]) => (
-              <button key={v} onClick={()=>{setAuthView(v);setError("")}} style={{
-                flex:1, padding:"9px", borderRadius:99, border:"none", cursor:"pointer",
-                background: authView===v ? `linear-gradient(135deg,${C.gold},${C.gold2})` : "transparent",
-                color: authView===v ? C.dark : C.muted,
-                fontWeight:700, fontSize:13, fontFamily:"inherit", transition:"all .2s",
-              }}>{l}</button>
-            ))}
-          </div>
-
-          <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
-            {authView==="register" && (
-              <Field label="NOM COMPLET">
-                <Input value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder="Marie Dupont"/>
-              </Field>
-            )}
-            <Field label="EMAIL">
-              <Input type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} placeholder="vous@example.fr"/>
-            </Field>
-            <Field label="MOT DE PASSE">
-              <Input type="password" value={form.password} onChange={e=>setForm({...form,password:e.target.value})} placeholder="••••••••"/>
-            </Field>
-            {error && <div style={{color:C.red,fontSize:12,textAlign:"center"}}>{error}</div>}
-            <button onClick={onLogin} style={{
-              marginTop:4, width:"100%", padding:"14px", fontSize:15, letterSpacing:1,
-              background:"#fff", border:"none", borderRadius:12, cursor:"pointer",
-              display:"flex", alignItems:"center", justifyContent:"center", gap:12,
-              fontFamily:"Georgia,serif", fontWeight:700, color:"#2A1A0E",
-              boxShadow:"0 2px 8px rgba(0,0,0,0.3)"
-            }}>
-              <svg width="20" height="20" viewBox="0 0 48 48">
-                <path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34.5 6.5 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/>
-                <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16.1 19 13 24 13c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34.5 6.5 29.5 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
-                <path fill="#4CAF50" d="M24 44c5.2 0 9.9-1.9 13.5-5l-6.2-5.2C29.4 35.5 26.8 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.7 39.6 16.3 44 24 44z"/>
-                <path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.3-2.4 4.3-4.5 5.7l6.2 5.2C41.1 36.2 44 30.6 44 24c0-1.3-.1-2.6-.4-3.9z"/>
-              </svg>
-              Se connecter avec Google
-            </button>
-          </div>
+      <div style={{ position:"relative", zIndex:1, width:"100%", maxWidth:420 }}>
+        <div style={{ textAlign:"center", marginBottom:40 }}>
+          <div style={{ fontSize:48, marginBottom:12 }}>🪑</div>
+          <h1 style={{ fontSize:36, fontWeight:400, letterSpacing:4, color:C.gold, margin:"0 0 8px" }}>TableMaître</h1>
+          <p style={{ color:C.muted, fontSize:12, letterSpacing:3 }}>{t.loginSubtitle}</p>
         </div>
-
-        <div style={{ marginTop:24, display:"flex", flexWrap:"wrap", gap:8, justifyContent:"center" }}>
-          {["💍 Mariage","🥂 Gala","🎂 Anniversaire","🎤 Conférence","Plan de salle libre","Chevalets imprimables","Contraintes alimentaires"].map(f=>(
-            <span key={f} style={{ background:C.gold+"18", border:`1px solid ${C.gold}33`, color:C.gold, borderRadius:99, padding:"3px 12px", fontSize:11 }}>{f}</span>
+        <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:20, padding:40, boxShadow:"0 20px 60px rgba(0,0,0,0.4)" }}>
+          <button onClick={onLogin} style={{
+            width:"100%", padding:"14px", background:"#fff", border:"none",
+            borderRadius:12, cursor:"pointer",
+            display:"flex", alignItems:"center", justifyContent:"center", gap:12,
+            fontFamily:"Georgia,serif", fontWeight:700, color:"#2A1A0E",
+            fontSize:15, letterSpacing:1, boxShadow:"0 2px 8px rgba(0,0,0,0.3)",
+          }}>
+            <svg width="20" height="20" viewBox="0 0 48 48">
+              <path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34.5 6.5 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/>
+              <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16.1 19 13 24 13c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34.5 6.5 29.5 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
+              <path fill="#4CAF50" d="M24 44c5.2 0 9.9-1.9 13.5-5l-6.2-5.2C29.4 35.5 26.8 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.7 39.6 16.3 44 24 44z"/>
+              <path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.3-2.4 4.3-4.5 5.7l6.2 5.2C41.1 36.2 44 30.6 44 24c0-1.3-.1-2.6-.4-3.9z"/>
+            </svg>
+            {t.loginGoogle}
+          </button>
+        </div>
+        <div style={{ display:"flex", flexWrap:"wrap", gap:8, justifyContent:"center", marginTop:28 }}>
+          {["💍 Mariage","🥂 Gala","🎂 Anniversaire","🎤 Conférence","📋 Plan de salle","🖨 Chevalets","⊘ Régimes alimentaires"].map(f=>(
+            <span key={f} style={{ background:C.card+"99", border:`1px solid ${C.border}`, borderRadius:99, padding:"4px 14px", fontSize:11, color:C.muted }}>{f}</span>
           ))}
         </div>
       </div>
@@ -1428,9 +1396,6 @@ function LoginScreen({ onLogin, t: tProp }) {
   );
 }
 
-// ═══════════════════════════════════════════════════════════════
-// SUPER ADMIN PANEL
-// ═══════════════════════════════════════════════════════════════
 
 function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
   const [tab, setTab] = useState("projects"); // projects | users
