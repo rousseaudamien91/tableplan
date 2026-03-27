@@ -87,6 +87,7 @@ const TRANSLATIONS = {
     floorPlan: "📄 Plan PDF",
     qrCode: "QR Code",
     tabPlan: "🗺 Plan",
+    tabList: "📋 Liste",
     tabGuests: "👥 Invités",
     tabFood: "🍽 Alimentation",
     tabConstraints: "⊘ Contraintes",
@@ -204,6 +205,7 @@ const TRANSLATIONS = {
     floorPlan: "📄 Floor plan PDF",
     qrCode: "QR Code",
     tabPlan: "🗺 Plan",
+    tabList: "📋 Liste",
     tabGuests: "👥 Guests",
     tabFood: "🍽 Dietary",
     tabConstraints: "⊘ Constraints",
@@ -422,6 +424,7 @@ const TRANSLATIONS = {
     floorPlan: "📄 Saalplan PDF",
     qrCode: "QR-Code",
     tabPlan: "🗺 Plan",
+    tabList: "📋 Liste",
     tabGuests: "👥 Gäste",
     tabFood: "🍽 Ernährung",
     tabConstraints: "⊘ Einschränkungen",
@@ -1119,7 +1122,7 @@ const TABLE_R = 44;
 const TABLE_RECT_W = 80;
 const TABLE_RECT_H = 44;
 
-function FloorPlan({ ev, onUpdateTables, onSelectTable, selectedTable, highlightAvailable }) {
+function FloorPlan({ ev, onUpdateTables, onSelectTable, selectedTable, highlightAvailable, onDropGuestToTable }) {
   const svgRef = useRef(null);
   const [dragging, setDragging] = useState(null); // { tableId, offsetX, offsetY }
 
@@ -1958,6 +1961,7 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
 
   const TABS = [
     {id:"plan",         icon:"🗺",  label: t ? t.tabPlan.replace(/^\S+\s/,"") : "Plan"},
+    {id:"list",         icon:"📋",  label:"Liste"},
     {id:"guests",       icon:"👥",  label:`${t ? t.tabGuests.replace(/^\S+\s/,"") : "Guests"} (${ev.guests.length})`},
     {id:"diet",         icon:"🍽️",  label: t ? t.tabFood.replace(/^\S+\s/,"") : "Dietary"},
     {id:"constraints",  icon:"⚙",  label: t ? t.tabConstraints.replace(/^\S+\s/,"") : "Constraints"},
@@ -1977,7 +1981,7 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
         <Btn small variant="ghost" onClick={()=>setShowQR(true)}>📱 QR Code</Btn>
         <Btn small variant="success" onClick={()=>printPlaceCards(ev)}>{t.placeCards}</Btn>
         <Btn small variant="ghost" onClick={()=>printFloorPlan(ev)}>{t.floorPlan}</Btn>
-        <Btn small onClick={autoPlace}>{t.autoPlace}</Btn>
+        <Btn small onClick={autoPlace} style={{opacity:aiPlacing?0.7:1}}>{aiPlacing?"🤖 IA en cours...":t.autoPlace}</Btn>
         <button onClick={()=>setShowSettings(true)} style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:18 }}>⚙</button>
       </div>
 
@@ -2865,6 +2869,165 @@ function LoadingScreen() {
 // ROOT APP
 // ═══════════════════════════════════════════════════════════════
 
+// ═══════════════════════════════════════════════════════════════
+// PAGE PUBLIQUE INVITÉ (?join=eventId)
+// ═══════════════════════════════════════════════════════════════
+function GuestJoinPage({ eventId }) {
+  const [ev, setEv] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [step, setStep] = useState("view"); // view | rsvp | done
+  const [form, setForm] = useState({ name:"", diet:"standard", allergies:[], notes:"" });
+  const [found, setFound] = useState(null);
+
+  useEffect(() => {
+    // Charger l'événement public depuis Firestore
+    async function loadEvent() {
+      const fb = getFirebase();
+      if (!fb) { setLoading(false); return; }
+      try {
+        // Chercher dans tous les users (collection group query)
+        const snap = await fb.db.collectionGroup("events").where("id","==",eventId).limit(1).get();
+        if (!snap.empty) {
+          setEv(snap.docs[0].data());
+        }
+      } catch(e) {
+        console.error("Erreur chargement event public:", e);
+      }
+      setLoading(false);
+    }
+    loadEvent();
+  }, [eventId]);
+
+  if (loading) return (
+    <div style={{ minHeight:"100vh", background:"#120C08", display:"flex", alignItems:"center", justifyContent:"center" }}>
+      <div style={{ color:"#C9973A", fontSize:18 }}>🪑 Chargement…</div>
+    </div>
+  );
+
+  if (!ev) return (
+    <div style={{ minHeight:"100vh", background:"#120C08", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", fontFamily:"Georgia,serif" }}>
+      <div style={{ fontSize:48, marginBottom:16 }}>🔍</div>
+      <h2 style={{ color:"#C9973A", fontWeight:400 }}>Événement introuvable</h2>
+      <p style={{ color:"#8A7355" }}>Le lien est peut-être expiré ou invalide.</p>
+    </div>
+  );
+
+  const theme = THEMES_CONFIG[ev.type] || THEMES_CONFIG.autre;
+  const myTable = found ? ev.tables?.find(t => t.id === found.tableId) : null;
+  const seatedCount = (ev.guests||[]).filter(g => g.tableId).length;
+  const totalGuests = (ev.guests||[]).length;
+
+  return (
+    <div style={{ minHeight:"100vh", background:`linear-gradient(135deg, #120C08, #1a0e06)`, fontFamily:"Georgia,'Palatino Linotype',serif", padding:"20px 16px" }}>
+      {/* Header */}
+      <div style={{ maxWidth:480, margin:"0 auto" }}>
+        <div style={{ textAlign:"center", marginBottom:32 }}>
+          <div style={{ fontSize:48, marginBottom:8 }}>{theme.icon}</div>
+          <h1 style={{ fontSize:28, fontWeight:400, color:"#C9973A", letterSpacing:2, margin:"0 0 8px" }}>{ev.name}</h1>
+          <p style={{ color:"#8A7355", fontSize:14 }}>
+            📅 {new Date(ev.date).toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long", year:"numeric" })}
+          </p>
+          {ev.notes && <p style={{ color:"#A89060", fontSize:13, fontStyle:"italic", marginTop:8 }}>{ev.notes}</p>}
+        </div>
+
+        {/* Stats */}
+        <div style={{ display:"flex", gap:12, justifyContent:"center", marginBottom:28 }}>
+          {[
+            { label:"Tables", val:ev.tables?.length||0, icon:"🪑" },
+            { label:"Invités", val:totalGuests, icon:"👥" },
+            { label:"Placés", val:seatedCount, icon:"✅" },
+          ].map(s => (
+            <div key={s.label} style={{ background:"#1E1208", border:"1px solid #3a2a1a", borderRadius:12, padding:"12px 20px", textAlign:"center", flex:1 }}>
+              <div style={{ fontSize:20 }}>{s.icon}</div>
+              <div style={{ color:"#C9973A", fontSize:20, fontWeight:700 }}>{s.val}</div>
+              <div style={{ color:"#8A7355", fontSize:11 }}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Rechercher sa place */}
+        <div style={{ background:"#1E1208", border:"1px solid #3a2a1a", borderRadius:16, padding:24, marginBottom:20 }}>
+          <h3 style={{ color:"#C9973A", fontWeight:400, fontSize:16, marginBottom:16 }}>🔍 Trouver ma place</h3>
+          <input
+            placeholder="Votre prénom ou nom…"
+            onChange={e => {
+              const q = e.target.value.toLowerCase();
+              if (!q) { setFound(null); return; }
+              const match = (ev.guests||[]).find(g => g.name.toLowerCase().includes(q));
+              setFound(match || false);
+            }}
+            style={{ width:"100%", padding:"12px 16px", background:"#2a1a0e", border:"1px solid #5a3a1a", borderRadius:10, color:"#F5EAD4", fontSize:15, fontFamily:"Georgia,serif", boxSizing:"border-box", outline:"none" }}
+          />
+
+          {found === false && (
+            <div style={{ marginTop:12, color:"#E8845A", fontSize:13 }}>
+              ❌ Prénom non trouvé dans la liste des invités
+            </div>
+          )}
+
+          {found && (
+            <div style={{ marginTop:16, background:"#0a2a0a", border:"1px solid #2a5a2a", borderRadius:12, padding:16 }}>
+              <p style={{ color:"#81C784", fontWeight:700, fontSize:16, margin:"0 0 8px" }}>✅ Bonjour {found.name} !</p>
+              {myTable ? (
+                <>
+                  <p style={{ color:"#A5D6A7", margin:"0 0 4px" }}>
+                    Vous êtes à la <strong style={{ color:"#C9973A" }}>Table {myTable.number}{myTable.label ? ` — ${myTable.label}` : ""}</strong>
+                  </p>
+                  <p style={{ color:"#6a8a6a", fontSize:12 }}>
+                    {(ev.guests||[]).filter(g => g.tableId === myTable.id).length} personnes à cette table
+                  </p>
+                </>
+              ) : (
+                <p style={{ color:"#E8845A", fontSize:14 }}>Votre placement n'est pas encore défini</p>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Plan par tables */}
+        {(ev.tables||[]).length > 0 && (
+          <div style={{ background:"#1E1208", border:"1px solid #3a2a1a", borderRadius:16, padding:24 }}>
+            <h3 style={{ color:"#C9973A", fontWeight:400, fontSize:16, marginBottom:16 }}>🪑 Plan de table</h3>
+            <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
+              {(ev.tables||[]).map(tbl => {
+                const tGuests = (ev.guests||[]).filter(g => g.tableId === tbl.id);
+                return (
+                  <div key={tbl.id} style={{ background:"#2a1a0e", borderRadius:10, overflow:"hidden", border:`1px solid ${tbl.color||"#5a3a1a"}44` }}>
+                    <div style={{ background:(tbl.color||"#C9973A")+"22", padding:"8px 16px", display:"flex", justifyContent:"space-between" }}>
+                      <span style={{ color:tbl.color||"#C9973A", fontWeight:700, fontSize:14 }}>
+                        Table {tbl.number}{tbl.label ? ` — ${tbl.label}` : ""}
+                      </span>
+                      <span style={{ color:"#8A7355", fontSize:12 }}>{tGuests.length}/{tbl.capacity}</span>
+                    </div>
+                    <div style={{ padding:"8px 16px", display:"flex", flexWrap:"wrap", gap:6 }}>
+                      {tGuests.length === 0 ? (
+                        <span style={{ color:"#5a3a1a", fontSize:12, fontStyle:"italic" }}>— Vide —</span>
+                      ) : tGuests.map(g => (
+                        <span key={g.id} style={{
+                          background: found && found.id === g.id ? "#C9973A22" : "#3a2a1a",
+                          border: `1px solid ${found && found.id === g.id ? "#C9973A" : "#5a3a1a"}`,
+                          borderRadius:99, padding:"3px 10px", fontSize:12,
+                          color: found && found.id === g.id ? "#C9973A" : "#A89060",
+                          fontWeight: found && found.id === g.id ? 700 : 400,
+                        }}>{g.name}</span>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        <p style={{ textAlign:"center", color:"#5a3a1a", fontSize:11, marginTop:24 }}>
+          Propulsé par TableMaître 🪑
+        </p>
+      </div>
+    </div>
+  );
+}
+
+
 export default function App() {
   const fbUser = useFirebaseAuth();
   const [events, setEvents] = useState([]);
@@ -2898,14 +3061,30 @@ export default function App() {
     }
   }, [lightMode]);
 
-  // Charger les événements depuis Firestore quand l'utilisateur se connecte
+  // Chargement temps réel via Firestore onSnapshot
   useEffect(() => {
     if (!fbUser) { setEvents([]); setEventsLoaded(false); return; }
     setEventsLoaded(false);
-    loadEventsFromFirestore(fbUser.uid).then(evs => {
-      setEvents(evs.length > 0 ? evs : []);
-      setEventsLoaded(true);
-    });
+    const fb = getFirebase();
+    if (!fb) {
+      loadEventsFromFirestore(fbUser.uid).then(evs => {
+        setEvents(evs.length > 0 ? evs : []);
+        setEventsLoaded(true);
+      });
+      return;
+    }
+    // onSnapshot = temps réel — se met à jour automatiquement
+    const unsub = fb.db
+      .collection("users").doc(fbUser.uid).collection("events")
+      .onSnapshot(function(snap) {
+        const evs = snap.docs.map(function(d){ return d.data(); });
+        setEvents(evs);
+        setEventsLoaded(true);
+      }, function(err) {
+        console.error("Snapshot error:", err);
+        setEventsLoaded(true);
+      });
+    return function(){ unsub && unsub(); };
   }, [fbUser]);
 
   const selectedEvent = events.find(e => e.id === selectedEventId);
