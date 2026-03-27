@@ -557,7 +557,7 @@ function FloorPlan({ ev, onUpdateTables, onSelectTable, selectedTable, highlight
   const handleMouseUp = useCallback(() => setDragging(null), []);
 
   const polyPoints = (pts) => pts.map(p => `${p.x},${p.y}`).join(" ");
-  const theme = THEMES_CONFIG[ev.type] || THEMES_CONFIG.autre;
+  var theme = THEMES_CONFIG[ev.type] || THEMES_CONFIG.autre;
 
   return (
     <svg
@@ -1342,15 +1342,15 @@ function EventEditor({ ev, onUpdate, onBack, saveToast }) {
     updateEv(e => ({ ...e, tables: prev }));
   };
 
-  const theme = THEMES_CONFIG[ev.type]||THEMES_CONFIG.autre;
-  const seated = ev.guests.filter(function(gst){ return !!gst.tableId; });
-  const unseated = ev.guests.filter(function(gst){ return !gst.tableId; });
+  var theme = THEMES_CONFIG[ev.type]||THEMES_CONFIG.autre;
+  var seated = ev.guests.filter(function(gst){ return !!gst.tableId; });
+  var unseated = ev.guests.filter(function(gst){ return !gst.tableId; });
   const tableSel = ev.tables.find(t=>t.id===selectedTable);
-  const tableGuests = tableSel ? ev.guests.filter(function(gst){ return gst.tableId===selectedTable; }) : [];
-  const filtered = ev.guests.filter(function(gst){ return gst.name.toLowerCase().includes(search.toLowerCase()); });
+  var tableGuests = tableSel ? ev.guests.filter(function(gst){ return gst.tableId===selectedTable; }) : [];
+  var filtered = ev.guests.filter(function(gst){ return gst.name.toLowerCase().includes(search.toLowerCase()); });
 
   // Diet stats
-  const dietStats = DIET_OPTIONS.filter(function(dopt){ return dopt.id!=="standard"; }).map(function(dopt){
+  var dietStats = DIET_OPTIONS.filter(function(dopt){ return dopt.id!=="standard"; }).map(function(dopt){
     return {...dopt, count: ev.guests.filter(function(gst){ return gst.diet===dopt.id || (gst.allergies||[]).includes(dopt.id); }).length};
   }).filter(function(dopt){ return dopt.count > 0; });
 
@@ -1998,8 +1998,8 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
   const [showNew, setShowNew] = useState(false);
   const [newEv, setNewEv] = useState({ name:"", date:"", type:"mariage" });
 
-  const myEventsRaw = events.filter(function(ev2){ return ev2.ownerId === user.id; });
-  const myEvents = !globalSearch ? myEventsRaw : myEventsRaw.filter(function(ev2){
+  var myEventsRaw = events.filter(function(ev2){ return ev2.ownerId === user.id; });
+  var myEvents = !globalSearch ? myEventsRaw : myEventsRaw.filter(function(ev2){
     var q = globalSearch.toLowerCase();
     return ev2.name.toLowerCase().includes(q) ||
       (ev2.date||"").includes(q) ||
