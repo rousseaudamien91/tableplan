@@ -2329,8 +2329,8 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
             <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
               <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:20 }}>
                 <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>🍽 Menu de l'événement</h4>
-                <Btn small variant="muted" onClick={function(){
-                  var btn = event.currentTarget;
+                <Btn small variant="muted" onClick={function(e){
+                  var btn = e.currentTarget;
                   btn.disabled = true;
                   btn.textContent = "⏳ Génération...";
                   // IA génère le menu
