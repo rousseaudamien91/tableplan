@@ -145,6 +145,69 @@ const dietInfo = (id) => DIET_OPTIONS.find(d => d.id === id) || DIET_OPTIONS[0];
 
 function uid() { return Date.now() + Math.random().toString(36).slice(2); }
 
+function printFloorPlan(ev) {
+  const theme = THEMES_CONFIG[ev.type] || THEMES_CONFIG.autre;
+  const seated = ev.guests.filter(g => g.tableId);
+  const tableRows = ev.tables.map(t => {
+    const guests = ev.guests.filter(g => g.tableId === t.id);
+    return `
+      <div class="table-block">
+        <div class="table-title">Table ${t.number}${t.label ? ` — ${t.label}` : ""}</div>
+        <div class="table-count">${guests.length}/${t.capacity} places</div>
+        <ul class="guest-list">
+          ${guests.map(g => {
+            const d = DIET_OPTIONS.find(d=>d.id===g.diet)||DIET_OPTIONS[0];
+            return `<li>${g.name}${g.diet!=="standard"?` <span class="diet">${d.icon}</span>`:""}${g.notes?` <span class="note">${g.notes}</span>`:""}</li>`;
+          }).join("")}
+          ${guests.length === 0 ? '<li class="empty">— Vide —</li>' : ""}
+        </ul>
+      </div>`;
+  }).join("");
+
+  const w = window.open("", "_blank");
+  w.document.write(`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
+  <title>Plan de table — ${ev.name}</title>
+  <style>
+    @page { size: A4; margin: 15mm; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Georgia', serif; color: #1a0e08; background: white; }
+    .header { text-align: center; border-bottom: 2px solid ${theme.color}; padding-bottom: 12px; margin-bottom: 20px; }
+    .header h1 { font-size: 24px; font-weight: 400; letter-spacing: 2px; color: #1a0e08; }
+    .header p { color: #8a7355; font-size: 12px; margin-top: 4px; letter-spacing: 1px; }
+    .stats { display: flex; gap: 24px; justify-content: center; margin-bottom: 20px; font-size: 12px; color: #8a7355; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .table-block { border: 1px solid ${theme.color}66; border-radius: 8px; padding: 12px; break-inside: avoid; }
+    .table-title { font-size: 14px; font-weight: 700; color: ${theme.color}; margin-bottom: 2px; }
+    .table-count { font-size: 10px; color: #8a7355; margin-bottom: 8px; }
+    .guest-list { list-style: none; }
+    .guest-list li { font-size: 11px; padding: 3px 0; border-bottom: 1px solid #f0e8d8; color: #2a1a0e; }
+    .guest-list li:last-child { border-bottom: none; }
+    .diet { font-size: 12px; }
+    .note { color: #8a7355; font-style: italic; font-size: 10px; }
+    .empty { color: #ccc; font-style: italic; }
+    .footer { margin-top: 20px; text-align: center; font-size: 10px; color: #ccc; border-top: 1px solid #eee; padding-top: 10px; }
+    @media print { .no-print { display: none; } }
+  </style></head><body>
+  <div class="no-print" style="text-align:center;padding:16px;">
+    <button onclick="window.print()" style="padding:10px 28px;background:${theme.color};border:none;border-radius:99px;font-family:Georgia;font-size:14px;cursor:pointer;font-weight:700;color:white;">🖨 Imprimer / Exporter PDF</button>
+  </div>
+  <div class="header">
+    <h1>${ev.name}</h1>
+    <p>${ev.date} · ${ev.tables.length} tables · ${ev.guests.length} invités · ${seated.length} placés</p>
+    ${ev.notes ? `<p style="margin-top:6px;font-style:italic">${ev.notes}</p>` : ""}
+  </div>
+  <div class="stats">
+    <span>🪑 ${ev.tables.length} tables</span>
+    <span>👤 ${ev.guests.length} invités</span>
+    <span>✓ ${seated.length} placés</span>
+    <span>⚠ ${ev.guests.length - seated.length} non placés</span>
+  </div>
+  <div class="grid">${tableRows}</div>
+  <div class="footer">TableMaître · Plan généré le ${new Date().toLocaleDateString("fr-FR")}</div>
+  </body></html>`);
+  w.document.close();
+}
+
 function exportGuestsCSV(ev) {
   const headers = ["Nom", "Email", "Table", "Régime", "Allergies", "Notes"];
   const rows = ev.guests.map(g => {
@@ -523,12 +586,15 @@ function FloorPlan({ ev, onUpdateTables, onSelectTable, selectedTable, highlight
         const full = seated.length >= t.capacity;
         const sel = selectedTable === t.id;
         const available = highlightAvailable && !full;
-        const col = sel ? C.gold : full ? C.green : available ? "#4CAF50" : theme.color;
+        const col = sel ? C.gold : full ? C.green : available ? "#4CAF50" : (t.color || theme.color);
         const glowStyle = available ? { filter:"drop-shadow(0 0 8px #4CAF5066)" } : {};
         const diets = seated.filter(g => g.diet !== "standard");
 
         return (
           <g key={t.id} style={{ cursor: "grab", ...glowStyle }} onMouseDown={e => handleMouseDown(e, t.id)} onClick={() => onSelectTable(t.id === selectedTable ? null : t.id)}>
+            <title>{`Table ${t.number}${t.label ? " — " + t.label : ""}
+${seated.map(g=>g.name).join(", ") || "Vide"}
+${seated.length}/${t.capacity} places`}</title>
             {t.shape === "rect" ? (
               <rect
                 x={t.x - TABLE_RECT_W/2} y={t.y - TABLE_RECT_H/2}
@@ -1250,7 +1316,7 @@ function GuestForm({ event, onBack }) {
 // EVENT EDITOR
 // ═══════════════════════════════════════════════════════════════
 
-function EventEditor({ ev, onUpdate, onBack }) {
+function EventEditor({ ev, onUpdate, onBack, saveToast }) {
   const [tab, setTab] = useState("plan");
   const [selectedTable, setSelectedTable] = useState(null);
   const [showAddGuest, setShowAddGuest] = useState(false);
@@ -1299,8 +1365,8 @@ function EventEditor({ ev, onUpdate, onBack }) {
     const n = newTable.number ? parseInt(newTable.number) : nextTableNumber;
     const x = 150 + (ev.tables.length % 5)*130;
     const y = 160 + Math.floor(ev.tables.length/5)*140;
-    updateEv(e=>({ ...e, tables:[...e.tables,{id:Date.now(),number:n,capacity:parseInt(newTable.capacity),shape:newTable.shape,label:newTable.label,x,y}] }));
-    setNewTable({number:"",capacity:8,shape:"round",label:""});
+    updateEv(e=>({ ...e, tables:[...e.tables,{id:Date.now(),number:n,capacity:parseInt(newTable.capacity),shape:newTable.shape,label:newTable.label,color:newTable.color,x,y}] }));
+    setNewTable({number:"",capacity:8,shape:"round",label:"",color:undefined});
     setShowAddTable(false);
   }
   function addConstraint() {
@@ -1358,10 +1424,17 @@ function EventEditor({ ev, onUpdate, onBack }) {
         <div style={{flex:1}}/>
         <Btn small variant="ghost" onClick={()=>setShowQR(true)}>📱 QR Code</Btn>
         <Btn small variant="success" onClick={()=>printPlaceCards(ev)}>🖨 Chevalets</Btn>
+        <Btn small variant="ghost" onClick={()=>printFloorPlan(ev)}>📄 Plan PDF</Btn>
         <Btn small onClick={autoPlace}>✨ Auto-placer</Btn>
         <button onClick={()=>setShowSettings(true)} style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:18 }}>⚙</button>
       </div>
 
+      {/* Notes bar */}
+      {ev.notes && (
+        <div style={{ background:C.gold+"11", borderBottom:`1px solid ${C.gold}22`, padding:"8px 24px", fontSize:12, color:C.muted, fontStyle:"italic" }}>
+          📝 {ev.notes}
+        </div>
+      )}
       {/* Stats bar */}
       <div style={{ background:C.mid+"55", borderBottom:`1px solid ${C.border}`, padding:"10px 24px", display:"flex", gap:24, overflowX:"auto" }}>
         {[
@@ -1745,6 +1818,17 @@ function EventEditor({ ev, onUpdate, onBack }) {
             </div>
           </Field>
           <Field label="ÉTIQUETTE (optionnel)"><Input value={newTable.label} onChange={e=>setNewTable({...newTable,label:e.target.value})} placeholder="ex: Famille, Amis…"/></Field>
+          <Field label="COULEUR (optionnel)">
+            <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
+              {["#C9973A","#E84A6A","#4CAF50","#2196F3","#9C27B0","#FF9800","#8B7EC8","#E8845A"].map(col=>(
+                <button key={col} onClick={()=>setNewTable({...newTable,color:col})} style={{
+                  width:28, height:28, borderRadius:"50%", background:col, border:`3px solid ${newTable.color===col?"#fff":"transparent"}`,
+                  cursor:"pointer", padding:0
+                }}/>
+              ))}
+              <button onClick={()=>setNewTable({...newTable,color:undefined})} style={{width:28,height:28,borderRadius:"50%",background:"none",border:`2px solid ${C.border}`,cursor:"pointer",color:C.muted,fontSize:10}}>✕</button>
+            </div>
+          </Field>
           <Btn onClick={addTable} style={{marginTop:4}}>Créer la table</Btn>
         </div>
       </Modal>
@@ -1786,12 +1870,14 @@ function EventEditor({ ev, onUpdate, onBack }) {
               <QRCodeWidget value={`https://tableplan-seven.vercel.app/?join=${ev.id}`} size={180}/>
             </div>
           </div>
-          <div style={{ background:C.mid,borderRadius:8,padding:"8px 16px",fontSize:12,color:C.muted,marginBottom:20,fontFamily:"monospace" }}>
-            tableplan-seven.vercel.app/?join={ev.id}
+          <div style={{ background:C.mid,borderRadius:8,padding:"8px 16px",fontSize:12,color:C.muted,marginBottom:20,fontFamily:"monospace",cursor:"pointer",display:"flex",alignItems:"center",gap:8 }}
+            onClick={()=>{navigator.clipboard.writeText(`https://tableplan-seven.vercel.app/?join=${ev.id}`);}} title="Cliquer pour copier">
+            tableplan-seven.vercel.app/?join={ev.id} <span style={{fontSize:10}}>📋</span>
           </div>
           <div style={{ display:"flex", gap:10, justifyContent:"center", flexWrap:"wrap" }}>
             <Btn small onClick={()=>{const c=document.querySelector("#qr-modal canvas");if(!c){alert("QR non disponible");return;}const l=document.createElement("a");l.download=`QR-${ev.name}.png`;l.href=c.toDataURL("image/png");l.click();}}>⬇ PNG</Btn>
-            <Btn small variant="ghost" onClick={()=>setShowSettings(false)}>🖨 Imprimer</Btn>
+            <Btn small variant="ghost" onClick={()=>{navigator.clipboard.writeText(`https://tableplan-seven.vercel.app/?join=${ev.id}`);alert("Lien copié !")}}>📋 Copier le lien</Btn>
+            <Btn small variant="muted" onClick={()=>setShowSettings(false)}>🖨 Imprimer</Btn>
           </div>
         </div>
       </Modal>
@@ -1800,6 +1886,11 @@ function EventEditor({ ev, onUpdate, onBack }) {
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <Field label="NOM"><Input value={ev.name} onChange={e=>updateEv(ev=>({...ev,name:e.target.value}))}/></Field>
           <Field label="DATE"><Input type="date" value={ev.date} onChange={e=>updateEv(ev=>({...ev,date:e.target.value}))}/></Field>
+          <Field label="LIEU / NOTES INTERNES">
+            <textarea value={ev.notes||""} onChange={e=>updateEv(ev=>({...ev,notes:e.target.value}))} rows={3}
+              placeholder="Salle des fêtes, traiteur, prestataires..."
+              style={{...inputStyle, resize:"vertical", lineHeight:1.6}}/>
+          </Field>
           <Field label="TYPE">
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:6 }}>
               {Object.entries(THEMES_CONFIG).map(([k,v])=>(
@@ -1907,9 +1998,17 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
   const [showNew, setShowNew] = useState(false);
   const [newEv, setNewEv] = useState({ name:"", date:"", type:"mariage" });
 
-  const myEvents = events.filter(e => e.ownerId === user.id);
+  const myEvents = events.filter(e => e.ownerId === user.id).filter(e => {
+    if (!globalSearch) return true;
+    const q = globalSearch.toLowerCase();
+    return e.name.toLowerCase().includes(q) ||
+      e.date?.includes(q) ||
+      (e.guests||[]).some(g => g.name.toLowerCase().includes(q) || g.email?.toLowerCase().includes(q));
+  });
 
   const [showUpgrade, setShowUpgrade] = useState(false);
+  const [globalSearch, setGlobalSearch] = useState("");
+  const [saveToast, setSaveToast] = useState(false);
 
   function createEvent() {
     if (!newEv.name) return;
@@ -1943,10 +2042,14 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
         <span style={{ fontSize:20, color:C.gold, letterSpacing:1 }}>🪑 TableMaître</span>
         <div style={{flex:1}}/>
         <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-          <div style={{ width:32,height:32,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:C.gold,fontSize:13,fontWeight:700 }}>
-            {user.avatar}
-          </div>
-          <span style={{ color:C.muted, fontSize:13 }}>{user.name}</span>
+          {user.photoURL ? (
+            <img src={user.photoURL} alt={user.name} style={{ width:32,height:32,borderRadius:"50%",objectFit:"cover",border:`2px solid ${C.gold}44` }}/>
+          ) : (
+            <div style={{ width:32,height:32,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:C.gold,fontSize:13,fontWeight:700 }}>
+              {user.avatar}
+            </div>
+          )}
+          <span style={{ color:C.muted, fontSize:13 }}>{user.name.split(" ")[0]}</span>
           <button onClick={onToggleTheme} title={lightMode?"Mode sombre":"Mode clair"}
             style={{ padding:"6px 10px", background:"none", border:`1px solid ${C.border}`, borderRadius:8, color:C.muted, cursor:"pointer", fontSize:16 }}>
             {lightMode ? "🌙" : "☀️"}
@@ -1968,7 +2071,11 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
           <p style={{ color:C.muted, margin:0, fontSize:14 }}>Bienvenue, {user.name}</p>
         </div>
 
-        <div style={{ display:"flex", justifyContent:"flex-end", marginBottom:24 }}>
+        <div style={{ display:"flex", gap:12, marginBottom:24, alignItems:"center" }}>
+          <input value={globalSearch} onChange={e=>setGlobalSearch(e.target.value)}
+            placeholder="🔍 Rechercher un événement ou un invité..."
+            style={{ flex:1, padding:"10px 16px", background:C.card, border:`1px solid ${C.border}`, borderRadius:12, color:C.cream, fontSize:14, fontFamily:"Georgia,serif", outline:"none" }}
+          />
           <Btn onClick={()=>setShowNew(true)}>+ Nouvel événement</Btn>
         </div>
 
@@ -1998,12 +2105,31 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
                   <span style={{ fontSize:32 }}>{theme.icon}</span>
                   <Badge color={theme.color}>{theme.label}</Badge>
                 </div>
-                <h3 style={{ color:C.cream, margin:"0 0 4px", fontSize:18, fontWeight:400 }}>{ev.name}</h3>
-                <p style={{ color:C.muted, margin:"0 0 16px", fontSize:12 }}>{ev.date}</p>
+                <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:4 }}>
+                  <h3 style={{ color:C.cream, margin:0, fontSize:18, fontWeight:400 }}>{ev.name}</h3>
+                  <button onClick={e=>{e.stopPropagation();const copy={...ev,id:Date.now(),name:ev.name+" (copie)",ownerId:user.id};setEvents(prev=>[...prev,copy]);}} title="Dupliquer"
+                    style={{background:"none",border:`1px solid ${C.border}`,borderRadius:8,color:C.muted,cursor:"pointer",fontSize:12,padding:"3px 8px",fontFamily:"inherit"}}>
+                    ⧉
+                  </button>
+                </div>
+                <p style={{ color:C.muted, margin:"0 0 16px", fontSize:12 }}>
+                  {ev.date}
+                  {(() => {
+                    const days = Math.ceil((new Date(ev.date) - new Date()) / 86400000);
+                    if (days < 0) return <span style={{color:C.muted,marginLeft:8}}>— passé</span>;
+                    if (days === 0) return <span style={{color:C.green,marginLeft:8,fontWeight:700}}>• Aujourd'hui !</span>;
+                    if (days <= 7) return <span style={{color:C.red,marginLeft:8,fontWeight:700}}>• Dans {days}j</span>;
+                    if (days <= 30) return <span style={{color:"#E8845A",marginLeft:8}}>• Dans {days}j</span>;
+                    return <span style={{color:C.muted,marginLeft:8}}>• Dans {days}j</span>;
+                  })()}
+                </p>
                 <div style={{ display:"flex", gap:16, fontSize:12, color:C.muted }}>
                   <span>🪑 {ev.tables.length} tables</span>
                   <span>👤 {ev.guests.length} invités</span>
                   {unseated>0 && <span style={{ color:C.red }}>⚠ {unseated} non placés</span>}
+                  {globalSearch && ev.guests.some(g=>g.name.toLowerCase().includes(globalSearch.toLowerCase())) && (
+                    <span style={{color:C.gold}}>✦ {ev.guests.filter(g=>g.name.toLowerCase().includes(globalSearch.toLowerCase())).length} invité(s) trouvé(s)</span>
+                  )}
                 </div>
                 {ev.guests.length > 0 && (() => {
                   const placed = ev.guests.filter(g => g.tableId).length;
@@ -2028,6 +2154,11 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
       </div>
 
       {showVoucher && <VoucherModal onClose={() => setShowVoucher(false)} onApply={handleApplyVoucher} />}
+      {saveToast && (
+        <div style={{ position:"fixed", bottom:24, left:"50%", transform:"translateX(-50%)", background:"#1E1208", border:`1px solid ${C.green}`, borderRadius:10, padding:"10px 20px", zIndex:9999, display:"flex", alignItems:"center", gap:8, boxShadow:"0 4px 20px rgba(0,0,0,0.4)", fontSize:13, color:C.green, pointerEvents:"none" }}>
+          ☁️ Sauvegardé dans le cloud
+        </div>
+      )}
       {showUpgrade && (
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.8)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:2000 }}>
           <div style={{ background:C.card, border:`1px solid ${C.gold}`, borderRadius:20, padding:40, width:400, textAlign:"center", boxShadow:"0 20px 60px rgba(0,0,0,0.5)" }}>
@@ -2207,12 +2338,19 @@ export default function App() {
   const handleOpenEvent = (id) => { setSelectedEventId(id); setView("event"); };
 
   // Mise à jour + sauvegarde auto Firestore
+  const [editorSaveToast, setEditorSaveToast] = useState(false);
   const handleUpdateEvent = (updatedEv) => {
     setEvents(prev => prev.map(e => e.id === updatedEv.id ? updatedEv : e));
-    if (fbUser) saveEventToFirestore(fbUser.uid, updatedEv);
+    if (fbUser) {
+      saveEventToFirestore(fbUser.uid, updatedEv);
+      setEditorSaveToast(true);
+      setTimeout(() => setEditorSaveToast(false), 2000);
+    }
   };
 
   // Création d'événement avec sauvegarde
+  const showSaveToast = () => { setSaveToast(true); setTimeout(()=>setSaveToast(false), 2000); };
+
   const handleSetEvents = (updater) => {
     setEvents(prev => {
       const next = typeof updater === "function" ? updater(prev) : updater;
@@ -2229,6 +2367,7 @@ export default function App() {
         prev.forEach(ev => {
           if (!nextIds.has(ev.id)) deleteEventFromFirestore(fbUser.uid, ev.id);
         });
+        setTimeout(showSaveToast, 300);
       }
       return next;
     });
@@ -2263,6 +2402,7 @@ export default function App() {
       ev={selectedEvent}
       onUpdate={handleUpdateEvent}
       onBack={() => { setView("dashboard"); setSelectedEventId(null); }}
+      saveToast={editorSaveToast}
     />
   );
 
