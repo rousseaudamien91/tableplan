@@ -5,6 +5,7 @@ import { LANG_FLAGS, LANG_NAMES, THEMES_CONFIG, PLANS } from "../constants";
 import { Btn, Badge, Modal, Field, Input, Select } from "./UI";
 import { uid } from "../utils";
 import VoucherModal from "./VoucherModal";
+import PricingPage from "./PricingPage";
 
 // ═══════════════════════════════════════════════════════════════
 // DASHBOARD — Liste des événements
@@ -26,6 +27,7 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
   });
 
   const [showUpgrade, setShowUpgrade] = useState(false);
+  const [showPricing, setShowPricing] = useState(false);
   const [saveToast, setSaveToast] = useState(false);
 
   function createEvent() {
@@ -105,6 +107,36 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
         </div>
 
         <div style={{ display:"flex", gap:12, marginBottom:24, alignItems:"center" }}>
+      {/* ── BANDEAU SOUSCRIPTION ── */}
+      {user && user.role !== "superadmin" && (()=>{
+        const status = user.subscriptionStatus || "trial";
+        const endDate = user.subscriptionEnd;
+        const daysLeft = endDate ? Math.ceil((new Date(endDate)-new Date())/86400000) : null;
+        if (status === "active") return null;
+        return (
+          <div style={{ margin:"0 0 20px", padding:"14px 20px", borderRadius:14,
+            background:status==="expired"?"rgba(224,82,82,0.12)":"rgba(240,201,122,0.1)",
+            border:`1px solid ${status==="expired"?"#e05252":"#F0C97A"}44`,
+            display:"flex", alignItems:"center", gap:16, flexWrap:"wrap" }}>
+            <span style={{fontSize:22}}>{status==="expired"?"❌":"⏳"}</span>
+            <div style={{flex:1}}>
+              <div style={{fontWeight:700,fontSize:14,color:status==="expired"?"#e05252":"#F0C97A"}}>
+                {status==="expired" ? "Abonnement expiré" : `Période d'essai${daysLeft!==null?" — "+daysLeft+" jour"+(daysLeft>1?"s":"")+" restant"+(daysLeft>1?"s":""):""}`}
+              </div>
+              <div style={{fontSize:12,color:"rgba(255,255,255,0.5)",marginTop:2}}>
+                {status==="expired" ? "Renouvelez votre abonnement pour continuer" : "Passez à un plan payant pour débloquer toutes les fonctionnalités"}
+              </div>
+            </div>
+            <button onClick={()=>setShowPricing(true)} style={{
+              padding:"10px 24px",background:"linear-gradient(135deg,#C9973A,#F0C97A)",
+              border:"none",borderRadius:99,cursor:"pointer",color:"#0d0d14",
+              fontWeight:800,fontSize:13,fontFamily:"inherit",whiteSpace:"nowrap"}}>
+              {status==="expired" ? "Renouveler" : "Voir les plans →"}
+            </button>
+          </div>
+        );
+      })()}
+
           <input
             value={globalSearch}
             onChange={e=>setGlobalSearch(e.target.value)}
@@ -192,6 +224,20 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
         </div>
       </div>
 
+      {showPricing && (
+        <PricingPage
+          user={user}
+          onClose={() => setShowPricing(false)}
+          onPlanSelected={(planId) => { setShowPricing(false); }}
+        />
+      )}
+      {showPricing && (
+        <PricingPage
+          user={user}
+          onClose={()=>setShowPricing(false)}
+          onPlanSelected={(planId)=>setShowPricing(false)}
+        />
+      )}
       {showVoucher && <VoucherModal onClose={() => setShowVoucher(false)} onApply={handleApplyVoucher} />}
       <div aria-live="polite" aria-atomic="true" style={{ position:"fixed", bottom:24, left:"50%", transform:"translateX(-50%)", zIndex:9999, pointerEvents:"none" }}>
         {saveToast && (
@@ -255,6 +301,69 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
           </Field>
           <Btn onClick={createEvent} style={{marginTop:4}}>Créer l'événement</Btn>
         </div>
+      {/* ── BANDEAU SOUSCRIPTION ── */}
+      {user && user.role !== "superadmin" && (() => {
+        const status = user.subscriptionStatus || "trial";
+        const endDate = user.subscriptionEnd;
+        const daysLeft = endDate ? Math.ceil((new Date(endDate) - new Date()) / 86400000) : null;
+        if (status === "active") return null; // Actif → pas de bandeau
+        return (
+          <div style={{
+            margin:"0 auto 24px", maxWidth:900, width:"100%",
+            padding:"14px 20px", borderRadius:14,
+            background: status==="expired" ? "rgba(224,82,82,0.12)" : "rgba(240,201,122,0.1)",
+            border: `1px solid ${status==="expired" ? "#e05252" : "#F0C97A"}44`,
+            display:"flex", alignItems:"center", gap:16, flexWrap:"wrap",
+          }}>
+
+      {/* Bandeau souscription */}
+      {user && user.role !== "superadmin" && (user.subscriptionStatus === "trial" || user.subscriptionStatus === "expired") && (
+        <div style={{
+          margin:"0 0 20px",padding:"14px 20px",borderRadius:14,
+          background:user.subscriptionStatus==="expired"?"rgba(224,82,82,0.1)":"rgba(240,201,122,0.08)",
+          border:"1px solid "+(user.subscriptionStatus==="expired"?"#e0525244":"#F0C97A44"),
+          display:"flex",alignItems:"center",gap:16,flexWrap:"wrap",
+        }}>
+          <span style={{fontSize:20}}>{user.subscriptionStatus==="expired"?"❌":"⏳"}</span>
+          <div style={{flex:1}}>
+            <div style={{fontWeight:700,fontSize:14,color:user.subscriptionStatus==="expired"?"#e05252":"#F0C97A"}}>
+              {user.subscriptionStatus==="expired"?"Abonnement expiré":"Période d'essai"}
+            </div>
+            <div style={{fontSize:12,color:"rgba(255,255,255,0.45)",marginTop:2}}>
+              {user.subscriptionStatus==="expired"
+                ?"Renouvelez votre abonnement pour continuer à utiliser TableMaître"
+                :"Activez un événement pour débloquer toutes les fonctionnalités"}
+            </div>
+          </div>
+          <button onClick={()=>setShowPricing(true)} style={{
+            padding:"9px 22px",background:"linear-gradient(135deg,#C9973A,#F0C97A)",
+            border:"none",borderRadius:99,cursor:"pointer",color:"#0d0d14",
+            fontWeight:800,fontSize:13,fontFamily:"inherit",whiteSpace:"nowrap",
+          }}>{user.subscriptionStatus==="expired"?"Renouveler":"Voir les formules →"}</button>
+        </div>
+      )}
+
+            <span style={{ fontSize:22 }}>{status==="expired" ? "❌" : "⏳"}</span>
+            <div style={{ flex:1 }}>
+              <div style={{ fontWeight:700, fontSize:14, color: status==="expired" ? "#e05252" : "#F0C97A" }}>
+                {status==="expired" ? "Abonnement expiré" : `Période d'essai${daysLeft !== null ? ` — ${daysLeft} jour${daysLeft>1?"s":""} restant${daysLeft>1?"s":""}` : ""}`}
+              </div>
+              <div style={{ fontSize:12, color:"rgba(255,255,255,0.5)", marginTop:2 }}>
+                {status==="expired" ? "Renouvelez votre abonnement pour continuer à utiliser TableMaître" : "Passez à un plan payant pour débloquer toutes les fonctionnalités"}
+              </div>
+            </div>
+            <button onClick={() => setShowPricing(true)} style={{
+              padding:"10px 24px", background:"linear-gradient(135deg,#C9973A,#F0C97A)",
+              border:"none", borderRadius:99, cursor:"pointer", color:"#0d0d14",
+              fontWeight:800, fontSize:13, fontFamily:"inherit", whiteSpace:"nowrap",
+            }}>
+              {status==="expired" ? "Renouveler" : "Voir les plans →"}
+            </button>
+          </div>
+        );
+      })()}
+
+
       </Modal>
     </div>
   );
