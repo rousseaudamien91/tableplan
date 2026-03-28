@@ -35,7 +35,7 @@ function getFirebase() {
 }
 
 // ═══════════════════════════════════════════════════════════════
-// LOADING + AUTH HOOK
+// FIREBASE AUTH HOOK
 // ═══════════════════════════════════════════════════════════════
 
 function useFirebaseAuth() {
@@ -87,6 +87,11 @@ async function loadEventsFromFirestore(userId) {
 // LOADING SCREEN
 // ═══════════════════════════════════════════════════════════════
 
+
+// ═══════════════════════════════════════════════════════════════
+// LOADING SCREEN
+// ═══════════════════════════════════════════════════════════════
+
 function LoadingScreen() {
   return (
     <div style={{ minHeight:"100vh", background:`radial-gradient(ellipse at 30% 40%, #2a1a0e, #120C08)`, display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column", gap:16 }}>
@@ -104,15 +109,6 @@ function LoadingScreen() {
 // ═══════════════════════════════════════════════════════════════
 // PAGE PUBLIQUE INVITÉ (?join=eventId)
 // ═══════════════════════════════════════════════════════════════
-
-function LoadingScreen() {
-  return (
-    <div style={{ minHeight:"100vh", background:"#0d0d14", display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column", gap:16 }}>
-      <div style={{ color:"#C9973A", fontSize:22, fontWeight:700, letterSpacing:1 }}>TableMaître</div>
-      <div style={{ color:"rgba(255,255,255,0.4)", fontSize:13 }}>Chargement…</div>
-    </div>
-  );
-}
 
 // ═══════════════════════════════════════════════════════════════
 // APP — Composant racine
