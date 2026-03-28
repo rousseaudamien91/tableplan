@@ -1792,7 +1792,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                     <input
                       value={venue.address||""}
                       onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var vens=[...(evUp.venues||[])]; vens[vi]={...vens[vi],address:v}; return {...evUp,venues:vens}; }); }}
-                      placeholder=t.fullAddress||"Full address"
+                      placeholder={t.fullAddress||"Full} address"
                       style={{ padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:13, fontFamily:"inherit" }}
                     />
                     <div style={{ display:"flex", gap:8, alignItems:"center", flexWrap:"wrap" }}>
@@ -2000,7 +2000,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         </div>
       </Modal>
 
-      <Modal open={showAddZone} onClose={()=>{setShowAddZone(false);setNewZone({label:"",icon:"📍",color:"#C9973A"});}} title=t.addZone||"Add a zone">
+      <Modal open={showAddZone} onClose={()=>{setShowAddZone(false);setNewZone({label:"",icon:"📍",color:"#C9973A"});}} title={t.addZone||"Add} a zone">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <Field label="NOM DE LA ZONE *">
             <Input value={newZone.label} onChange={e=>setNewZone({...newZone,label:e.target.value})} placeholder="ex: Piste de danse, Bar, Scène, Photo Booth…"/>
@@ -2209,7 +2209,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         </div>
       </Modal>
 
-      <Modal open={showConstraint} onClose={()=>setShowConstraint(false)} title=t.newConstraint||"New constraint">
+      <Modal open={showConstraint} onClose={()=>setShowConstraint(false)} title={t.newConstraint||"New} constraint">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <Field label="PREMIER INVITÉ">
             <Select value={constraint.a} onChange={e=>setConstraint({...constraint,a:parseInt(e.target.value)||e.target.value})}>
@@ -2258,7 +2258,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         </div>
       </Modal>
 
-      <Modal open={showSettings} onClose={()=>setShowSettings(false)} title=t.eventSettings||"Event settings">
+      <Modal open={showSettings} onClose={()=>setShowSettings(false)} title={t.eventSettings||"Event} settings">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <Field label={t.settingName}><Input value={ev.name} onChange={e=>updateEv(evUp=>({...evUp,name:e.target.value}))}/></Field>
           <Field label={t.settingDate}><Input type="date" value={ev.date} onChange={e=>updateEv(evUp=>({...evUp,date:e.target.value}))}/></Field>
