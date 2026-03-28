@@ -659,7 +659,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         {tab==="guests" && (
           <div style={{ maxWidth:860 }}>
             <div style={{ display:"flex", gap:12, marginBottom:20 }}>
-              <input value={search} onChange={e=>setSearch(e.target.value)} placeholder=t.search||"Search a guest..."
+              <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t.search||"Search a guest..."}
                 style={{ ...inputStyle, flex:1 }}/>
               <Btn variant="ghost" onClick={()=>exportGuestsCSV(ev)}>⬇ Export CSV</Btn>
               <Btn variant="ghost" onClick={()=>setShowImportCSV(true)}>⬆ Import CSV</Btn>
@@ -1404,16 +1404,16 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                           <option value="DJ">🎵 DJ</option>
                           <option value="Musicien">🎹 Musicien</option>
                           <option value="Photographe">📷 Photographe</option>
-                          <option value=t.videographer||"Videographer">🎬 Vidéaste</option>
+                          <option value={t.videographer||"Videographer"}>🎬 Vidéaste</option>
                           <option value="Fleuriste">🌸 Fleuriste</option>
-                          <option value=t.decorator||"Decorator">🎨 Décorateur</option>
+                          <option value={t.decorator||"Decorator"}>🎨 Décorateur</option>
                           <option value="Salle">🏛 Salle</option>
                           <option value="Transport">🚗 Transport</option>
                           <option value="Animation">🎭 Animation</option>
                           <option value="Autre">📦 Autre</option>
                         </select>
                         <input value={sup.name||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],name:v}; return {...evUp,suppliers:s}; }); }}
-                          placeholder=t.supplierName||"Name / Company" style={{ flex:1, background:"none", border:"none", color:"#ffffff", fontSize:14, fontFamily:"inherit", outline:"none" }}/>
+                          placeholder={t.supplierName||"Name / Company"} style={{ flex:1, background:"none", border:"none", color:"#ffffff", fontSize:14, fontFamily:"inherit", outline:"none" }}/>
                         <span style={{ fontSize:16 }}>{statusIcon}</span>
                         <select value={sup.status||"pending"} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],status:v}; return {...evUp,suppliers:s}; }); }}
                           style={{ background:statusColor+"22", border:"1px solid "+statusColor+"66", borderRadius:6, color:statusColor, fontSize:11, padding:"4px 8px", fontFamily:"inherit" }}>
@@ -1783,7 +1783,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                       <input
                         value={venue.name||""}
                         onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var vens=[...(evUp.venues||[])]; vens[vi]={...vens[vi],name:v}; return {...evUp,venues:vens}; }); }}
-                        placeholder=t.venueName||"Venue name"
+                        placeholder={t.venueName||"Venue name"}
                         style={{ flex:1, padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:14, fontFamily:"inherit" }}
                       />
                       <button onClick={function(){ updateEv(function(evUp){ return {...evUp, venues:(evUp.venues||[]).filter(function(_,i){ return i!==vi; })}; }); }}
@@ -1792,7 +1792,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                     <input
                       value={venue.address||""}
                       onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var vens=[...(evUp.venues||[])]; vens[vi]={...vens[vi],address:v}; return {...evUp,venues:vens}; }); }}
-                      placeholder=t.fullAddress||"Full address"
+                      placeholder={t.fullAddress||"Full address"}
                       style={{ padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:13, fontFamily:"inherit" }}
                     />
                     <div style={{ display:"flex", gap:8, alignItems:"center", flexWrap:"wrap" }}>
@@ -1805,7 +1805,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                       <input
                         value={venue.notes||""}
                         onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var vens=[...(evUp.venues||[])]; vens[vi]={...vens[vi],notes:v}; return {...evUp,venues:vens}; }); }}
-                        placeholder=t.venueNotes||"Notes (parking, access code...)"
+                        placeholder={t.venueNotes||"Notes (parking, access code...)"}
                         style={{ flex:1, padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit" }}
                       />
                       {venue.address && (
@@ -1897,7 +1897,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
       </div>
 
       {/* ── MODALS ── */}
-      <Modal open={showImportCSV} onClose={()=>setShowImportCSV(false)} title=t.importCSV||"Import guests (CSV)" width={500}>
+      <Modal open={showImportCSV} onClose={()=>setShowImportCSV(false)} title={t.importCSV||"Import guests (CSV)"} width={500}>
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <div style={{ background:"#13131e", borderRadius:10, padding:"12px 16px", fontSize:12, color:"rgba(255,255,255,0.45)", lineHeight:1.8 }}>
             <strong style={{color:"#C9973A"}}>Format attendu (1 invité par ligne) :</strong><br/>
@@ -1934,11 +1934,11 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         </div>
       </Modal>
 
-      <Modal open={showAddGuest} onClose={()=>setShowAddGuest(false)} title=t.addGuestBtn||"Add guest">
+      <Modal open={showAddGuest} onClose={()=>setShowAddGuest(false)} title={t.addGuestBtn||"Add guest"}>
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label={t.fieldName}><Input value={newGuest.name} onChange={e=>setNewGuest({...newGuest,name:e.target.value})} placeholder=t.guestName||"First Last"/></Field>
+          <Field label={t.fieldName}><Input value={newGuest.name} onChange={e=>setNewGuest({...newGuest,name:e.target.value})} placeholder={t.guestName||"First Last"}/></Field>
           <Field label={t.fieldEmail}><Input type="email" value={newGuest.email} onChange={e=>setNewGuest({...newGuest,email:e.target.value})} placeholder="email@example.fr"/></Field>
-          <Field label=t.guestDiet?.toUpperCase()||"DIET">
+          <Field label={t.guestDiet?.toUpperCase()||"DIET"}>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:6 }}>
               {DIET_OPTIONS.map(function(ditem){ return (
                 <button key={ditem.id} onClick={()=>setNewGuest({...newGuest,diet:ditem.id})} style={{
@@ -1950,7 +1950,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               );})}
             </div>
           </Field>
-          <Field label=t.guestRole?.toUpperCase()||"ROLE">
+          <Field label={t.guestRole?.toUpperCase()||"ROLE"}>
             <select value={newGuest.role||""} onChange={e=>setNewGuest({...newGuest,role:e.target.value})}
               style={{ width:"100%", padding:"8px 12px", background:"#13131e", border:"1px solid "+C.border, borderRadius:8, color:"#ffffff", fontSize:13, fontFamily:"inherit" }}>
               <option value="">— Aucun rôle spécial —</option>
@@ -1969,7 +1969,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         </div>
       </Modal>
 
-      <Modal open={showAddTable} onClose={()=>setShowAddTable(false)} title=t.addTable||"Add a table">
+      <Modal open={showAddTable} onClose={()=>setShowAddTable(false)} title={t.addTable||"Add a table"}>
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <Field label={`${t.fieldNumber} (auto: ${nextTableNumber})`}><Input type="number" value={newTable.number} onChange={e=>setNewTable({...newTable,number:e.target.value})} placeholder={String(nextTableNumber)}/></Field>
           <Field label={t.fieldCapacity}><Input type="number" value={newTable.capacity} onChange={e=>setNewTable({...newTable,capacity:e.target.value})}/></Field>
@@ -2000,7 +2000,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         </div>
       </Modal>
 
-      <Modal open={showAddZone} onClose={()=>{setShowAddZone(false);setNewZone({label:"",icon:"📍",color:"#C9973A"});}} title=t.addZone||"Add a zone">
+      <Modal open={showAddZone} onClose={()=>{setShowAddZone(false);setNewZone({label:"",icon:"📍",color:"#C9973A"});}} title={t.addZone||"Add a zone"}>
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <Field label="NOM DE LA ZONE *">
             <Input value={newZone.label} onChange={e=>setNewZone({...newZone,label:e.target.value})} placeholder="ex: Piste de danse, Bar, Scène, Photo Booth…"/>
@@ -2075,7 +2075,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
       {/* ── MODAL BUDGET ── */}
       <Modal open={showAddBudget} onClose={()=>{setShowAddBudget(false);setNewBudgetLine({category:"salle",label:"",estimated:0,actual:0,paid:false,notes:""}); }} title="Ajouter un poste budgétaire">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label=t.category?.toUpperCase()||"CATEGORY">
+          <Field label={t.category?.toUpperCase()||"CATEGORY"}>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:6 }}>
               {BUDGET_CATEGORIES.map(cat=>(
                 <button key={cat.id} onClick={()=>setNewBudgetLine({...newBudgetLine,category:cat.id})} style={{
@@ -2087,14 +2087,14 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               ))}
             </div>
           </Field>
-          <Field label=t.labelOptional||"Label (optional)">
+          <Field label={t.labelOptional||"Label} (optional)">
             <Input value={newBudgetLine.label} onChange={e=>setNewBudgetLine({...newBudgetLine,label:e.target.value})} placeholder="ex: Château de Vincennes, DJ Martin…"/>
           </Field>
           <div style={{ display:"flex", gap:12 }}>
-            <Field label=t.amountEstimated||"Estimated amount (€)">
+            <Field label={t.amountEstimated||"Estimated} amount (€)">
               <Input type="number" value={newBudgetLine.estimated} onChange={e=>setNewBudgetLine({...newBudgetLine,estimated:parseFloat(e.target.value)||0})} placeholder="0"/>
             </Field>
-            <Field label=t.amountActual||"Actual amount (€)">
+            <Field label={t.amountActual||"Actual} amount (€)">
               <Input type="number" value={newBudgetLine.actual} onChange={e=>setNewBudgetLine({...newBudgetLine,actual:parseFloat(e.target.value)||0})} placeholder="0"/>
             </Field>
           </div>
@@ -2116,7 +2116,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
       {/* ── MODAL TÂCHE PLANNING ── */}
       <Modal open={showAddTask} onClose={()=>{setShowAddTask(false);setNewTask({title:"",dueDate:"",responsible:"",priority:"medium",done:false,notes:""});}} title="Ajouter une tâche">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label=t.taskLabel||"TASK *">
+          <Field label={t.taskLabel||"TASK} *">
             <Input value={newTask.title} onChange={e=>setNewTask({...newTask,title:e.target.value})} placeholder="ex: Confirmer le traiteur, Envoyer les invitations…"/>
           </Field>
           <div style={{ display:"flex", gap:12 }}>
@@ -2127,7 +2127,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               <Input value={newTask.responsible} onChange={e=>setNewTask({...newTask,responsible:e.target.value})} placeholder="ex: Marie, Traiteur…"/>
             </Field>
           </div>
-          <Field label=t.priority?.toUpperCase()||"PRIORITY">
+          <Field label={t.priority?.toUpperCase()||"PRIORITY"}>
             <div style={{ display:"flex", gap:8 }}>
               {[["high","🔴 Urgent",C.red],["medium","🟡 Normal",C.gold],["low","🟢 Faible",C.green]].map(([v,l,col])=>(
                 <button key={v} onClick={()=>setNewTask({...newTask,priority:v})} style={{
@@ -2139,7 +2139,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             </div>
           </Field>
           <Field label="NOTES (optionnel)">
-            <Input value={newTask.notes} onChange={e=>setNewTask({...newTask,notes:e.target.value})} placeholder=t.details||"Details..."/>
+            <Input value={newTask.notes} onChange={e=>setNewTask({...newTask,notes:e.target.value})} placeholder={t.details||"Details..."}/>
           </Field>
           <Btn disabled={!newTask.title.trim()} onClick={()=>{
             updateEv(ev2=>({...ev2, planning:[...(ev2.planning||[]), {...newTask}]}));
@@ -2156,7 +2156,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             <Field label="HEURE">
               <Input type="time" value={newProgramItem.time} onChange={e=>setNewProgramItem({...newProgramItem,time:e.target.value})}/>
             </Field>
-            <Field label=t.stepLabel||"STEP *">
+            <Field label={t.stepLabel||"STEP} *">
               <Input value={newProgramItem.label} onChange={e=>setNewProgramItem({...newProgramItem,label:e.target.value})} placeholder="ex: Vin d'honneur, Dîner, Ouverture de bal…"/>
             </Field>
           </div>
@@ -2184,10 +2184,10 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
       {/* ── MODAL PRESTATAIRE ── */}
       <Modal open={showAddSupplier} onClose={()=>{setShowAddSupplier(false);setNewSupplier({name:"",role:"",phone:"",email:"",notes:""}); }} title="Ajouter un prestataire">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label=t.supplierName||"Name / Company *">
+          <Field label={t.supplierName||"Name} / Company *">
             <Input value={newSupplier.name} onChange={e=>setNewSupplier({...newSupplier,name:e.target.value})} placeholder="ex: DJ Martin, Fleurs du Soleil, Photos by Julie…"/>
           </Field>
-          <Field label=t.supplierRole||"Role / Service">
+          <Field label={t.supplierRole||"Role} / Service">
             <Input value={newSupplier.role} onChange={e=>setNewSupplier({...newSupplier,role:e.target.value})} placeholder="ex: DJ, Fleuriste, Photographe, Traiteur…"/>
           </Field>
           <div style={{ display:"flex", gap:12 }}>
@@ -2209,9 +2209,9 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         </div>
       </Modal>
 
-      <Modal open={showConstraint} onClose={()=>setShowConstraint(false)} title=t.newConstraint||"New constraint">
+      <Modal open={showConstraint} onClose={()=>setShowConstraint(false)} title={t.newConstraint||"New constraint"}>
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label=t.firstGuest||"FIRST GUEST">
+          <Field label={t.firstGuest||"FIRST} GUEST">
             <Select value={constraint.a} onChange={e=>setConstraint({...constraint,a:parseInt(e.target.value)||e.target.value})}>
               <option value="">— Choisir —</option>
               {ev.guests.map(g=><option key={g.id} value={g.id}>{g.name}</option>)}
@@ -2228,7 +2228,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               ))}
             </div>
           </Field>
-          <Field label=t.secondGuest||"SECOND GUEST">
+          <Field label={t.secondGuest||"SECOND} GUEST">
             <Select value={constraint.b} onChange={e=>setConstraint({...constraint,b:parseInt(e.target.value)||e.target.value})}>
               <option value="">— Choisir —</option>
               {ev.guests.filter(g=>g.id!==constraint.a).map(g=><option key={g.id} value={g.id}>{g.name}</option>)}
@@ -2258,7 +2258,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         </div>
       </Modal>
 
-      <Modal open={showSettings} onClose={()=>setShowSettings(false)} title=t.eventSettings||"Event settings">
+      <Modal open={showSettings} onClose={()=>setShowSettings(false)} title={t.eventSettings||"Event settings"}>
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <Field label={t.settingName}><Input value={ev.name} onChange={e=>updateEv(evUp=>({...evUp,name:e.target.value}))}/></Field>
           <Field label={t.settingDate}><Input type="date" value={ev.date} onChange={e=>updateEv(evUp=>({...evUp,date:e.target.value}))}/></Field>
