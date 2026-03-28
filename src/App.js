@@ -734,18 +734,18 @@ const LANG_NAMES = { fr: 'Français', en: 'English', es: 'Español', de: 'Deutsc
 
 
 const C = {
-  dark:   "#120C08",
-  mid:    "#2A1A0E",
-  card:   "#1E1208",
+  dark:   "#0d0d14",
+  mid:    "#13131e",
+  card:   "#18182a",
   gold:   "#C9973A",
-  gold2:  "#E8C46A",
-  cream:  "#F5EAD4",
-  light:  "#EDD9A3",
-  muted:  "#8A7355",
-  red:    "#C0392B",
+  gold2:  "#F0C97A",
+  cream:  "#ffffff",
+  light:  "#ffffff",
+  muted:  "rgba(255,255,255,0.45)",
+  red:    "#e05252",
   green:  "#27AE60",
-  blue:   "#2980B9",
-  border: "rgba(201,151,58,0.2)",
+  blue:   "#3b82f6",
+  border: "rgba(201,151,58,0.18)",
 };
 
 const THEMES_CONFIG = {
@@ -1167,7 +1167,7 @@ function RoomShapeEditor({ shape, onChange }) {
       </div>
 
       {mode === "draw" && (
-        <div style={{background:C.gold+"18",border:`1px solid ${C.gold}44`,borderRadius:8,padding:"8px 14px",marginBottom:10,fontSize:12,color:"#C9973A"}}>
+        <div style={{background:"linear-gradient(90deg,#C9973A,#F0C97A)"+"18",border:`1px solid ${C.gold}44`,borderRadius:8,padding:"8px 14px",marginBottom:10,fontSize:12,color:"#C9973A"}}>
           Cliquez pour ajouter des points · Cliquez près du premier point pour fermer la forme ({drawing.length} points placés)
         </div>
       )}
@@ -1803,7 +1803,7 @@ function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
                       <span>👤 {ev.guests.length} invités</span>
                     </div>
                     <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                      <div style={{ width:24,height:24,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:10,fontWeight:700 }}>
+                      <div style={{ width:24,height:24,borderRadius:"50%",background:"linear-gradient(90deg,#C9973A,#F0C97A)"+"33",display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:10,fontWeight:700 }}>
                         {owner?.avatar||"?"}
                       </div>
                       <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>{owner?.name||"Sans propriétaire"}</span>
@@ -2301,7 +2301,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
 
       {/* Notes bar */}
       {ev.notes && (
-        <div style={{ background:C.gold+"11", borderBottom:`1px solid ${C.gold}22`, padding:"8px 24px", fontSize:12, color:"rgba(255,255,255,0.45)", fontStyle:"italic" }}>
+        <div style={{ background:"linear-gradient(90deg,#C9973A,#F0C97A)"+"11", borderBottom:`1px solid ${C.gold}22`, padding:"8px 24px", fontSize:12, color:"rgba(255,255,255,0.45)", fontStyle:"italic" }}>
           {t.note} {ev.notes}
         </div>
       )}
@@ -2335,7 +2335,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
       {/* ── AI ASSISTANT PANEL ── */}
       {aiAssistOpen && (
         <div style={{ position:"fixed", bottom:24, right:24, width:380, maxHeight:520, zIndex:200, display:"flex", flexDirection:"column", background:"#18182a", border:`1px solid ${C.gold}44`, borderRadius:20, boxShadow:"0 8px 40px #00000066", overflow:"hidden" }}>
-          <div style={{ background:C.gold+"22", borderBottom:`1px solid ${C.gold}33`, padding:"14px 18px", display:"flex", alignItems:"center", gap:10 }}>
+          <div style={{ background:"linear-gradient(90deg,#C9973A,#F0C97A)"+"22", borderBottom:`1px solid ${C.gold}33`, padding:"14px 18px", display:"flex", alignItems:"center", gap:10 }}>
             <span style={{ fontSize:20 }}>🤖</span>
             <div style={{ flex:1 }}>
               <div style={{ color:"#C9973A", fontSize:14, fontWeight:700 }}>Assistant IA</div>
@@ -2343,7 +2343,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             </div>
             {aiAssistHistory.length===0 && (
               <button onClick={()=>sendAiAssist("Fais-moi un bilan rapide de l'état de mon événement et dis-moi ce qui est urgent.")}
-                style={{ background:C.gold+"22", border:`1px solid ${C.gold}44`, borderRadius:8, padding:"4px 10px", cursor:"pointer", color:"#C9973A", fontSize:11, fontFamily:"inherit" }}>
+                style={{ background:"linear-gradient(90deg,#C9973A,#F0C97A)"+"22", border:`1px solid ${C.gold}44`, borderRadius:8, padding:"4px 10px", cursor:"pointer", color:"#C9973A", fontSize:11, fontFamily:"inherit" }}>
                 ✨ Bilan auto
               </button>
             )}
@@ -2447,7 +2447,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 highlightAvailable={highlightTables || !!selectedUnseatedGuest}
               />
               {unseated.length>0 && (
-                <div style={{ marginTop:16, background:C.red+"11", border:`1px solid ${C.red}33`, borderRadius:12, padding:"12px 16px" }}>
+                <div style={{ marginTop:16, background:"#e05252"+"11", border:`1px solid ${C.red}33`, borderRadius:12, padding:"12px 16px" }}>
                   <div style={{ display:"flex", alignItems:"center", marginBottom:8 }}>
                     <div style={{ color:C.red, fontSize:12, letterSpacing:.5, flex:1 }}>{t.unseatedList} ({unseated.length})</div>
                     <button onClick={()=>setHighlightTables(h=>!h)} style={{ background:highlightTables?C.gold:"none", border:`1px solid ${highlightTables?C.gold:C.border}`, borderRadius:6, color:highlightTables?C.dark:C.muted, fontSize:11, padding:"3px 10px", cursor:"pointer", fontFamily:"inherit" }}>
@@ -2499,7 +2499,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                     const d=dietInfo(g.diet);
                     return (
                       <div key={g.id} style={{ background:C.mid+"88",borderRadius:10,padding:"8px 12px",display:"flex",alignItems:"center",gap:8 }}>
-                        <div style={{ width:26,height:26,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:11,fontWeight:700 }}>
+                        <div style={{ width:26,height:26,borderRadius:"50%",background:"linear-gradient(90deg,#C9973A,#F0C97A)"+"33",display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:11,fontWeight:700 }}>
                           {g.name[0]}
                         </div>
                         <div style={{flex:1}}>
@@ -2647,7 +2647,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                               <tr key={g.id} style={{ borderBottom:idx<tblGuests.length-1?"1px solid "+C.border+"33":"none", background:idx%2===0?"transparent":C.mid+"33" }}>
                                 <td style={{ padding:"10px 20px", color:"#ffffff", fontSize:14 }}>
                                   {g.name}
-                                  {g.role && <span style={{ marginLeft:6, background:C.gold+"22", border:"1px solid "+C.gold+"44", borderRadius:99, padding:"1px 8px", fontSize:10, color:"#C9973A" }}>
+                                  {g.role && <span style={{ marginLeft:6, background:"linear-gradient(90deg,#C9973A,#F0C97A)"+"22", border:"1px solid "+C.gold+"44", borderRadius:99, padding:"1px 8px", fontSize:10, color:"#C9973A" }}>
                                     {{"marie1":"💍","marie2":"💍","temoin":"🎖","famille_proche":"👨‍👩‍👧","ami_proche":"⭐","enfant":"🧒","vip":"🌟","prestataire":"🔧"}[g.role]||""} {{"marie1":"Marié(e)","marie2":"Marié(e)","temoin":"Témoin","famille_proche":"Famille","ami_proche":"Ami proche","enfant":"Enfant","vip":"VIP","prestataire":"Prestataire"}[g.role]||g.role}
                                   </span>}
                                 </td>
@@ -2663,11 +2663,11 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 );
               })}
               {ev.guests.filter(function(g){ return !g.tableId; }).length > 0 && (
-                <div style={{ background:C.red+"11", border:"1px solid "+C.red+"44", borderRadius:14, padding:"12px 20px" }}>
+                <div style={{ background:"#e05252"+"11", border:"1px solid "+C.red+"44", borderRadius:14, padding:"12px 20px" }}>
                   <p style={{ color:C.red, fontSize:13, fontWeight:700, marginBottom:8 }}>⚠ Non placés ({ev.guests.filter(function(g){ return !g.tableId; }).length})</p>
                   <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
                     {ev.guests.filter(function(g){ return !g.tableId; }).map(function(g){
-                      return <span key={g.id} style={{ background:C.red+"22", borderRadius:99, padding:"4px 12px", fontSize:12, color:"#ffffff" }}>{g.name}</span>;
+                      return <span key={g.id} style={{ background:"#e05252"+"22", borderRadius:99, padding:"4px 12px", fontSize:12, color:"#ffffff" }}>{g.name}</span>;
                     })}
                   </div>
                 </div>
@@ -2703,7 +2703,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 const d=dietInfo(g.diet);
                 return (
                   <div key={g.id} style={{ background:"#18182a",border:"1px solid rgba(201,151,58,0.15)",borderRadius:12,padding:"14px 18px",display:"flex",alignItems:"center",gap:14 }}>
-                    <div style={{ width:38,height:38,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:15,fontWeight:700 }}>
+                    <div style={{ width:38,height:38,borderRadius:"50%",background:"linear-gradient(90deg,#C9973A,#F0C97A)"+"33",display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:15,fontWeight:700 }}>
                       {g.name[0]}
                     </div>
                     <div style={{flex:1}}>
@@ -2824,7 +2824,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 })}
               </div>
               {ev.menu&&ev.menu.note && (
-                <div style={{ marginTop:14, background:C.gold+"11", border:"1px solid "+C.gold+"44", borderRadius:10, padding:"10px 16px", color:"#C9973A", fontSize:13, fontStyle:"italic" }}>
+                <div style={{ marginTop:14, background:"linear-gradient(90deg,#C9973A,#F0C97A)"+"11", border:"1px solid "+C.gold+"44", borderRadius:10, padding:"10px 16px", color:"#C9973A", fontSize:13, fontStyle:"italic" }}>
                   💡 {ev.menu.note}
                 </div>
               )}
@@ -3007,8 +3007,8 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                   </span>
                 </div>
                 <div style={{ height:8, background:"#13131e", borderRadius:99, overflow:"hidden", display:"flex" }}>
-                  <div style={{ width:`${rsvpConfirmed/ev.guests.length*100}%`, background:C.green, transition:"width .4s" }}/>
-                  <div style={{ width:`${rsvpDeclined/ev.guests.length*100}%`, background:C.red, transition:"width .4s" }}/>
+                  <div style={{ width:`${rsvpConfirmed/ev.guests.length*100}%`, background:"#27AE60", transition:"width .4s" }}/>
+                  <div style={{ width:`${rsvpDeclined/ev.guests.length*100}%`, background:"#e05252", transition:"width .4s" }}/>
                 </div>
                 <div style={{ display:"flex", gap:16, marginTop:8, fontSize:11, color:"rgba(255,255,255,0.45)" }}>
                   <span style={{ color:C.green }}>■ Confirmés {rsvpConfirmed}</span>
@@ -3048,7 +3048,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                   var rsvpIcon  = rsvp==="confirmed" ? "✅" : rsvp==="declined" ? "❌" : "⏳";
                   return (
                     <div key={g.id} style={{ display:"flex", alignItems:"center", gap:12, padding:"10px 14px", background:C.mid+"44", borderRadius:10, border:"1px solid "+C.border+"33" }}>
-                      <div style={{ width:32,height:32,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:13,fontWeight:700 }}>{g.name[0]}</div>
+                      <div style={{ width:32,height:32,borderRadius:"50%",background:"linear-gradient(90deg,#C9973A,#F0C97A)"+"33",display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:13,fontWeight:700 }}>{g.name[0]}</div>
                       <div style={{ flex:1 }}>
                         <div style={{ color:"#ffffff", fontSize:14 }}>{g.name}</div>
                         {g.email && <div style={{ color:"rgba(255,255,255,0.45)", fontSize:11 }}>{g.email}</div>}
@@ -3193,7 +3193,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               </div>
 
               {(ev.budget||[]).length > 0 && (
-                <div style={{ marginTop:16, padding:"14px 16px", background:C.gold+"11", border:"1px solid "+C.gold+"33", borderRadius:10, display:"flex", gap:24 }}>
+                <div style={{ marginTop:16, padding:"14px 16px", background:"linear-gradient(90deg,#C9973A,#F0C97A)"+"11", border:"1px solid "+C.gold+"33", borderRadius:10, display:"flex", gap:24 }}>
                   <span style={{ color:"#C9973A", fontSize:14 }}>Total estimé : <strong>{budgetTotal.toFixed(0)}€</strong></span>
                   <span style={{ color:budgetSpent>budgetTotal?C.red:C.green, fontSize:14 }}>Total réel : <strong>{budgetSpent.toFixed(0)}€</strong></span>
                   <span style={{ color:"rgba(255,255,255,0.45)", fontSize:14 }}>Écart : <strong>{(budgetTotal-budgetSpent).toFixed(0)}€</strong></span>
@@ -3233,7 +3233,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                   <span style={{ color:"#C9973A", fontSize:12, fontWeight:700 }}>{Math.round(planningDone/planningTotal*100)}%</span>
                 </div>
                 <div style={{ height:8, background:"#13131e", borderRadius:99, overflow:"hidden" }}>
-                  <div style={{ width:`${planningDone/planningTotal*100}%`, background:C.green, transition:"width .4s", height:"100%" }}/>
+                  <div style={{ width:`${planningDone/planningTotal*100}%`, background:"#27AE60", transition:"width .4s", height:"100%" }}/>
                 </div>
               </div>
             )}
@@ -3534,7 +3534,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
                 {ev.guests.map(g=>(
                   <div key={g.id} style={{ display:"flex", alignItems:"center", gap:12, padding:"10px 14px", background:C.mid+"55", borderRadius:10 }}>
-                    <div style={{ width:32,height:32,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:13,fontWeight:700 }}>{g.name[0]}</div>
+                    <div style={{ width:32,height:32,borderRadius:"50%",background:"linear-gradient(90deg,#C9973A,#F0C97A)"+"33",display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:13,fontWeight:700 }}>{g.name[0]}</div>
                     <div style={{ flex:1 }}>
                       <div style={{ color:"#ffffff", fontSize:14 }}>{g.name}</div>
                       {g.email && <div style={{ color:"rgba(255,255,255,0.45)", fontSize:11 }}>{g.email}</div>}
@@ -3737,8 +3737,8 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                   {(ev.programme||[]).sort((a,b)=>a.time.localeCompare(b.time)).map((item,ii)=>(
                     <div key={ii} style={{ display:"flex", gap:14, position:"relative", paddingBottom:16 }}>
                       <div style={{ display:"flex", flexDirection:"column", alignItems:"center" }}>
-                        <div style={{ width:36,height:36,borderRadius:"50%",background:C.gold+"33",border:`2px solid ${C.gold}44`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,zIndex:1 }}>{item.icon}</div>
-                        {ii<(ev.programme||[]).length-1 && <div style={{ width:2,flex:1,background:C.gold+"22",marginTop:4 }}/>}
+                        <div style={{ width:36,height:36,borderRadius:"50%",background:"linear-gradient(90deg,#C9973A,#F0C97A)"+"33",border:`2px solid ${C.gold}44`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,zIndex:1 }}>{item.icon}</div>
+                        {ii<(ev.programme||[]).length-1 && <div style={{ width:2,flex:1,background:"linear-gradient(90deg,#C9973A,#F0C97A)"+"22",marginTop:4 }}/>}
                       </div>
                       <div style={{ flex:1, paddingTop:6 }}>
                         <div style={{ display:"flex", alignItems:"baseline", gap:10 }}>
@@ -3767,7 +3767,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                   {(ev.suppliers||[]).map((s,si)=>(
                     <div key={si} style={{ background:C.mid+"55", borderRadius:12, padding:"14px 16px" }}>
                       <div style={{ display:"flex", alignItems:"start", gap:10 }}>
-                        <div style={{ width:38,height:38,borderRadius:"50%",background:C.gold+"22",border:`1px solid ${C.gold}44`,display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:16,fontWeight:700,flexShrink:0 }}>
+                        <div style={{ width:38,height:38,borderRadius:"50%",background:"linear-gradient(90deg,#C9973A,#F0C97A)"+"22",border:`1px solid ${C.gold}44`,display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:16,fontWeight:700,flexShrink:0 }}>
                           {s.name[0]}
                         </div>
                         <div style={{ flex:1 }}>
@@ -3831,7 +3831,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                       {venue.address && (
                         <a href={"https://maps.google.com/?q="+encodeURIComponent(venue.address)}
                           target="_blank" rel="noopener noreferrer"
-                          style={{ background:C.gold+"22", border:"1px solid "+C.gold+"44", borderRadius:6, padding:"6px 12px", color:"#C9973A", fontSize:12, textDecoration:"none" }}>
+                          style={{ background:"linear-gradient(90deg,#C9973A,#F0C97A)"+"22", border:"1px solid "+C.gold+"44", borderRadius:6, padding:"6px 12px", color:"#C9973A", fontSize:12, textDecoration:"none" }}>
                           🗺 Voir sur Maps
                         </a>
                       )}
@@ -3855,7 +3855,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 <button onClick={function(){
                   var url = ev.giftList && ev.giftList.url;
                   if (url) { window.open(url, "_blank"); }
-                }} style={{ background:C.gold+"22", border:"1px solid "+C.gold+"44", borderRadius:8, padding:"6px 14px", cursor:"pointer", color:"#C9973A", fontFamily:"inherit", fontSize:12, display:ev.giftList&&ev.giftList.url?"flex":"none", alignItems:"center", gap:6 }}>
+                }} style={{ background:"linear-gradient(90deg,#C9973A,#F0C97A)"+"22", border:"1px solid "+C.gold+"44", borderRadius:8, padding:"6px 14px", cursor:"pointer", color:"#C9973A", fontFamily:"inherit", fontSize:12, display:ev.giftList&&ev.giftList.url?"flex":"none", alignItems:"center", gap:6 }}>
                   🔗 Voir la liste en ligne
                 </button>
               </div>
@@ -4441,7 +4441,7 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
           {user.photoURL ? (
             <img src={user.photoURL} alt={user.name} style={{ width:32,height:32,borderRadius:"50%",objectFit:"cover",border:`2px solid ${C.gold}44` }}/>
           ) : (
-            <div style={{ width:32,height:32,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:13,fontWeight:700 }}>
+            <div style={{ width:32,height:32,borderRadius:"50%",background:"linear-gradient(90deg,#C9973A,#F0C97A)"+"33",display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:13,fontWeight:700 }}>
               {user.avatar}
             </div>
           )}
