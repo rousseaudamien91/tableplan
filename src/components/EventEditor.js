@@ -34,6 +34,7 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
   const [tab, setTab] = useState("plan");
   const [selectedTable, setSelectedTable] = useState(null);
   const [showAddGuest, setShowAddGuest] = useState(false);
+  const [guestSubTab, setGuestSubTab] = useState("list"); // list | rsvp
   const [showPricingPalier, setShowPricingPalier] = useState(false);
   const [showAddTable, setShowAddTable] = useState(false);
   const [showAddZone, setShowAddZone] = useState(false);
@@ -249,7 +250,6 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
     {id:"plan",         icon:"🗺",  label: t.tabPlan || "Plan"},
     {id:"list",         icon:"📋",  label: t.tabList || "List"},
     {id:"guests",       icon:"👥",  label:`${t.tabGuests || "Guests"} (${ev.guests.length})`},
-    {id:"rsvp",         icon:"💌",  label:`RSVP${rsvpPending>0?" ("+rsvpPending+"⏳)":""}`},
     {id:"budget",       icon:"💰",  label: t.tabBudget || "Budget"},
     {id:"planning",     icon:"🗓",  label:`${t.tabPlanning || "Planning"}${planningTotal>0?" ("+planningDone+"/"+planningTotal+")":""}`},
     {id:"programme",    icon:"🎵",  label: t.tabProgramme || "Programme"},
@@ -320,7 +320,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             background:"none", border:"none", borderBottom:`2px solid ${tab===tabItem.id?C.gold:"transparent"}`,
             color:tab===tabItem.id?C.gold:C.muted, padding:"14px 18px",
             cursor:"pointer", fontFamily:"inherit", fontSize:13, fontWeight:tab===tabItem.id?700:400, whiteSpace:"nowrap",
-          }}>{tabItem.icon} {tabItem.label}</button>
+          }}>{tabItem.label}</button>
         ))}
       </div>
 
@@ -670,6 +670,43 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
 
         {tab==="guests" && (
           <div style={{ maxWidth:860 }}>
+            {/* Sous-onglets Invités / RSVP */}
+            <div style={{ display:"flex", gap:0, marginBottom:20, borderBottom:"1px solid rgba(201,151,58,0.15)" }}>
+              {[
+                {id:"list", label:"👥 "+(t.tabGuests||"Invités"), count:ev.guests.length},
+                {id:"rsvp",  label:"💌 RSVP", count:rsvpPending>0?rsvpPending:null},
+              ].map(sub=>(
+                <button key={sub.id} onClick={()=>setGuestSubTab(sub.id)} style={{
+                  background:"none", border:"none",
+                  borderBottom:`2px solid ${guestSubTab===sub.id?C.gold:"transparent"}`,
+                  color:guestSubTab===sub.id?C.gold:C.muted,
+                  padding:"10px 20px", cursor:"pointer", fontFamily:"inherit",
+                  fontSize:13, fontWeight:guestSubTab===sub.id?700:400, whiteSpace:"nowrap",
+                }}>
+                  {sub.label}{sub.count!==null?" ("+sub.count+")":""}
+                </button>
+              ))}
+            </div>
+
+            {/* Sous-onglets Invités / RSVP */}
+            <div style={{ display:"flex", gap:0, marginBottom:20, borderBottom:"1px solid rgba(201,151,58,0.15)" }}>
+              {[
+                {id:"list", label:`👥 ${t.tabGuests||"Invités"} (${ev.guests.length})`},
+                {id:"rsvp",  label:`💌 RSVP${rsvpPending>0?" ("+rsvpPending+"⏳)":""}`},
+              ].map(sub=>(
+                <button key={sub.id} onClick={()=>setGuestSubTab(sub.id)} style={{
+                  background:"none", border:"none",
+                  borderBottom:`2px solid ${guestSubTab===sub.id?C.gold:"transparent"}`,
+                  color:guestSubTab===sub.id?C.gold:"rgba(255,255,255,0.5)",
+                  padding:"10px 20px", cursor:"pointer",
+                  fontSize:13, fontWeight:guestSubTab===sub.id?700:400,
+                  fontFamily:"inherit", whiteSpace:"nowrap",
+                }}>{sub.label}</button>
+              ))}
+            </div>
+
+            {/* ── SOUS-ONGLET : LISTE INVITÉS ── */}
+            {guestSubTab==="list" && (
             <div style={{ display:"flex", gap:12, marginBottom:20 }}>
               <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t.search||"Search guest..."}
                 style={{ ...inputStyle, flex:1 }}/>
@@ -964,14 +1001,11 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               </div>
             )}
 
-          </div>
-        )}
+            )} {/* fin guestSubTab list */}
 
-        {/* ══════════════════════════════════════════
-            ── RSVP TAB ──
-        ══════════════════════════════════════════ */}
-        {tab==="rsvp" && (
-          <div style={{ maxWidth:900 }}>
+            {/* ── SOUS-ONGLET : RSVP ── */}
+            {guestSubTab==="rsvp" && (
+            <div style={{ maxWidth:900 }}>
 
             {/* ── Synthèse RSVP ── */}
             <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))", gap:14, marginBottom:28 }}>
@@ -1068,7 +1102,8 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 })}
               </div>
             </div>
-          </div>
+            )} {/* fin guestSubTab rsvp */}
+          </div> {/* fin maxWidth:860 tab guests */}
         )}
 
         {/* ══════════════════════════════════════════
@@ -1488,71 +1523,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         )}
 
         {/* ── RSVP TAB ── */}
-        {tab==="rsvp" && (
-          <div style={{ maxWidth:900, display:"flex", flexDirection:"column", gap:20 }}>
-            {/* Compteurs RSVP */}
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:14 }}>
-              {[
-                {label:t.rsvpConfirmed||"Confirmed",val:rsvpConfirmed,color:C.green,icon:"✅"},
-                {label:"En attente",val:rsvpPending,color:"#C9973A",icon:"⏳"},
-                {label:t.rsvpDeclined||"Declined",val:rsvpDeclined,color:C.red,icon:"❌"},
-              ].map(s=>(
-                <div key={s.label} style={{ background:"#18182a", border:`1px solid ${s.color}44`, borderRadius:14, padding:"20px 24px", textAlign:"center" }}>
-                  <div style={{ fontSize:28 }}>{s.icon}</div>
-                  <div style={{ fontSize:28, fontWeight:700, color:s.color, margin:"4px 0" }}>{s.val}</div>
-                  <div style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>{s.label}</div>
-                </div>
-              ))}
-            </div>
-            {/* Progress bar */}
-            <div style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:14, padding:"18px 24px" }}>
-              <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8 }}>
-                <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>{t.rsvpRate||"Response rate"}</span>
-                <span style={{ color:"#C9973A", fontSize:12, fontWeight:700 }}>{ev.guests.length>0?Math.round((rsvpConfirmed+rsvpDeclined)/ev.guests.length*100):0}%</span>
-              </div>
-              <div style={{ height:8, background:"#13131e", borderRadius:99, overflow:"hidden" }}>
-                <div style={{ height:"100%", width:`${ev.guests.length>0?(rsvpConfirmed+rsvpDeclined)/ev.guests.length*100:0}%`, background:`linear-gradient(90deg,${C.green},${C.gold})`, borderRadius:99 }}/>
-              </div>
-            </div>
-            {/* Liste invités avec statut RSVP */}
-            <div style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:14, padding:24 }}>
-              <div style={{ display:"flex", alignItems:"center", marginBottom:16 }}>
-                <h4 style={{ margin:0, color:"#C9973A", fontWeight:400, fontSize:16 }}>💌 {t.rsvpTracking||"Guest tracking"}</h4>
-                <div style={{ flex:1 }}/>
-                <Btn small variant="muted" onClick={()=>{
-                  updateEv(e=>({...e, guests:e.guests.map(g=>g.rsvp?g:{...g,rsvp:"pending"})}));
-                }}>{t.rsvpMarkPending||"Mark all pending"}</Btn>
-              </div>
-              <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-                {ev.guests.map(g=>(
-                  <div key={g.id} style={{ display:"flex", alignItems:"center", gap:12, padding:"10px 14px", background:C.mid+"55", borderRadius:10 }}>
-                    <div style={{ width:32,height:32,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:13,fontWeight:700 }}>{g.name[0]}</div>
-                    <div style={{ flex:1 }}>
-                      <div style={{ color:"#ffffff", fontSize:14 }}>{g.name}</div>
-                      {g.email && <div style={{ color:"rgba(255,255,255,0.45)", fontSize:11 }}>{g.email}</div>}
-                    </div>
-                    <div style={{ display:"flex", gap:6 }}>
-                      {[["confirmed","✅",t.rsvpConfirmedSingle||"Confirmed",C.green],["pending","⏳","En attente",C.gold],["declined","❌",t.rsvpDeclinedSingle||"Declined",C.red]].map(([v,ic,lb,col])=>(
-                        <button key={v} onClick={()=>updateEv(e=>({...e,guests:e.guests.map(x=>x.id===g.id?{...x,rsvp:v}:x)}))}
-                          style={{ padding:"4px 10px", borderRadius:8, border:`1.5px solid ${(!g.rsvp&&v==="pending")||g.rsvp===v?col:C.border}`,
-                            background:(!g.rsvp&&v==="pending")||g.rsvp===v?col+"22":"none",
-                            color:(!g.rsvp&&v==="pending")||g.rsvp===v?col:C.muted, cursor:"pointer", fontSize:11, fontFamily:"inherit" }}>
-                          {ic} {lb}
-                        </button>
-                      ))}
-                    </div>
-                    {g.rsvpNote && <span style={{ color:"rgba(255,255,255,0.45)", fontSize:11, fontStyle:"italic", maxWidth:120, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{g.rsvpNote}</span>}
-                    <input
-                      value={g.rsvpNote||""} onChange={e=>{const v=e.target.value; updateEv(ev2=>({...ev2,guests:ev2.guests.map(x=>x.id===g.id?{...x,rsvpNote:v}:x)}));}}
-                      placeholder="Note…"
-                      style={{ width:120, padding:"4px 8px", background:"#fff1", border:"1px solid rgba(201,151,58,0.15)", borderRadius:6, color:"#ffffff", fontSize:11, fontFamily:"inherit" }}
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
+
 
         {/* ── BUDGET TAB ── */}
         {tab==="budget" && (
