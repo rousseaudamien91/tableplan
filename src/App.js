@@ -779,7 +779,7 @@ const INITIAL_USERS = [];
 // ═══════════════════════════════════════════════════════════════
 
 const PLANS = {
-  free:   { label: "Gratuit", price: 0,    maxEvents: 1,   maxGuests: 30,  color: "rgba(255,255,255,0.45)", icon: "🆓" },
+  free:   { label: "Gratuit", price: 0,    maxEvents: 1,   maxGuests: 30,  color: "#8A7355", icon: "🆓" },
   pro:    { label: "Pro",     price: 9.90, maxEvents: 999, maxGuests: 999, color: "#C9973A", icon: "⭐" },
   agence: { label: "Agence",  price: 29,   maxEvents: 999, maxGuests: 999, color: "#2A1A0e", icon: "🏢" },
 };
@@ -1001,9 +1001,7 @@ function Modal({ title, onClose, children, width=520 }) {
       <div style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.2)", borderRadius:16, padding:"28px 32px", width:"90%", maxWidth:width, maxHeight:"88vh", overflowY:"auto", boxShadow:"0 24px 80px rgba(0,0,0,0.6)", position:"relative" }}>
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:22, paddingBottom:16, borderBottom:"1px solid rgba(255,255,255,0.07)" }}>
           <h2 style={{ margin:0, fontSize:17, fontWeight:700, color:"#ffffff", letterSpacing:.3 }}>{title}</h2>
-          <button onClick={onClose} style={{ background:"rgba(255,255,255,0.07)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:8, width:30, height:30, cursor:"pointer", color:"rgba(255,255,255,0.5)", fontSize:16, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}
-            onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,0.12)"; e.currentTarget.style.color="#fff"; }}
-            onMouseLeave={e=>{ e.currentTarget.style.background="rgba(255,255,255,0.07)"; e.currentTarget.style.color="rgba(255,255,255,0.5)"; }}>
+          <button onClick={onClose} style={{ background:"rgba(255,255,255,0.08)", border:"1px solid rgba(255,255,255,0.12)", borderRadius:8, width:32, height:32, cursor:"pointer", color:"rgba(255,255,255,0.6)", fontSize:18, display:"flex", alignItems:"center", justifyContent:"center", fontWeight:400, lineHeight:1 }}>
             ✕
           </button>
         </div>
@@ -2057,7 +2055,7 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
   const [showAddZone, setShowAddZone] = useState(false);
   const [showAddFurniture, setShowAddFurniture] = useState(false);
   const [newZone, setNewZone] = useState({ label:"", icon:"📍", color:"#C9973A" });
-  const [newFurniture, setNewFurniture] = useState({ label:"", icon:"🪑", color:"rgba(255,255,255,0.45)", width:80, height:40 });
+  const [newFurniture, setNewFurniture] = useState({ label:"", icon:"🪑", color:"#8A7355", width:80, height:40 });
   const [planSubTab, setPlanSubTab] = useState("tables");
   const [showConstraint, setShowConstraint] = useState(false);
   // IA proactive
@@ -4052,7 +4050,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         </div>
       </Modal>
 
-      <Modal open={showAddFurniture} onClose={()=>{setShowAddFurniture(false);setNewFurniture({label:"",icon:"🪑",color:"rgba(255,255,255,0.45)",width:80,height:40});}} title="Ajouter du mobilier">
+      <Modal open={showAddFurniture} onClose={()=>{setShowAddFurniture(false);setNewFurniture({label:"",icon:"🪑",color:"#8A7355",width:80,height:40});}} title="Ajouter du mobilier">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <Field label="NOM *">
             <Input value={newFurniture.label} onChange={e=>setNewFurniture({...newFurniture,label:e.target.value})} placeholder="ex: Buffet, Piano, Podium, Bar, Scène…"/>
@@ -4077,7 +4075,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
           </div>
           <Field label="COULEUR">
             <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
-              {["rgba(255,255,255,0.45)","#C9973A","#E84A6A","#4CAF50","#2196F3","#9C27B0","#FF9800","#8B7EC8"].map(col=>(
+              {["#8A7355","#C9973A","#E84A6A","#4CAF50","#2196F3","#9C27B0","#FF9800","#8B7EC8"].map(col=>(
                 <button key={col} onClick={()=>setNewFurniture({...newFurniture,color:col})} style={{
                   width:28,height:28,borderRadius:"50%",background:col,border:`3px solid ${newFurniture.color===col?"#fff":"transparent"}`,cursor:"pointer",padding:0,
                 }}/>
@@ -4086,7 +4084,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
           </Field>
           <Btn disabled={!newFurniture.label.trim()} onClick={()=>{
             updateEv(function(evUp){ return {...evUp, furniture:[...(evUp.furniture||[]), {...newFurniture,id:Date.now(),x:200,y:200}]}; });
-            setNewFurniture({label:"",icon:"🪑",color:"rgba(255,255,255,0.45)",width:80,height:40});
+            setNewFurniture({label:"",icon:"🪑",color:"#8A7355",width:80,height:40});
             setShowAddFurniture(false);
           }} style={{marginTop:4}}>Ajouter le mobilier</Btn>
         </div>
@@ -4700,7 +4698,7 @@ function LoadingScreen() {
     <div style={{ minHeight:"100vh", background:`radial-gradient(ellipse at 30% 40%, #13131e, #0d0d14)`, display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column", gap:16 }}>
       <div style={{ fontSize:48 }}>🪑</div>
       <div style={{ color:"#C9973A", fontSize:18, letterSpacing:2, fontFamily:"Georgia,serif" }}>TableMaître</div>
-      <div style={{ color:"rgba(255,255,255,0.45)", fontSize:13 }}>Loading…</div>
+      <div style={{ color:"#8A7355", fontSize:13 }}>Loading…</div>
     </div>
   );
 }
@@ -4760,7 +4758,7 @@ function GuestJoinPage({ eventId }) {
     <div style={{ minHeight:"100vh", background:"#0d0d14", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", fontFamily:"Georgia,serif", padding:20, textAlign:"center" }}>
       <div style={{ fontSize:48, marginBottom:16 }}>🔍</div>
       <h2 style={{ color:"#C9973A", fontWeight:400 }}>Événement introuvable</h2>
-      <p style={{ color:"rgba(255,255,255,0.45)", marginBottom:8 }}>Le lien est peut-être expiré ou invalide.</p>
+      <p style={{ color:"#8A7355", marginBottom:8 }}>Le lien est peut-être expiré ou invalide.</p>
       <p style={{ color:"#5a3a1a", fontSize:12 }}>Demandez à l'organisateur de partager le lien via le bouton "🔗 Partager" de l'application.</p>
       <a href="/" style={{ marginTop:24, color:"#C9973A", fontSize:14 }}>← Retour à TableMaître</a>
     </div>
@@ -4778,7 +4776,7 @@ function GuestJoinPage({ eventId }) {
         <div style={{ textAlign:"center", marginBottom:32 }}>
           <div style={{ fontSize:48, marginBottom:8 }}>{theme.icon}</div>
           <h1 style={{ fontSize:28, fontWeight:400, color:"#C9973A", letterSpacing:2, margin:"0 0 8px" }}>{ev.name}</h1>
-          <p style={{ color:"rgba(255,255,255,0.45)", fontSize:14 }}>
+          <p style={{ color:"#8A7355", fontSize:14 }}>
             📅 {new Date(ev.date).toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long", year:"numeric" })}
           </p>
           {ev.notes && <p style={{ color:"#A89060", fontSize:13, fontStyle:"italic", marginTop:8 }}>{ev.notes}</p>}
@@ -4794,7 +4792,7 @@ function GuestJoinPage({ eventId }) {
             <div key={s.label} style={{ background:"#18182a", border:"1px solid #3a2a1a", borderRadius:12, padding:"12px 20px", textAlign:"center", flex:1 }}>
               <div style={{ fontSize:20 }}>{s.icon}</div>
               <div style={{ color:"#C9973A", fontSize:20, fontWeight:700 }}>{s.val}</div>
-              <div style={{ color:"rgba(255,255,255,0.45)", fontSize:11 }}>{s.label}</div>
+              <div style={{ color:"#8A7355", fontSize:11 }}>{s.label}</div>
             </div>
           ))}
         </div>
@@ -4910,7 +4908,7 @@ function GuestJoinPage({ eventId }) {
                       <span style={{ color:tbl.color||"#C9973A", fontWeight:700, fontSize:14 }}>
                         Table {tbl.number}{tbl.label ? ` — ${tbl.label}` : ""}
                       </span>
-                      <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>{tGuests.length}/{tbl.capacity}</span>
+                      <span style={{ color:"#8A7355", fontSize:12 }}>{tGuests.length}/{tbl.capacity}</span>
                     </div>
                     <div style={{ padding:"8px 16px", display:"flex", flexWrap:"wrap", gap:6 }}>
                       {tGuests.length === 0 ? (
