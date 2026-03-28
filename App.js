@@ -98,6 +98,7 @@ export default function App() {
   const fbUser = useFirebaseAuth();
   const [events, setEvents] = useState([]);
   const [eventsLoaded, setEventsLoaded] = useState(false);
+  const [guestMode, setGuestMode] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState(null);
   const [view, setView] = useState("dashboard");
   const [lightMode, setLightMode] = useState(false);
@@ -237,7 +238,6 @@ export default function App() {
 
   // Mise à jour + sauvegarde auto Firestore
   const [editorSaveToast, setEditorSaveToast] = useState(false);
-  const [guestMode, setGuestMode] = useState(false);
   const handleUpdateEvent = (updatedEv) => {
     setEvents(prev => prev.map(e => e.id === updatedEv.id ? updatedEv : e));
     if (fbUser) {
