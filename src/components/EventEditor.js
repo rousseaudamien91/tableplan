@@ -308,7 +308,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             background:"none", border:"none", borderBottom:`2px solid ${tab===tabItem.id?C.gold:"transparent"}`,
             color:tab===tabItem.id?C.gold:C.muted, padding:"14px 18px",
             cursor:"pointer", fontFamily:"inherit", fontSize:13, fontWeight:tab===tabItem.id?700:400, whiteSpace:"nowrap",
-          }}>{tabItem.icon} {tabItem.label}</button>
+          }}>{tabItem.label}</button>
         ))}
       </div>
 
@@ -659,7 +659,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         {tab==="guests" && (
           <div style={{ maxWidth:860 }}>
             <div style={{ display:"flex", gap:12, marginBottom:20 }}>
-              <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t.search||"Search guest..."}
+              <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Rechercher un invité…"
                 style={{ ...inputStyle, flex:1 }}/>
               <Btn variant="ghost" onClick={()=>exportGuestsCSV(ev)}>⬇ Export CSV</Btn>
               <Btn variant="ghost" onClick={()=>setShowImportCSV(true)}>⬆ Import CSV</Btn>
