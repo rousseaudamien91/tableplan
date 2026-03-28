@@ -1494,7 +1494,7 @@ function printDietSummary(ev) {
 // ═══════════════════════════════════════════════════════════════
 
 function LoginScreen({ onLogin, t: tProp }) {
-  const { t: tHook } = useI18n();
+  const { t: tHook, lang, setLang } = useI18n();
   const t = tProp || tHook;
 
   return (
@@ -1517,6 +1517,19 @@ function LoginScreen({ onLogin, t: tProp }) {
       <div style={{ position:"relative", zIndex:1, width:"100%", maxWidth:420 }}>
         <div style={{ textAlign:"center", marginBottom:40 }}>
           <div style={{ fontSize:48, marginBottom:12 }}>🪑</div>
+          {/* Sélecteur de langue */}
+          <div style={{ display:"flex", gap:6, marginBottom:20, justifyContent:"center" }}>
+            {Object.entries(LANG_FLAGS).map(([lk, flag]) => (
+              <button key={lk} onClick={()=>setLang(lk)} title={LANG_NAMES[lk]} style={{
+                background: lang===lk ? C.gold+"33" : "transparent",
+                border: lang===lk ? `1px solid ${C.gold}` : "1px solid transparent",
+                borderRadius:8, padding:"4px 8px", cursor:"pointer", fontSize:18,
+                transition:"all .2s", opacity: lang===lk ? 1 : 0.5,
+              }}>
+                {flag}
+              </button>
+            ))}
+          </div>
           <h1 style={{ fontSize:36, fontWeight:400, letterSpacing:4, color:C.gold, margin:"0 0 8px" }}>TableMaître</h1>
           <p style={{ color:C.muted, fontSize:12, letterSpacing:3 }}>{t.loginSubtitle}</p>
         </div>
