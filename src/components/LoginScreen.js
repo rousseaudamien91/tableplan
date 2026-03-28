@@ -98,18 +98,6 @@ function LoginScreen({ onLogin, t: tProp }) {
         </div>
       </section>
 
-      {/* FOOTER CTA */}
-      <section style={{ padding:"80px 24px", textAlign:"center", borderTop:"1px solid rgba(255,255,255,0.07)", background:"rgba(201,151,58,0.04)" }}>
-        <h2 style={{ fontSize:34, fontWeight:800, fontFamily:"Georgia,serif", margin:"0 0 14px", color:"#ffffff" }}>
-          {t.loginFooterTitle || "Prêt à sublimer vos événements ?"}
-        </h2>
-        <p style={{ color:"rgba(255,255,255,0.4)", marginBottom:36, fontSize:15 }}>
-          {t.loginFree || "Gratuit · Sans carte bancaire · Synchronisé cloud"}
-        </p>
-        <button onClick={onLogin} style={{ padding:"17px 40px", background:"linear-gradient(135deg,#C9973A,#F0C97A)", border:"none", borderRadius:99, cursor:"pointer", color:"#0d0d14", fontWeight:800, fontSize:16, boxShadow:"0 8px 40px rgba(201,151,58,0.35)", display:"inline-flex", alignItems:"center", gap:10 }}>
-          {t.loginCta || "Commencer gratuitement avec Google"}
-        </button>
-      </section>
     </div>
   );
 }
