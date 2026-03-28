@@ -77,7 +77,6 @@ function VoucherModal({ onClose, onApply }) {
           </button>
         </div>
         <div style={{ marginTop:20, fontSize:11, color:"rgba(255,255,255,0.45)", lineHeight:1.8 }}>
-          Codes actifs : <span style={{color:"#C9973A"}}>BIENVENUE</span> · <span style={{color:"#C9973A"}}>MARIAGE2026</span> · <span style={{color:"#C9973A"}}>PARTENAIRE</span> · <span style={{color:"#C9973A"}}>VIP100</span>
         </div>
       </div>
     </div>
