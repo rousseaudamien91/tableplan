@@ -125,8 +125,7 @@ const TRANSLATIONS = {
     noTable: "-- Non placé --",
     // Login
     loginGoogle: "Se connecter avec Google",
-    loginSubtitle: "GESTION DE PLANS DE TABLE",
-    loginTagline: "La plateforme de gestion d'événements pour les professionnels",
+    loginTagline: "La plateforme pro de gestion d'événements",
     loginHero: "Organisez. Placez. Impressionnez.",
     loginSub: "De l'invitation à la salle, gérez chaque détail de votre événement depuis une seule application.",
     loginCta: "Commencer gratuitement avec Google",
@@ -143,6 +142,9 @@ const TRANSLATIONS = {
     loginTrust2: "Galas",
     loginTrust3: "Conférences",
     loginTrust4: "Événements corporate",
+    loginFooterTitle: "Prêt à sublimer vos événements ?",
+    trustedFor: "Nos clients organisent",
+    loginSubtitle: "GESTION DE PLANS DE TABLE",
     
     // Notifications
     savedCloud: "☁️ Sauvegardé dans le cloud",
@@ -257,6 +259,25 @@ const TRANSLATIONS = {
     addGuestBtn: "Add guest",
     noTable: "-- Not seated --",
     loginGoogle: "Sign in with Google",
+    loginTagline: "The professional event management platform",
+    loginHero: "Organize. Place. Impress.",
+    loginSub: "From invitations to seating, manage every detail of your event from one powerful application.",
+    loginCta: "Get started free with Google",
+    loginFree: "Free · No credit card · Cloud synced",
+    loginF1: "Interactive floor plan",
+    loginF1d: "Drag and drop tables on an intuitive canvas",
+    loginF2: "RSVP & invitations",
+    loginF2d: "Track confirmations in real time",
+    loginF3: "Premium exports",
+    loginF3d: "PDF, printable place cards, guest QR codes",
+    loginF4: "Proactive AI",
+    loginF4d: "An assistant that analyzes and guides your event",
+    loginTrust1: "Weddings",
+    loginTrust2: "Galas",
+    loginTrust3: "Conferences",
+    loginTrust4: "Corporate events",
+    loginFooterTitle: "Ready to elevate your events?",
+    trustedFor: "Our clients organize",
     loginSubtitle: "TABLE PLAN MANAGEMENT",
     savedCloud: "☁️ Saved to cloud",
     savedAuto: "☁️ Auto-saved",
@@ -367,6 +388,25 @@ const TRANSLATIONS = {
     addGuestBtn: "Añadir invitado",
     noTable: "-- Sin asignar --",
     loginGoogle: "Iniciar sesión con Google",
+    loginTagline: "La plataforma profesional de gestión de eventos",
+    loginHero: "Organiza. Coloca. Impresiona.",
+    loginSub: "Desde las invitaciones hasta la sala, gestiona cada detalle desde una sola aplicación.",
+    loginCta: "Comenzar gratis con Google",
+    loginFree: "Gratis · Sin tarjeta · Sincronizado en la nube",
+    loginF1: "Plano de sala interactivo",
+    loginF1d: "Arrastra y suelta mesas en un canvas intuitivo",
+    loginF2: "RSVP & invitaciones",
+    loginF2d: "Sigue las confirmaciones en tiempo real",
+    loginF3: "Exportaciones premium",
+    loginF3d: "PDF, tarjetas imprimibles, códigos QR",
+    loginF4: "IA proactiva",
+    loginF4d: "Un asistente que analiza y guía tu evento",
+    loginTrust1: "Bodas",
+    loginTrust2: "Galas",
+    loginTrust3: "Conferencias",
+    loginTrust4: "Eventos corporativos",
+    loginFooterTitle: "¿Listo para elevar sus eventos?",
+    trustedFor: "Nuestros clientes organizan",
     loginSubtitle: "GESTIÓN DE PLANES DE MESA",
     savedCloud: "☁️ Guardado en la nube",
     savedAuto: "☁️ Guardado automáticamente",
@@ -476,6 +516,25 @@ const TRANSLATIONS = {
     addGuestBtn: "Gast hinzufügen",
     noTable: "-- Nicht platziert --",
     loginGoogle: "Mit Google anmelden",
+    loginTagline: "Die professionelle Event-Management-Plattform",
+    loginHero: "Organisieren. Platzieren. Beeindrucken.",
+    loginSub: "Von der Einladung bis zum Saal — verwalten Sie jedes Detail von einer Anwendung aus.",
+    loginCta: "Kostenlos mit Google starten",
+    loginFree: "Kostenlos · Keine Kreditkarte · Cloud-synchronisiert",
+    loginF1: "Interaktiver Saalplan",
+    loginF1d: "Tische per Drag & Drop",
+    loginF2: "RSVP & Einladungen",
+    loginF2d: "Bestätigungen in Echtzeit verfolgen",
+    loginF3: "Premium-Exporte",
+    loginF3d: "PDF, druckbare Tischkarten, QR-Codes",
+    loginF4: "Proaktive KI",
+    loginF4d: "Ein Assistent für Ihr Event",
+    loginTrust1: "Hochzeiten",
+    loginTrust2: "Galas",
+    loginTrust3: "Konferenzen",
+    loginTrust4: "Firmenevents",
+    loginFooterTitle: "Bereit, Ihre Events zu perfektionieren?",
+    trustedFor: "Unsere Kunden organisieren",
     loginSubtitle: "TISCHPLAN-VERWALTUNG",
     savedCloud: "☁️ In der Cloud gespeichert",
     savedAuto: "☁️ Automatisch gespeichert",
@@ -584,6 +643,25 @@ const TRANSLATIONS = {
     addGuestBtn: "Aggiungi ospite",
     noTable: "-- Non assegnato --",
     loginGoogle: "Accedi con Google",
+    loginTagline: "La piattaforma professionale di gestione eventi",
+    loginHero: "Organizza. Posiziona. Impressiona.",
+    loginSub: "Dall'invito alla sala, gestisci ogni dettaglio da un'unica applicazione.",
+    loginCta: "Inizia gratis con Google",
+    loginFree: "Gratis · Senza carta · Sincronizzato nel cloud",
+    loginF1: "Pianta della sala interattiva",
+    loginF1d: "Trascina e rilascia i tavoli su una canvas",
+    loginF2: "RSVP & inviti",
+    loginF2d: "Monitora le conferme in tempo reale",
+    loginF3: "Esportazioni premium",
+    loginF3d: "PDF, segnaposto stampabili, QR code",
+    loginF4: "IA proattiva",
+    loginF4d: "Un assistente che guida il tuo evento",
+    loginTrust1: "Matrimoni",
+    loginTrust2: "Gala",
+    loginTrust3: "Conferenze",
+    loginTrust4: "Eventi aziendali",
+    loginFooterTitle: "Pronti a elevare i vostri eventi?",
+    trustedFor: "I nostri clienti organizzano",
     loginSubtitle: "GESTIONE PIANI TAVOLA",
     savedCloud: "☁️ Salvato nel cloud",
     savedAuto: "☁️ Salvato automaticamente",
@@ -1523,73 +1601,52 @@ function LoginScreen({ onLogin, t: tProp }) {
     { icon:"🤖", title: t.loginF4 || "IA proactive", desc: t.loginF4d || "Un assistant qui analyse et guide votre événement" },
   ];
 
-  const TRUST = [
-    t.loginTrust1 || "Mariages",
-    t.loginTrust2 || "Galas",
-    t.loginTrust3 || "Conférences",
-    t.loginTrust4 || "Événements corporate"
-  ];
+  const TRUST = [t.loginTrust1||"Mariages", t.loginTrust2||"Galas", t.loginTrust3||"Conférences", t.loginTrust4||"Corporate"];
 
   return (
     <div style={{ minHeight:"100vh", background:"#0d0d14", fontFamily:"'Inter','Segoe UI',sans-serif", color:"#ffffff", overflowX:"hidden" }}>
 
       {/* NAV */}
-      <nav style={{ position:"fixed", top:0, left:0, right:0, zIndex:100, display:"flex", alignItems:"center", padding:"0 48px", height:64, background:"rgba(13,13,20,0.92)", backdropFilter:"blur(20px)", borderBottom:"1px solid rgba(201,151,58,0.2)" }}>
-        <span style={{ fontSize:20, fontWeight:800, letterSpacing:.5, color:"#F0C97A" }}>
-          TableMaître
-        </span>
+      <nav style={{ position:"fixed", top:0, left:0, right:0, zIndex:100, display:"flex", alignItems:"center", padding:"0 40px", height:64, background:"rgba(13,13,20,0.95)", backdropFilter:"blur(20px)", borderBottom:"1px solid rgba(201,151,58,0.2)" }}>
+        <span style={{ fontSize:20, fontWeight:800, letterSpacing:.5, color:"#F0C97A" }}>TableMaître</span>
         <div style={{ flex:1 }}/>
-        <div style={{ display:"flex", gap:6, marginRight:20, background:"rgba(255,255,255,0.06)", borderRadius:10, padding:"4px 6px" }}>
+        {/* Sélecteur de langue — visible et accessible */}
+        <div style={{ display:"flex", gap:4, marginRight:20, background:"rgba(255,255,255,0.08)", borderRadius:12, padding:"5px 8px", border:"1px solid rgba(255,255,255,0.12)" }}>
           {Object.entries(LANG_FLAGS).map(([lk, flag]) => (
             <button key={lk} onClick={()=>setLang(lk)} title={LANG_NAMES[lk]} style={{
-              background: lang===lk ? "rgba(201,151,58,0.35)" : "transparent",
-              border: lang===lk ? "1px solid #C9973A" : "1px solid transparent",
-              borderRadius:7, padding:"5px 10px", cursor:"pointer", fontSize:18,
-              transition:"all .2s", opacity: lang===lk ? 1 : 0.5,
+              background: lang===lk ? "linear-gradient(135deg,#C9973A,#F0C97A)" : "transparent",
+              border:"none", borderRadius:8, padding:"4px 10px", cursor:"pointer",
+              fontSize:18, transition:"all .2s",
+              opacity: lang===lk ? 1 : 0.55,
+              transform: lang===lk ? "scale(1.15)" : "scale(1)",
               lineHeight:1,
             }}>{flag}</button>
           ))}
         </div>
-        <button onClick={onLogin} style={{ padding:"9px 22px", background:"linear-gradient(135deg,#C9973A,#F0C97A)", border:"none", borderRadius:99, cursor:"pointer", color:"#0d0d14", fontWeight:800, fontSize:13, letterSpacing:.5 }}>
+        <button onClick={onLogin} style={{ padding:"9px 22px", background:"linear-gradient(135deg,#C9973A,#F0C97A)", border:"none", borderRadius:99, cursor:"pointer", color:"#0d0d14", fontWeight:800, fontSize:13, letterSpacing:.5, whiteSpace:"nowrap" }}>
           {t.loginGoogle || "Se connecter avec Google"}
         </button>
       </nav>
 
       {/* HERO */}
       <section style={{ position:"relative", minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", padding:"120px 24px 80px", textAlign:"center" }}>
-        <div style={{ position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", width:700, height:700, background:"radial-gradient(ellipse, rgba(201,151,58,0.14) 0%, transparent 65%)", pointerEvents:"none", borderRadius:"50%" }}/>
-
+        <div style={{ position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", width:700, height:700, background:"radial-gradient(ellipse, rgba(201,151,58,0.13) 0%, transparent 65%)", pointerEvents:"none", borderRadius:"50%" }}/>
         <div style={{ position:"relative", maxWidth:740, margin:"0 auto" }}>
           <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(201,151,58,0.12)", border:"1px solid rgba(201,151,58,0.4)", borderRadius:99, padding:"7px 20px", marginBottom:36, fontSize:12, color:"#F0C97A", letterSpacing:2, textTransform:"uppercase", fontWeight:600 }}>
             <span style={{ width:6, height:6, borderRadius:"50%", background:"#C9973A", display:"inline-block" }}/>
             {t.loginTagline || "La plateforme pro de gestion d'événements"}
           </div>
-
           <h1 style={{ fontSize:"clamp(40px,6vw,72px)", fontWeight:800, lineHeight:1.08, letterSpacing:-1.5, margin:"0 0 24px", color:"#ffffff", fontFamily:"Georgia,'Palatino Linotype',serif" }}>
             {t.loginHero || "Organisez. Placez. Impressionnez."}
           </h1>
-
           <p style={{ fontSize:18, color:"rgba(255,255,255,0.6)", maxWidth:520, margin:"0 auto 48px", lineHeight:1.75 }}>
             {t.loginSub || "De l'invitation à la salle, gérez chaque détail de votre événement depuis une seule application."}
           </p>
-
-          <button onClick={onLogin} style={{
-            display:"inline-flex", alignItems:"center", gap:12, padding:"18px 44px",
-            background:"linear-gradient(135deg,#C9973A 0%,#F0C97A 100%)",
-            border:"none", borderRadius:99, cursor:"pointer",
-            color:"#0d0d14", fontWeight:800, fontSize:17, letterSpacing:.3,
-            boxShadow:"0 8px 40px rgba(201,151,58,0.4)",
-            transition:"transform .2s, box-shadow .2s",
-          }}
+          <button onClick={onLogin} style={{ display:"inline-flex", alignItems:"center", gap:12, padding:"18px 44px", background:"linear-gradient(135deg,#C9973A 0%,#F0C97A 100%)", border:"none", borderRadius:99, cursor:"pointer", color:"#0d0d14", fontWeight:800, fontSize:17, letterSpacing:.3, boxShadow:"0 8px 40px rgba(201,151,58,0.4)", transition:"transform .2s, box-shadow .2s" }}
             onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.boxShadow="0 16px 56px rgba(201,151,58,0.55)"; }}
             onMouseLeave={e=>{ e.currentTarget.style.transform=""; e.currentTarget.style.boxShadow="0 8px 40px rgba(201,151,58,0.4)"; }}
           >
-            <svg width="20" height="20" viewBox="0 0 48 48">
-              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
-              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
-              <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
-              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-            </svg>
+            <svg width="20" height="20" viewBox="0 0 48 48"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
             {t.loginCta || "Commencer gratuitement avec Google"}
           </button>
           <p style={{ marginTop:14, fontSize:12, color:"rgba(255,255,255,0.35)", letterSpacing:1 }}>
@@ -1602,27 +1659,23 @@ function LoginScreen({ onLogin, t: tProp }) {
       <section style={{ padding:"80px 24px", background:"rgba(255,255,255,0.025)", borderTop:"1px solid rgba(255,255,255,0.07)", borderBottom:"1px solid rgba(255,255,255,0.07)" }}>
         <div style={{ maxWidth:1040, margin:"0 auto", display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(230px,1fr))", gap:20 }}>
           {FEATURES.map((f,i) => (
-            <div key={i}
-              onMouseEnter={()=>setHovered(i)} onMouseLeave={()=>setHovered(null)}
-              style={{
-                background: hovered===i ? "rgba(201,151,58,0.1)" : "rgba(255,255,255,0.04)",
-                border: hovered===i ? "1px solid rgba(201,151,58,0.5)" : "1px solid rgba(255,255,255,0.08)",
-                borderRadius:16, padding:"28px 24px", transition:"all .25s",
-              }}>
+            <div key={i} onMouseEnter={()=>setHovered(i)} onMouseLeave={()=>setHovered(null)} style={{ background: hovered===i?"rgba(201,151,58,0.1)":"rgba(255,255,255,0.04)", border: hovered===i?"1px solid rgba(201,151,58,0.5)":"1px solid rgba(255,255,255,0.08)", borderRadius:16, padding:"28px 24px", transition:"all .25s" }}>
               <div style={{ fontSize:34, marginBottom:14, lineHeight:1 }}>{f.icon}</div>
-              <h3 style={{ fontSize:15, fontWeight:700, margin:"0 0 8px", color: hovered===i ? "#F0C97A" : "#ffffff" }}>{f.title}</h3>
+              <h3 style={{ fontSize:15, fontWeight:700, margin:"0 0 8px", color: hovered===i?"#F0C97A":"#ffffff" }}>{f.title}</h3>
               <p style={{ fontSize:13, color:"rgba(255,255,255,0.5)", margin:0, lineHeight:1.65 }}>{f.desc}</p>
             </div>
           ))}
         </div>
       </section>
 
-      {/* TRUST BADGES */}
+      {/* TRUST */}
       <section style={{ padding:"56px 24px", textAlign:"center" }}>
-        <p style={{ fontSize:11, color:"rgba(255,255,255,0.3)", letterSpacing:3, textTransform:"uppercase", marginBottom:20, fontWeight:600 }}>Trusted for</p>
+        <p style={{ fontSize:11, color:"rgba(255,255,255,0.35)", letterSpacing:3, textTransform:"uppercase", marginBottom:20, fontWeight:600 }}>
+          {t.trustedFor || "Nos clients organisent"}
+        </p>
         <div style={{ display:"flex", justifyContent:"center", flexWrap:"wrap", gap:10 }}>
           {TRUST.map((label,i) => (
-            <span key={i} style={{ padding:"9px 22px", border:"1px solid rgba(201,151,58,0.3)", borderRadius:99, fontSize:13, color:"rgba(255,255,255,0.6)", letterSpacing:.5 }}>{label}</span>
+            <span key={i} style={{ padding:"9px 22px", border:"1px solid rgba(201,151,58,0.3)", borderRadius:99, fontSize:13, color:"rgba(255,255,255,0.65)", letterSpacing:.5 }}>{label}</span>
           ))}
         </div>
       </section>
@@ -1630,14 +1683,15 @@ function LoginScreen({ onLogin, t: tProp }) {
       {/* FOOTER CTA */}
       <section style={{ padding:"80px 24px", textAlign:"center", borderTop:"1px solid rgba(255,255,255,0.07)", background:"rgba(201,151,58,0.04)" }}>
         <h2 style={{ fontSize:34, fontWeight:800, fontFamily:"Georgia,serif", margin:"0 0 14px", color:"#ffffff" }}>
-          {lang==="fr" ? "Prêt à sublimer vos événements ?" : lang==="en" ? "Ready to elevate your events?" : lang==="es" ? "¿Listo para elevar sus eventos?" : lang==="de" ? "Bereit, Ihre Events zu perfektionieren?" : "Pronto a elevare i vostri eventi?"}
+          {t.loginFooterTitle || "Prêt à sublimer vos événements ?"}
         </h2>
-        <p style={{ color:"rgba(255,255,255,0.4)", marginBottom:36, fontSize:15 }}>{t.loginFree || "Gratuit · Sans carte bancaire · Synchronisé cloud"}</p>
+        <p style={{ color:"rgba(255,255,255,0.4)", marginBottom:36, fontSize:15 }}>
+          {t.loginFree || "Gratuit · Sans carte bancaire · Synchronisé cloud"}
+        </p>
         <button onClick={onLogin} style={{ padding:"17px 40px", background:"linear-gradient(135deg,#C9973A,#F0C97A)", border:"none", borderRadius:99, cursor:"pointer", color:"#0d0d14", fontWeight:800, fontSize:16, boxShadow:"0 8px 40px rgba(201,151,58,0.35)", display:"inline-flex", alignItems:"center", gap:10 }}>
           {t.loginCta || "Commencer gratuitement avec Google"}
         </button>
       </section>
-
     </div>
   );
 }
