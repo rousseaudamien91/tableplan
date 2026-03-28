@@ -5,228 +5,413 @@ import { Btn, Badge, Modal, Field, Input, Select } from "./UI";
 import { PLANS, INITIAL_USERS, THEMES_CONFIG, VOUCHERS } from "../constants";
 import { uid } from "../utils";
 
-// ═══════════════════════════════════════════════════════════════
-// SUPER ADMIN PANEL
-// ═══════════════════════════════════════════════════════════════
+const SUBSCRIPTION_PLANS = {
+  free:       { label:"Free",       color:"#8A7355",  price:0,   maxEvents:1,   maxGuests:50   },
+  starter:    { label:"Starter",    color:"#3b82f6",  price:9,   maxEvents:3,   maxGuests:200  },
+  pro:        { label:"Pro",        color:"#C9973A",  price:29,  maxEvents:20,  maxGuests:999  },
+  enterprise: { label:"Enterprise", color:"#e05252",  price:99,  maxEvents:999, maxGuests:9999 },
+};
+
+const STATUS_COLORS = {
+  active:"#27AE60", trial:"#F0C97A", expired:"#e05252", cancelled:"#8A7355",
+};
 
 function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
   const { t } = useI18n();
-  const [tab, setTab] = useState("projects"); // projects | users
+  const [tab, setTab]                       = useState("accounts");
   const [showNewProject, setShowNewProject] = useState(false);
-  const [showNewUser, setShowNewUser] = useState(false);
-  const [newProject, setNewProject] = useState({ name:"", date:"", type:"mariage", adminId:"" });
-  const [newUser, setNewUser] = useState({ name:"", email:"", password:"", role:"admin" });
+  const [showNewUser, setShowNewUser]       = useState(false);
+  const [showSubscription, setShowSubscription] = useState(null);
+  const [showStripeSetup, setShowStripeSetup]   = useState(false);
+  const [stripeKey,    setStripeKey]    = useState(localStorage.getItem("tm_stripe_pk")||"");
+  const [stripeSecret, setStripeSecret] = useState(localStorage.getItem("tm_stripe_sk")||"");
+  const [search,       setSearch]       = useState("");
+  const [filterPlan,   setFilterPlan]   = useState("all");
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [newProject,   setNewProject]   = useState({ name:"", date:"", type:"mariage", adminId:"" });
+  const [newUser,      setNewUser]      = useState({ name:"", email:"", role:"admin", plan:"free", subscriptionStatus:"trial" });
+
+  const enrichedUsers = users.map(u => ({
+    ...u,
+    plan: u.plan || "free",
+    subscriptionStatus: u.subscriptionStatus || (u.role==="superadmin" ? "active" : "trial"),
+    subscriptionStart: u.subscriptionStart || new Date(Date.now()-7*86400000).toISOString().slice(0,10),
+    subscriptionEnd:   u.subscriptionEnd   || new Date(Date.now()+23*86400000).toISOString().slice(0,10),
+    stripeCustomerId:  u.stripeCustomerId  || "",
+    projectCount: events.filter(e=>e.ownerId===u.id).length,
+    guestCount:   events.filter(e=>e.ownerId===u.id).reduce((s,e)=>s+(e.guests||[]).length,0),
+  }));
+
+  const filteredUsers = enrichedUsers.filter(u => {
+    if (filterPlan   !== "all" && u.plan               !== filterPlan)   return false;
+    if (filterStatus !== "all" && u.subscriptionStatus !== filterStatus) return false;
+    if (search && !u.name?.toLowerCase().includes(search.toLowerCase()) &&
+        !u.email?.toLowerCase().includes(search.toLowerCase())) return false;
+    return true;
+  });
+
+  const stats = {
+    totalUsers:           users.length,
+    activeSubscriptions:  enrichedUsers.filter(u=>u.subscriptionStatus==="active").length,
+    trialUsers:           enrichedUsers.filter(u=>u.subscriptionStatus==="trial").length,
+    proUsers:             enrichedUsers.filter(u=>u.plan==="pro"||u.plan==="enterprise").length,
+    mrr:                  enrichedUsers.reduce((s,u)=>s+(SUBSCRIPTION_PLANS[u.plan]?.price||0),0),
+  };
 
   const createProject = () => {
     if (!newProject.name) return;
     const ev = {
       id: Date.now(), ownerId: newProject.adminId || "sa",
       name: newProject.name, date: newProject.date || new Date().toISOString().slice(0,10),
-      type: newProject.type, plan: "pro",
+      type: newProject.type, plan:"pro",
       roomShape:[{x:60,y:60},{x:740,y:60},{x:740,y:520},{x:60,y:520}],
       tables:[], guests:[], constraints:[], menu:null,
     };
     setEvents(prev=>[...prev,ev]);
-    if (newProject.adminId) {
-      setUsers(prev=>prev.map(u=>u.id===newProject.adminId?{...u,projectIds:[...(u.projectIds||[]),ev.id]}:u));
-    }
+    if (newProject.adminId) setUsers(prev=>prev.map(u=>u.id===newProject.adminId?{...u,projectIds:[...(u.projectIds||[]),ev.id]}:u));
     setNewProject({name:"",date:"",type:"mariage",adminId:""});
     setShowNewProject(false);
   };
 
   const createUser = () => {
-    if (!newUser.name||!newUser.email||!newUser.password) return;
-    const u = { id:uid(), ...newUser, avatar:newUser.name.slice(0,2).toUpperCase(), projectIds:[] };
-    setUsers(prev=>[...prev,u]);
-    setNewUser({name:"",email:"",password:"",role:"admin"});
+    if (!newUser.name||!newUser.email) return;
+    setUsers(prev=>[...prev,{
+      id:uid(), ...newUser,
+      avatar: newUser.name.slice(0,2).toUpperCase(), projectIds:[],
+      subscriptionStart: new Date().toISOString().slice(0,10),
+      subscriptionEnd:   new Date(Date.now()+30*86400000).toISOString().slice(0,10),
+    }]);
+    setNewUser({name:"",email:"",role:"admin",plan:"free",subscriptionStatus:"trial"});
     setShowNewUser(false);
   };
 
+  const saveStripeKeys = () => {
+    localStorage.setItem("tm_stripe_pk", stripeKey);
+    localStorage.setItem("tm_stripe_sk", stripeSecret);
+    setShowStripeSetup(false);
+  };
+
+  const card = { background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:14, padding:"20px 24px" };
+
   return (
-    <div style={{ minHeight:"100vh", background:`linear-gradient(160deg,${C.dark},#1a0e08)`, fontFamily:"Georgia,serif", color:"#ffffff" }}>
-      {/* Nav */}
-      <div style={{ background:"#18182a", borderBottom:"1px solid rgba(201,151,58,0.12)", padding:"0 32px", display:"flex", alignItems:"center", height:60, position:"sticky", top:0, zIndex:100 }}>
-        <span style={{ fontSize:20, color:"#C9973A", letterSpacing:1 }}>🪑 TableMaître</span>
-        <Badge color={C.red} style={{marginLeft:10}}>Super Admin</Badge>
+    <div style={{ minHeight:"100vh", background:C.dark, fontFamily:"'Inter','Segoe UI',sans-serif", color:"#ffffff" }}>
+
+      {/* NAV */}
+      <div style={{ background:"#18182a", borderBottom:"1px solid rgba(201,151,58,0.12)", padding:"0 32px", display:"flex", alignItems:"center", height:60, position:"sticky", top:0, zIndex:100, gap:4 }}>
+        <span style={{ fontSize:18, color:"#C9973A", fontWeight:800 }}>🪑 TableMaître</span>
+        <Badge color={C.red} style={{marginLeft:8,fontSize:10}}>Super Admin</Badge>
         <div style={{flex:1}}/>
-        {[["projects","📁 Projets"],["users","👥 Utilisateurs"],["stats","📊 Stats"]].map(([t,l])=>(
-          <button key={t} onClick={()=>setTab(t)} style={{
-            background:tab===t?C.gold+"22":"none", border:"none", color:tab===t?C.gold:C.muted,
+        {[["accounts","👥 Comptes"],["projects","📁 Projets"],["stats","📊 Stats"],["stripe","💳 Paiement"]].map(([id,label])=>(
+          <button key={id} onClick={()=>setTab(id)} style={{
+            background:tab===id?C.gold+"22":"none", border:"none",
+            color:tab===id?C.gold:"rgba(255,255,255,0.5)",
             padding:"8px 16px", borderRadius:8, cursor:"pointer", fontSize:13, fontWeight:600, fontFamily:"inherit",
-          }}>{l}</button>
+          }}>{label}</button>
         ))}
         <div style={{width:1,height:24,background:C.border,margin:"0 12px"}}/>
         <Btn variant="muted" small onClick={onLogout}>Déconnexion</Btn>
       </div>
 
-      <div style={{ maxWidth:1100, margin:"0 auto", padding:"40px 20px" }}>
-        {/* PROJECTS */}
-        {tab==="projects" && (
-          <>
-            <div style={{ display:"flex", alignItems:"center", marginBottom:28 }}>
-              <div>
-                <h2 style={{ margin:0, fontSize:26, fontWeight:400 }}>Tous les projets</h2>
-                <p style={{ color:"rgba(255,255,255,0.45)", margin:"4px 0 0", fontSize:13 }}>{events.length} projet{events.length>1?"s":""}</p>
-              </div>
-              <div style={{flex:1}}/>
-              <Btn onClick={()=>setShowNewProject(true)}>+ Nouveau projet</Btn>
+      <div style={{ maxWidth:1200, margin:"0 auto", padding:"40px 24px" }}>
+
+        {/* ── COMPTES ── */}
+        {tab==="accounts" && (<>
+          <div style={{ display:"flex", alignItems:"center", marginBottom:24, gap:12, flexWrap:"wrap" }}>
+            <div style={{flex:1}}>
+              <h2 style={{ margin:0, fontSize:24, fontWeight:700 }}>Comptes & Souscriptions</h2>
+              <p style={{ color:"rgba(255,255,255,0.4)", margin:"4px 0 0", fontSize:13 }}>
+                {filteredUsers.length} compte{filteredUsers.length>1?"s":""} · MRR : <strong style={{color:C.gold}}>{stats.mrr}€/mois</strong>
+              </p>
             </div>
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))", gap:20 }}>
-              {events.map(ev=>{
-                const owner = users.find(u=>u.id===ev.ownerId);
-                const theme = THEMES_CONFIG[ev.type]||THEMES_CONFIG.autre;
+            <Btn onClick={()=>setShowNewUser(true)}>+ Nouveau compte</Btn>
+          </div>
+
+          <div style={{ display:"flex", gap:10, marginBottom:20, flexWrap:"wrap" }}>
+            <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Rechercher..."
+              style={{ flex:1, minWidth:200, padding:"8px 14px", background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:8, color:"#fff", fontSize:13, outline:"none" }}/>
+            <select value={filterPlan} onChange={e=>setFilterPlan(e.target.value)}
+              style={{ padding:"8px 14px", background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:8, color:"#fff", fontSize:13 }}>
+              <option value="all">Tous les plans</option>
+              {Object.entries(SUBSCRIPTION_PLANS).map(([k,v])=><option key={k} value={k}>{v.label}</option>)}
+            </select>
+            <select value={filterStatus} onChange={e=>setFilterStatus(e.target.value)}
+              style={{ padding:"8px 14px", background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:8, color:"#fff", fontSize:13 }}>
+              <option value="all">Tous statuts</option>
+              <option value="active">Actif</option>
+              <option value="trial">Essai</option>
+              <option value="expired">Expiré</option>
+              <option value="cancelled">Annulé</option>
+            </select>
+          </div>
+
+          <div style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.1)", borderRadius:16, overflow:"hidden" }}>
+            <div style={{ display:"grid", gridTemplateColumns:"2fr 1fr 1fr 1fr 1fr 1fr auto", gap:12, padding:"12px 20px", borderBottom:"1px solid rgba(255,255,255,0.06)", fontSize:11, color:"rgba(255,255,255,0.3)", fontWeight:700, textTransform:"uppercase", letterSpacing:1 }}>
+              <span>Compte</span><span>Plan</span><span>Statut</span><span>Fin</span><span>Projets</span><span>Invités</span><span>Actions</span>
+            </div>
+            {filteredUsers.length===0 && <div style={{padding:40,textAlign:"center",color:"rgba(255,255,255,0.3)"}}>Aucun compte trouvé</div>}
+            {filteredUsers.map(u=>{
+              const plan   = SUBSCRIPTION_PLANS[u.plan] || SUBSCRIPTION_PLANS.free;
+              const sColor = STATUS_COLORS[u.subscriptionStatus] || STATUS_COLORS.trial;
+              const soon   = u.subscriptionEnd && new Date(u.subscriptionEnd)<new Date(Date.now()+7*86400000);
+              return (
+                <div key={u.id} style={{ display:"grid", gridTemplateColumns:"2fr 1fr 1fr 1fr 1fr 1fr auto", gap:12, padding:"14px 20px", alignItems:"center", borderBottom:"1px solid rgba(255,255,255,0.04)" }}
+                  onMouseEnter={e=>e.currentTarget.style.background="rgba(255,255,255,0.02)"}
+                  onMouseLeave={e=>e.currentTarget.style.background=""}>
+                  <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+                    <div style={{ width:34,height:34,borderRadius:"50%",background:u.role==="superadmin"?C.red+"33":C.gold+"22",display:"flex",alignItems:"center",justifyContent:"center",color:u.role==="superadmin"?C.red:C.gold,fontSize:12,fontWeight:800,flexShrink:0 }}>{u.avatar||"?"}</div>
+                    <div>
+                      <div style={{fontSize:14,fontWeight:600}}>{u.name}</div>
+                      <div style={{fontSize:11,color:"rgba(255,255,255,0.4)"}}>{u.email}</div>
+                    </div>
+                  </div>
+                  <span style={{display:"inline-flex",alignItems:"center",gap:4}}>
+                    <span style={{width:8,height:8,borderRadius:"50%",background:plan.color,flexShrink:0}}/>
+                    <span style={{fontSize:13,color:plan.color,fontWeight:600}}>{plan.label}</span>
+                  </span>
+                  <span style={{display:"inline-block",padding:"3px 10px",borderRadius:99,background:sColor+"22",color:sColor,fontSize:11,fontWeight:700}}>
+                    {u.subscriptionStatus==="active"?"✅ Actif":u.subscriptionStatus==="trial"?"⏳ Essai":u.subscriptionStatus==="expired"?"❌ Expiré":"⛔ Annulé"}
+                  </span>
+                  <span style={{fontSize:12,color:soon?"#F0C97A":"rgba(255,255,255,0.4)"}}>{u.subscriptionEnd?(soon?"⚠️ ":"")+u.subscriptionEnd:"—"}</span>
+                  <span style={{fontSize:13,color:"rgba(255,255,255,0.6)"}}>{u.projectCount}</span>
+                  <span style={{fontSize:13,color:"rgba(255,255,255,0.6)"}}>{u.guestCount}</span>
+                  <div style={{display:"flex",gap:6}}>
+                    {u.role!=="superadmin" && <>
+                      <Btn small variant="ghost" onClick={()=>setShowSubscription(u)}>✏️</Btn>
+                      <Btn small variant="danger" onClick={()=>setUsers(prev=>prev.filter(x=>x.id!==u.id))}>✕</Btn>
+                    </>}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(4,1fr)", gap:16, marginTop:24 }}>
+            {[{label:"Actifs",val:stats.activeSubscriptions,color:STATUS_COLORS.active},{label:"En essai",val:stats.trialUsers,color:STATUS_COLORS.trial},{label:"Plans payants",val:stats.proUsers,color:C.gold},{label:"MRR",val:stats.mrr+"€",color:C.gold}].map(s=>(
+              <div key={s.label} style={{...card,textAlign:"center",padding:16}}>
+                <div style={{fontSize:22,fontWeight:800,color:s.color}}>{s.val}</div>
+                <div style={{fontSize:11,color:"rgba(255,255,255,0.4)",marginTop:4}}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+        </>)}
+
+        {/* ── PROJETS ── */}
+        {tab==="projects" && (<>
+          <div style={{display:"flex",alignItems:"center",marginBottom:28}}>
+            <div><h2 style={{margin:0,fontSize:24,fontWeight:700}}>Tous les projets</h2><p style={{color:"rgba(255,255,255,0.4)",margin:"4px 0 0",fontSize:13}}>{events.length} projet{events.length>1?"s":""}</p></div>
+            <div style={{flex:1}}/><Btn onClick={()=>setShowNewProject(true)}>+ Nouveau projet</Btn>
+          </div>
+          <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))",gap:20}}>
+            {events.map(ev=>{
+              const owner=users.find(u=>u.id===ev.ownerId);
+              const theme=THEMES_CONFIG[ev.type]||THEMES_CONFIG.autre;
+              return (
+                <div key={ev.id} style={card}>
+                  <div style={{display:"flex",alignItems:"start",gap:12,marginBottom:12}}>
+                    <span style={{fontSize:28}}>{theme.icon}</span>
+                    <div style={{flex:1}}><div style={{fontSize:15,fontWeight:600,marginBottom:2}}>{ev.name}</div><div style={{color:"rgba(255,255,255,0.4)",fontSize:12}}>{ev.date}</div></div>
+                    <Badge color={theme.color}>{theme.label}</Badge>
+                  </div>
+                  <div style={{display:"flex",gap:16,fontSize:12,color:"rgba(255,255,255,0.4)",marginBottom:12}}>
+                    <span>🪑 {(ev.tables||[]).length} tables</span><span>👤 {(ev.guests||[]).length} invités</span>
+                  </div>
+                  <div style={{display:"flex",alignItems:"center",gap:8}}>
+                    <div style={{width:24,height:24,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:10,fontWeight:700}}>{owner?.avatar||"?"}</div>
+                    <span style={{color:"rgba(255,255,255,0.4)",fontSize:12}}>{owner?.name||"Sans propriétaire"}</span>
+                    <div style={{flex:1}}/>
+                    <Btn small variant="danger" onClick={()=>setEvents(prev=>prev.filter(e=>e.id!==ev.id))}>Supprimer</Btn>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </>)}
+
+        {/* ── STATS ── */}
+        {tab==="stats" && (
+          <div>
+            <h2 style={{margin:"0 0 28px",fontSize:24,fontWeight:700}}>Tableau de bord</h2>
+            <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))",gap:16,marginBottom:28}}>
+              {[{label:"Utilisateurs",val:users.length,icon:"👥",color:C.blue},{label:"MRR",val:stats.mrr+"€",icon:"💰",color:C.gold},{label:"Projets",val:events.length,icon:"📁",color:C.gold},{label:"Invités",val:events.reduce((s,e)=>s+(e.guests||[]).length,0),icon:"👤",color:C.green},{label:"Plans payants",val:stats.proUsers,icon:"⭐",color:"#E8845A"},{label:"En essai",val:stats.trialUsers,icon:"⏳",color:STATUS_COLORS.trial}].map(s=>(
+                <div key={s.label} style={card}><div style={{fontSize:24,marginBottom:8}}>{s.icon}</div><div style={{fontSize:28,fontWeight:800,color:s.color}}>{s.val}</div><div style={{color:"rgba(255,255,255,0.4)",fontSize:12,marginTop:4}}>{s.label}</div></div>
+              ))}
+            </div>
+            <div style={{...card,marginBottom:20}}>
+              <h3 style={{color:C.gold,margin:"0 0 16px",fontWeight:600,fontSize:15}}>Répartition par plan</h3>
+              {Object.entries(SUBSCRIPTION_PLANS).map(([key,plan])=>{
+                const count=enrichedUsers.filter(u=>u.plan===key).length;
+                const pct=users.length>0?Math.round(count/users.length*100):0;
                 return (
-                  <div key={ev.id} style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:16, padding:24, transition:"all .2s" }}>
-                    <div style={{ display:"flex", alignItems:"start", gap:12, marginBottom:12 }}>
-                      <span style={{ fontSize:28 }}>{theme.icon}</span>
-                      <div style={{flex:1}}>
-                        <div style={{ color:"#ffffff", fontSize:16, marginBottom:2 }}>{ev.name}</div>
-                        <div style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>{ev.date}</div>
-                      </div>
-                      <Badge color={theme.color}>{theme.label}</Badge>
+                  <div key={key} style={{display:"flex",alignItems:"center",gap:12,marginBottom:10}}>
+                    <span style={{width:80,fontSize:13,color:plan.color,fontWeight:600}}>{plan.label}</span>
+                    <div style={{flex:1,height:8,background:"rgba(255,255,255,0.06)",borderRadius:99,overflow:"hidden"}}>
+                      <div style={{width:pct+"%",height:"100%",background:plan.color,borderRadius:99}}/>
                     </div>
-                    <div style={{ display:"flex", gap:16, fontSize:12, color:"rgba(255,255,255,0.45)", marginBottom:12 }}>
-                      <span>🪑 {ev.tables.length} tables</span>
-                      <span>👤 {ev.guests.length} invités</span>
-                    </div>
-                    <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                      <div style={{ width:24,height:24,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:10,fontWeight:700 }}>
-                        {owner?.avatar||"?"}
-                      </div>
-                      <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>{owner?.name||"Sans propriétaire"}</span>
-                      <div style={{flex:1}}/>
-                      <Btn small variant="danger" onClick={()=>setEvents(prev=>prev.filter(e=>e.id!==ev.id))}>Supprimer</Btn>
-                    </div>
+                    <span style={{fontSize:12,color:"rgba(255,255,255,0.4)",width:60,textAlign:"right"}}>{count} compte{count>1?"s":""}</span>
+                    <span style={{fontSize:12,color:"rgba(255,255,255,0.25)",width:35}}>{pct}%</span>
                   </div>
                 );
               })}
             </div>
-          </>
-        )}
-
-        {/* STATS */}
-        {tab==="stats" && (
-          <div>
-            <h2 style={{ margin:"0 0 28px", fontSize:26, fontWeight:400 }}>Tableau de bord</h2>
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))", gap:16, marginBottom:32 }}>
-              {[
-                { label:"Projets total", val:events.length, icon:"📁", color:"#C9973A" },
-                { label:"Utilisateurs", val:users.length, icon:"👥", color:C.blue },
-                { label:"Invités total", val:events.reduce((s,e)=>s+e.guests.length,0), icon:"👤", color:C.green },
-                { label:"Tables", val:events.reduce((s,e)=>s+e.tables.length,0), icon:"🪑", color:"#C9973A" },
-                { label:"Projets Pro", val:events.filter(e=>e.plan==="pro").length, icon:"⭐", color:"#E8845A" },
-                { label:"Projets Free", val:events.filter(e=>e.plan==="free").length, icon:"🆓", color:"rgba(255,255,255,0.45)" },
-              ].map(s => (
-                <div key={s.label} style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:14, padding:"20px 24px" }}>
-                  <div style={{ fontSize:28, marginBottom:8 }}>{s.icon}</div>
-                  <div style={{ fontSize:28, fontWeight:700, color:s.color }}>{s.val}</div>
-                  <div style={{ color:"rgba(255,255,255,0.45)", fontSize:12, marginTop:4 }}>{s.label}</div>
+            <div style={card}>
+              <h3 style={{color:C.gold,margin:"0 0 16px",fontWeight:600,fontSize:15}}>🎟️ Codes promotionnels</h3>
+              {Object.entries(VOUCHERS).map(([code,v])=>(
+                <div key={code} style={{display:"flex",alignItems:"center",gap:12,padding:"12px 16px",background:"#13131e",borderRadius:10,marginBottom:8}}>
+                  <span style={{fontFamily:"monospace",color:"#C9973A",fontWeight:700,fontSize:14,minWidth:120}}>{code}</span>
+                  <span style={{color:"#fff",fontSize:13,flex:1}}>{v.description}</span>
+                  <span style={{color:"rgba(255,255,255,0.4)",fontSize:12}}>-{v.discount}%</span>
+                  <span style={{color:"rgba(255,255,255,0.4)",fontSize:12}}>max {v.maxUses}</span>
                 </div>
               ))}
             </div>
-            <div style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:16, padding:24 }}>
-              <h3 style={{ color:"#C9973A", margin:"0 0 16px", fontWeight:400, fontSize:16 }}>🎟️ Codes promotionnels actifs</h3>
-              <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
-                {Object.entries(VOUCHERS).map(([code, v]) => (
-                  <div key={code} style={{ display:"flex", alignItems:"center", gap:12, padding:"12px 16px", background:"#13131e", borderRadius:10 }}>
-                    <span style={{ fontFamily:"monospace", color:"#C9973A", fontWeight:700, fontSize:14, minWidth:120 }}>{code}</span>
-                    <span style={{ color:"#ffffff", fontSize:13, flex:1 }}>{v.description}</span>
-                    <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>-{v.discount}%</span>
-                    <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>max {v.maxUses} utilisations</span>
+          </div>
+        )}
+
+        {/* ── STRIPE ── */}
+        {tab==="stripe" && (
+          <div>
+            <h2 style={{margin:"0 0 8px",fontSize:24,fontWeight:700}}>Intégration paiement</h2>
+            <p style={{color:"rgba(255,255,255,0.4)",margin:"0 0 32px",fontSize:14}}>Configurez Stripe pour activer les abonnements.</p>
+            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:20,marginBottom:28}}>
+              <div style={card}>
+                <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:16}}>
+                  <span style={{fontSize:28}}>💳</span>
+                  <div>
+                    <div style={{fontWeight:700,fontSize:15}}>Stripe</div>
+                    <div style={{fontSize:12,color:stripeKey?STATUS_COLORS.active:STATUS_COLORS.expired}}>{stripeKey?"✅ Clés configurées":"❌ Non configuré"}</div>
                   </div>
+                </div>
+                <Btn onClick={()=>setShowStripeSetup(true)}>{stripeKey?"Modifier les clés":"Configurer Stripe"}</Btn>
+              </div>
+              <div style={card}>
+                <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:16}}>
+                  <span style={{fontSize:28}}>🔗</span>
+                  <div><div style={{fontWeight:700,fontSize:15}}>Liens de paiement</div><div style={{fontSize:12,color:"rgba(255,255,255,0.4)"}}>Créez des liens pour chaque plan</div></div>
+                </div>
+                <a href="https://dashboard.stripe.com/payment-links" target="_blank" rel="noreferrer"><Btn variant="ghost">Ouvrir Stripe Dashboard →</Btn></a>
+              </div>
+            </div>
+            <div style={{...card,marginBottom:20}}>
+              <h3 style={{color:C.gold,margin:"0 0 20px",fontWeight:600,fontSize:15}}>Plans & tarifs</h3>
+              <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(220px,1fr))",gap:16}}>
+                {Object.entries(SUBSCRIPTION_PLANS).map(([key,plan])=>(
+                  <div key={key} style={{padding:20,borderRadius:12,border:"1px solid "+plan.color+"44",background:plan.color+"08"}}>
+                    <div style={{color:plan.color,fontWeight:800,fontSize:16,marginBottom:4}}>{plan.label}</div>
+                    <div style={{fontSize:24,fontWeight:800,marginBottom:8}}>{plan.price===0?"Gratuit":plan.price+"€"}<span style={{fontSize:12,color:"rgba(255,255,255,0.4)",fontWeight:400}}>/mois</span></div>
+                    <div style={{fontSize:12,color:"rgba(255,255,255,0.5)",display:"flex",flexDirection:"column",gap:4}}>
+                      <span>📁 {plan.maxEvents===999?"Illimité":plan.maxEvents} projet{plan.maxEvents>1?"s":""}</span>
+                      <span>👤 {plan.maxGuests===9999?"Illimité":plan.maxGuests} invités</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div style={card}>
+              <h3 style={{color:C.gold,margin:"0 0 16px",fontWeight:600,fontSize:15}}>📋 Guide d'intégration</h3>
+              <div style={{display:"flex",flexDirection:"column",gap:10,fontSize:13,color:"rgba(255,255,255,0.6)",lineHeight:1.7}}>
+                {[
+                  ["1","Créez un compte sur stripe.com et récupérez vos clés API (Dashboard → Développeurs → Clés API)"],
+                  ["2","Entrez vos clés dans le panneau \"Configurer Stripe\" ci-dessus"],
+                  ["3","Créez un produit et des prix dans Stripe pour chaque plan (Starter 9€, Pro 29€, Enterprise 99€)"],
+                  ["4","Créez des Liens de paiement Stripe et partagez-les avec vos utilisateurs"],
+                  ["5","Configurez un Webhook Stripe pour mettre à jour automatiquement les statuts de souscription"],
+                ].map(([n,text])=>(
+                  <div key={n} style={{display:"flex",gap:12}}><span style={{color:C.gold,fontWeight:700,minWidth:20}}>{n}.</span><span>{text}</span></div>
                 ))}
               </div>
             </div>
           </div>
         )}
-
-        {/* USERS */}
-        {tab==="users" && (
-          <>
-            <div style={{ display:"flex", alignItems:"center", marginBottom:28 }}>
-              <div>
-                <h2 style={{ margin:0, fontSize:26, fontWeight:400 }}>Utilisateurs</h2>
-                <p style={{ color:"rgba(255,255,255,0.45)", margin:"4px 0 0", fontSize:13 }}>{users.length} comptes</p>
-              </div>
-              <div style={{flex:1}}/>
-              <Btn onClick={()=>setShowNewUser(true)}>+ Nouvel utilisateur</Btn>
-            </div>
-            <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
-              {users.map(u=>(
-                <div key={u.id} style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:14, padding:"18px 24px", display:"flex", alignItems:"center", gap:16 }}>
-                  <div style={{ width:42,height:42,borderRadius:"50%",background:u.role==="superadmin"?C.red+"33":C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:u.role==="superadmin"?C.red:C.gold,fontSize:15,fontWeight:700 }}>
-                    {u.avatar}
-                  </div>
-                  <div style={{flex:1}}>
-                    <div style={{ color:"#ffffff", fontSize:15 }}>{u.name}</div>
-                    <div style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>{u.email}</div>
-                  </div>
-                  <Badge color={u.role==="superadmin"?C.red:C.gold}>{u.role}</Badge>
-                  <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>
-                    {u.role!=="superadmin" && `${(u.projectIds||[]).length} projet${(u.projectIds||[]).length>1?"s":""}`}
-                  </span>
-                  {u.role!=="superadmin" && (
-                    <Btn small variant="danger" onClick={()=>setUsers(prev=>prev.filter(x=>x.id!==u.id))}>Supprimer</Btn>
-                  )}
-                </div>
-              ))}
-            </div>
-          </>
-        )}
       </div>
 
-      {/* Modal new project */}
+      {/* MODAL souscription */}
+      {showSubscription && (
+        <Modal open={true} onClose={()=>setShowSubscription(null)} title={"Souscription — "+showSubscription.name} width={500}>
+          <div style={{display:"flex",flexDirection:"column",gap:14}}>
+            <div style={{padding:"12px 16px",background:"#13131e",borderRadius:10,fontSize:13}}>
+              <div style={{fontWeight:600}}>{showSubscription.name}</div>
+              <div style={{color:"rgba(255,255,255,0.4)",fontSize:12}}>{showSubscription.email}</div>
+            </div>
+            <Field label="PLAN">
+              <Select value={showSubscription.plan} onChange={e=>setShowSubscription({...showSubscription,plan:e.target.value})}>
+                {Object.entries(SUBSCRIPTION_PLANS).map(([k,v])=><option key={k} value={k}>{v.label} — {v.price===0?"Gratuit":v.price+"€/mois"}</option>)}
+              </Select>
+            </Field>
+            <Field label="STATUT">
+              <Select value={showSubscription.subscriptionStatus} onChange={e=>setShowSubscription({...showSubscription,subscriptionStatus:e.target.value})}>
+                <option value="active">✅ Actif</option>
+                <option value="trial">⏳ Essai</option>
+                <option value="expired">❌ Expiré</option>
+                <option value="cancelled">⛔ Annulé</option>
+              </Select>
+            </Field>
+            <Field label="DATE DE FIN">
+              <Input type="date" value={showSubscription.subscriptionEnd||""} onChange={e=>setShowSubscription({...showSubscription,subscriptionEnd:e.target.value})}/>
+            </Field>
+            <Field label="STRIPE CUSTOMER ID">
+              <Input value={showSubscription.stripeCustomerId||""} onChange={e=>setShowSubscription({...showSubscription,stripeCustomerId:e.target.value})} placeholder="cus_xxxxxxxxxxxxxxxxx"/>
+            </Field>
+            <Btn onClick={()=>{setUsers(prev=>prev.map(u=>u.id===showSubscription.id?{...u,plan:showSubscription.plan,subscriptionStatus:showSubscription.subscriptionStatus,subscriptionEnd:showSubscription.subscriptionEnd,stripeCustomerId:showSubscription.stripeCustomerId}:u));setShowSubscription(null);}}>Sauvegarder</Btn>
+          </div>
+        </Modal>
+      )}
+
+      {/* MODAL Stripe */}
+      <Modal open={showStripeSetup} onClose={()=>setShowStripeSetup(false)} title="Configuration Stripe" width={500}>
+        <div style={{display:"flex",flexDirection:"column",gap:14}}>
+          <div style={{padding:"10px 14px",background:"rgba(201,151,58,0.08)",border:"1px solid rgba(201,151,58,0.2)",borderRadius:8,fontSize:12,color:"rgba(255,255,255,0.6)"}}>
+            ⚠️ Clés stockées localement. Pour la production, configurez-les dans les variables d'environnement Vercel.
+          </div>
+          <Field label="CLÉ PUBLIQUE (pk_live_... ou pk_test_...)"><Input value={stripeKey} onChange={e=>setStripeKey(e.target.value)} placeholder="pk_live_xxxxxxxxxxxxx"/></Field>
+          <Field label="CLÉ SECRÈTE (sk_live_... ou sk_test_...)"><Input type="password" value={stripeSecret} onChange={e=>setStripeSecret(e.target.value)} placeholder="sk_live_xxxxxxxxxxxxx"/></Field>
+          <div style={{display:"flex",gap:10}}>
+            <Btn onClick={saveStripeKeys} style={{flex:1}}>💾 Sauvegarder</Btn>
+            <a href="https://dashboard.stripe.com/apikeys" target="_blank" rel="noreferrer" style={{textDecoration:"none"}}><Btn variant="ghost">Ouvrir Stripe →</Btn></a>
+          </div>
+        </div>
+      </Modal>
+
+      {/* MODAL nouveau projet */}
       <Modal open={showNewProject} onClose={()=>setShowNewProject(false)} title="Créer un nouveau projet">
-        <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label="NOM DE L'ÉVÉNEMENT *">
-            <Input value={newProject.name} onChange={e=>setNewProject({...newProject,name:e.target.value})} placeholder="Mariage Dupont × Martin"/>
-          </Field>
-          <Field label={t.settingDate}>
-            <Input type="date" value={newProject.date} onChange={e=>setNewProject({...newProject,date:e.target.value})}/>
-          </Field>
-          <Field label="TYPE D'ÉVÉNEMENT">
+        <div style={{display:"flex",flexDirection:"column",gap:14}}>
+          <Field label="NOM *"><Input value={newProject.name} onChange={e=>setNewProject({...newProject,name:e.target.value})} placeholder="Mariage Dupont × Martin"/></Field>
+          <Field label="DATE"><Input type="date" value={newProject.date} onChange={e=>setNewProject({...newProject,date:e.target.value})}/></Field>
+          <Field label="TYPE">
             <Select value={newProject.type} onChange={e=>setNewProject({...newProject,type:e.target.value})}>
               {Object.entries(THEMES_CONFIG).map(([k,v])=><option key={k} value={k}>{v.icon} {v.label}</option>)}
             </Select>
           </Field>
-          <Field label="ASSIGNER À UN ADMIN">
+          <Field label="ADMIN">
             <Select value={newProject.adminId} onChange={e=>setNewProject({...newProject,adminId:e.target.value})}>
               <option value="">— Sans propriétaire —</option>
-              {users.filter(u=>u.role==="admin").map(u=><option key={u.id} value={u.id}>{u.name} ({u.email})</option>)}
+              {users.filter(u=>u.role==="admin").map(u=><option key={u.id} value={u.id}>{u.name}</option>)}
             </Select>
           </Field>
-          <Btn onClick={createProject} style={{marginTop:8}}>Créer le projet</Btn>
+          <Btn onClick={createProject}>Créer</Btn>
         </div>
       </Modal>
 
-      {/* Modal new user */}
-      <Modal open={showNewUser} onClose={()=>setShowNewUser(false)} title="Créer un utilisateur">
-        <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label="NOM COMPLET *">
-            <Input value={newUser.name} onChange={e=>setNewUser({...newUser,name:e.target.value})} placeholder="Marie Dupont"/>
-          </Field>
-          <Field label="EMAIL *">
-            <Input type="email" value={newUser.email} onChange={e=>setNewUser({...newUser,email:e.target.value})} placeholder="marie@example.fr"/>
-          </Field>
-          <Field label="MOT DE PASSE *">
-            <Input type="password" value={newUser.password} onChange={e=>setNewUser({...newUser,password:e.target.value})} placeholder="Mot de passe temporaire"/>
-          </Field>
-          <Field label="RÔLE">
-            <Select value={newUser.role} onChange={e=>setNewUser({...newUser,role:e.target.value})}>
-              <option value="admin">Admin Projet</option>
-              <option value="superadmin">Super Admin</option>
+      {/* MODAL nouvel utilisateur */}
+      <Modal open={showNewUser} onClose={()=>setShowNewUser(false)} title="Créer un compte admin">
+        <div style={{display:"flex",flexDirection:"column",gap:14}}>
+          <Field label="NOM *"><Input value={newUser.name} onChange={e=>setNewUser({...newUser,name:e.target.value})} placeholder="Marie Dupont"/></Field>
+          <Field label="EMAIL *"><Input type="email" value={newUser.email} onChange={e=>setNewUser({...newUser,email:e.target.value})} placeholder="marie@example.fr"/></Field>
+          <Field label="PLAN">
+            <Select value={newUser.plan} onChange={e=>setNewUser({...newUser,plan:e.target.value})}>
+              {Object.entries(SUBSCRIPTION_PLANS).map(([k,v])=><option key={k} value={k}>{v.label}</option>)}
             </Select>
           </Field>
-          <Btn onClick={createUser} style={{marginTop:8}}>Créer l'utilisateur</Btn>
+          <Field label="STATUT">
+            <Select value={newUser.subscriptionStatus} onChange={e=>setNewUser({...newUser,subscriptionStatus:e.target.value})}>
+              <option value="trial">⏳ Essai</option>
+              <option value="active">✅ Actif</option>
+            </Select>
+          </Field>
+          <Btn onClick={createUser}>Créer le compte</Btn>
         </div>
       </Modal>
     </div>
   );
 }
-
-// ═══════════════════════════════════════════════════════════════
-// GUEST FORM (QR landing)
-// ═══════════════════════════════════════════════════════════════
-
 
 export default SuperAdminPanel;
