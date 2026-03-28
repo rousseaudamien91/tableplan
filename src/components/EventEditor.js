@@ -308,7 +308,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             background:"none", border:"none", borderBottom:`2px solid ${tab===tabItem.id?C.gold:"transparent"}`,
             color:tab===tabItem.id?C.gold:C.muted, padding:"14px 18px",
             cursor:"pointer", fontFamily:"inherit", fontSize:13, fontWeight:tab===tabItem.id?700:400, whiteSpace:"nowrap",
-          }}>{tabItem.label}</button>
+          }}>{tabItem.icon} {tabItem.label}</button>
         ))}
       </div>
 
@@ -663,7 +663,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 style={{ ...inputStyle, flex:1 }}/>
               <Btn variant="ghost" onClick={()=>exportGuestsCSV(ev)}>⬇ Export CSV</Btn>
               <Btn variant="ghost" onClick={()=>setShowImportCSV(true)}>⬆ Import CSV</Btn>
-              <Btn onClick={()=>setShowAddGuest(true)}>+ Invité</Btn>
+              <Btn onClick={()=>{ if(ev.plan==="guest"&&(ev.guests||[]).length>=5){ alert("Mode démo : maximum 5 invités. Créez un compte pour en ajouter plus."); return; } setShowAddGuest(true); }}>+ Invité</Btn>
             </div>
 
             {/* Diet filter legend */}

@@ -11,7 +11,7 @@ import PricingPage from "./PricingPage";
 // DASHBOARD — Liste des événements
 // ═══════════════════════════════════════════════════════════════
 
-function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, onToggleTheme, t, lang, setLang }) {
+function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, onToggleTheme, t, lang, setLang, guestMode }) {
   const [appliedVoucher, setAppliedVoucher] = useState(null);
   const [showVoucher, setShowVoucher] = useState(false);
   const [showNew, setShowNew] = useState(false);
@@ -316,7 +316,29 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
             display:"flex", alignItems:"center", gap:16, flexWrap:"wrap",
           }}>
 
-      {/* Bandeau souscription */}
+      {/* Bandeau mode démo */}
+      {guestMode && (
+        <div style={{
+          margin:"0 0 16px", padding:"12px 20px", borderRadius:12,
+          background:"rgba(59,130,246,0.1)", border:"1px solid rgba(59,130,246,0.3)",
+          display:"flex", alignItems:"center", gap:12, flexWrap:"wrap",
+        }}>
+          <span style={{fontSize:18}}>👤</span>
+          <div style={{flex:1}}>
+            <div style={{fontWeight:700,fontSize:13,color:"#60a5fa"}}>Mode démo</div>
+            <div style={{fontSize:12,color:"rgba(255,255,255,0.4)",marginTop:1}}>
+              ⚠️ Limité à 5 invités par événement · Aucune donnée sauvegardée · Session temporaire
+            </div>
+          </div>
+          <button onClick={onLogout} style={{
+            padding:"7px 16px",background:"rgba(59,130,246,0.2)",
+            border:"1px solid rgba(59,130,246,0.4)",borderRadius:8,
+            color:"#60a5fa",cursor:"pointer",fontSize:12,fontWeight:700,fontFamily:"inherit",
+          }}>Créer un compte →</button>
+        </div>
+      )}
+
+      {/* Bandeau souscription */}}
       {user && user.role !== "superadmin" && (user.subscriptionStatus === "trial" || user.subscriptionStatus === "expired") && (
         <div style={{
           margin:"0 0 20px",padding:"14px 20px",borderRadius:14,
