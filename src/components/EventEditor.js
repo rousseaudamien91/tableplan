@@ -661,7 +661,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             <div style={{ display:"flex", gap:12, marginBottom:20 }}>
               <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t.search||"Search a guest..."}
                 style={{ ...inputStyle, flex:1 }}/>
-              <Btn variant="ghost" onClick={()=>exportGuestsCSV(ev)}>⬇ Export CSV</Btn>
+              <Btn variant="}ghost" onClick={()=>exportGuestsCSV(ev)}>⬇ Export CSV</Btn>
               <Btn variant="ghost" onClick={()=>setShowImportCSV(true)}>⬆ Import CSV</Btn>
               <Btn onClick={()=>setShowAddGuest(true)}>+ Invité</Btn>
             </div>
@@ -699,7 +699,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                     )}
                     {table ? <Badge color={C.gold}>Table {table.number}</Badge> : <Badge color={C.red}>Non placé</Badge>}
                     <select value={g.tableId||""} onChange={function(evt){ var tid=evt.target.value?parseInt(evt.target.value):null; updateEv(function(evUp){ return {...evUp,guests:evUp.guests.map(function(x){ return x.id===g.id?{...x,tableId:tid}:x; })}; }); }}
-                      style={{ background:"#13131e",border:"1px solid "+C.border,borderRadius:8,color:"#ffffff",padding:"4px 8px",fontSize:12,cursor:"pointer",fontFamily:"inherit" }}>
+                      style={{ background:"}#13131e",border:"1px solid "+C.border,borderRadius:8,color:"#ffffff",padding:"4px 8px",fontSize:12,cursor:"pointer",fontFamily:"inherit" }}>
                       <option value="">— Non placé —</option>
                       {ev.tables.map(function(tbl){return <option key={tbl.id} value={tbl.id}>Table {tbl.number}{tbl.label?" ("+tbl.label+")":""}</option>;})}
                     </select>
@@ -797,7 +797,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                         value={(ev.menu&&ev.menu[key])||""}
                         onChange={function(e){ var v=e.target.value; updateEv(function(ev2){ return {...ev2, menu:{...(ev2.menu||{}), [key]:v}}; }); }}
                         placeholder={ph}
-                        style={{ width:"100%", padding:"8px 12px", background:"#fff1", border:"1px solid "+C.border, borderRadius:8, color:"#ffffff", fontSize:13, fontFamily:"inherit", boxSizing:"border-box" }}
+                        style={{ width:"}100%", padding:"8px 12px", background:"#fff1", border:"1px solid "+C.border, borderRadius:8, color:"#ffffff", fontSize:13, fontFamily:"inherit", boxSizing:"border-box" }}
                       />
                     </div>
                   );
@@ -832,7 +832,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                         value={(ev.drinks&&ev.drinks[key])||""}
                         onChange={function(e){ var v=e.target.value; updateEv(function(ev2){ return {...ev2, drinks:{...(ev2.drinks||{}), [key]:v}}; }); }}
                         placeholder={ph}
-                        style={{ width:"100%", padding:"7px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit", boxSizing:"border-box" }}
+                        style={{ width:"}100%", padding:"7px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit", boxSizing:"border-box" }}
                       />
                     </div>
                   );
@@ -843,7 +843,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 <input
                   value={(ev.drinks&&ev.drinks.notes)||""}
                   onChange={function(e){ var v=e.target.value; updateEv(function(ev2){ return {...ev2, drinks:{...(ev2.drinks||{}), notes:v}}; }); }}
-                  placeholder="Ex: Pas d'alcool sur les tables enfants, service champagne à l'arrivée..."
+                  placeholder="}Ex: Pas d'alcool sur les tables enfants, service champagne à l'arrivée..."
                   style={{ width:"100%", padding:"8px 12px", background:"#fff1", border:"1px solid "+C.border, borderRadius:8, color:"#ffffff", fontSize:13, fontFamily:"inherit", boxSizing:"border-box" }}
                 />
               </div>
@@ -1159,7 +1159,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                         <div style={{ flex:2, minWidth:160 }}>
                           <label style={{ color:"rgba(255,255,255,0.45)", fontSize:10, letterSpacing:1 }}>NOTES</label>
                           <input value={item.notes||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var b=[...(evUp.budget||[])]; b[bi]={...b[bi],notes:v}; return {...evUp,budget:b}; }); }}
-                            placeholder="Prestataire, devis..." style={{ width:"100%", padding:"6px 10px", background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:13, fontFamily:"inherit" }}/>
+                            placeholder="}Prestataire, devis..." style={{ width:"100%", padding:"6px 10px", background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:13, fontFamily:"inherit" }}/>
                         </div>
                       </div>
                       {parseFloat(item.estimated||0) > 0 && (
@@ -1279,10 +1279,10 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                             <input value={task.label} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var p=[...(evUp.planning||[])]; p[ti]={...p[ti],label:v}; return {...evUp,planning:p}; }); }}
                               style={{ flex:1, background:"none", border:"none", color:task.done?C.muted:C.cream, fontSize:13, fontFamily:"inherit", outline:"none", textDecoration:task.done?"line-through":"none" }}/>
                             <input type="date" value={task.deadline||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var p=[...(evUp.planning||[])]; p[ti]={...p[ti],deadline:v}; return {...evUp,planning:p}; }); }}
-                              style={{ background:"#18182a", border:"1px solid "+(isLate?C.red:C.border), borderRadius:6, color:isLate?C.red:C.muted, fontSize:11, padding:"4px 8px", fontFamily:"inherit" }}/>
+                              style={{ background:"}#18182a", border:"1px solid "+(isLate?C.red:C.border), borderRadius:6, color:isLate?C.red:C.muted, fontSize:11, padding:"4px 8px", fontFamily:"inherit" }}/>
                             {isLate && <span style={{ color:C.red, fontSize:11, fontWeight:700 }}>EN RETARD</span>}
                             <select value={task.priority||"medium"} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var p=[...(evUp.planning||[])]; p[ti]={...p[ti],priority:v}; return {...evUp,planning:p}; }); }}
-                              style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"rgba(255,255,255,0.45)", fontSize:11, padding:"4px 8px", fontFamily:"inherit" }}>
+                              style={{ background:"}#18182a", border:"1px solid "+C.border, borderRadius:6, color:"rgba(255,255,255,0.45)", fontSize:11, padding:"4px 8px", fontFamily:"inherit" }}>
                               <option value="high">🔴 Haute</option>
                               <option value="medium">🟡 Moyenne</option>
                               <option value="low">🟢 Faible</option>
@@ -1354,7 +1354,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                       {/* Content */}
                       <div style={{ flex:1, background:C.mid+"44", border:"1px solid "+C.border+"33", borderRadius:12, padding:"12px 16px", marginBottom:8, display:"flex", gap:10, alignItems:"center", flexWrap:"wrap" }}>
                         <input type="time" value={step.time||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var p=[...(evUp.programme||[])]; p[pi]={...p[pi],time:v}; return {...evUp,programme:p}; }); }}
-                          style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#C9973A", fontSize:13, padding:"4px 8px", fontFamily:"inherit", fontWeight:700, minWidth:80 }}/>
+                          style={{ background:"}#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#C9973A", fontSize:13, padding:"4px 8px", fontFamily:"inherit", fontWeight:700, minWidth:80 }}/>
                         <span style={{ fontSize:18 }}>{step.icon||"📌"}</span>
                         <input value={step.label} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var p=[...(evUp.programme||[])]; p[pi]={...p[pi],label:v}; return {...evUp,programme:p}; }); }}
                           style={{ flex:1, background:"none", border:"none", color:"#ffffff", fontSize:14, fontFamily:"inherit", outline:"none", minWidth:120 }}/>
@@ -1364,7 +1364,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                           <span style={{ color:"rgba(255,255,255,0.45)", fontSize:11 }}>min</span>
                         </div>
                         <input value={step.notes||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var p=[...(evUp.programme||[])]; p[pi]={...p[pi],notes:v}; return {...evUp,programme:p}; }); }}
-                          placeholder="Notes / responsable…" style={{ flex:1, background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"rgba(255,255,255,0.45)", fontSize:12, padding:"4px 10px", fontFamily:"inherit", minWidth:100 }}/>
+                          placeholder="}Notes / responsable…" style={{ flex:1, background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"rgba(255,255,255,0.45)", fontSize:12, padding:"4px 10px", fontFamily:"inherit", minWidth:100 }}/>
                         <button onClick={function(){ updateEv(function(evUp){ return {...evUp, programme:(evUp.programme||[]).filter(function(_,i){ return i!==pi; })}; }); }}
                           style={{ background:"none", border:"none", color:"rgba(255,255,255,0.45)", cursor:"pointer", fontSize:13 }}>🗑</button>
                       </div>
@@ -1398,25 +1398,25 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                     <div key={sup.id} style={{ background:C.mid+"44", border:"1px solid "+C.border+"33", borderRadius:12, padding:"14px 16px" }}>
                       <div style={{ display:"flex", gap:10, alignItems:"center", marginBottom:8, flexWrap:"wrap" }}>
                         <select value={sup.role||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],role:v}; return {...evUp,suppliers:s}; }); }}
-                          style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#C9973A", fontSize:12, padding:"4px 8px", fontFamily:"inherit" }}>
+                          style={{ background:"}#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#C9973A", fontSize:12, padding:"4px 8px", fontFamily:"inherit" }}>
                           <option value="">— Rôle —</option>
                           <option value="Traiteur">🍽 Traiteur</option>
                           <option value="DJ">🎵 DJ</option>
                           <option value="Musicien">🎹 Musicien</option>
                           <option value="Photographe">📷 Photographe</option>
                           <option value={t.videographer||"Videographer"}>🎬 Vidéaste</option>
-                          <option value="Fleuriste">🌸 Fleuriste</option>
+                          <option value="}Fleuriste">🌸 Fleuriste</option>
                           <option value={t.decorator||"Decorator"}>🎨 Décorateur</option>
-                          <option value="Salle">🏛 Salle</option>
+                          <option value="}Salle">🏛 Salle</option>
                           <option value="Transport">🚗 Transport</option>
                           <option value="Animation">🎭 Animation</option>
                           <option value="Autre">📦 Autre</option>
                         </select>
                         <input value={sup.name||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],name:v}; return {...evUp,suppliers:s}; }); }}
-                          placeholder={t.supplierName||"Name / Company"} style={{ flex:1, background:"none", border:"none", color:"#ffffff", fontSize:14, fontFamily:"inherit", outline:"none" }}/>
+                          placeholder={t.supplierName||"}Name / Company"} style={{ flex:1, background:"}none", border:"none", color:"#ffffff", fontSize:14, fontFamily:"inherit", outline:"none" }}/>
                         <span style={{ fontSize:16 }}>{statusIcon}</span>
                         <select value={sup.status||"pending"} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],status:v}; return {...evUp,suppliers:s}; }); }}
-                          style={{ background:statusColor+"22", border:"1px solid "+statusColor+"66", borderRadius:6, color:statusColor, fontSize:11, padding:"4px 8px", fontFamily:"inherit" }}>
+                          style={{ background:statusColor+"}22", border:"1px solid "+statusColor+"66", borderRadius:6, color:statusColor, fontSize:11, padding:"4px 8px", fontFamily:"inherit" }}>
                           <option value="pending">⏳ En cours</option>
                           <option value="confirmed">✅ {t.rsvpConfirmedSingle||"Confirmed"}</option>
                           <option value="cancelled">❌ Annulé</option>
@@ -1426,11 +1426,11 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                       </div>
                       <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
                         <input value={sup.phone||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],phone:v}; return {...evUp,suppliers:s}; }); }}
-                          placeholder={"📞 "+(t.phone||"Phone")} style={{ flex:1, padding:"5px 10px", background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit", minWidth:120 }}/>
+                          placeholder={"}📞 "+(t.phone||"}Phone")} style={{ flex:1, padding:"5px 10px", background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit", minWidth:120 }}/>
                         <input value={sup.email||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],email:v}; return {...evUp,suppliers:s}; }); }}
-                          placeholder="✉️ Email" style={{ flex:1, padding:"5px 10px", background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit", minWidth:120 }}/>
+                          placeholder="}✉️ Email" style={{ flex:1, padding:"5px 10px", background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit", minWidth:120 }}/>
                         <input value={sup.notes||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],notes:v}; return {...evUp,suppliers:s}; }); }}
-                          placeholder="Notes, tarifs, contrat…" style={{ flex:2, padding:"5px 10px", background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit", minWidth:160 }}/>
+                          placeholder="}Notes, tarifs, contrat…" style={{ flex:2, padding:"5px 10px", background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit", minWidth:160 }}/>
                       </div>
                     </div>
                   );
@@ -1532,7 +1532,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                     {g.rsvpNote && <span style={{ color:"rgba(255,255,255,0.45)", fontSize:11, fontStyle:"italic", maxWidth:120, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{g.rsvpNote}</span>}
                     <input
                       value={g.rsvpNote||""} onChange={e=>{const v=e.target.value; updateEv(ev2=>({...ev2,guests:ev2.guests.map(x=>x.id===g.id?{...x,rsvpNote:v}:x)}));}}
-                      placeholder="Note…"
+                      placeholder="}Note…"
                       style={{ width:120, padding:"4px 8px", background:"#fff1", border:"1px solid rgba(201,151,58,0.15)", borderRadius:6, color:"#ffffff", fontSize:11, fontFamily:"inherit" }}
                     />
                   </div>
@@ -1595,7 +1595,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                           <div style={{ color:"rgba(255,255,255,0.45)", fontSize:11 }}>Estimé : <span style={{ color:"#C9973A" }}>{(parseFloat(b.estimated)||0).toLocaleString("fr-FR")} €</span></div>
                           <div style={{ color:"rgba(255,255,255,0.45)", fontSize:11 }}>Réel : <span style={{ color:(b.actual||0)>(b.estimated||0)?C.red:C.green }}>{(parseFloat(b.actual)||0).toLocaleString("fr-FR")} €</span></div>
                         </div>
-                        <span style={{ fontSize:18, cursor:"pointer", color:b.paid?"#4CAF50":C.muted }} title={b.paid?t.paid||"Paid":t.notPaid||"Unpaid"}
+                        <span style={{ fontSize:18, cursor:"pointer", color:b.paid?"#4CAF50":C.muted }} title={b.paid?t.paid||"Paid"}:t.notPaid||"Unpaid"}
                           onClick={()=>updateEv(ev2=>({...ev2,budget:ev2.budget.map((x,i)=>i===bi?{...x,paid:!x.paid}:x)}))}>
                           {b.paid?"✅":"💳"}
                         </span>
@@ -1783,8 +1783,8 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                       <input
                         value={venue.name||""}
                         onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var vens=[...(evUp.venues||[])]; vens[vi]={...vens[vi],name:v}; return {...evUp,venues:vens}; }); }}
-                        placeholder={t.venueName||"Venue name"}
-                        style={{ flex:1, padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:14, fontFamily:"inherit" }}
+                        placeholder={t.venueName||"}Venue name"}
+                        style={{ flex:1, padding:"}6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:14, fontFamily:"inherit" }}
                       />
                       <button onClick={function(){ updateEv(function(evUp){ return {...evUp, venues:(evUp.venues||[]).filter(function(_,i){ return i!==vi; })}; }); }}
                         style={{ background:"none", border:"none", color:"rgba(255,255,255,0.45)", cursor:"pointer", fontSize:16 }}>🗑</button>
@@ -1792,21 +1792,21 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                     <input
                       value={venue.address||""}
                       onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var vens=[...(evUp.venues||[])]; vens[vi]={...vens[vi],address:v}; return {...evUp,venues:vens}; }); }}
-                      placeholder={t.fullAddress||"Full address"}
-                      style={{ padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:13, fontFamily:"inherit" }}
+                      placeholder={t.fullAddress||"}Full address"}
+                      style={{ padding:"}6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:13, fontFamily:"inherit" }}
                     />
                     <div style={{ display:"flex", gap:8, alignItems:"center", flexWrap:"wrap" }}>
                       <input
                         value={venue.time||""}
                         onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var vens=[...(evUp.venues||[])]; vens[vi]={...vens[vi],time:v}; return {...evUp,venues:vens}; }); }}
-                        placeholder="Heure (ex: 14h00)"
+                        placeholder="}Heure (ex: 14h00)"
                         style={{ width:120, padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit" }}
                       />
                       <input
                         value={venue.notes||""}
                         onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var vens=[...(evUp.venues||[])]; vens[vi]={...vens[vi],notes:v}; return {...evUp,venues:vens}; }); }}
-                        placeholder={t.venueNotes||"Notes (parking, access code...)"}
-                        style={{ flex:1, padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit" }}
+                        placeholder={t.venueNotes||"}Notes (parking, access code...)"}
+                        style={{ flex:1, padding:"}6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit" }}
                       />
                       {venue.address && (
                         <a href={"https://maps.google.com/?q="+encodeURIComponent(venue.address)}
@@ -1845,7 +1845,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                   <input
                     value={(ev.giftList&&ev.giftList.url)||""}
                     onChange={function(e){ var v=e.target.value; updateEv(function(ev2){ return {...ev2, giftList:{...(ev2.giftList||{}), url:v}}; }); }}
-                    placeholder="https://www.wishlist.fr/..."
+                    placeholder="}https://www.wishlist.fr/..."
                     style={{ width:"100%", padding:"8px 12px", background:"#fff1", border:"1px solid "+C.border, borderRadius:8, color:"#ffffff", fontSize:13, fontFamily:"inherit", boxSizing:"border-box" }}
                   />
                 </div>
@@ -1854,7 +1854,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                   <input
                     value={(ev.giftList&&ev.giftList.message)||""}
                     onChange={function(e){ var v=e.target.value; updateEv(function(ev2){ return {...ev2, giftList:{...(ev2.giftList||{}), message:v}}; }); }}
-                    placeholder="Ex: Votre présence est le plus beau cadeau. Si vous souhaitez néanmoins nous gâter..."
+                    placeholder="}Ex: Votre présence est le plus beau cadeau. Si vous souhaitez néanmoins nous gâter..."
                     style={{ width:"100%", padding:"8px 12px", background:"#fff1", border:"1px solid "+C.border, borderRadius:8, color:"#ffffff", fontSize:13, fontFamily:"inherit", boxSizing:"border-box" }}
                   />
                 </div>
@@ -1869,13 +1869,13 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                       <input
                         value={gift.name||""}
                         onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var gifts=[...(evUp.gifts||[])]; gifts[gi]={...gifts[gi],name:v}; return {...evUp,gifts}; }); }}
-                        placeholder="Nom du cadeau ou de l'expéditeur"
+                        placeholder="}Nom du cadeau ou de l'expéditeur"
                         style={{ flex:1, padding:"6px 10px", background:gift.received?"#0a2a0a":"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:13, fontFamily:"inherit", textDecoration:gift.received?"line-through":"none" }}
                       />
                       <input
                         value={gift.from||""}
                         onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var gifts=[...(evUp.gifts||[])]; gifts[gi]={...gifts[gi],from:v}; return {...evUp,gifts}; }); }}
-                        placeholder="De la part de..."
+                        placeholder="}De la part de..."
                         style={{ width:150, padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit" }}
                       />
                       <button onClick={function(){ updateEv(function(evUp){ return {...evUp,gifts:(evUp.gifts||[]).filter(function(_,i){ return i!==gi; })}; }); }}
@@ -1898,7 +1898,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
 
       {/* ── MODALS ── */}
       <Modal open={showImportCSV} onClose={()=>setShowImportCSV(false)} title={t.importCSV||"Import guests (CSV)"} width={500}>
-        <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
+        <div style={{ display:"}flex", flexDirection:"column", gap:14 }}>
           <div style={{ background:"#13131e", borderRadius:10, padding:"12px 16px", fontSize:12, color:"rgba(255,255,255,0.45)", lineHeight:1.8 }}>
             <strong style={{color:"#C9973A"}}>Format attendu (1 invité par ligne) :</strong><br/>
             <code style={{color:"#ffffff"}}>Prénom Nom, email@example.fr, standard</code><br/>
@@ -1907,7 +1907,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
           <textarea
             rows={10}
             placeholder={"Marie Martin, marie@test.com, vegetarien\nJean Dupont, jean@test.com, standard\nSophie Laurent, , vegan"}
-            id="csv-import-area"
+            id="}csv-import-area"
             style={{ ...inputStyle, resize:"vertical", fontFamily:"monospace", fontSize:12, lineHeight:1.6 }}
           />
           <Btn onClick={() => {
@@ -1935,11 +1935,11 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
       </Modal>
 
       <Modal open={showAddGuest} onClose={()=>setShowAddGuest(false)} title={t.addGuestBtn||"Add guest"}>
-        <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
+        <div style={{ display:"}flex", flexDirection:"column", gap:14 }}>
           <Field label={t.fieldName}><Input value={newGuest.name} onChange={e=>setNewGuest({...newGuest,name:e.target.value})} placeholder={t.guestName||"First Last"}/></Field>
-          <Field label={t.fieldEmail}><Input type="email" value={newGuest.email} onChange={e=>setNewGuest({...newGuest,email:e.target.value})} placeholder="email@example.fr"/></Field>
+          <Field label={t.fieldEmail}><Input type="}email" value={newGuest.email} onChange={e=>setNewGuest({...newGuest,email:e.target.value})} placeholder="email@example.fr"/></Field>
           <Field label={t.guestDiet?.toUpperCase()||"DIET"}>
-            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:6 }}>
+            <div style={{ display:"}grid", gridTemplateColumns:"1fr 1fr", gap:6 }}>
               {DIET_OPTIONS.map(function(ditem){ return (
                 <button key={ditem.id} onClick={()=>setNewGuest({...newGuest,diet:ditem.id})} style={{
                   padding:"7px 10px", borderRadius:8, border:`2px solid ${newGuest.diet===ditem.id?ditem.color:C.border}`,
@@ -1951,7 +1951,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             </div>
           </Field>
           <Field label={t.guestRole?.toUpperCase()||"ROLE"}>
-            <select value={newGuest.role||""} onChange={e=>setNewGuest({...newGuest,role:e.target.value})}
+            <select value={newGuest.role||"}"} onChange={e=>setNewGuest({...newGuest,role:e.target.value})}
               style={{ width:"100%", padding:"8px 12px", background:"#13131e", border:"1px solid "+C.border, borderRadius:8, color:"#ffffff", fontSize:13, fontFamily:"inherit" }}>
               <option value="">— Aucun rôle spécial —</option>
               <option value="marie1">💍 Marié(e) 1</option>
@@ -1970,7 +1970,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
       </Modal>
 
       <Modal open={showAddTable} onClose={()=>setShowAddTable(false)} title={t.addTable||"Add a table"}>
-        <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
+        <div style={{ display:"}flex", flexDirection:"column", gap:14 }}>
           <Field label={`${t.fieldNumber} (auto: ${nextTableNumber})`}><Input type="number" value={newTable.number} onChange={e=>setNewTable({...newTable,number:e.target.value})} placeholder={String(nextTableNumber)}/></Field>
           <Field label={t.fieldCapacity}><Input type="number" value={newTable.capacity} onChange={e=>setNewTable({...newTable,capacity:e.target.value})}/></Field>
           <Field label={t.fieldShape}>
@@ -2001,7 +2001,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
       </Modal>
 
       <Modal open={showAddZone} onClose={()=>{setShowAddZone(false);setNewZone({label:"",icon:"📍",color:"#C9973A"});}} title={t.addZone||"Add a zone"}>
-        <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
+        <div style={{ display:"}flex", flexDirection:"column", gap:14 }}>
           <Field label="NOM DE LA ZONE *">
             <Input value={newZone.label} onChange={e=>setNewZone({...newZone,label:e.target.value})} placeholder="ex: Piste de danse, Bar, Scène, Photo Booth…"/>
           </Field>
@@ -2076,7 +2076,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
       <Modal open={showAddBudget} onClose={()=>{setShowAddBudget(false);setNewBudgetLine({category:"salle",label:"",estimated:0,actual:0,paid:false,notes:""}); }} title="Ajouter un poste budgétaire">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <Field label={t.category?.toUpperCase()||"CATEGORY"}>
-            <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:6 }}>
+            <div style={{ display:"}grid", gridTemplateColumns:"1fr 1fr", gap:6 }}>
               {BUDGET_CATEGORIES.map(cat=>(
                 <button key={cat.id} onClick={()=>setNewBudgetLine({...newBudgetLine,category:cat.id})} style={{
                   padding:"8px 10px", borderRadius:8, border:`2px solid ${newBudgetLine.category===cat.id?C.gold:C.border}`,
@@ -2087,15 +2087,15 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               ))}
             </div>
           </Field>
-          <Field label={t.labelOptional||"Label} (optional)">
-            <Input value={newBudgetLine.label} onChange={e=>setNewBudgetLine({...newBudgetLine,label:e.target.value})} placeholder="ex: Château de Vincennes, DJ Martin…"/>
+          <Field label={t.labelOptional||"Label (optional)"}>
+            <Input value={newBudgetLine.label} onChange={e=>setNewBudgetLine({...newBudgetLine,label:e.target.value})} placeholder="}ex: Château de Vincennes, DJ Martin…"/>
           </Field>
           <div style={{ display:"flex", gap:12 }}>
-            <Field label={t.amountEstimated||"Estimated} amount (€)">
-              <Input type="number" value={newBudgetLine.estimated} onChange={e=>setNewBudgetLine({...newBudgetLine,estimated:parseFloat(e.target.value)||0})} placeholder="0"/>
+            <Field label={t.amountEstimated||"Estimated amount (€)"}>
+              <Input type="}number" value={newBudgetLine.estimated} onChange={e=>setNewBudgetLine({...newBudgetLine,estimated:parseFloat(e.target.value)||0})} placeholder="0"/>
             </Field>
-            <Field label={t.amountActual||"Actual} amount (€)">
-              <Input type="number" value={newBudgetLine.actual} onChange={e=>setNewBudgetLine({...newBudgetLine,actual:parseFloat(e.target.value)||0})} placeholder="0"/>
+            <Field label={t.amountActual||"Actual amount (€)"}>
+              <Input type="}number" value={newBudgetLine.actual} onChange={e=>setNewBudgetLine({...newBudgetLine,actual:parseFloat(e.target.value)||0})} placeholder="0"/>
             </Field>
           </div>
           <Field label="NOTES">
@@ -2116,8 +2116,8 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
       {/* ── MODAL TÂCHE PLANNING ── */}
       <Modal open={showAddTask} onClose={()=>{setShowAddTask(false);setNewTask({title:"",dueDate:"",responsible:"",priority:"medium",done:false,notes:""});}} title="Ajouter une tâche">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label={t.taskLabel||"TASK} *">
-            <Input value={newTask.title} onChange={e=>setNewTask({...newTask,title:e.target.value})} placeholder="ex: Confirmer le traiteur, Envoyer les invitations…"/>
+          <Field label={t.taskLabel||"TASK *"}>
+            <Input value={newTask.title} onChange={e=>setNewTask({...newTask,title:e.target.value})} placeholder="}ex: Confirmer le traiteur, Envoyer les invitations…"/>
           </Field>
           <div style={{ display:"flex", gap:12 }}>
             <Field label="DATE LIMITE">
@@ -2128,7 +2128,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             </Field>
           </div>
           <Field label={t.priority?.toUpperCase()||"PRIORITY"}>
-            <div style={{ display:"flex", gap:8 }}>
+            <div style={{ display:"}flex", gap:8 }}>
               {[["high","🔴 Urgent",C.red],["medium","🟡 Normal",C.gold],["low","🟢 Faible",C.green]].map(([v,l,col])=>(
                 <button key={v} onClick={()=>setNewTask({...newTask,priority:v})} style={{
                   flex:1, padding:"9px 6px", borderRadius:10, border:`2px solid ${newTask.priority===v?col:C.border}`,
@@ -2143,7 +2143,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
           </Field>
           <Btn disabled={!newTask.title.trim()} onClick={()=>{
             updateEv(ev2=>({...ev2, planning:[...(ev2.planning||[]), {...newTask}]}));
-            setNewTask({title:"",dueDate:"",responsible:"",priority:"medium",done:false,notes:""});
+            setNewTask({title:"}",dueDate:"",responsible:"",priority:"medium",done:false,notes:""});
             setShowAddTask(false);
           }} style={{marginTop:4}}>Ajouter la tâche</Btn>
         </div>
@@ -2156,8 +2156,8 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             <Field label="HEURE">
               <Input type="time" value={newProgramItem.time} onChange={e=>setNewProgramItem({...newProgramItem,time:e.target.value})}/>
             </Field>
-            <Field label={t.stepLabel||"STEP} *">
-              <Input value={newProgramItem.label} onChange={e=>setNewProgramItem({...newProgramItem,label:e.target.value})} placeholder="ex: Vin d'honneur, Dîner, Ouverture de bal…"/>
+            <Field label={t.stepLabel||"STEP *"}>
+              <Input value={newProgramItem.label} onChange={e=>setNewProgramItem({...newProgramItem,label:e.target.value})} placeholder="}ex: Vin d'honneur, Dîner, Ouverture de bal…"/>
             </Field>
           </div>
           <Field label="ICON">
@@ -2184,11 +2184,11 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
       {/* ── MODAL PRESTATAIRE ── */}
       <Modal open={showAddSupplier} onClose={()=>{setShowAddSupplier(false);setNewSupplier({name:"",role:"",phone:"",email:"",notes:""}); }} title="Ajouter un prestataire">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label={t.supplierName||"Name} / Company *">
-            <Input value={newSupplier.name} onChange={e=>setNewSupplier({...newSupplier,name:e.target.value})} placeholder="ex: DJ Martin, Fleurs du Soleil, Photos by Julie…"/>
+          <Field label={t.supplierName||"Name / Company *"}>
+            <Input value={newSupplier.name} onChange={e=>setNewSupplier({...newSupplier,name:e.target.value})} placeholder="}ex: DJ Martin, Fleurs du Soleil, Photos by Julie…"/>
           </Field>
-          <Field label={t.supplierRole||"Role} / Service">
-            <Input value={newSupplier.role} onChange={e=>setNewSupplier({...newSupplier,role:e.target.value})} placeholder="ex: DJ, Fleuriste, Photographe, Traiteur…"/>
+          <Field label={t.supplierRole||"Role / Service"}>
+            <Input value={newSupplier.role} onChange={e=>setNewSupplier({...newSupplier,role:e.target.value})} placeholder="}ex: DJ, Fleuriste, Photographe, Traiteur…"/>
           </Field>
           <div style={{ display:"flex", gap:12 }}>
             <Field label="PHONE">
@@ -2210,10 +2210,10 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
       </Modal>
 
       <Modal open={showConstraint} onClose={()=>setShowConstraint(false)} title={t.newConstraint||"New constraint"}>
-        <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label={t.firstGuest||"FIRST} GUEST">
+        <div style={{ display:"}flex", flexDirection:"column", gap:14 }}>
+          <Field label={t.firstGuest||"FIRST GUEST"}>
             <Select value={constraint.a} onChange={e=>setConstraint({...constraint,a:parseInt(e.target.value)||e.target.value})}>
-              <option value="">— Choisir —</option>
+              <option value="}">— Choisir —</option>
               {ev.guests.map(g=><option key={g.id} value={g.id}>{g.name}</option>)}
             </Select>
           </Field>
@@ -2228,9 +2228,9 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               ))}
             </div>
           </Field>
-          <Field label={t.secondGuest||"SECOND} GUEST">
+          <Field label={t.secondGuest||"SECOND GUEST"}>
             <Select value={constraint.b} onChange={e=>setConstraint({...constraint,b:parseInt(e.target.value)||e.target.value})}>
-              <option value="">— Choisir —</option>
+              <option value="}">— Choisir —</option>
               {ev.guests.filter(g=>g.id!==constraint.a).map(g=><option key={g.id} value={g.id}>{g.name}</option>)}
             </Select>
           </Field>
@@ -2243,7 +2243,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
           <p style={{ color:"rgba(255,255,255,0.45)", fontSize:13, marginBottom:20 }}>Partagez ce QR code avec vos invités pour qu'ils renseignent leurs préférences.</p>
           <div style={{ display:"flex", justifyContent:"center", marginBottom:20 }}>
             <div style={{ padding:16,background:C.cream,borderRadius:16,border:`2px solid ${C.border}`,display:"inline-block" }}>
-              <QRCodeWidget value={`https://tableplan-seven.vercel.app/?join=${(window.firebase?.auth?.().currentUser?.uid||"")}___${ev.id}`} size={180}/>
+              <QRCodeWidget value={`https://tableplan-seven.vercel.app/?join=${(window.firebase?.auth?.().currentUser?.uid||""})}___${ev.id}`} size={180}/>
             </div>
           </div>
           <div style={{ background:"#13131e",borderRadius:8,padding:"8px 16px",fontSize:12,color:"rgba(255,255,255,0.45)",marginBottom:20,fontFamily:"monospace",cursor:"pointer",display:"flex",alignItems:"center",gap:8 }}
@@ -2259,12 +2259,12 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
       </Modal>
 
       <Modal open={showSettings} onClose={()=>setShowSettings(false)} title={t.eventSettings||"Event settings"}>
-        <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
+        <div style={{ display:"}flex", flexDirection:"column", gap:14 }}>
           <Field label={t.settingName}><Input value={ev.name} onChange={e=>updateEv(evUp=>({...evUp,name:e.target.value}))}/></Field>
           <Field label={t.settingDate}><Input type="date" value={ev.date} onChange={e=>updateEv(evUp=>({...evUp,date:e.target.value}))}/></Field>
           <Field label={t.eventNotes}>
             <textarea value={ev.notes||""} onChange={e=>updateEv(evUp=>({...evUp,notes:e.target.value}))} rows={3}
-              placeholder="Salle des fêtes, traiteur, prestataires..."
+              placeholder="}Salle des fêtes, traiteur, prestataires..."
               style={{...inputStyle, resize:"vertical", lineHeight:1.6}}/>
           </Field>
           <Field label={t.settingType}>
