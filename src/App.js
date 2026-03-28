@@ -161,26 +161,27 @@ export default function App() {
   useEffect(() => {
     if (!fbUser) { setEvents([]); setEventsLoaded(false); return; }
     setEventsLoaded(false);
-    const fb = getFirebase();
-    if (!fb) {
-      loadEventsFromFirestore(fbUser.uid).then(evs => {
-        setEvents(evs.length > 0 ? evs : []);
-        setEventsLoaded(true);
-      });
-      return;
-    }
-    // onSnapshot = temps réel — se met à jour automatiquement
-    const unsub = fb.db
-      .collection("users").doc(fbUser.uid).collection("events")
-      .onSnapshot(function(snap) {
-        const evs = snap.docs.map(function(d){ return d.data(); });
-        setEvents(evs);
-        setEventsLoaded(true);
-      }, function(err) {
-        console.error("Snapshot error:", err);
-        setEventsLoaded(true);
-      });
-    return function(){ unsub && unsub(); };
+    // Utiliser window.firebase directement (SDK CDN déjà chargé)
+    const trySubscribe = () => {
+      if (!window.firebase || !window.firebase.firestore) {
+        setTimeout(trySubscribe, 200);
+        return;
+      }
+      const db = window.firebase.firestore();
+      const unsub = db
+        .collection("users").doc(fbUser.uid).collection("events")
+        .onSnapshot(function(snap) {
+          const evs = snap.docs.map(function(d){ return d.data(); });
+          setEvents(evs);
+          setEventsLoaded(true);
+        }, function(err) {
+          console.error("Snapshot error:", err);
+          setEventsLoaded(true);
+        });
+      window.__eventsUnsub = unsub;
+    };
+    trySubscribe();
+    return function(){ if (window.__eventsUnsub) { window.__eventsUnsub(); window.__eventsUnsub = null; } };
   }, [fbUser]);
 
   const selectedEvent = events.find(e => e.id === selectedEventId);
