@@ -234,16 +234,16 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
   const planningTotal = (ev.planning||[]).length;
 
   const TABS = [
-    {id:"plan",         icon:"🗺",  label: t ? t.tabPlan.replace(/^\S+\s/,"") : "Plan"},
-    {id:"list",         icon:"📋",  label:"Liste"},
-    {id:"guests",       icon:"👥",  label:`${t ? t.tabGuests.replace(/^\S+\s/,"") : "Guests"} (${ev.guests.length})`},
+    {id:"plan",         icon:"🗺",  label: t.tabPlan || "Plan"},
+    {id:"list",         icon:"📋",  label: t.tabList || "List"},
+    {id:"guests",       icon:"👥",  label:`${t.tabGuests || "Guests"} (${ev.guests.length})`},
     {id:"rsvp",         icon:"💌",  label:`RSVP${rsvpPending>0?" ("+rsvpPending+"⏳)":""}`},
-    {id:"budget",       icon:"💰",  label:"Budget"},
-    {id:"planning",     icon:"🗓",  label:`Planning${planningTotal>0?" ("+planningDone+"/"+planningTotal+")":""}`},
-    {id:"programme",    icon:"🎵",  label:"Programme"},
-    {id:"diet",         icon:"🍽️",  label: t ? t.tabFood.replace(/^\S+\s/,"") : "Dietary"},
-    {id:"constraints",  icon:"⚙",  label: t ? t.tabConstraints.replace(/^\S+\s/,"") : "Constraints"},
-    {id:"logistique",   icon:"🗂",  label:"Logistique"},
+    {id:"budget",       icon:"💰",  label: t.tabBudget || "Budget"},
+    {id:"planning",     icon:"🗓",  label:`${t.tabPlanning || "Planning"}${planningTotal>0?" ("+planningDone+"/"+planningTotal+")":""}`},
+    {id:"programme",    icon:"🎵",  label: t.tabProgramme || "Programme"},
+    {id:"diet",         icon:"🍽️",  label: t.tabFood || "Dietary"},
+    {id:"constraints",  icon:"⚙",  label: t.tabConstraints || "Constraints"},
+    {id:"logistique",   icon:"🗂",  label: t.tabLogistique || "Logistics"},
   ];
 
   return (
@@ -617,7 +617,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                       <table style={{ width:"100%", borderCollapse:"collapse" }}>
                         <thead>
                           <tr style={{ borderBottom:"1px solid " + C.border }}>
-                            {["Nom","Rôle","Régime","Notes"].map(function(h){ return <th key={h} style={{ padding:"8px 20px", color:"rgba(255,255,255,0.45)", fontSize:11, textAlign:"left", letterSpacing:1 }}>{h}</th>; })}
+                            {[t.guestName || "Name",t.guestRole || "Role",t.guestDiet || "Diet",t.guestNotes || "Notes"].map(function(h){ return <th key={h} style={{ padding:"8px 20px", color:"rgba(255,255,255,0.45)", fontSize:11, textAlign:"left", letterSpacing:1 }}>{h}</th>; })}
                           </tr>
                         </thead>
                         <tbody>
