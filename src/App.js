@@ -1517,120 +1517,127 @@ function LoginScreen({ onLogin, t: tProp }) {
   const [hovered, setHovered] = useState(null);
 
   const FEATURES = [
-    { icon:"🗺️", title: t.loginF1, desc: t.loginF1d },
-    { icon:"💌", title: t.loginF2, desc: t.loginF2d },
-    { icon:"🖨️", title: t.loginF3, desc: t.loginF3d },
-    { icon:"🤖", title: t.loginF4, desc: t.loginF4d },
+    { icon:"🗺️", title: t.loginF1 || "Plan de salle interactif", desc: t.loginF1d || "Glissez-déposez vos tables sur un canvas intuitif" },
+    { icon:"💌", title: t.loginF2 || "RSVP & invitations", desc: t.loginF2d || "Suivez les confirmations en temps réel" },
+    { icon:"🖨️", title: t.loginF3 || "Exports premium", desc: t.loginF3d || "PDF, chevalets imprimables, QR codes invités" },
+    { icon:"🤖", title: t.loginF4 || "IA proactive", desc: t.loginF4d || "Un assistant qui analyse et guide votre événement" },
   ];
 
-  const TRUST = [t.loginTrust1, t.loginTrust2, t.loginTrust3, t.loginTrust4];
+  const TRUST = [
+    t.loginTrust1 || "Mariages",
+    t.loginTrust2 || "Galas",
+    t.loginTrust3 || "Conférences",
+    t.loginTrust4 || "Événements corporate"
+  ];
 
   return (
-    <div style={{ minHeight:"100vh", background:"#0a0a0f", fontFamily:"'Inter', 'Segoe UI', sans-serif", color:"#fff", overflowX:"hidden" }}>
+    <div style={{ minHeight:"100vh", background:"#0d0d14", fontFamily:"'Inter','Segoe UI',sans-serif", color:"#ffffff", overflowX:"hidden" }}>
 
-      {/* ── NAV ── */}
-      <nav style={{ position:"fixed", top:0, left:0, right:0, zIndex:100, display:"flex", alignItems:"center", padding:"0 48px", height:64, background:"rgba(10,10,15,0.85)", backdropFilter:"blur(20px)", borderBottom:"1px solid rgba(201,151,58,0.15)" }}>
-        <span style={{ fontSize:20, fontWeight:700, letterSpacing:1, background:"linear-gradient(135deg,#C9973A,#F0C97A)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
+      {/* NAV */}
+      <nav style={{ position:"fixed", top:0, left:0, right:0, zIndex:100, display:"flex", alignItems:"center", padding:"0 48px", height:64, background:"rgba(13,13,20,0.92)", backdropFilter:"blur(20px)", borderBottom:"1px solid rgba(201,151,58,0.2)" }}>
+        <span style={{ fontSize:20, fontWeight:800, letterSpacing:.5, color:"#F0C97A" }}>
           TableMaître
         </span>
         <div style={{ flex:1 }}/>
-        {/* Sélecteur de langue */}
-        <div style={{ display:"flex", gap:4, marginRight:20 }}>
+        <div style={{ display:"flex", gap:6, marginRight:20, background:"rgba(255,255,255,0.06)", borderRadius:10, padding:"4px 6px" }}>
           {Object.entries(LANG_FLAGS).map(([lk, flag]) => (
             <button key={lk} onClick={()=>setLang(lk)} title={LANG_NAMES[lk]} style={{
-              background: lang===lk ? "rgba(201,151,58,0.2)" : "transparent",
-              border: lang===lk ? "1px solid rgba(201,151,58,0.6)" : "1px solid transparent",
-              borderRadius:8, padding:"5px 9px", cursor:"pointer", fontSize:17,
-              transition:"all .2s", opacity: lang===lk ? 1 : 0.45,
+              background: lang===lk ? "rgba(201,151,58,0.35)" : "transparent",
+              border: lang===lk ? "1px solid #C9973A" : "1px solid transparent",
+              borderRadius:7, padding:"5px 10px", cursor:"pointer", fontSize:18,
+              transition:"all .2s", opacity: lang===lk ? 1 : 0.5,
+              lineHeight:1,
             }}>{flag}</button>
           ))}
         </div>
-        <button onClick={onLogin} style={{ padding:"9px 22px", background:"linear-gradient(135deg,#C9973A,#F0C97A)", border:"none", borderRadius:99, cursor:"pointer", color:"#0a0a0f", fontWeight:700, fontSize:13, letterSpacing:.5 }}>
-          {t.loginGoogle}
+        <button onClick={onLogin} style={{ padding:"9px 22px", background:"linear-gradient(135deg,#C9973A,#F0C97A)", border:"none", borderRadius:99, cursor:"pointer", color:"#0d0d14", fontWeight:800, fontSize:13, letterSpacing:.5 }}>
+          {t.loginGoogle || "Se connecter avec Google"}
         </button>
       </nav>
 
-      {/* ── HERO ── */}
-      <section style={{ position:"relative", minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", padding:"120px 24px 80px", textAlign:"center", overflow:"hidden" }}>
-        {/* Fond radial déco */}
-        <div style={{ position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", width:800, height:800, background:"radial-gradient(ellipse, rgba(201,151,58,0.12) 0%, transparent 65%)", pointerEvents:"none" }}/>
-        <div style={{ position:"absolute", top:"20%", left:"15%", width:300, height:300, background:"radial-gradient(ellipse, rgba(201,151,58,0.05) 0%, transparent 70%)", borderRadius:"50%", pointerEvents:"none" }}/>
+      {/* HERO */}
+      <section style={{ position:"relative", minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", padding:"120px 24px 80px", textAlign:"center" }}>
+        <div style={{ position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", width:700, height:700, background:"radial-gradient(ellipse, rgba(201,151,58,0.14) 0%, transparent 65%)", pointerEvents:"none", borderRadius:"50%" }}/>
 
-        <div style={{ position:"relative", maxWidth:760, margin:"0 auto" }}>
-          {/* Badge pro */}
-          <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(201,151,58,0.1)", border:"1px solid rgba(201,151,58,0.3)", borderRadius:99, padding:"6px 18px", marginBottom:32, fontSize:12, color:"#C9973A", letterSpacing:2, textTransform:"uppercase" }}>
+        <div style={{ position:"relative", maxWidth:740, margin:"0 auto" }}>
+          <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(201,151,58,0.12)", border:"1px solid rgba(201,151,58,0.4)", borderRadius:99, padding:"7px 20px", marginBottom:36, fontSize:12, color:"#F0C97A", letterSpacing:2, textTransform:"uppercase", fontWeight:600 }}>
             <span style={{ width:6, height:6, borderRadius:"50%", background:"#C9973A", display:"inline-block" }}/>
-            {t.loginTagline}
+            {t.loginTagline || "La plateforme pro de gestion d'événements"}
           </div>
 
-          <h1 style={{ fontSize:"clamp(42px,7vw,80px)", fontWeight:800, lineHeight:1.05, letterSpacing:-2, margin:"0 0 24px", fontFamily:"Georgia,'Palatino Linotype',serif" }}>
-            {t.loginHero}
+          <h1 style={{ fontSize:"clamp(40px,6vw,72px)", fontWeight:800, lineHeight:1.08, letterSpacing:-1.5, margin:"0 0 24px", color:"#ffffff", fontFamily:"Georgia,'Palatino Linotype',serif" }}>
+            {t.loginHero || "Organisez. Placez. Impressionnez."}
           </h1>
 
-          <p style={{ fontSize:18, color:"rgba(255,255,255,0.55)", maxWidth:520, margin:"0 auto 48px", lineHeight:1.7 }}>
-            {t.loginSub}
+          <p style={{ fontSize:18, color:"rgba(255,255,255,0.6)", maxWidth:520, margin:"0 auto 48px", lineHeight:1.75 }}>
+            {t.loginSub || "De l'invitation à la salle, gérez chaque détail de votre événement depuis une seule application."}
           </p>
 
-          {/* CTA bouton */}
           <button onClick={onLogin} style={{
-            display:"inline-flex", alignItems:"center", gap:12, padding:"18px 40px",
+            display:"inline-flex", alignItems:"center", gap:12, padding:"18px 44px",
             background:"linear-gradient(135deg,#C9973A 0%,#F0C97A 100%)",
             border:"none", borderRadius:99, cursor:"pointer",
-            color:"#0a0a0f", fontWeight:700, fontSize:17, letterSpacing:.3,
-            boxShadow:"0 8px 40px rgba(201,151,58,0.35)",
+            color:"#0d0d14", fontWeight:800, fontSize:17, letterSpacing:.3,
+            boxShadow:"0 8px 40px rgba(201,151,58,0.4)",
             transition:"transform .2s, box-shadow .2s",
           }}
-            onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.boxShadow="0 14px 50px rgba(201,151,58,0.5)"; }}
-            onMouseLeave={e=>{ e.currentTarget.style.transform=""; e.currentTarget.style.boxShadow="0 8px 40px rgba(201,151,58,0.35)"; }}
+            onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.boxShadow="0 16px 56px rgba(201,151,58,0.55)"; }}
+            onMouseLeave={e=>{ e.currentTarget.style.transform=""; e.currentTarget.style.boxShadow="0 8px 40px rgba(201,151,58,0.4)"; }}
           >
             <svg width="20" height="20" viewBox="0 0 48 48">
               <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
               <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
               <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
               <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
-              <path fill="none" d="M0 0h48v48H0z"/>
             </svg>
-            {t.loginCta}
+            {t.loginCta || "Commencer gratuitement avec Google"}
           </button>
-          <p style={{ marginTop:16, fontSize:12, color:"rgba(255,255,255,0.3)", letterSpacing:1 }}>{t.loginFree}</p>
+          <p style={{ marginTop:14, fontSize:12, color:"rgba(255,255,255,0.35)", letterSpacing:1 }}>
+            {t.loginFree || "Gratuit · Sans carte bancaire · Synchronisé cloud"}
+          </p>
         </div>
       </section>
 
-      {/* ── FEATURES ── */}
-      <section style={{ padding:"80px 24px", background:"rgba(255,255,255,0.02)", borderTop:"1px solid rgba(255,255,255,0.05)" }}>
-        <div style={{ maxWidth:1000, margin:"0 auto" }}>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))", gap:24 }}>
-            {FEATURES.map((f,i) => (
-              <div key={i}
-                onMouseEnter={()=>setHovered(i)} onMouseLeave={()=>setHovered(null)}
-                style={{ background: hovered===i ? "rgba(201,151,58,0.08)" : "rgba(255,255,255,0.03)", border: hovered===i ? "1px solid rgba(201,151,58,0.4)" : "1px solid rgba(255,255,255,0.07)", borderRadius:16, padding:"28px 24px", transition:"all .25s", cursor:"default" }}>
-                <div style={{ fontSize:32, marginBottom:14 }}>{f.icon}</div>
-                <h3 style={{ fontSize:15, fontWeight:600, margin:"0 0 8px", color:hovered===i?"#F0C97A":"#fff" }}>{f.title}</h3>
-                <p style={{ fontSize:13, color:"rgba(255,255,255,0.45)", margin:0, lineHeight:1.6 }}>{f.desc}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ── TRUST ── */}
-      <section style={{ padding:"48px 24px", textAlign:"center" }}>
-        <p style={{ fontSize:11, color:"rgba(255,255,255,0.25)", letterSpacing:3, textTransform:"uppercase", marginBottom:24 }}>Trusted for</p>
-        <div style={{ display:"flex", justifyContent:"center", flexWrap:"wrap", gap:12 }}>
-          {TRUST.map((t2,i) => (
-            <span key={i} style={{ padding:"8px 20px", border:"1px solid rgba(201,151,58,0.25)", borderRadius:99, fontSize:13, color:"rgba(255,255,255,0.5)", letterSpacing:.5 }}>{t2}</span>
+      {/* FEATURES */}
+      <section style={{ padding:"80px 24px", background:"rgba(255,255,255,0.025)", borderTop:"1px solid rgba(255,255,255,0.07)", borderBottom:"1px solid rgba(255,255,255,0.07)" }}>
+        <div style={{ maxWidth:1040, margin:"0 auto", display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(230px,1fr))", gap:20 }}>
+          {FEATURES.map((f,i) => (
+            <div key={i}
+              onMouseEnter={()=>setHovered(i)} onMouseLeave={()=>setHovered(null)}
+              style={{
+                background: hovered===i ? "rgba(201,151,58,0.1)" : "rgba(255,255,255,0.04)",
+                border: hovered===i ? "1px solid rgba(201,151,58,0.5)" : "1px solid rgba(255,255,255,0.08)",
+                borderRadius:16, padding:"28px 24px", transition:"all .25s",
+              }}>
+              <div style={{ fontSize:34, marginBottom:14, lineHeight:1 }}>{f.icon}</div>
+              <h3 style={{ fontSize:15, fontWeight:700, margin:"0 0 8px", color: hovered===i ? "#F0C97A" : "#ffffff" }}>{f.title}</h3>
+              <p style={{ fontSize:13, color:"rgba(255,255,255,0.5)", margin:0, lineHeight:1.65 }}>{f.desc}</p>
+            </div>
           ))}
         </div>
       </section>
 
-      {/* ── FOOTER CTA ── */}
-      <section style={{ padding:"80px 24px", textAlign:"center", borderTop:"1px solid rgba(255,255,255,0.05)" }}>
-        <h2 style={{ fontSize:32, fontWeight:700, fontFamily:"Georgia,serif", margin:"0 0 16px" }}>Prêt à sublimer vos événements ?</h2>
-        <p style={{ color:"rgba(255,255,255,0.4)", marginBottom:32 }}>{t.loginFree}</p>
-        <button onClick={onLogin} style={{ padding:"16px 36px", background:"linear-gradient(135deg,#C9973A,#F0C97A)", border:"none", borderRadius:99, cursor:"pointer", color:"#0a0a0f", fontWeight:700, fontSize:16, boxShadow:"0 8px 40px rgba(201,151,58,0.3)" }}>
-          {t.loginCta}
+      {/* TRUST BADGES */}
+      <section style={{ padding:"56px 24px", textAlign:"center" }}>
+        <p style={{ fontSize:11, color:"rgba(255,255,255,0.3)", letterSpacing:3, textTransform:"uppercase", marginBottom:20, fontWeight:600 }}>Trusted for</p>
+        <div style={{ display:"flex", justifyContent:"center", flexWrap:"wrap", gap:10 }}>
+          {TRUST.map((label,i) => (
+            <span key={i} style={{ padding:"9px 22px", border:"1px solid rgba(201,151,58,0.3)", borderRadius:99, fontSize:13, color:"rgba(255,255,255,0.6)", letterSpacing:.5 }}>{label}</span>
+          ))}
+        </div>
+      </section>
+
+      {/* FOOTER CTA */}
+      <section style={{ padding:"80px 24px", textAlign:"center", borderTop:"1px solid rgba(255,255,255,0.07)", background:"rgba(201,151,58,0.04)" }}>
+        <h2 style={{ fontSize:34, fontWeight:800, fontFamily:"Georgia,serif", margin:"0 0 14px", color:"#ffffff" }}>
+          {lang==="fr" ? "Prêt à sublimer vos événements ?" : lang==="en" ? "Ready to elevate your events?" : lang==="es" ? "¿Listo para elevar sus eventos?" : lang==="de" ? "Bereit, Ihre Events zu perfektionieren?" : "Pronto a elevare i vostri eventi?"}
+        </h2>
+        <p style={{ color:"rgba(255,255,255,0.4)", marginBottom:36, fontSize:15 }}>{t.loginFree || "Gratuit · Sans carte bancaire · Synchronisé cloud"}</p>
+        <button onClick={onLogin} style={{ padding:"17px 40px", background:"linear-gradient(135deg,#C9973A,#F0C97A)", border:"none", borderRadius:99, cursor:"pointer", color:"#0d0d14", fontWeight:800, fontSize:16, boxShadow:"0 8px 40px rgba(201,151,58,0.35)", display:"inline-flex", alignItems:"center", gap:10 }}>
+          {t.loginCta || "Commencer gratuitement avec Google"}
         </button>
       </section>
+
     </div>
   );
 }
