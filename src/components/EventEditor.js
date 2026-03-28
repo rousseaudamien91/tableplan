@@ -383,8 +383,8 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             {/* Sous-onglets Plan */}
             <div style={{ display:"flex", gap:0, marginBottom:20, borderBottom:"1px solid rgba(201,151,58,0.12)" }}>
               {[
-                {id:"tables", icon:"🗺", label:"Tables & Plan"},
-                {id:"salle",  icon:"📐", label:"Édition de salle"},
+                {id:"tables", icon:"🗺", label:t.tabPlanDetail || "Floor Plan"},
+                {id:"salle",  icon:"📐", label:t.tabRoom || "Room Editor"},
               ].map(sub=>(
                 <button key={sub.id} onClick={()=>setPlanSubTab(sub.id)} style={{
                   background:"none", border:"none", borderBottom:`2px solid ${planSubTab===sub.id?C.gold:"transparent"}`,
@@ -628,7 +628,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                                 <td style={{ padding:"10px 20px", color:"#ffffff", fontSize:14 }}>
                                   {g.name}
                                   {g.role && <span style={{ marginLeft:6, background:C.gold+"22", border:"1px solid "+C.gold+"44", borderRadius:99, padding:"1px 8px", fontSize:10, color:"#C9973A" }}>
-                                    {{"marie1":"💍","marie2":"💍","temoin":"🎖","famille_proche":"👨‍👩‍👧","ami_proche":"⭐","enfant":"🧒","vip":"🌟","prestataire":"🔧"}[g.role]||""} {{"marie1":"Marié(e)","marie2":"Marié(e)","temoin":"Témoin","famille_proche":"Famille","ami_proche":"Ami proche","enfant":"Enfant","vip":"VIP","prestataire":"Prestataire"}[g.role]||g.role}
+                                    {{"marie1":"💍","marie2":"💍","temoin":"🎖","famille_proche":"👨‍👩‍👧","ami_proche":"⭐","enfant":"🧒","vip":"🌟","prestataire":"🔧"}[g.role]||""} {{"marie1":"Marié(e)","marie2":"Marié(e)","temoin":"Témoin","famille_proche":"Famille","ami_proche":"Ami proche","enfant":"Enfant","vip":"VIP","prestataire":t.supplier||"Supplier"}[g.role]||g.role}
                                   </span>}
                                 </td>
                                 <td style={{ padding:"10px 20px", fontSize:13, color:dinfo.color }}>{dinfo.icon} {dinfo.label}</td>
@@ -964,9 +964,9 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             {/* ── Synthèse RSVP ── */}
             <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))", gap:14, marginBottom:28 }}>
               {[
-                {label:"Confirmés",   val:rsvpConfirmed, color:C.green,  icon:"✅"},
-                {label:"Refusés",     val:rsvpDeclined,  color:C.red,    icon:"❌"},
-                {label:"En attente",  val:rsvpPending,   color:"#FF9800", icon:"⏳"},
+                {label:t.rsvpConfirmed||"Confirmed",   val:rsvpConfirmed, color:C.green,  icon:"✅"},
+                {label:t.rsvpDeclined||"Declined",     val:rsvpDeclined,  color:C.red,    icon:"❌"},
+                {label:t.rsvpPending||"Pending",  val:rsvpPending,   color:"#FF9800", icon:"⏳"},
                 {label:"Total",       val:ev.guests.length, color:"#C9973A", icon:"👥"},
               ].map(s=>(
                 <div key={s.label} style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:14, padding:"18px 20px", textAlign:"center" }}>
@@ -981,7 +981,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             {ev.guests.length > 0 && (
               <div style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px", marginBottom:24 }}>
                 <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8 }}>
-                  <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>Taux de réponse</span>
+                  <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>{t.rsvpRate||"Response rate"}</span>
                   <span style={{ color:"#C9973A", fontSize:12, fontWeight:700 }}>
                     {Math.round((rsvpConfirmed+rsvpDeclined)/ev.guests.length*100)}%
                   </span>
@@ -991,16 +991,16 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                   <div style={{ width:`${rsvpDeclined/ev.guests.length*100}%`, background:C.red, transition:"width .4s" }}/>
                 </div>
                 <div style={{ display:"flex", gap:16, marginTop:8, fontSize:11, color:"rgba(255,255,255,0.45)" }}>
-                  <span style={{ color:C.green }}>■ Confirmés {rsvpConfirmed}</span>
-                  <span style={{ color:C.red }}>■ Refusés {rsvpDeclined}</span>
-                  <span style={{ color:"#FF9800" }}>■ En attente {rsvpPending}</span>
+                  <span style={{ color:C.green }}>■ {t.rsvpConfirmed||"Confirmed"} {rsvpConfirmed}</span>
+                  <span style={{ color:C.red }}>■ {t.rsvpDeclined||"Declined"} {rsvpDeclined}</span>
+                  <span style={{ color:"#FF9800" }}>■ {t.rsvpPending||"Pending"} {rsvpPending}</span>
                 </div>
               </div>
             )}
 
             {/* ── Lien RSVP ── */}
             <div style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px", marginBottom:24 }}>
-              <h4 style={{ color:"#C9973A", fontWeight:400, fontSize:14, margin:"0 0 12px" }}>🔗 Lien de confirmation invités</h4>
+              <h4 style={{ color:"#C9973A", fontWeight:400, fontSize:14, margin:"0 0 12px" }}>{t.rsvpLink||"Guest confirmation link"}</h4>
               {(function(){
                 var fb = null; try{fb=getFirebase();}catch(e){}
                 var uid = fb&&fb.auth&&fb.auth.currentUser ? fb.auth.currentUser.uid : "";
@@ -1019,7 +1019,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
 
             {/* ── Liste invités avec statut RSVP ── */}
             <div style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px" }}>
-              <h4 style={{ color:"#C9973A", fontWeight:400, fontSize:14, margin:"0 0 16px" }}>👥 Statut par invité</h4>
+              <h4 style={{ color:"#C9973A", fontWeight:400, fontSize:14, margin:"0 0 16px" }}>{t.rsvpStatus||"Guest status"}</h4>
               <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
                 {ev.guests.length === 0 && <p style={{ color:"rgba(255,255,255,0.45)", fontStyle:"italic" }}>Aucun invité ajouté.</p>}
                 {ev.guests.map(function(g){
@@ -1037,7 +1037,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                       <div style={{ display:"flex", gap:4 }}>
                         {["confirmed","declined","pending"].map(function(s){
                           var icons = {confirmed:"✅",declined:"❌",pending:"⏳"};
-                          var labels = {confirmed:"Oui",declined:"Non",pending:"?"};
+                          var labels = {confirmed:t.yes||"Yes",declined:t.no||"No",pending:"?"};
                           return (
                             <button key={s} onClick={function(){
                               updateEv(function(evUp){ return {...evUp, guests:evUp.guests.map(function(x){ return x.id===g.id?{...x,rsvp:s}:x; })}; });
@@ -1174,8 +1174,8 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
 
               {(ev.budget||[]).length > 0 && (
                 <div style={{ marginTop:16, padding:"14px 16px", background:C.gold+"11", border:"1px solid "+C.gold+"33", borderRadius:10, display:"flex", gap:24 }}>
-                  <span style={{ color:"#C9973A", fontSize:14 }}>Total estimé : <strong>{budgetTotal.toFixed(0)}€</strong></span>
-                  <span style={{ color:budgetSpent>budgetTotal?C.red:C.green, fontSize:14 }}>Total réel : <strong>{budgetSpent.toFixed(0)}€</strong></span>
+                  <span style={{ color:"#C9973A", fontSize:14 }}>{t.totalEstimated||"Estimated total"} : <strong>{budgetTotal.toFixed(0)}€</strong></span>
+                  <span style={{ color:budgetSpent>budgetTotal?C.red:C.green, fontSize:14 }}>{t.totalActual||"Actual total"} : <strong>{budgetSpent.toFixed(0)}€</strong></span>
                   <span style={{ color:"rgba(255,255,255,0.45)", fontSize:14 }}>Écart : <strong>{(budgetTotal-budgetSpent).toFixed(0)}€</strong></span>
                 </div>
               )}
@@ -1418,7 +1418,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                         <select value={sup.status||"pending"} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],status:v}; return {...evUp,suppliers:s}; }); }}
                           style={{ background:statusColor+"22", border:"1px solid "+statusColor+"66", borderRadius:6, color:statusColor, fontSize:11, padding:"4px 8px", fontFamily:"inherit" }}>
                           <option value="pending">⏳ En cours</option>
-                          <option value="confirmed">✅ Confirmé</option>
+                          <option value="confirmed">✅ {t.rsvpConfirmedSingle||"Confirmed"}</option>
                           <option value="cancelled">❌ Annulé</option>
                         </select>
                         <button onClick={function(){ updateEv(function(evUp){ return {...evUp, suppliers:(evUp.suppliers||[]).filter(function(_,i){ return i!==si; })}; }); }}
@@ -1481,9 +1481,9 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             {/* Compteurs RSVP */}
             <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:14 }}>
               {[
-                {label:"Confirmés",val:rsvpConfirmed,color:C.green,icon:"✅"},
+                {label:t.rsvpConfirmed||"Confirmed",val:rsvpConfirmed,color:C.green,icon:"✅"},
                 {label:"En attente",val:rsvpPending,color:"#C9973A",icon:"⏳"},
-                {label:"Déclinés",val:rsvpDeclined,color:C.red,icon:"❌"},
+                {label:t.rsvpDeclined||"Declined",val:rsvpDeclined,color:C.red,icon:"❌"},
               ].map(s=>(
                 <div key={s.label} style={{ background:"#18182a", border:`1px solid ${s.color}44`, borderRadius:14, padding:"20px 24px", textAlign:"center" }}>
                   <div style={{ fontSize:28 }}>{s.icon}</div>
@@ -1495,7 +1495,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             {/* Progress bar */}
             <div style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:14, padding:"18px 24px" }}>
               <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8 }}>
-                <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>Taux de réponse</span>
+                <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>{t.rsvpRate||"Response rate"}</span>
                 <span style={{ color:"#C9973A", fontSize:12, fontWeight:700 }}>{ev.guests.length>0?Math.round((rsvpConfirmed+rsvpDeclined)/ev.guests.length*100):0}%</span>
               </div>
               <div style={{ height:8, background:"#13131e", borderRadius:99, overflow:"hidden" }}>
@@ -1505,11 +1505,11 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             {/* Liste invités avec statut RSVP */}
             <div style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:14, padding:24 }}>
               <div style={{ display:"flex", alignItems:"center", marginBottom:16 }}>
-                <h4 style={{ margin:0, color:"#C9973A", fontWeight:400, fontSize:16 }}>💌 Suivi par invité</h4>
+                <h4 style={{ margin:0, color:"#C9973A", fontWeight:400, fontSize:16 }}>💌 {t.rsvpTracking||"Guest tracking"}</h4>
                 <div style={{ flex:1 }}/>
                 <Btn small variant="muted" onClick={()=>{
                   updateEv(e=>({...e, guests:e.guests.map(g=>g.rsvp?g:{...g,rsvp:"pending"})}));
-                }}>Marquer tous en attente</Btn>
+                }}>{t.rsvpMarkPending||"Mark all pending"}</Btn>
               </div>
               <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
                 {ev.guests.map(g=>(
@@ -1520,7 +1520,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                       {g.email && <div style={{ color:"rgba(255,255,255,0.45)", fontSize:11 }}>{g.email}</div>}
                     </div>
                     <div style={{ display:"flex", gap:6 }}>
-                      {[["confirmed","✅","Confirmé",C.green],["pending","⏳","En attente",C.gold],["declined","❌","Décliné",C.red]].map(([v,ic,lb,col])=>(
+                      {[["confirmed","✅",t.rsvpConfirmedSingle||"Confirmed",C.green],["pending","⏳","En attente",C.gold],["declined","❌",t.rsvpDeclinedSingle||"Declined",C.red]].map(([v,ic,lb,col])=>(
                         <button key={v} onClick={()=>updateEv(e=>({...e,guests:e.guests.map(x=>x.id===g.id?{...x,rsvp:v}:x)}))}
                           style={{ padding:"4px 10px", borderRadius:8, border:`1.5px solid ${(!g.rsvp&&v==="pending")||g.rsvp===v?col:C.border}`,
                             background:(!g.rsvp&&v==="pending")||g.rsvp===v?col+"22":"none",
@@ -1595,7 +1595,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                           <div style={{ color:"rgba(255,255,255,0.45)", fontSize:11 }}>Estimé : <span style={{ color:"#C9973A" }}>{(parseFloat(b.estimated)||0).toLocaleString("fr-FR")} €</span></div>
                           <div style={{ color:"rgba(255,255,255,0.45)", fontSize:11 }}>Réel : <span style={{ color:(b.actual||0)>(b.estimated||0)?C.red:C.green }}>{(parseFloat(b.actual)||0).toLocaleString("fr-FR")} €</span></div>
                         </div>
-                        <span style={{ fontSize:18, cursor:"pointer", color:b.paid?"#4CAF50":C.muted }} title={b.paid?"Payé":"Non payé"}
+                        <span style={{ fontSize:18, cursor:"pointer", color:b.paid?"#4CAF50":C.muted }} title={b.paid?t.paid||"Paid":"Non payé"}
                           onClick={()=>updateEv(ev2=>({...ev2,budget:ev2.budget.map((x,i)=>i===bi?{...x,paid:!x.paid}:x)}))}>
                           {b.paid?"✅":"💳"}
                         </span>
