@@ -15,6 +15,21 @@ import GuestForm from "./GuestForm";
 function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
   const { t: tHook } = useI18n();
   const t = tProp || tHook;
+
+  // Style partagé pour les inputs/textarea
+  const inputStyle = {
+    width: "100%",
+    padding: "9px 12px",
+    background: "rgba(255,255,255,0.05)",
+    border: "1px solid rgba(255,255,255,0.1)",
+    borderRadius: 8,
+    color: "#ffffff",
+    fontSize: 14,
+    outline: "none",
+    boxSizing: "border-box",
+    fontFamily: "inherit",
+  };
+
   const [tab, setTab] = useState("plan");
   const [selectedTable, setSelectedTable] = useState(null);
   const [showAddGuest, setShowAddGuest] = useState(false);

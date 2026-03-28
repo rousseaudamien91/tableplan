@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { C, useI18n } from "../theme";
 import { Btn, Badge, Modal, Field, Input, Select } from "./UI";
-import { PLANS, INITIAL_USERS } from "../constants";
+import { PLANS, INITIAL_USERS, THEMES_CONFIG, VOUCHERS } from "../constants";
 import { uid } from "../utils";
 
 // ═══════════════════════════════════════════════════════════════

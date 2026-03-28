@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { C, useI18n } from "../theme";
 import { Btn, Badge, Field, Input, Select } from "./UI";
-import { DIET_OPTIONS } from "../constants";
+import { DIET_OPTIONS, THEMES_CONFIG } from "../constants";
 import { uid } from "../utils";
 
 // ═══════════════════════════════════════════════════════════════
@@ -10,6 +10,14 @@ import { uid } from "../utils";
 // ═══════════════════════════════════════════════════════════════
 
 function GuestForm({ event, onBack }) {
+  const inputStyle = {
+    width:"100%", padding:"9px 12px",
+    background:"rgba(255,255,255,0.05)",
+    border:"1px solid rgba(255,255,255,0.1)",
+    borderRadius:8, color:"#ffffff", fontSize:14,
+    outline:"none", boxSizing:"border-box", fontFamily:"inherit",
+  };
+
   const { t } = useI18n();
   const [step, setStep] = useState(0);
   const [form, setForm] = useState({ name:"", email:"", diet:"standard", notes:"", plus1:false, allergies:[] });
