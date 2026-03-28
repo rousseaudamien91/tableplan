@@ -74,10 +74,10 @@ async function loadEventsFromFirestore(userId) {
 
 function LoadingScreen() {
   return (
-    <div style={{ minHeight:"100vh", background:"#0d0d14", display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column", gap:16 }}>
+    <div style={{ minHeight:"100vh", background:`radial-gradient(ellipse at 30% 40%, #2a1a0e, #120C08)`, display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column", gap:16 }}>
       <div style={{ fontSize:48 }}>🪑</div>
       <div style={{ color:"#C9973A", fontSize:18, letterSpacing:2, fontFamily:"Georgia,serif" }}>TableMaître</div>
-      <div style={{ color:"rgba(255,255,255,0.4)", fontSize:13 }}>Loading…</div>
+      <div style={{ color:"#8A7355", fontSize:13 }}>Loading…</div>
     </div>
   );
 }
@@ -135,8 +135,8 @@ export default function App() {
   }, [events]);
 
   useEffect(() => {
-    document.body.style.background = lightMode ? "#F5F0E8" : "#0d0d14";
-    document.body.style.color = lightMode ? "#2A1A0E" : "#ffffff";
+    document.body.style.background = lightMode ? "#F5F0E8" : "#120C08";
+    document.body.style.color = lightMode ? "#2A1A0E" : "#F5EAD4";
     // Accessibilité : focus visible pour navigation clavier
     const styleId = 'a11y-focus-style';
     if (!document.getElementById(styleId)) {
@@ -248,7 +248,7 @@ export default function App() {
     name: fbUser.displayName || fbUser.email,
     avatar: (fbUser.displayName || fbUser.email || "?").slice(0,2).toUpperCase(),
     photoURL: fbUser.photoURL,
-    role: fbUser.email === "admin@tablema.fr" ? "superadmin" : "admin",
+    role: fbUser.email === "rousseau.damien.91@gmail.com" ? "superadmin" : "admin",
     projectIds: events.map(e => e.id),
   } : null;
 
