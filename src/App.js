@@ -126,6 +126,24 @@ const TRANSLATIONS = {
     // Login
     loginGoogle: "Se connecter avec Google",
     loginSubtitle: "GESTION DE PLANS DE TABLE",
+    loginTagline: "La plateforme de gestion d'événements pour les professionnels",
+    loginHero: "Organisez. Placez. Impressionnez.",
+    loginSub: "De l'invitation à la salle, gérez chaque détail de votre événement depuis une seule application.",
+    loginCta: "Commencer gratuitement avec Google",
+    loginFree: "Gratuit · Sans carte bancaire · Synchronisé cloud",
+    loginF1: "Plan de salle interactif",
+    loginF1d: "Glissez-déposez vos tables sur un canvas intuitif",
+    loginF2: "RSVP & invitations",
+    loginF2d: "Suivez les confirmations en temps réel",
+    loginF3: "Exports premium",
+    loginF3d: "PDF, chevalets imprimables, QR codes invités",
+    loginF4: "IA proactive",
+    loginF4d: "Un assistant qui analyse et guide votre événement",
+    loginTrust1: "Mariages",
+    loginTrust2: "Galas",
+    loginTrust3: "Conférences",
+    loginTrust4: "Événements corporate",
+    
     // Notifications
     savedCloud: "☁️ Sauvegardé dans le cloud",
     savedAuto: "☁️ Sauvegardé automatiquement",
@@ -1496,70 +1514,126 @@ function printDietSummary(ev) {
 function LoginScreen({ onLogin, t: tProp }) {
   const { t: tHook, lang, setLang } = useI18n();
   const t = tProp || tHook;
+  const [hovered, setHovered] = useState(null);
+
+  const FEATURES = [
+    { icon:"🗺️", title: t.loginF1, desc: t.loginF1d },
+    { icon:"💌", title: t.loginF2, desc: t.loginF2d },
+    { icon:"🖨️", title: t.loginF3, desc: t.loginF3d },
+    { icon:"🤖", title: t.loginF4, desc: t.loginF4d },
+  ];
+
+  const TRUST = [t.loginTrust1, t.loginTrust2, t.loginTrust3, t.loginTrust4];
 
   return (
-    <div style={{
-      minHeight:"100vh",
-      background:`radial-gradient(ellipse at 30% 40%, #2a1a0e 0%, ${C.dark} 70%)`,
-      fontFamily:"Georgia, 'Palatino Linotype', serif",
-      display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:20,
-      position:"relative", overflow:"hidden",
-    }}>
-      {[...Array(5)].map((_,i) => (
-        <div key={i} style={{
-          position:"absolute", borderRadius:"50%",
-          border:`1px solid ${C.gold}${["18","12","0e","08","05"][i]}`,
-          width:200+i*180, height:200+i*180,
-          top:"50%", left:"50%", transform:"translate(-50%,-50%)",
-          pointerEvents:"none",
-        }}/>
-      ))}
-      <div style={{ position:"relative", zIndex:1, width:"100%", maxWidth:420 }}>
-        <div style={{ textAlign:"center", marginBottom:40 }}>
-          <div style={{ fontSize:48, marginBottom:12 }}>🪑</div>
-          {/* Sélecteur de langue */}
-          <div style={{ display:"flex", gap:6, marginBottom:20, justifyContent:"center" }}>
-            {Object.entries(LANG_FLAGS).map(([lk, flag]) => (
-              <button key={lk} onClick={()=>setLang(lk)} title={LANG_NAMES[lk]} style={{
-                background: lang===lk ? C.gold+"33" : "transparent",
-                border: lang===lk ? `1px solid ${C.gold}` : "1px solid transparent",
-                borderRadius:8, padding:"4px 8px", cursor:"pointer", fontSize:18,
-                transition:"all .2s", opacity: lang===lk ? 1 : 0.5,
-              }}>
-                {flag}
-              </button>
-            ))}
-          </div>
-          <h1 style={{ fontSize:36, fontWeight:400, letterSpacing:4, color:C.gold, margin:"0 0 8px" }}>TableMaître</h1>
-          <p style={{ color:C.muted, fontSize:12, letterSpacing:3 }}>{t.loginSubtitle}</p>
-        </div>
-        <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:20, padding:40, boxShadow:"0 20px 60px rgba(0,0,0,0.4)" }}>
-          <button onClick={onLogin} style={{
-            width:"100%", padding:"14px", background:"#fff", border:"none",
-            borderRadius:12, cursor:"pointer",
-            display:"flex", alignItems:"center", justifyContent:"center", gap:12,
-            fontFamily:"Georgia,serif", fontWeight:700, color:"#2A1A0E",
-            fontSize:15, letterSpacing:1, boxShadow:"0 2px 8px rgba(0,0,0,0.3)",
-          }}>
-            <svg width="20" height="20" viewBox="0 0 48 48">
-              <path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34.5 6.5 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/>
-              <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16.1 19 13 24 13c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34.5 6.5 29.5 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
-              <path fill="#4CAF50" d="M24 44c5.2 0 9.9-1.9 13.5-5l-6.2-5.2C29.4 35.5 26.8 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.7 39.6 16.3 44 24 44z"/>
-              <path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.3-2.4 4.3-4.5 5.7l6.2 5.2C41.1 36.2 44 30.6 44 24c0-1.3-.1-2.6-.4-3.9z"/>
-            </svg>
-            {t.loginGoogle}
-          </button>
-        </div>
-        <div style={{ display:"flex", flexWrap:"wrap", gap:8, justifyContent:"center", marginTop:28 }}>
-          {["💍 Mariage","🥂 Gala","🎂 Anniversaire","🎤 Conférence","📋 Plan de salle","🖨 Chevalets","⊘ Régimes alimentaires"].map(f=>(
-            <span key={f} style={{ background:C.card+"99", border:`1px solid ${C.border}`, borderRadius:99, padding:"4px 14px", fontSize:11, color:C.muted }}>{f}</span>
+    <div style={{ minHeight:"100vh", background:"#0a0a0f", fontFamily:"'Inter', 'Segoe UI', sans-serif", color:"#fff", overflowX:"hidden" }}>
+
+      {/* ── NAV ── */}
+      <nav style={{ position:"fixed", top:0, left:0, right:0, zIndex:100, display:"flex", alignItems:"center", padding:"0 48px", height:64, background:"rgba(10,10,15,0.85)", backdropFilter:"blur(20px)", borderBottom:"1px solid rgba(201,151,58,0.15)" }}>
+        <span style={{ fontSize:20, fontWeight:700, letterSpacing:1, background:"linear-gradient(135deg,#C9973A,#F0C97A)", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>
+          TableMaître
+        </span>
+        <div style={{ flex:1 }}/>
+        {/* Sélecteur de langue */}
+        <div style={{ display:"flex", gap:4, marginRight:20 }}>
+          {Object.entries(LANG_FLAGS).map(([lk, flag]) => (
+            <button key={lk} onClick={()=>setLang(lk)} title={LANG_NAMES[lk]} style={{
+              background: lang===lk ? "rgba(201,151,58,0.2)" : "transparent",
+              border: lang===lk ? "1px solid rgba(201,151,58,0.6)" : "1px solid transparent",
+              borderRadius:8, padding:"5px 9px", cursor:"pointer", fontSize:17,
+              transition:"all .2s", opacity: lang===lk ? 1 : 0.45,
+            }}>{flag}</button>
           ))}
         </div>
-      </div>
+        <button onClick={onLogin} style={{ padding:"9px 22px", background:"linear-gradient(135deg,#C9973A,#F0C97A)", border:"none", borderRadius:99, cursor:"pointer", color:"#0a0a0f", fontWeight:700, fontSize:13, letterSpacing:.5 }}>
+          {t.loginGoogle}
+        </button>
+      </nav>
+
+      {/* ── HERO ── */}
+      <section style={{ position:"relative", minHeight:"100vh", display:"flex", alignItems:"center", justifyContent:"center", padding:"120px 24px 80px", textAlign:"center", overflow:"hidden" }}>
+        {/* Fond radial déco */}
+        <div style={{ position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", width:800, height:800, background:"radial-gradient(ellipse, rgba(201,151,58,0.12) 0%, transparent 65%)", pointerEvents:"none" }}/>
+        <div style={{ position:"absolute", top:"20%", left:"15%", width:300, height:300, background:"radial-gradient(ellipse, rgba(201,151,58,0.05) 0%, transparent 70%)", borderRadius:"50%", pointerEvents:"none" }}/>
+
+        <div style={{ position:"relative", maxWidth:760, margin:"0 auto" }}>
+          {/* Badge pro */}
+          <div style={{ display:"inline-flex", alignItems:"center", gap:8, background:"rgba(201,151,58,0.1)", border:"1px solid rgba(201,151,58,0.3)", borderRadius:99, padding:"6px 18px", marginBottom:32, fontSize:12, color:"#C9973A", letterSpacing:2, textTransform:"uppercase" }}>
+            <span style={{ width:6, height:6, borderRadius:"50%", background:"#C9973A", display:"inline-block" }}/>
+            {t.loginTagline}
+          </div>
+
+          <h1 style={{ fontSize:"clamp(42px,7vw,80px)", fontWeight:800, lineHeight:1.05, letterSpacing:-2, margin:"0 0 24px", fontFamily:"Georgia,'Palatino Linotype',serif" }}>
+            {t.loginHero}
+          </h1>
+
+          <p style={{ fontSize:18, color:"rgba(255,255,255,0.55)", maxWidth:520, margin:"0 auto 48px", lineHeight:1.7 }}>
+            {t.loginSub}
+          </p>
+
+          {/* CTA bouton */}
+          <button onClick={onLogin} style={{
+            display:"inline-flex", alignItems:"center", gap:12, padding:"18px 40px",
+            background:"linear-gradient(135deg,#C9973A 0%,#F0C97A 100%)",
+            border:"none", borderRadius:99, cursor:"pointer",
+            color:"#0a0a0f", fontWeight:700, fontSize:17, letterSpacing:.3,
+            boxShadow:"0 8px 40px rgba(201,151,58,0.35)",
+            transition:"transform .2s, box-shadow .2s",
+          }}
+            onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-3px)"; e.currentTarget.style.boxShadow="0 14px 50px rgba(201,151,58,0.5)"; }}
+            onMouseLeave={e=>{ e.currentTarget.style.transform=""; e.currentTarget.style.boxShadow="0 8px 40px rgba(201,151,58,0.35)"; }}
+          >
+            <svg width="20" height="20" viewBox="0 0 48 48">
+              <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+              <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+              <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+              <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+              <path fill="none" d="M0 0h48v48H0z"/>
+            </svg>
+            {t.loginCta}
+          </button>
+          <p style={{ marginTop:16, fontSize:12, color:"rgba(255,255,255,0.3)", letterSpacing:1 }}>{t.loginFree}</p>
+        </div>
+      </section>
+
+      {/* ── FEATURES ── */}
+      <section style={{ padding:"80px 24px", background:"rgba(255,255,255,0.02)", borderTop:"1px solid rgba(255,255,255,0.05)" }}>
+        <div style={{ maxWidth:1000, margin:"0 auto" }}>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))", gap:24 }}>
+            {FEATURES.map((f,i) => (
+              <div key={i}
+                onMouseEnter={()=>setHovered(i)} onMouseLeave={()=>setHovered(null)}
+                style={{ background: hovered===i ? "rgba(201,151,58,0.08)" : "rgba(255,255,255,0.03)", border: hovered===i ? "1px solid rgba(201,151,58,0.4)" : "1px solid rgba(255,255,255,0.07)", borderRadius:16, padding:"28px 24px", transition:"all .25s", cursor:"default" }}>
+                <div style={{ fontSize:32, marginBottom:14 }}>{f.icon}</div>
+                <h3 style={{ fontSize:15, fontWeight:600, margin:"0 0 8px", color:hovered===i?"#F0C97A":"#fff" }}>{f.title}</h3>
+                <p style={{ fontSize:13, color:"rgba(255,255,255,0.45)", margin:0, lineHeight:1.6 }}>{f.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── TRUST ── */}
+      <section style={{ padding:"48px 24px", textAlign:"center" }}>
+        <p style={{ fontSize:11, color:"rgba(255,255,255,0.25)", letterSpacing:3, textTransform:"uppercase", marginBottom:24 }}>Trusted for</p>
+        <div style={{ display:"flex", justifyContent:"center", flexWrap:"wrap", gap:12 }}>
+          {TRUST.map((t2,i) => (
+            <span key={i} style={{ padding:"8px 20px", border:"1px solid rgba(201,151,58,0.25)", borderRadius:99, fontSize:13, color:"rgba(255,255,255,0.5)", letterSpacing:.5 }}>{t2}</span>
+          ))}
+        </div>
+      </section>
+
+      {/* ── FOOTER CTA ── */}
+      <section style={{ padding:"80px 24px", textAlign:"center", borderTop:"1px solid rgba(255,255,255,0.05)" }}>
+        <h2 style={{ fontSize:32, fontWeight:700, fontFamily:"Georgia,serif", margin:"0 0 16px" }}>Prêt à sublimer vos événements ?</h2>
+        <p style={{ color:"rgba(255,255,255,0.4)", marginBottom:32 }}>{t.loginFree}</p>
+        <button onClick={onLogin} style={{ padding:"16px 36px", background:"linear-gradient(135deg,#C9973A,#F0C97A)", border:"none", borderRadius:99, cursor:"pointer", color:"#0a0a0f", fontWeight:700, fontSize:16, boxShadow:"0 8px 40px rgba(201,151,58,0.3)" }}>
+          {t.loginCta}
+        </button>
+      </section>
     </div>
   );
 }
-
 
 function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
   const { t } = useI18n();
