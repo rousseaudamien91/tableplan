@@ -1880,6 +1880,11 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
   const [selectedTable, setSelectedTable] = useState(null);
   const [showAddGuest, setShowAddGuest] = useState(false);
   const [showAddTable, setShowAddTable] = useState(false);
+  const [showAddZone, setShowAddZone] = useState(false);
+  const [showAddFurniture, setShowAddFurniture] = useState(false);
+  const [newZone, setNewZone] = useState({ label:"", icon:"📍", color:"#C9973A" });
+  const [newFurniture, setNewFurniture] = useState({ label:"", icon:"🪑", color:"#8A7355", width:80, height:40 });
+  const [planSubTab, setPlanSubTab] = useState("tables");
   const [showConstraint, setShowConstraint] = useState(false);
   const [showQR, setShowQR] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -2003,7 +2008,6 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
     {id:"guests",       icon:"👥",  label:`${t ? t.tabGuests.replace(/^\S+\s/,"") : "Guests"} (${ev.guests.length})`},
     {id:"diet",         icon:"🍽️",  label: t ? t.tabFood.replace(/^\S+\s/,"") : "Dietary"},
     {id:"constraints",  icon:"⚙",  label: t ? t.tabConstraints.replace(/^\S+\s/,"") : "Constraints"},
-    {id:"room",         icon:"📐",  label: t ? t.tabRoom.replace(/^\S+\s/,"") : "Room"},
     {id:"logistique",   icon:"🗂",  label:"Logistique"},
   ];
 
@@ -2076,11 +2080,31 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
 
         {/* ── PLAN TAB ── */}
         {tab==="plan" && (
+          <div style={{ display:"flex", flexDirection:"column", gap:0 }}>
+            {/* Sous-onglets Plan */}
+            <div style={{ display:"flex", gap:0, marginBottom:20, borderBottom:`1px solid ${C.border}` }}>
+              {[
+                {id:"tables", icon:"🗺", label:"Tables & Plan"},
+                {id:"salle",  icon:"📐", label:"Édition de salle"},
+              ].map(sub=>(
+                <button key={sub.id} onClick={()=>setPlanSubTab(sub.id)} style={{
+                  background:"none", border:"none", borderBottom:`2px solid ${planSubTab===sub.id?C.gold:"transparent"}`,
+                  color:planSubTab===sub.id?C.gold:C.muted, padding:"10px 20px",
+                  cursor:"pointer", fontFamily:"inherit", fontSize:12, fontWeight:planSubTab===sub.id?700:400,
+                  display:"flex", alignItems:"center", gap:6, whiteSpace:"nowrap",
+                }}>{sub.icon} {sub.label}</button>
+              ))}
+            </div>
+
+            {/* Sous-onglet Tables & Plan */}
+            {planSubTab==="tables" && (
           <div style={{ display:"flex", gap:20, alignItems:"start", flexWrap:"wrap" }}>
             <div style={{ flex:"1 1 600px", minWidth:0 }}>
               <div style={{ display:"flex", gap:10, marginBottom:16, flexWrap:"wrap" }}>
                 <Btn small variant="ghost" onClick={()=>setShowAddTable(true)}>{t.addTable}</Btn>
                 <Btn small variant="muted" onClick={()=>setShowAddGuest(true)}>{t.addGuest}</Btn>
+                <Btn small variant="muted" onClick={()=>setShowAddZone(true)}>+ Zone</Btn>
+                <Btn small variant="muted" onClick={()=>setShowAddFurniture(true)}>+ Mobilier</Btn>
                 {tablesHistory.length > 0 && <Btn small variant="muted" onClick={undoTables}>{t.undo}</Btn>}
                 <div style={{flex:1}}/>
                 <Btn small variant="ghost" onClick={()=>printDietSummary(ev)}>{t.dietSummary}</Btn>
@@ -2186,6 +2210,84 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
                 <Btn small variant="danger" onClick={()=>{updateEv(e=>({...e,tables:e.tables.filter(t=>t.id!==selectedTable),guests:e.guests.map(g=>g.tableId===selectedTable?{...g,tableId:null}:g)}));setSelectedTable(null);}} style={{width:"100%",marginTop:12}}>
                   Supprimer la table
                 </Btn>
+              </div>
+            )}
+          </div>
+            )}
+
+            {/* Sous-onglet Salle */}
+            {planSubTab==="salle" && (
+              <div style={{ maxWidth:900 }}>
+                <h3 style={{ fontWeight:400, fontSize:20, marginBottom:20 }}>Forme de la salle</h3>
+                <div style={{ marginBottom:20 }}>
+                  <h4 style={{ color:C.gold, fontWeight:400, fontSize:13, letterSpacing:1, marginBottom:10 }}>TEMPLATES RAPIDES</h4>
+                  <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
+                    {[
+                      { name:"Rectangle", icon:"⬛", pts:[{x:60,y:60},{x:900,y:60},{x:900,y:560},{x:60,y:560}] },
+                      { name:"Forme L", icon:"🔲", pts:[{x:60,y:60},{x:500,y:60},{x:500,y:300},{x:900,y:300},{x:900,y:560},{x:60,y:560}] },
+                      { name:"Forme U", icon:"🔳", pts:[{x:60,y:60},{x:300,y:60},{x:300,y:380},{x:640,y:380},{x:640,y:60},{x:900,y:60},{x:900,y:560},{x:60,y:560}] },
+                      { name:"Hexagone", icon:"⬡", pts:(function(){ var p=[]; for(var i=0;i<6;i++){var a=i*Math.PI*2/6-Math.PI/6;p.push({x:Math.round(480+280*Math.cos(a)),y:Math.round(310+220*Math.sin(a))});} return p; })() },
+                      { name:"Rond", icon:"⭕", pts:(function(){ var p=[]; for(var i=0;i<16;i++){var a=i*Math.PI*2/16;p.push({x:Math.round(480+300*Math.cos(a)),y:Math.round(310+230*Math.sin(a))});} return p; })() },
+                    ].map(function(tmpl){ return (
+                      <button key={tmpl.name}
+                        onClick={function(){
+                          if (tmpl.pts && Array.isArray(tmpl.pts)) {
+                            updateEv(function(evUp){ return {...evUp, roomShape: tmpl.pts.map(function(p){ return {x:p.x, y:p.y}; })}; });
+                          }
+                        }}
+                        style={{ background:C.card, border:"1px solid "+C.border, borderRadius:8, padding:"8px 14px", cursor:"pointer", color:C.cream, fontFamily:"inherit", fontSize:12, display:"flex", alignItems:"center", gap:6 }}
+                      >
+                        <span>{tmpl.icon}</span><span>{tmpl.name}</span>
+                      </button>
+                    ); })}
+                  </div>
+                </div>
+                <RoomShapeEditor shape={ev.roomShape||[]} onChange={shape=>updateEv(e=>({...e,roomShape:shape}))}/>
+
+                {/* Zones spéciales */}
+                <div style={{ marginTop:20 }}>
+                  <h4 style={{ color:C.gold, fontWeight:400, fontSize:13, letterSpacing:1, marginBottom:10 }}>ZONES SPÉCIALES</h4>
+                  <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginBottom:12 }}>
+                    {(ev.zones||[]).map(function(zone, zi){ return (
+                      <div key={zi} style={{ background:zone.color+"22", border:"1px solid "+zone.color+"66", borderRadius:8, padding:"6px 14px", display:"flex", alignItems:"center", gap:8 }}>
+                        <span style={{ fontSize:16 }}>{zone.icon}</span>
+                        <span style={{ color:zone.color, fontSize:13 }}>{zone.label}</span>
+                        <button onClick={function(){ updateEv(function(evUp){ return {...evUp, zones:(evUp.zones||[]).filter(function(_,i){ return i!==zi; })}; }); }}
+                          style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:14, padding:0 }}>✕</button>
+                      </div>
+                    ); })}
+                    <button onClick={()=>setShowAddZone(true)}
+                      style={{ background:C.card, border:"1px dashed "+C.border, borderRadius:8, padding:"6px 14px", cursor:"pointer", color:C.muted, fontFamily:"inherit", fontSize:12 }}>
+                      + Ajouter une zone
+                    </button>
+                  </div>
+                  <p style={{ color:C.muted, fontSize:11, fontStyle:"italic" }}>
+                    Les zones apparaissent dans les exports PDF. Exemples : Estrade, Scène, Bar, Piste de danse, Photo Booth...
+                  </p>
+                </div>
+
+                {/* Mobilier */}
+                <div style={{ marginTop:24 }}>
+                  <h4 style={{ color:C.gold, fontWeight:400, fontSize:13, letterSpacing:1, marginBottom:10 }}>MOBILIER</h4>
+                  <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginBottom:12 }}>
+                    {(ev.furniture||[]).map(function(item, fi){ return (
+                      <div key={fi} style={{ background:item.color+"22", border:"1px solid "+item.color+"66", borderRadius:8, padding:"6px 14px", display:"flex", alignItems:"center", gap:8 }}>
+                        <span style={{ fontSize:16 }}>{item.icon}</span>
+                        <span style={{ color:item.color, fontSize:13 }}>{item.label}</span>
+                        <span style={{ color:C.muted, fontSize:11 }}>{item.width}×{item.height}</span>
+                        <button onClick={function(){ updateEv(function(evUp){ return {...evUp, furniture:(evUp.furniture||[]).filter(function(_,i){ return i!==fi; })}; }); }}
+                          style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:14, padding:0 }}>✕</button>
+                      </div>
+                    ); })}
+                    <button onClick={()=>setShowAddFurniture(true)}
+                      style={{ background:C.card, border:"1px dashed "+C.border, borderRadius:8, padding:"6px 14px", cursor:"pointer", color:C.muted, fontFamily:"inherit", fontSize:12 }}>
+                      + Ajouter du mobilier
+                    </button>
+                  </div>
+                  <p style={{ color:C.muted, fontSize:11, fontStyle:"italic" }}>
+                    Exemples : Scène, Bar, Buffet, Photobooth, Podium, Piano...
+                  </p>
+                </div>
               </div>
             )}
           </div>
@@ -2715,65 +2817,6 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
           </div>
         )}
 
-                {tab==="room" && (
-          <div style={{ maxWidth:900 }}>
-            <h3 style={{ fontWeight:400, fontSize:20, marginBottom:20 }}>Forme de la salle</h3>
-            <div style={{ marginBottom:20 }}>
-              <h4 style={{ color:C.gold, fontWeight:400, fontSize:13, letterSpacing:1, marginBottom:10 }}>TEMPLATES RAPIDES</h4>
-              <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
-                {[
-                  { name:"Rectangle", icon:"⬛", pts:[{x:60,y:60},{x:900,y:60},{x:900,y:560},{x:60,y:560}] },
-                  { name:"Forme L", icon:"🔲", pts:[{x:60,y:60},{x:500,y:60},{x:500,y:300},{x:900,y:300},{x:900,y:560},{x:60,y:560}] },
-                  { name:"Forme U", icon:"🔳", pts:[{x:60,y:60},{x:300,y:60},{x:300,y:380},{x:640,y:380},{x:640,y:60},{x:900,y:60},{x:900,y:560},{x:60,y:560}] },
-                  { name:"Hexagone", icon:"⬡", pts:(function(){ var p=[]; for(var i=0;i<6;i++){var a=i*Math.PI*2/6-Math.PI/6;p.push({x:Math.round(480+280*Math.cos(a)),y:Math.round(310+220*Math.sin(a))});} return p; })() },
-                  { name:"Rond", icon:"⭕", pts:(function(){ var p=[]; for(var i=0;i<16;i++){var a=i*Math.PI*2/16;p.push({x:Math.round(480+300*Math.cos(a)),y:Math.round(310+230*Math.sin(a))});} return p; })() },
-                ].map(function(tmpl){ return (
-                  <button key={tmpl.name}
-                    onClick={function(){ 
-                      if (tmpl.pts && Array.isArray(tmpl.pts)) {
-                        updateEv(function(evUp){ return {...evUp, roomShape: tmpl.pts.map(function(p){ return {x:p.x, y:p.y}; })}; });
-                      }
-                    }}
-                    style={{ background:C.card, border:"1px solid "+C.border, borderRadius:8, padding:"8px 14px", cursor:"pointer", color:C.cream, fontFamily:"inherit", fontSize:12, display:"flex", alignItems:"center", gap:6 }}
-                  >
-                    <span>{tmpl.icon}</span><span>{tmpl.name}</span>
-                  </button>
-                ); })}
-              </div>
-            </div>
-            <RoomShapeEditor shape={ev.roomShape||[]} onChange={shape=>updateEv(e=>({...e,roomShape:shape}))}/>
-
-            {/* Zones spéciales */}
-            <div style={{ marginTop:20 }}>
-              <h4 style={{ color:C.gold, fontWeight:400, fontSize:13, letterSpacing:1, marginBottom:10 }}>ZONES SPÉCIALES</h4>
-              <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginBottom:12 }}>
-                {(ev.zones||[]).map(function(zone, zi){ return (
-                  <div key={zi} style={{ background:zone.color+"22", border:"1px solid "+zone.color+"66", borderRadius:8, padding:"6px 14px", display:"flex", alignItems:"center", gap:8 }}>
-                    <span style={{ fontSize:16 }}>{zone.icon}</span>
-                    <span style={{ color:zone.color, fontSize:13 }}>{zone.label}</span>
-                    <button onClick={function(){ updateEv(function(evUp){ return {...evUp, zones:(evUp.zones||[]).filter(function(_,i){ return i!==zi; })}; }); }}
-                      style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:14, padding:0 }}>✕</button>
-                  </div>
-                ); })}
-                <button onClick={function(){
-                  var label = prompt("Nom de la zone (ex: Estrade, Scène, Bar, Dancefloor, Photo Booth...)");
-                  if (!label) return;
-                  var icons = {"estrade":"🎭","scène":"🎭","bar":"🍹","dancefloor":"💃","piste":"💃","photo":"📸","enfants":"🧒","fumeurs":"🚬","terrasse":"🌿","buffet":"🍽","cocktail":"🥂"};
-                  var colors = ["#C9973A","#4CAF50","#E8845A","#81C784","#9575CD","#64B5F6","#FF8A65"];
-                  var lc = label.toLowerCase();
-                  var icon = Object.keys(icons).find(function(k){ return lc.includes(k); });
-                  var color = colors[Math.floor(Math.random()*colors.length)];
-                  updateEv(function(evUp){ return {...evUp, zones:[...(evUp.zones||[]), {label:label, icon:icon?icons[icon]:"📍", color:color}]}; });
-                }} style={{ background:C.card, border:"1px dashed "+C.border, borderRadius:8, padding:"6px 14px", cursor:"pointer", color:C.muted, fontFamily:"inherit", fontSize:12 }}>
-                  + Ajouter une zone
-                </button>
-              </div>
-              <p style={{ color:C.muted, fontSize:11, fontStyle:"italic" }}>
-                Les zones apparaissent dans les exports PDF et sur les chevalets. Exemples : Estrade, Scène, Bar, Dancefloor, Photo Booth...
-              </p>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* ── MODALS ── */}
@@ -2877,6 +2920,78 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
             </div>
           </Field>
           <Btn onClick={addTable} style={{marginTop:4}}>Créer la table</Btn>
+        </div>
+      </Modal>
+
+      <Modal open={showAddZone} onClose={()=>{setShowAddZone(false);setNewZone({label:"",icon:"📍",color:"#C9973A"});}} title="Ajouter une zone">
+        <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
+          <Field label="NOM DE LA ZONE *">
+            <Input value={newZone.label} onChange={e=>setNewZone({...newZone,label:e.target.value})} placeholder="ex: Piste de danse, Bar, Scène, Photo Booth…"/>
+          </Field>
+          <Field label="ICÔNE">
+            <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
+              {["💃","🎭","🍹","📸","🧒","🌿","🍽","🥂","🎤","🎰","⛲","🪑","🎊","📍"].map(ic=>(
+                <button key={ic} onClick={()=>setNewZone({...newZone,icon:ic})} style={{
+                  width:38,height:38,borderRadius:8,fontSize:20,background:newZone.icon===ic?C.gold+"33":C.mid,
+                  border:`2px solid ${newZone.icon===ic?C.gold:C.border}`,cursor:"pointer",
+                }}>{ic}</button>
+              ))}
+            </div>
+          </Field>
+          <Field label="COULEUR">
+            <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
+              {["#C9973A","#E84A6A","#4CAF50","#2196F3","#9C27B0","#FF9800","#8B7EC8","#64B5F6","#E8845A","#81C784"].map(col=>(
+                <button key={col} onClick={()=>setNewZone({...newZone,color:col})} style={{
+                  width:28,height:28,borderRadius:"50%",background:col,border:`3px solid ${newZone.color===col?"#fff":"transparent"}`,cursor:"pointer",padding:0,
+                }}/>
+              ))}
+            </div>
+          </Field>
+          <Btn disabled={!newZone.label.trim()} onClick={()=>{
+            updateEv(function(evUp){ return {...evUp, zones:[...(evUp.zones||[]), {...newZone}]}; });
+            setNewZone({label:"",icon:"📍",color:"#C9973A"});
+            setShowAddZone(false);
+          }} style={{marginTop:4}}>Ajouter la zone</Btn>
+        </div>
+      </Modal>
+
+      <Modal open={showAddFurniture} onClose={()=>{setShowAddFurniture(false);setNewFurniture({label:"",icon:"🪑",color:"#8A7355",width:80,height:40});}} title="Ajouter du mobilier">
+        <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
+          <Field label="NOM *">
+            <Input value={newFurniture.label} onChange={e=>setNewFurniture({...newFurniture,label:e.target.value})} placeholder="ex: Buffet, Piano, Podium, Bar, Scène…"/>
+          </Field>
+          <Field label="ICÔNE">
+            <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
+              {["🪑","🛋","🎹","🎤","🍽","🍹","🎰","📺","🖼","🌿","🕯","🎊","🎭","🔲"].map(ic=>(
+                <button key={ic} onClick={()=>setNewFurniture({...newFurniture,icon:ic})} style={{
+                  width:38,height:38,borderRadius:8,fontSize:20,background:newFurniture.icon===ic?C.gold+"33":C.mid,
+                  border:`2px solid ${newFurniture.icon===ic?C.gold:C.border}`,cursor:"pointer",
+                }}>{ic}</button>
+              ))}
+            </div>
+          </Field>
+          <div style={{ display:"flex", gap:12 }}>
+            <Field label="LARGEUR (cm)">
+              <Input type="number" value={newFurniture.width} onChange={e=>setNewFurniture({...newFurniture,width:parseInt(e.target.value)||80})} placeholder="80"/>
+            </Field>
+            <Field label="HAUTEUR (cm)">
+              <Input type="number" value={newFurniture.height} onChange={e=>setNewFurniture({...newFurniture,height:parseInt(e.target.value)||40})} placeholder="40"/>
+            </Field>
+          </div>
+          <Field label="COULEUR">
+            <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
+              {["#8A7355","#C9973A","#E84A6A","#4CAF50","#2196F3","#9C27B0","#FF9800","#8B7EC8"].map(col=>(
+                <button key={col} onClick={()=>setNewFurniture({...newFurniture,color:col})} style={{
+                  width:28,height:28,borderRadius:"50%",background:col,border:`3px solid ${newFurniture.color===col?"#fff":"transparent"}`,cursor:"pointer",padding:0,
+                }}/>
+              ))}
+            </div>
+          </Field>
+          <Btn disabled={!newFurniture.label.trim()} onClick={()=>{
+            updateEv(function(evUp){ return {...evUp, furniture:[...(evUp.furniture||[]), {...newFurniture,id:Date.now(),x:200,y:200}]}; });
+            setNewFurniture({label:"",icon:"🪑",color:"#8A7355",width:80,height:40});
+            setShowAddFurniture(false);
+          }} style={{marginTop:4}}>Ajouter le mobilier</Btn>
         </div>
       </Modal>
 
