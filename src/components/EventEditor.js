@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { getFirebase } from "../firebase";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { C, useI18n } from "../theme";
 import { Btn, Badge, Modal, Field, Input, Select, useQRLib, QRCodeWidget } from "./UI";

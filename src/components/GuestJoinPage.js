@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { getFirebase } from "../firebase";
 import { useState, useEffect } from "react";
 import { C, useI18n } from "../theme";
 import { Btn, Badge } from "./UI";
