@@ -1,11 +1,11 @@
 /* eslint-disable */
 import { useState, useEffect, useRef, useCallback } from "react";
 
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 // FIREBASE CONFIG
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 
-// Firebase chargÃ© via CDN dans public/index.html
+// Firebase chargÃÂ© via CDN dans public/index.html
 // Les variables firebase, db, auth sont globales (window.firebase...)
 
 const firebaseConfig = {
@@ -31,11 +31,11 @@ function getFirebase() {
   return { auth: _auth, db: _db };
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 // CONSTANTS & DATA
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 
-// Ãchapper les caractÃ¨res HTML pour Ã©viter les injections XSS
+// ÃÂchapper les caractÃÂ¨res HTML pour ÃÂ©viter les injections XSS
 function escapeHtml(str) {
   return String(str || "")
     .replace(/&/g, "&amp;")
@@ -45,128 +45,127 @@ function escapeHtml(str) {
     .replace(/'/g, "&#039;");
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 // INTERNATIONALISATION (i18n)
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 
 const TRANSLATIONS = {
   fr: {
     // Navbar
-    appName: "TableMaÃ®tre",
-    logout: "DÃ©connexion",
+    appName: "TableMaÃÂ®tre",
+    logout: "DÃÂ©connexion",
     lightMode: "Passer en mode clair",
     darkMode: "Passer en mode sombre",
-    codePromo: "ðï¸ Code promo",
+    codePromo: "Ã°ÂÂÂÃ¯Â¸Â Code promo",
     // Dashboard
-    myEvents: "Mes Ã©vÃ©nements",
+    myEvents: "Mes ÃÂ©vÃÂ©nements",
     welcome: "Bienvenue",
-    searchPlaceholder: "Rechercher un Ã©vÃ©nement ou un invitÃ©...",
-    newEvent: "+ Nouvel Ã©vÃ©nement",
-    noEvents: "Aucun Ã©vÃ©nement pour le moment",
-    createFirst: "CrÃ©er mon premier Ã©vÃ©nement",
+    searchPlaceholder: "Rechercher un ÃÂ©vÃÂ©nement ou un invitÃÂ©...",
+    newEvent: "+ Nouvel ÃÂ©vÃÂ©nement",
+    noEvents: "Aucun ÃÂ©vÃÂ©nement pour le moment",
+    createFirst: "CrÃÂ©er mon premier ÃÂ©vÃÂ©nement",
     tables: "tables",
-    guests: "invitÃ©s",
-    unseated: "non placÃ©s",
+    guests: "invitÃÂ©s",
+    unseated: "non placÃÂ©s",
     placement: "Placement",
-    guestsFound: "invitÃ©(s) trouvÃ©(s)",
-    duplicate: "Dupliquer cet Ã©vÃ©nement",
-    daysAgo: "passÃ©",
+    guestsFound: "invitÃÂ©(s) trouvÃÂ©(s)",
+    duplicate: "Dupliquer cet ÃÂ©vÃÂ©nement",
+    daysAgo: "passÃÂ©",
     today: "Aujourd'hui !",
     inDays: "Dans",
     days: "j",
     // Event types
     mariage: "Mariage",
-    gala: "Gala / SoirÃ©e",
+    gala: "Gala / SoirÃÂ©e",
     anniversaire: "Anniversaire",
-    conference: "ConfÃ©rence",
+    conference: "ConfÃÂ©rence",
     autre: "Autre",
     // Event Editor
-    back: "â Projets",
-    autoPlace: "â¨ Auto-placer",
-    placeCards: "ð¨ Chevalets",
-    floorPlan: "ð Plan PDF",
+    back: "Ã¢ÂÂ Projets",
+    autoPlace: "Ã¢ÂÂ¨ Auto-placer",
+    placeCards: "Ã°ÂÂÂ¨ Chevalets",
+    floorPlan: "Ã°ÂÂÂ Plan PDF",
     qrCode: "QR Code",
-    tabPlan: "ðº Plan",
-    tabList: "ð Liste",
-    tabGuests: "ð¥ InvitÃ©s",
-    tabFood: "ð½ Alimentation",
-    tabConstraints: "â Contraintes",
-    tabRoom: "â¬¡ Salle",
+    tabPlan: "Ã°ÂÂÂº Plan",
+    tabList: "Ã°ÂÂÂ Liste",
+    tabGuests: "Ã°ÂÂÂ¥ InvitÃÂ©s",
+    tabFood: "Ã°ÂÂÂ½ Alimentation",
+    tabConstraints: "Ã¢ÂÂ Contraintes",
+    tabRoom: "Ã¢Â¬Â¡ Salle",
     addTable: "+ Table",
-    addGuest: "+ InvitÃ©",
-    dietSummary: "ð RÃ©cap alimentaire",
-    unseatedList: "â  NON PLACÃS",
-    seeAvailable: "ð Voir places libres",
-    tablesVisible: "â Tables visibles",
-    clickToPlace: "ð Cliquez sur une table pour y placer",
-    undo: "â© Annuler",
+    addGuest: "+ InvitÃÂ©",
+    dietSummary: "Ã°ÂÂÂ RÃÂ©cap alimentaire",
+    unseatedList: "Ã¢ÂÂ  NON PLACÃÂS",
+    seeAvailable: "Ã°ÂÂÂ Voir places libres",
+    tablesVisible: "Ã¢ÂÂ Tables visibles",
+    clickToPlace: "Ã°ÂÂÂ Cliquez sur une table pour y placer",
+    undo: "Ã¢ÂÂ© Annuler",
     // Guests
-    search: "Rechercher un invitÃ©â¦",
-    exportCSV: "â¬ Export CSV",
-    importCSV: "â¬ Import CSV",
+    search: "Rechercher un invitÃÂ©Ã¢ÂÂ¦",
+    exportCSV: "Ã¢Â¬Â Export CSV",
+    importCSV: "Ã¢Â¬Â Import CSV",
     // Table form
-    tableNumber: "NUMÃRO",
-    tableCapacity: "CAPACITÃ",
+    tableNumber: "NUMÃÂRO",
+    tableCapacity: "CAPACITÃÂ",
     tableShape: "FORME",
-    tableLabel: "ÃTIQUETTE",
+    tableLabel: "ÃÂTIQUETTE",
     tableColor: "COULEUR",
-    createTable: "CrÃ©er la table",
+    createTable: "CrÃÂ©er la table",
     deleteTable: "Supprimer la table",
     round: "Ronde",
     rectangular: "Rectangulaire",
     // Guest form
     guestName: "NOM *",
     guestEmail: "EMAIL",
-    guestDiet: "RÃGIME",
+    guestDiet: "RÃÂGIME",
     guestAllergies: "ALLERGIES",
     guestTable: "TABLE",
     guestNotes: "NOTES",
-    addGuestBtn: "Ajouter l'invitÃ©",
-    noTable: "-- Non placÃ© --",
+    addGuestBtn: "Ajouter l'invitÃÂ©",
+    noTable: "-- Non placÃÂ© --",
     // Login
     loginGoogle: "Se connecter avec Google",
-    loginMicrosoft: "Se connecter avec Microsoft",
     loginSubtitle: "GESTION DE PLANS DE TABLE",
     // Notifications
-    savedCloud: "âï¸ SauvegardÃ© dans le cloud",
-    savedAuto: "âï¸ SauvegardÃ© automatiquement",
+    savedCloud: "Ã¢ÂÂÃ¯Â¸Â SauvegardÃÂ© dans le cloud",
+    savedAuto: "Ã¢ÂÂÃ¯Â¸Â SauvegardÃÂ© automatiquement",
     // Voucher
     voucherTitle: "Code promotionnel",
-    voucherApplied: "â Code appliquÃ© !",
+    voucherApplied: "Ã¢ÂÂ Code appliquÃÂ© !",
     // Misc
-    loading: "Chargementâ¦",
+    loading: "ChargementÃ¢ÂÂ¦",
     skipToMain: "Passer au contenu principal",
-    note: "ð",
+    note: "Ã°ÂÂÂ",
     eventNotes: "LIEU / NOTES INTERNES",
     eventName: "NOM",
     eventDate: "DATE",
     eventType: "TYPE",
     // Stats bar
     statTables: "Tables",
-    statGuests: "InvitÃ©s",
-    statSeated: "PlacÃ©s",
+    statGuests: "InvitÃÂ©s",
+    statSeated: "PlacÃÂ©s",
     statWaiting: "En attente",
-    statDiets: "RÃ©gimes spÃ©ciaux",
+    statDiets: "RÃÂ©gimes spÃÂ©ciaux",
     // Countdown
-    daysAgoLabel: "passÃ©",
+    daysAgoLabel: "passÃÂ©",
     todayLabel: "Aujourd'hui !",
     // Form labels
     fieldName: "NOM *",
     fieldEmail: "EMAIL",
     fieldTable: "TABLE",
     fieldNotes: "NOTES",
-    fieldDiet: "RÃGIME",
+    fieldDiet: "RÃÂGIME",
     fieldAllergies: "ALLERGIES",
-    fieldNumber: "NUMÃRO",
-    fieldCapacity: "CAPACITÃ",
+    fieldNumber: "NUMÃÂRO",
+    fieldCapacity: "CAPACITÃÂ",
     fieldShape: "FORME",
-    fieldLabel: "ÃTIQUETTE",
+    fieldLabel: "ÃÂTIQUETTE",
     fieldColor: "COULEUR",
     shapeRound: "Ronde",
     shapeRect: "Rectangulaire",
-    notSeated: "Non placÃ©",
-    addGuestBtn: "Ajouter l'invitÃ©",
-    createTableBtn: "CrÃ©er la table",
+    notSeated: "Non placÃÂ©",
+    addGuestBtn: "Ajouter l'invitÃÂ©",
+    createTableBtn: "CrÃÂ©er la table",
     deleteTableBtn: "Supprimer la table",
     settingName: "NOM",
     settingDate: "DATE",
@@ -174,7 +173,7 @@ const TRANSLATIONS = {
   },
 
   en: {
-    appName: "TableMaÃ®tre",
+    appName: "TableMaÃÂ®tre",
     logout: "Sign out",
     lightMode: "Switch to light mode",
     darkMode: "Switch to dark mode",
@@ -200,28 +199,28 @@ const TRANSLATIONS = {
     anniversaire: "Birthday",
     conference: "Conference",
     autre: "Other",
-    back: "â Projects",
-    autoPlace: "â¨ Auto-seat",
-    placeCards: "ð¨ Place cards",
-    floorPlan: "ð Floor plan PDF",
+    back: "Ã¢ÂÂ Projects",
+    autoPlace: "Ã¢ÂÂ¨ Auto-seat",
+    placeCards: "Ã°ÂÂÂ¨ Place cards",
+    floorPlan: "Ã°ÂÂÂ Floor plan PDF",
     qrCode: "QR Code",
-    tabPlan: "ðº Plan",
-    tabList: "ð Liste",
-    tabGuests: "ð¥ Guests",
-    tabFood: "ð½ Dietary",
-    tabConstraints: "â Constraints",
-    tabRoom: "â¬¡ Room",
+    tabPlan: "Ã°ÂÂÂº Plan",
+    tabList: "Ã°ÂÂÂ Liste",
+    tabGuests: "Ã°ÂÂÂ¥ Guests",
+    tabFood: "Ã°ÂÂÂ½ Dietary",
+    tabConstraints: "Ã¢ÂÂ Constraints",
+    tabRoom: "Ã¢Â¬Â¡ Room",
     addTable: "+ Table",
     addGuest: "+ Guest",
-    dietSummary: "ð Dietary summary",
-    unseatedList: "â  UNSEATED",
-    seeAvailable: "ð Show available seats",
-    tablesVisible: "â Tables highlighted",
-    clickToPlace: "ð Click a table to seat",
-    undo: "â© Undo",
-    search: "Search a guestâ¦",
-    exportCSV: "â¬ Export CSV",
-    importCSV: "â¬ Import CSV",
+    dietSummary: "Ã°ÂÂÂ Dietary summary",
+    unseatedList: "Ã¢ÂÂ  UNSEATED",
+    seeAvailable: "Ã°ÂÂÂ Show available seats",
+    tablesVisible: "Ã¢ÂÂ Tables highlighted",
+    clickToPlace: "Ã°ÂÂÂ Click a table to seat",
+    undo: "Ã¢ÂÂ© Undo",
+    search: "Search a guestÃ¢ÂÂ¦",
+    exportCSV: "Ã¢Â¬Â Export CSV",
+    importCSV: "Ã¢Â¬Â Import CSV",
     tableNumber: "NUMBER",
     tableCapacity: "CAPACITY",
     tableShape: "SHAPE",
@@ -240,15 +239,14 @@ const TRANSLATIONS = {
     addGuestBtn: "Add guest",
     noTable: "-- Not seated --",
     loginGoogle: "Sign in with Google",
-    loginMicrosoft: "Sign in with Microsoft",
     loginSubtitle: "TABLE PLAN MANAGEMENT",
-    savedCloud: "âï¸ Saved to cloud",
-    savedAuto: "âï¸ Auto-saved",
+    savedCloud: "Ã¢ÂÂÃ¯Â¸Â Saved to cloud",
+    savedAuto: "Ã¢ÂÂÃ¯Â¸Â Auto-saved",
     voucherTitle: "Promotional code",
-    voucherApplied: "â Code applied!",
-    loading: "Loadingâ¦",
+    voucherApplied: "Ã¢ÂÂ Code applied!",
+    loading: "LoadingÃ¢ÂÂ¦",
     skipToMain: "Skip to main content",
-    note: "ð",
+    note: "Ã°ÂÂÂ",
     eventNotes: "VENUE / INTERNAL NOTES",
     eventName: "NAME",
     eventDate: "DATE",
@@ -286,11 +284,11 @@ const TRANSLATIONS = {
   },
 
   es: {
-    appName: "TableMaÃ®tre",
-    logout: "Cerrar sesiÃ³n",
+    appName: "TableMaÃÂ®tre",
+    logout: "Cerrar sesiÃÂ³n",
     lightMode: "Cambiar a modo claro",
     darkMode: "Cambiar a modo oscuro",
-    codePromo: "CÃ³digo promocional",
+    codePromo: "CÃÂ³digo promocional",
     myEvents: "Mis eventos",
     welcome: "Bienvenido",
     searchPlaceholder: "Buscar un evento o un invitado...",
@@ -300,40 +298,40 @@ const TRANSLATIONS = {
     tables: "mesas",
     guests: "invitados",
     unseated: "sin asiento",
-    placement: "AsignaciÃ³n",
+    placement: "AsignaciÃÂ³n",
     guestsFound: "invitado(s) encontrado(s)",
     duplicate: "Duplicar este evento",
     daysAgo: "pasado",
-    today: "Â¡Hoy!",
+    today: "ÃÂ¡Hoy!",
     inDays: "En",
     days: "d",
     mariage: "Boda",
     gala: "Gala / Fiesta",
-    anniversaire: "CumpleaÃ±os",
+    anniversaire: "CumpleaÃÂ±os",
     conference: "Conferencia",
     autre: "Otro",
-    back: "â Proyectos",
-    autoPlace: "â¨ Auto-sentar",
-    placeCards: "ð¨ Tarjetas",
-    floorPlan: "ð Plano PDF",
-    qrCode: "CÃ³digo QR",
-    tabPlan: "ðº Plano",
-    tabGuests: "ð¥ Invitados",
-    tabFood: "ð½ AlimentaciÃ³n",
-    tabConstraints: "â Restricciones",
-    tabRoom: "â¬¡ Sala",
+    back: "Ã¢ÂÂ Proyectos",
+    autoPlace: "Ã¢ÂÂ¨ Auto-sentar",
+    placeCards: "Ã°ÂÂÂ¨ Tarjetas",
+    floorPlan: "Ã°ÂÂÂ Plano PDF",
+    qrCode: "CÃÂ³digo QR",
+    tabPlan: "Ã°ÂÂÂº Plano",
+    tabGuests: "Ã°ÂÂÂ¥ Invitados",
+    tabFood: "Ã°ÂÂÂ½ AlimentaciÃÂ³n",
+    tabConstraints: "Ã¢ÂÂ Restricciones",
+    tabRoom: "Ã¢Â¬Â¡ Sala",
     addTable: "+ Mesa",
     addGuest: "+ Invitado",
-    dietSummary: "ð Resumen dietÃ©tico",
-    unseatedList: "â  SIN ASIENTO",
-    seeAvailable: "ð Ver asientos libres",
-    tablesVisible: "â Mesas destacadas",
-    clickToPlace: "ð Haz clic en una mesa para sentar",
-    undo: "â© Deshacer",
-    search: "Buscar un invitadoâ¦",
-    exportCSV: "â¬ Exportar CSV",
-    importCSV: "â¬ Importar CSV",
-    tableNumber: "NÃMERO",
+    dietSummary: "Ã°ÂÂÂ Resumen dietÃÂ©tico",
+    unseatedList: "Ã¢ÂÂ  SIN ASIENTO",
+    seeAvailable: "Ã°ÂÂÂ Ver asientos libres",
+    tablesVisible: "Ã¢ÂÂ Mesas destacadas",
+    clickToPlace: "Ã°ÂÂÂ Haz clic en una mesa para sentar",
+    undo: "Ã¢ÂÂ© Deshacer",
+    search: "Buscar un invitadoÃ¢ÂÂ¦",
+    exportCSV: "Ã¢Â¬Â Exportar CSV",
+    importCSV: "Ã¢Â¬Â Importar CSV",
+    tableNumber: "NÃÂMERO",
     tableCapacity: "CAPACIDAD",
     tableShape: "FORMA",
     tableLabel: "ETIQUETA",
@@ -348,17 +346,17 @@ const TRANSLATIONS = {
     guestAllergies: "ALERGIAS",
     guestTable: "MESA",
     guestNotes: "NOTAS",
-    addGuestBtn: "AÃ±adir invitado",
+    addGuestBtn: "AÃÂ±adir invitado",
     noTable: "-- Sin asignar --",
-    loginGoogle: "Iniciar sesiÃ³n con Google",
-    loginSubtitle: "GESTIÃN DE PLANES DE MESA",
-    savedCloud: "âï¸ Guardado en la nube",
-    savedAuto: "âï¸ Guardado automÃ¡ticamente",
-    voucherTitle: "CÃ³digo promocional",
-    voucherApplied: "â Â¡CÃ³digo aplicado!",
-    loading: "Cargandoâ¦",
+    loginGoogle: "Iniciar sesiÃÂ³n con Google",
+    loginSubtitle: "GESTIÃÂN DE PLANES DE MESA",
+    savedCloud: "Ã¢ÂÂÃ¯Â¸Â Guardado en la nube",
+    savedAuto: "Ã¢ÂÂÃ¯Â¸Â Guardado automÃÂ¡ticamente",
+    voucherTitle: "CÃÂ³digo promocional",
+    voucherApplied: "Ã¢ÂÂ ÃÂ¡CÃÂ³digo aplicado!",
+    loading: "CargandoÃ¢ÂÂ¦",
     skipToMain: "Ir al contenido principal",
-    note: "ð",
+    note: "Ã°ÂÂÂ",
     eventNotes: "LUGAR / NOTAS INTERNAS",
     eventName: "NOMBRE",
     eventDate: "FECHA",
@@ -370,14 +368,14 @@ const TRANSLATIONS = {
     statWaiting: "En espera",
     statDiets: "Dietas especiales",
     daysAgoLabel: "pasado",
-    todayLabel: "Â¡Hoy!",
+    todayLabel: "ÃÂ¡Hoy!",
     fieldName: "NOMBRE *",
     fieldEmail: "EMAIL",
     fieldTable: "MESA",
     fieldNotes: "NOTAS",
     fieldDiet: "DIETA",
     fieldAllergies: "ALERGIAS",
-    fieldNumber: "NÃMERO",
+    fieldNumber: "NÃÂMERO",
     fieldCapacity: "CAPACIDAD",
     fieldShape: "FORMA",
     fieldLabel: "ETIQUETA",
@@ -385,7 +383,7 @@ const TRANSLATIONS = {
     shapeRound: "Redonda",
     shapeRect: "Rectangular",
     notSeated: "Sin asignar",
-    addGuestBtn: "AÃ±adir invitado",
+    addGuestBtn: "AÃÂ±adir invitado",
     createTableBtn: "Crear mesa",
     deleteTableBtn: "Eliminar mesa",
     settingName: "NOMBRE",
@@ -394,7 +392,7 @@ const TRANSLATIONS = {
   },
 
   de: {
-    appName: "TableMaÃ®tre",
+    appName: "TableMaÃÂ®tre",
     logout: "Abmelden",
     lightMode: "Zum hellen Modus wechseln",
     darkMode: "Zum dunklen Modus wechseln",
@@ -406,10 +404,10 @@ const TRANSLATIONS = {
     noEvents: "Noch keine Veranstaltungen",
     createFirst: "Meine erste Veranstaltung erstellen",
     tables: "Tische",
-    guests: "GÃ¤ste",
+    guests: "GÃÂ¤ste",
     unseated: "ohne Platz",
     placement: "Platzierung",
-    guestsFound: "Gast/GÃ¤ste gefunden",
+    guestsFound: "Gast/GÃÂ¤ste gefunden",
     duplicate: "Veranstaltung duplizieren",
     daysAgo: "vergangen",
     today: "Heute!",
@@ -420,94 +418,93 @@ const TRANSLATIONS = {
     anniversaire: "Geburtstag",
     conference: "Konferenz",
     autre: "Sonstiges",
-    back: "â Projekte",
-    autoPlace: "â¨ Auto-Platzierung",
-    placeCards: "ð¨ Tischkarten",
-    floorPlan: "ð Saalplan PDF",
+    back: "Ã¢ÂÂ Projekte",
+    autoPlace: "Ã¢ÂÂ¨ Auto-Platzierung",
+    placeCards: "Ã°ÂÂÂ¨ Tischkarten",
+    floorPlan: "Ã°ÂÂÂ Saalplan PDF",
     qrCode: "QR-Code",
-    tabPlan: "ðº Plan",
-    tabList: "ð Liste",
-    tabGuests: "ð¥ GÃ¤ste",
-    tabFood: "ð½ ErnÃ¤hrung",
-    tabConstraints: "â EinschrÃ¤nkungen",
-    tabRoom: "â¬¡ Saal",
+    tabPlan: "Ã°ÂÂÂº Plan",
+    tabList: "Ã°ÂÂÂ Liste",
+    tabGuests: "Ã°ÂÂÂ¥ GÃÂ¤ste",
+    tabFood: "Ã°ÂÂÂ½ ErnÃÂ¤hrung",
+    tabConstraints: "Ã¢ÂÂ EinschrÃÂ¤nkungen",
+    tabRoom: "Ã¢Â¬Â¡ Saal",
     addTable: "+ Tisch",
     addGuest: "+ Gast",
-    dietSummary: "ð ErnÃ¤hrungsÃ¼bersicht",
-    unseatedList: "â  OHNE PLATZ",
-    seeAvailable: "ð Freie PlÃ¤tze anzeigen",
-    tablesVisible: "â Tische hervorgehoben",
-    clickToPlace: "ð Klicke einen Tisch zum Platzieren",
-    undo: "â© RÃ¼ckgÃ¤ngig",
-    search: "Gast suchenâ¦",
-    exportCSV: "â¬ CSV exportieren",
-    importCSV: "â¬ CSV importieren",
+    dietSummary: "Ã°ÂÂÂ ErnÃÂ¤hrungsÃÂ¼bersicht",
+    unseatedList: "Ã¢ÂÂ  OHNE PLATZ",
+    seeAvailable: "Ã°ÂÂÂ Freie PlÃÂ¤tze anzeigen",
+    tablesVisible: "Ã¢ÂÂ Tische hervorgehoben",
+    clickToPlace: "Ã°ÂÂÂ Klicke einen Tisch zum Platzieren",
+    undo: "Ã¢ÂÂ© RÃÂ¼ckgÃÂ¤ngig",
+    search: "Gast suchenÃ¢ÂÂ¦",
+    exportCSV: "Ã¢Â¬Â CSV exportieren",
+    importCSV: "Ã¢Â¬Â CSV importieren",
     tableNumber: "NUMMER",
-    tableCapacity: "KAPAZITÃT",
+    tableCapacity: "KAPAZITÃÂT",
     tableShape: "FORM",
     tableLabel: "BEZEICHNUNG",
     tableColor: "FARBE",
     createTable: "Tisch erstellen",
-    deleteTable: "Tisch lÃ¶schen",
+    deleteTable: "Tisch lÃÂ¶schen",
     round: "Rund",
     rectangular: "Rechteckig",
     guestName: "NAME *",
     guestEmail: "E-MAIL",
-    guestDiet: "ERNÃHRUNG",
+    guestDiet: "ERNÃÂHRUNG",
     guestAllergies: "ALLERGIEN",
     guestTable: "TISCH",
     guestNotes: "NOTIZEN",
-    addGuestBtn: "Gast hinzufÃ¼gen",
+    addGuestBtn: "Gast hinzufÃÂ¼gen",
     noTable: "-- Nicht platziert --",
     loginGoogle: "Mit Google anmelden",
-    loginMicrosoft: "Mit Microsoft anmelden",
     loginSubtitle: "TISCHPLAN-VERWALTUNG",
-    savedCloud: "âï¸ In der Cloud gespeichert",
-    savedAuto: "âï¸ Automatisch gespeichert",
+    savedCloud: "Ã¢ÂÂÃ¯Â¸Â In der Cloud gespeichert",
+    savedAuto: "Ã¢ÂÂÃ¯Â¸Â Automatisch gespeichert",
     voucherTitle: "Aktionscode",
-    voucherApplied: "â Code angewendet!",
-    loading: "Wird geladenâ¦",
+    voucherApplied: "Ã¢ÂÂ Code angewendet!",
+    loading: "Wird geladenÃ¢ÂÂ¦",
     skipToMain: "Zum Hauptinhalt springen",
-    note: "ð",
+    note: "Ã°ÂÂÂ",
     eventNotes: "ORT / INTERNE NOTIZEN",
     eventName: "NAME",
     eventDate: "DATUM",
     eventType: "TYP",
     // Stats bar
     statTables: "Tische",
-    statGuests: "GÃ¤ste",
+    statGuests: "GÃÂ¤ste",
     statSeated: "Platziert",
     statWaiting: "Wartend",
-    statDiets: "SpezialdiÃ¤ten",
+    statDiets: "SpezialdiÃÂ¤ten",
     daysAgoLabel: "vergangen",
     todayLabel: "Heute!",
     fieldName: "NAME *",
     fieldEmail: "E-MAIL",
     fieldTable: "TISCH",
     fieldNotes: "NOTIZEN",
-    fieldDiet: "ERNÃHRUNG",
+    fieldDiet: "ERNÃÂHRUNG",
     fieldAllergies: "ALLERGIEN",
     fieldNumber: "NUMMER",
-    fieldCapacity: "KAPAZITÃT",
+    fieldCapacity: "KAPAZITÃÂT",
     fieldShape: "FORM",
     fieldLabel: "BEZEICHNUNG",
     fieldColor: "FARBE",
     shapeRound: "Rund",
     shapeRect: "Rechteckig",
     notSeated: "Nicht platziert",
-    addGuestBtn: "Gast hinzufÃ¼gen",
+    addGuestBtn: "Gast hinzufÃÂ¼gen",
     createTableBtn: "Tisch erstellen",
-    deleteTableBtn: "Tisch lÃ¶schen",
+    deleteTableBtn: "Tisch lÃÂ¶schen",
     settingName: "NAME",
     settingDate: "DATUM",
     settingType: "TYP",
   },
 
   it: {
-    appName: "TableMaÃ®tre",
+    appName: "TableMaÃÂ®tre",
     logout: "Disconnetti",
-    lightMode: "Passa alla modalitÃ  chiara",
-    darkMode: "Passa alla modalitÃ  scura",
+    lightMode: "Passa alla modalitÃÂ  chiara",
+    darkMode: "Passa alla modalitÃÂ  scura",
     codePromo: "Codice promozionale",
     myEvents: "I miei eventi",
     welcome: "Benvenuto",
@@ -530,29 +527,29 @@ const TRANSLATIONS = {
     anniversaire: "Compleanno",
     conference: "Conferenza",
     autre: "Altro",
-    back: "â Progetti",
-    autoPlace: "â¨ Disponi automaticamente",
-    placeCards: "ð¨ Segnaposto",
-    floorPlan: "ð Piano PDF",
+    back: "Ã¢ÂÂ Progetti",
+    autoPlace: "Ã¢ÂÂ¨ Disponi automaticamente",
+    placeCards: "Ã°ÂÂÂ¨ Segnaposto",
+    floorPlan: "Ã°ÂÂÂ Piano PDF",
     qrCode: "Codice QR",
-    tabPlan: "ðº Piano",
-    tabGuests: "ð¥ Ospiti",
-    tabFood: "ð½ Alimentazione",
-    tabConstraints: "â Vincoli",
-    tabRoom: "â¬¡ Sala",
+    tabPlan: "Ã°ÂÂÂº Piano",
+    tabGuests: "Ã°ÂÂÂ¥ Ospiti",
+    tabFood: "Ã°ÂÂÂ½ Alimentazione",
+    tabConstraints: "Ã¢ÂÂ Vincoli",
+    tabRoom: "Ã¢Â¬Â¡ Sala",
     addTable: "+ Tavolo",
     addGuest: "+ Ospite",
-    dietSummary: "ð Riepilogo dietetico",
-    unseatedList: "â  SENZA POSTO",
-    seeAvailable: "ð Vedi posti liberi",
-    tablesVisible: "â Tavoli evidenziati",
-    clickToPlace: "ð Clicca un tavolo per sistemare",
-    undo: "â© Annulla",
-    search: "Cerca un ospiteâ¦",
-    exportCSV: "â¬ Esporta CSV",
-    importCSV: "â¬ Importa CSV",
+    dietSummary: "Ã°ÂÂÂ Riepilogo dietetico",
+    unseatedList: "Ã¢ÂÂ  SENZA POSTO",
+    seeAvailable: "Ã°ÂÂÂ Vedi posti liberi",
+    tablesVisible: "Ã¢ÂÂ Tavoli evidenziati",
+    clickToPlace: "Ã°ÂÂÂ Clicca un tavolo per sistemare",
+    undo: "Ã¢ÂÂ© Annulla",
+    search: "Cerca un ospiteÃ¢ÂÂ¦",
+    exportCSV: "Ã¢Â¬Â Esporta CSV",
+    importCSV: "Ã¢Â¬Â Importa CSV",
     tableNumber: "NUMERO",
-    tableCapacity: "CAPACITÃ",
+    tableCapacity: "CAPACITÃÂ",
     tableShape: "FORMA",
     tableLabel: "ETICHETTA",
     tableColor: "COLORE",
@@ -569,15 +566,14 @@ const TRANSLATIONS = {
     addGuestBtn: "Aggiungi ospite",
     noTable: "-- Non assegnato --",
     loginGoogle: "Accedi con Google",
-    loginMicrosoft: "Accedi con Microsoft",
     loginSubtitle: "GESTIONE PIANI TAVOLA",
-    savedCloud: "âï¸ Salvato nel cloud",
-    savedAuto: "âï¸ Salvato automaticamente",
+    savedCloud: "Ã¢ÂÂÃ¯Â¸Â Salvato nel cloud",
+    savedAuto: "Ã¢ÂÂÃ¯Â¸Â Salvato automaticamente",
     voucherTitle: "Codice promozionale",
-    voucherApplied: "â Codice applicato!",
-    loading: "Caricamentoâ¦",
+    voucherApplied: "Ã¢ÂÂ Codice applicato!",
+    loading: "CaricamentoÃ¢ÂÂ¦",
     skipToMain: "Vai al contenuto principale",
-    note: "ð",
+    note: "Ã°ÂÂÂ",
     eventNotes: "LUOGO / NOTE INTERNE",
     eventName: "NOME",
     eventDate: "DATA",
@@ -597,7 +593,7 @@ const TRANSLATIONS = {
     fieldDiet: "DIETA",
     fieldAllergies: "ALLERGIE",
     fieldNumber: "NUMERO",
-    fieldCapacity: "CAPACITÃ",
+    fieldCapacity: "CAPACITÃÂ",
     fieldShape: "FORMA",
     fieldLabel: "ETICHETTA",
     fieldColor: "COLORE",
@@ -613,7 +609,7 @@ const TRANSLATIONS = {
 
 };
 
-// DÃ©tecter la langue du navigateur / pays
+// DÃÂ©tecter la langue du navigateur / pays
 function detectLang() {
   const saved = localStorage.getItem('tableMaitreLang');
   if (saved && TRANSLATIONS[saved]) return saved;
@@ -634,9 +630,9 @@ function useI18n() {
   return { t, lang, setLang };
 }
 
-// Drapeaux pour le sÃ©lecteur
-const LANG_FLAGS = { fr: 'ð«ð·', en: 'ð¬ð§', es: 'ðªð¸', de: 'ð©ðª', it: 'ð®ð¹' };
-const LANG_NAMES = { fr: 'FranÃ§ais', en: 'English', es: 'EspaÃ±ol', de: 'Deutsch', it: 'Italiano' };
+// Drapeaux pour le sÃÂ©lecteur
+const LANG_FLAGS = { fr: 'Ã°ÂÂÂ«Ã°ÂÂÂ·', en: 'Ã°ÂÂÂ¬Ã°ÂÂÂ§', es: 'Ã°ÂÂÂªÃ°ÂÂÂ¸', de: 'Ã°ÂÂÂ©Ã°ÂÂÂª', it: 'Ã°ÂÂÂ®Ã°ÂÂÂ¹' };
+const LANG_NAMES = { fr: 'FranÃÂ§ais', en: 'English', es: 'EspaÃÂ±ol', de: 'Deutsch', it: 'Italiano' };
 
 
 
@@ -657,53 +653,53 @@ const C = {
 };
 
 const THEMES_CONFIG = {
-  mariage:      { label: "Mariage",        icon: "ð", color: "#C9973A", bg: "linear-gradient(135deg,#1a0c08,#2a1a0e)" },
-  gala:         { label: "Gala / SoirÃ©e",  icon: "ð¥", color: "#8B7EC8", bg: "linear-gradient(135deg,#0d0a1a,#1a1530)" },
-  anniversaire: { label: "Anniversaire",   icon: "ð", color: "#E8845A", bg: "linear-gradient(135deg,#1a0e08,#2a1810)" },
-  conference:   { label: "ConfÃ©rence",     icon: "ð¤", color: "#4A9B7F", bg: "linear-gradient(135deg,#081a12,#0e2a1e)" },
-  bapteme:      { label: "BaptÃªme",        icon: "ðï¸", color: "#7ABDE8", bg: "linear-gradient(135deg,#081218,#0e1e2a)" },
-  loto:         { label: "Loto / Casino",  icon: "ð°", color: "#E84A6A", bg: "linear-gradient(135deg,#1a0810,#2a0e18)" },
-  autre:        { label: "Autre",          icon: "ð", color: "#C9973A", bg: "linear-gradient(135deg,#120c08,#2a1a0e)" },
+  mariage:      { label: "Mariage",        icon: "Ã°ÂÂÂ", color: "#C9973A", bg: "linear-gradient(135deg,#1a0c08,#2a1a0e)" },
+  gala:         { label: "Gala / SoirÃÂ©e",  icon: "Ã°ÂÂ¥Â", color: "#8B7EC8", bg: "linear-gradient(135deg,#0d0a1a,#1a1530)" },
+  anniversaire: { label: "Anniversaire",   icon: "Ã°ÂÂÂ", color: "#E8845A", bg: "linear-gradient(135deg,#1a0e08,#2a1810)" },
+  conference:   { label: "ConfÃÂ©rence",     icon: "Ã°ÂÂÂ¤", color: "#4A9B7F", bg: "linear-gradient(135deg,#081a12,#0e2a1e)" },
+  bapteme:      { label: "BaptÃÂªme",        icon: "Ã°ÂÂÂÃ¯Â¸Â", color: "#7ABDE8", bg: "linear-gradient(135deg,#081218,#0e1e2a)" },
+  loto:         { label: "Loto / Casino",  icon: "Ã°ÂÂÂ°", color: "#E84A6A", bg: "linear-gradient(135deg,#1a0810,#2a0e18)" },
+  autre:        { label: "Autre",          icon: "Ã°ÂÂÂ", color: "#C9973A", bg: "linear-gradient(135deg,#120c08,#2a1a0e)" },
 };
 
 const DIET_OPTIONS = [
-  { id: "standard",     label: "Standard",         icon: "ð½ï¸", color: C.muted },
-  { id: "vegetarien",   label: "VÃ©gÃ©tarien",        icon: "ð¥", color: "#4CAF50" },
-  { id: "vegan",        label: "Vegan",             icon: "ð±", color: "#8BC34A" },
-  { id: "sans-gluten",  label: "Sans gluten",       icon: "ð¾", color: "#FF9800" },
-  { id: "halal",        label: "Halal",             icon: "âªï¸", color: "#2196F3" },
-  { id: "casher",       label: "Casher",            icon: "â¡ï¸",  color: "#3F51B5" },
-  { id: "sans-lactose", label: "Sans lactose",      icon: "ð¥", color: "#9C27B0" },
-  { id: "sans-noix",    label: "Allergie noix",     icon: "ð¥", color: "#F44336" },
-  { id: "sans-fruits-mer", label: "Allergie fruits de mer", icon: "ð¦", color: "#E91E63" },
-  { id: "diabetique",   label: "DiabÃ©tique",        icon: "ð", color: "#607D8B" },
+  { id: "standard",     label: "Standard",         icon: "Ã°ÂÂÂ½Ã¯Â¸Â", color: C.muted },
+  { id: "vegetarien",   label: "VÃÂ©gÃÂ©tarien",        icon: "Ã°ÂÂ¥Â", color: "#4CAF50" },
+  { id: "vegan",        label: "Vegan",             icon: "Ã°ÂÂÂ±", color: "#8BC34A" },
+  { id: "sans-gluten",  label: "Sans gluten",       icon: "Ã°ÂÂÂ¾", color: "#FF9800" },
+  { id: "halal",        label: "Halal",             icon: "Ã¢ÂÂªÃ¯Â¸Â", color: "#2196F3" },
+  { id: "casher",       label: "Casher",            icon: "Ã¢ÂÂ¡Ã¯Â¸Â",  color: "#3F51B5" },
+  { id: "sans-lactose", label: "Sans lactose",      icon: "Ã°ÂÂ¥Â", color: "#9C27B0" },
+  { id: "sans-noix",    label: "Allergie noix",     icon: "Ã°ÂÂ¥Â", color: "#F44336" },
+  { id: "sans-fruits-mer", label: "Allergie fruits de mer", icon: "Ã°ÂÂ¦Â", color: "#E91E63" },
+  { id: "diabetique",   label: "DiabÃÂ©tique",        icon: "Ã°ÂÂÂ", color: "#607D8B" },
 ];
 
-// Auth 100% Firebase Google â aucun identifiant stockÃ© dans le code
+// Auth 100% Firebase Google Ã¢ÂÂ aucun identifiant stockÃÂ© dans le code
 const INITIAL_USERS = [];
 
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 // PLANS & VOUCHERS
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 
 const PLANS = {
-  free:   { label: "Gratuit", price: 0,    maxEvents: 1,   maxGuests: 30,  color: "#8A7355", icon: "ð" },
-  pro:    { label: "Pro",     price: 9.90, maxEvents: 999, maxGuests: 999, color: "#C9973A", icon: "â­" },
-  agence: { label: "Agence",  price: 29,   maxEvents: 999, maxGuests: 999, color: "#2A1A0e", icon: "ð¢" },
+  free:   { label: "Gratuit", price: 0,    maxEvents: 1,   maxGuests: 30,  color: "#8A7355", icon: "Ã°ÂÂÂ" },
+  pro:    { label: "Pro",     price: 9.90, maxEvents: 999, maxGuests: 999, color: "#C9973A", icon: "Ã¢Â­Â" },
+  agence: { label: "Agence",  price: 29,   maxEvents: 999, maxGuests: 999, color: "#2A1A0e", icon: "Ã°ÂÂÂ¢" },
 };
 
 const VOUCHERS = {
-  "BIENVENUE":   { discount: 100, type: "percent", plan: "pro", description: "1 mois Pro offert ð",    maxUses: 999 },
-  "MARIAGE2026": { discount: 50,  type: "percent", plan: "pro", description: "-50% sur le plan Pro ð", maxUses: 100 },
-  "PARTENAIRE":  { discount: 30,  type: "percent", plan: "pro", description: "-30% partenaire ð¤",      maxUses: 50  },
-  "VIP100":      { discount: 100, type: "percent", plan: "pro", description: "AccÃ¨s VIP gratuit ð",    maxUses: 10  },
+  "BIENVENUE":   { discount: 100, type: "percent", plan: "pro", description: "1 mois Pro offert Ã°ÂÂÂ",    maxUses: 999 },
+  "MARIAGE2026": { discount: 50,  type: "percent", plan: "pro", description: "-50% sur le plan Pro Ã°ÂÂÂ", maxUses: 100 },
+  "PARTENAIRE":  { discount: 30,  type: "percent", plan: "pro", description: "-30% partenaire Ã°ÂÂ¤Â",      maxUses: 50  },
+  "VIP100":      { discount: 100, type: "percent", plan: "pro", description: "AccÃÂ¨s VIP gratuit Ã°ÂÂÂ",    maxUses: 10  },
 };
 
 
 const INITIAL_EVENTS = [
   {
     id: 1, ownerId: "u1",
-    name: "Mariage Martin Ã Dubois", date: "2025-09-14", type: "mariage", plan: "pro",
+    name: "Mariage Martin ÃÂ Dubois", date: "2025-09-14", type: "mariage", plan: "pro",
     roomShape: [
       { x: 60, y: 60 }, { x: 740, y: 60 }, { x: 740, y: 520 },
       { x: 450, y: 520 }, { x: 450, y: 380 }, { x: 60, y: 380 }
@@ -711,18 +707,18 @@ const INITIAL_EVENTS = [
     tables: [
       { id: 1, number: 1, capacity: 8,  x: 160, y: 150, shape: "round",  label: "Famille" },
       { id: 2, number: 2, capacity: 10, x: 350, y: 150, shape: "round",  label: "Amis" },
-      { id: 3, number: 3, capacity: 6,  x: 550, y: 150, shape: "round",  label: "CollÃ¨gues" },
+      { id: 3, number: 3, capacity: 6,  x: 550, y: 150, shape: "round",  label: "CollÃÂ¨gues" },
       { id: 4, number: 4, capacity: 8,  x: 160, y: 290, shape: "round",  label: "Famille" },
     ],
     guests: [
       { id: 1, name: "Marie Martin",    email: "marie@test.com",  tableId: 1, diet: "vegetarien",   notes: "", allergies: [] },
       { id: 2, name: "Jean Dupont",     email: "jean@test.com",   tableId: 1, diet: "standard",     notes: "", allergies: [] },
-      { id: 3, name: "Sophie Laurent",  email: "",                tableId: 2, diet: "vegan",         notes: "Allergie noix sÃ©vÃ¨re", allergies: ["sans-noix"] },
+      { id: 3, name: "Sophie Laurent",  email: "",                tableId: 2, diet: "vegan",         notes: "Allergie noix sÃÂ©vÃÂ¨re", allergies: ["sans-noix"] },
       { id: 4, name: "Pierre Moreau",   email: "",                tableId: 2, diet: "halal",         notes: "", allergies: [] },
       { id: 5, name: "Julie Petit",     email: "",                tableId: null, diet: "sans-gluten", notes: "", allergies: [] },
     ],
     constraints: [{ id: 1, a: 1, b: 2, type: "together" }],
-    menu: { starter: "VeloutÃ© de butternut", main: "Filet de bÅuf Wellington", dessert: "PiÃ¨ce montÃ©e", vegOption: "Risotto aux champignons" },
+    menu: { starter: "VeloutÃÂ© de butternut", main: "Filet de bÃÂuf Wellington", dessert: "PiÃÂ¨ce montÃÂ©e", vegOption: "Risotto aux champignons" },
   },
   {
     id: 2, ownerId: "u2",
@@ -741,9 +737,9 @@ const INITIAL_EVENTS = [
   },
 ];
 
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 // UTILS
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 
 function dietInfo(id) { return DIET_OPTIONS.find(function(ditem){ return ditem.id === id; }) || DIET_OPTIONS[0]; }
 
@@ -756,21 +752,21 @@ function printFloorPlan(ev) {
     const guestsSec = ev.guests.filter(g => g.tableId === t.id);
     return `
       <div class="table-block">
-        <div class="table-title">Table ${escapeHtml(String(t.number))}${t.label ? ` â ${escapeHtml(t.label)}` : ""}</div>
+        <div class="table-title">Table ${escapeHtml(String(t.number))}${t.label ? ` Ã¢ÂÂ ${escapeHtml(t.label)}` : ""}</div>
         <div class="table-count">${guestsSec.length}/${t.capacity} places</div>
         <ul class="guest-list">
           ${guestsSec.map(g => {
             const d = DIET_OPTIONS.find(function(ditem){ return ditem.id===g.diet; })||DIET_OPTIONS[0];
             return `<li>${escapeHtml(g.name)}${g.diet!=="standard"?` <span class="diet">${d.icon}</span>`:""}${g.notes?` <span class="note">${escapeHtml(g.notes)}</span>`:""}</li>`;
           }).join("")}
-          ${guests.length === 0 ? '<li class="empty">â Vide â</li>' : ""}
+          ${guests.length === 0 ? '<li class="empty">Ã¢ÂÂ Vide Ã¢ÂÂ</li>' : ""}
         </ul>
       </div>`;
   }).join("");
 
   const w = window.open("", "_blank");
   w.document.write(`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
-  <title>Plan de table â ${escapeHtml(ev.name)}</title>
+  <title>Plan de table Ã¢ÂÂ ${escapeHtml(ev.name)}</title>
   <style>
     @page { size: A4; margin: 15mm; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -793,52 +789,52 @@ function printFloorPlan(ev) {
     @media print { .no-print { display: none; } }
   </style></head><body>
   <div class="no-print" style="text-align:center;padding:16px;">
-    <button onclick="window.print()" style="padding:10px 28px;background:${theme.color};border:none;border-radius:99px;font-family:Georgia;font-size:14px;cursor:pointer;font-weight:700;color:white;">ð¨ Imprimer / Exporter PDF</button>
+    <button onclick="window.print()" style="padding:10px 28px;background:${theme.color};border:none;border-radius:99px;font-family:Georgia;font-size:14px;cursor:pointer;font-weight:700;color:white;">Ã°ÂÂÂ¨ Imprimer / Exporter PDF</button>
   </div>
   <div class="header">
     <h1>${escapeHtml(ev.name)}</h1>
-    <p>${escapeHtml(ev.date)} Â· ${ev.tables.length} tables Â· ${ev.guests.length} invitÃ©s Â· ${seated.length} placÃ©s</p>
+    <p>${escapeHtml(ev.date)} ÃÂ· ${ev.tables.length} tables ÃÂ· ${ev.guests.length} invitÃÂ©s ÃÂ· ${seated.length} placÃÂ©s</p>
     ${ev.notes ? `<p style="margin-top:6px;font-style:italic">${escapeHtml(ev.notes)}</p>` : ""}
   </div>
   <div class="stats">
-    <span>ðª ${ev.tables.length} tables</span>
-    <span>ð¤ ${ev.guests.length} invitÃ©s</span>
-    <span>â ${seated.length} placÃ©s</span>
-    <span>â  ${ev.guests.length - seated.length} non placÃ©s</span>
+    <span>Ã°ÂÂªÂ ${ev.tables.length} tables</span>
+    <span>Ã°ÂÂÂ¤ ${ev.guests.length} invitÃÂ©s</span>
+    <span>Ã¢ÂÂ ${seated.length} placÃÂ©s</span>
+    <span>Ã¢ÂÂ  ${ev.guests.length - seated.length} non placÃÂ©s</span>
   </div>
   <div class="grid">${tableRows}</div>
-  <div class="footer">TableMaÃ®tre Â· Plan gÃ©nÃ©rÃ© le ${new Date().toLocaleDateString("fr-FR")}</div>
+  <div class="footer">TableMaÃÂ®tre ÃÂ· Plan gÃÂ©nÃÂ©rÃÂ© le ${new Date().toLocaleDateString("fr-FR")}</div>
   </body></html>`);
   w.document.close();
 }
 
 function exportGuestsCSV(ev) {
-  const headers = ["Nom", "Email", "Table", "RÃ©gime", "Allergies", "Notes"];
+  const headers = ["Nom", "Email", "Table", "RÃÂ©gime", "Allergies", "Notes"];
   const rows = ev.guests.map(g => {
     const table = ev.tables.find(function(tbl2){ return tbl2.id === g.tableId; });
     const diet = dietInfo(g.diet);
     return [
       g.name,
       g.email || "",
-      table ? `Table ${table.number}${table.label ? " - " + table.label : ""}` : "Non placÃ©",
+      table ? `Table ${table.number}${table.label ? " - " + table.label : ""}` : "Non placÃÂ©",
       diet.label,
       (g.allergies || []).map(a => dietInfo(a).label).join(" | "),
       g.notes || ""
     ].map(v => `"${String(v).replace(/"/g, '""')}"`).join(",");
   });
   const csv = [headers.join(","), ...rows].join("\n");
-  const blob = new Blob(["ï»¿" + csv], { type: "text/csv;charset=utf-8;" });
+  const blob = new Blob(["Ã¯Â»Â¿" + csv], { type: "text/csv;charset=utf-8;" });
   const url = URL.createObjectURL(blob);
   const a = document.createElement("a");
   a.href = url;
-  a.download = `${ev.name.replace(/[^a-z0-9]/gi, "_")}_invitÃ©s.csv`;
+  a.download = `${ev.name.replace(/[^a-z0-9]/gi, "_")}_invitÃÂ©s.csv`;
   a.click();
   URL.revokeObjectURL(url);
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 // SHARED UI COMPONENTS
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 
 function Btn({ children, onClick, variant = "primary", small, style: s, disabled }) {
   const base = {
@@ -882,7 +878,7 @@ function Modal({ open, onClose, title, width = 520, children }) {
         <div style={{ display: "flex", alignItems: "center", marginBottom: 24 }}>
           <h3 style={{ margin: 0, color: C.cream, fontFamily: "Georgia,serif", fontSize: 18, fontWeight: 400 }}>{title}</h3>
           <div style={{ flex: 1 }} />
-          <button onClick={onClose} style={{ background: "none", border: "none", color: C.muted, cursor: "pointer", fontSize: 20, lineHeight: 1 }}>â</button>
+          <button onClick={onClose} style={{ background: "none", border: "none", color: C.muted, cursor: "pointer", fontSize: 20, lineHeight: 1 }}>Ã¢ÂÂ</button>
         </div>
         {children}
       </div>
@@ -919,9 +915,9 @@ function Select({ value, onChange, children }) {
   );
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 // QR LIB
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 
 function useQRLib() {
   const [ready, setReady] = useState(typeof window !== "undefined" && !!window.QRCode);
@@ -943,13 +939,13 @@ function QRCodeWidget({ value, size = 180 }) {
     ref.current.innerHTML = "";
     new window.QRCode(ref.current, { text: value, width: size, height: size, colorDark: C.dark, colorLight: C.cream, correctLevel: window.QRCode.CorrectLevel.H });
   }, [libReady, value, size]);
-  if (!libReady) return <div style={{ width: size, height: size, background: C.mid, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", color: C.muted, fontSize: 12 }}>Chargementâ¦</div>;
+  if (!libReady) return <div style={{ width: size, height: size, background: C.mid, borderRadius: 8, display: "flex", alignItems: "center", justifyContent: "center", color: C.muted, fontSize: 12 }}>ChargementÃ¢ÂÂ¦</div>;
   return <div ref={ref} style={{ lineHeight: 0, borderRadius: 8, overflow: "hidden" }} />;
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 // ROOM SHAPE EDITOR
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 
 const CANVAS_W = 800;
 const CANVAS_H = 560;
@@ -1035,27 +1031,27 @@ function RoomShapeEditor({ shape, onChange }) {
         <span style={{color:C.muted,fontSize:12,letterSpacing:.5}}>FORME DE LA SALLE</span>
         <div style={{flex:1}}/>
         <Btn small variant={mode==="draw"?"primary":"ghost"} onClick={()=>{setMode(mode==="draw"?"view":"draw");setDrawing([])}}>
-          {mode==="draw" ? "âï¸ Annuler dessin" : "âï¸ Dessiner"}
+          {mode==="draw" ? "Ã¢ÂÂÃ¯Â¸Â Annuler dessin" : "Ã¢ÂÂÃ¯Â¸Â Dessiner"}
         </Btn>
         <Btn small variant={mode==="edit"?"primary":"ghost"} onClick={()=>setMode(mode==="edit"?"view":"edit")}>
-          {mode==="edit" ? "â Terminer" : "â¦¿ Modifier points"}
+          {mode==="edit" ? "Ã¢ÂÂ Terminer" : "Ã¢Â¦Â¿ Modifier points"}
         </Btn>
         <div style={{width:1,height:20,background:C.border}}/>
-        <span style={{color:C.muted,fontSize:12}}>PrÃ©sets :</span>
-        <Btn small variant="muted" onClick={presetRectangle}>â­ Rect</Btn>
-        <Btn small variant="muted" onClick={presetL}>â L</Btn>
+        <span style={{color:C.muted,fontSize:12}}>PrÃÂ©sets :</span>
+        <Btn small variant="muted" onClick={presetRectangle}>Ã¢ÂÂ­ Rect</Btn>
+        <Btn small variant="muted" onClick={presetL}>Ã¢ÂÂ L</Btn>
         <Btn small variant="muted" onClick={presetU}>U</Btn>
-        <Btn small variant="muted" onClick={presetHex}>â¬¡ Hex</Btn>
+        <Btn small variant="muted" onClick={presetHex}>Ã¢Â¬Â¡ Hex</Btn>
       </div>
 
       {mode === "draw" && (
         <div style={{background:C.gold+"18",border:`1px solid ${C.gold}44`,borderRadius:8,padding:"8px 14px",marginBottom:10,fontSize:12,color:C.gold}}>
-          Cliquez pour ajouter des points Â· Cliquez prÃ¨s du premier point pour fermer la forme ({drawing.length} points placÃ©s)
+          Cliquez pour ajouter des points ÃÂ· Cliquez prÃÂ¨s du premier point pour fermer la forme ({drawing.length} points placÃÂ©s)
         </div>
       )}
       {mode === "edit" && (
         <div style={{background:C.blue+"18",border:`1px solid ${C.blue}44`,borderRadius:8,padding:"8px 14px",marginBottom:10,fontSize:12,color:C.blue}}>
-          Glissez les points dorÃ©s pour modifier la forme de la salle
+          Glissez les points dorÃÂ©s pour modifier la forme de la salle
         </div>
       )}
 
@@ -1118,9 +1114,9 @@ function RoomShapeEditor({ shape, onChange }) {
   );
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 // INTERACTIVE FLOOR PLAN
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 
 const TABLE_R = 44;
 const TABLE_RECT_W = 80;
@@ -1168,7 +1164,7 @@ function FloorPlan({ ev, onUpdateTables, onSelectTable, selectedTable, highlight
     <svg
       ref={svgRef}
       role="img"
-      aria-label={`Plan de table de l'Ã©vÃ©nement. ${ev.tables.length} tables, ${ev.guests.filter(g=>g.tableId).length} invitÃ©s placÃ©s sur ${ev.guests.length} au total.`}
+      aria-label={`Plan de table de l'ÃÂ©vÃÂ©nement. ${ev.tables.length} tables, ${ev.guests.filter(g=>g.tableId).length} invitÃÂ©s placÃÂ©s sur ${ev.guests.length} au total.`}
       viewBox={`0 0 ${CANVAS_W} ${CANVAS_H}`}
       style={{ width:"100%", display:"block", background:"#0a0604", borderRadius:12, border:`1px solid ${C.border}`, cursor:"default", userSelect:"none" }}
       onMouseMove={handleMouseMove}
@@ -1202,7 +1198,7 @@ function FloorPlan({ ev, onUpdateTables, onSelectTable, selectedTable, highlight
             onDragOver={function(e){ e.preventDefault(); e.currentTarget.style.filter="drop-shadow(0 0 12px #C9973A88)"; }}
             onDragLeave={function(e){ e.currentTarget.style.filter=""; }}
             onDrop={function(e){ e.preventDefault(); e.currentTarget.style.filter=""; var gId=e.dataTransfer.getData("guestId"); if(gId && onDropGuestToTable) onDropGuestToTable(gId, tbl.id); }}>
-            <title>{`Table ${tbl.number}${tbl.label ? " â " + tbl.label : ""}
+            <title>{`Table ${tbl.number}${tbl.label ? " Ã¢ÂÂ " + tbl.label : ""}
 ${seated.map(g=>g.name).join(", ") || "Vide"}
 ${seated.length}/${tbl.capacity} places`}</title>
             {tbl.shape === "rect" ? (
@@ -1247,9 +1243,9 @@ ${seated.length}/${tbl.capacity} places`}</title>
   );
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 // PLACE CARD (CHEVALET) PRINT
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 
 function printPlaceCards(ev) {
   const guests = ev.guests.filter(g => g.tableId);
@@ -1264,15 +1260,15 @@ function printPlaceCards(ev) {
         <div class="card-inner">
           <!-- Front -->
           <div class="face front">
-            <div class="ornament top">â¦ â¦ â¦</div>
+            <div class="ornament top">Ã¢ÂÂ¦ Ã¢ÂÂ¦ Ã¢ÂÂ¦</div>
             <div class="event-name">${ev.name}</div>
             <div class="guest-name">${g.name}</div>
             ${g.diet !== "standard" ? `<div class="diet-badge">${diet.icon} ${diet.label}</div>` : ""}
             <div class="table-info">Table ${table?.number || "?"}</div>
             ${table?.label ? `<div class="table-label">${table.label}</div>` : ""}
-            <div class="ornament bottom">â ${ev.date} â</div>
+            <div class="ornament bottom">Ã¢ÂÂ ${ev.date} Ã¢ÂÂ</div>
           </div>
-          <!-- Back (pliÃ©) -->
+          <!-- Back (pliÃÂ©) -->
           <div class="face back">
             <div class="back-content">
               <div class="back-table">Table ${table?.number || "?"}</div>
@@ -1290,7 +1286,7 @@ function printPlaceCards(ev) {
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Chevalets â ${ev.name}</title>
+  <title>Chevalets Ã¢ÂÂ ${ev.name}</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Cormorant+Garamond:wght@300;400;600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1332,7 +1328,7 @@ function printPlaceCards(ev) {
     .card-inner {
       width: 100%;
     }
-    /* Le chevalet = carte A6 pliÃ©e en deux */
+    /* Le chevalet = carte A6 pliÃÂ©e en deux */
     .face {
       width: 100%;
       min-height: 110px;
@@ -1422,12 +1418,12 @@ function printPlaceCards(ev) {
 </head>
 <body>
   <div class="no-print header">
-    <h1>Chevalets â ${ev.name}</h1>
-    <p>Imprimez cette page et dÃ©coupez les chevalets</p>
+    <h1>Chevalets Ã¢ÂÂ ${ev.name}</h1>
+    <p>Imprimez cette page et dÃÂ©coupez les chevalets</p>
   </div>
-  <div class="no-print stats">${guests.length} chevalets Â· ${ev.date}</div>
+  <div class="no-print stats">${guests.length} chevalets ÃÂ· ${ev.date}</div>
   <div class="no-print" style="text-align:center;margin-bottom:20px">
-    <button onclick="window.print()" style="padding:10px 28px;background:${accentColor};border:none;border-radius:99px;font-family:Georgia;font-size:14px;cursor:pointer;font-weight:700">ð¨ Imprimer</button>
+    <button onclick="window.print()" style="padding:10px 28px;background:${accentColor};border:none;border-radius:99px;font-family:Georgia;font-size:14px;cursor:pointer;font-weight:700">Ã°ÂÂÂ¨ Imprimer</button>
   </div>
   <div class="grid">
     ${cardsHTML}
@@ -1445,9 +1441,9 @@ function printPlaceCards(ev) {
   w.document.close();
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 // DIET SUMMARY PRINT
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 
 function printDietSummary(ev) {
   const byDiet = {};
@@ -1463,7 +1459,7 @@ function printDietSummary(ev) {
         <td style="font-weight:700;color:${d.color}">${guests.length}</td>
         <td>${guests.map(g => {
           const t = ev.tables.find(t => t.id === g.tableId);
-          return `${g.name}${t ? ` (T.${t.number})` : ' (non placÃ©)'}`;
+          return `${g.name}${t ? ` (T.${t.number})` : ' (non placÃÂ©)'}`;
         }).join(", ")}</td>
       </tr>
     `;
@@ -1471,7 +1467,7 @@ function printDietSummary(ev) {
 
   const w = window.open("", "_blank");
   w.document.write(`<!DOCTYPE html><html lang="fr"><head><meta charset="UTF-8">
-    <title>Contraintes alimentaires â ${ev.name}</title>
+    <title>Contraintes alimentaires Ã¢ÂÂ ${ev.name}</title>
     <style>
       body { font-family: Georgia, serif; padding: 32px; max-width: 900px; margin: 0 auto; }
       h1 { font-size: 22px; font-weight: 400; margin-bottom: 4px; }
@@ -1483,19 +1479,19 @@ function printDietSummary(ev) {
       @media print { button { display: none } }
     </style></head><body>
     <h1>Contraintes alimentaires</h1>
-    <p>${ev.name} Â· ${ev.date} Â· ${ev.guests.length} invitÃ©s</p>
-    <div style="margin-bottom:16px"><button onclick="window.print()" style="padding:8px 20px;background:#C9973A;border:none;border-radius:99px;cursor:pointer;font-family:Georgia">ð¨ Imprimer</button></div>
+    <p>${ev.name} ÃÂ· ${ev.date} ÃÂ· ${ev.guests.length} invitÃÂ©s</p>
+    <div style="margin-bottom:16px"><button onclick="window.print()" style="padding:8px 20px;background:#C9973A;border:none;border-radius:99px;cursor:pointer;font-family:Georgia">Ã°ÂÂÂ¨ Imprimer</button></div>
     <table>
-      <thead><tr><th>RÃ©gime</th><th>Nb</th><th>InvitÃ©s</th></tr></thead>
+      <thead><tr><th>RÃÂ©gime</th><th>Nb</th><th>InvitÃÂ©s</th></tr></thead>
       <tbody>${rows}</tbody>
     </table>
   </body></html>`);
   w.document.close();
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 // LOGIN SCREEN
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 
 function LoginScreen({ onLogin, t: tProp }) {
   const { t: tHook } = useI18n();
@@ -1503,26 +1499,26 @@ function LoginScreen({ onLogin, t: tProp }) {
   const [hovered, setHovered] = useState(null);
 
   const FEATURES = [
-    { icon:"ðº", title:"Plan de salle interactif", desc:"Glissez-dÃ©posez vos tables, zones et mobilier sur un canvas intuitif." },
-    { icon:"ð", title:"RSVP & invitations", desc:"Suivez les confirmations en temps rÃ©el. Lien de confirmation automatique." },
-    { icon:"ð°", title:"Suivi de budget", desc:"Estimez, comparez et maÃ®trisez chaque poste de dÃ©pense." },
-    { icon:"ð¤", title:"IA proactive", desc:"Un assistant contextuel qui analyse votre Ã©vÃ©nement et vous guide." },
-    { icon:"ð", title:"RÃ©troplanning", desc:"TÃ¢ches, prioritÃ©s, responsables â organisez chaque Ã©tape du J-90 au Jour J." },
-    { icon:"ð¨", title:"Exports premium", desc:"Chevalets imprimables, PDF plan de table, QR code invitÃ©s." },
+    { icon:"Ã°ÂÂÂº", title:"Plan de salle interactif", desc:"Glissez-dÃÂ©posez vos tables, zones et mobilier sur un canvas intuitif." },
+    { icon:"Ã°ÂÂÂ", title:"RSVP & invitations", desc:"Suivez les confirmations en temps rÃÂ©el. Lien de confirmation automatique." },
+    { icon:"Ã°ÂÂÂ°", title:"Suivi de budget", desc:"Estimez, comparez et maÃÂ®trisez chaque poste de dÃÂ©pense." },
+    { icon:"Ã°ÂÂ¤Â", title:"IA proactive", desc:"Un assistant contextuel qui analyse votre ÃÂ©vÃÂ©nement et vous guide." },
+    { icon:"Ã°ÂÂÂ", title:"RÃÂ©troplanning", desc:"TÃÂ¢ches, prioritÃÂ©s, responsables Ã¢ÂÂ organisez chaque ÃÂ©tape du J-90 au Jour J." },
+    { icon:"Ã°ÂÂÂ¨", title:"Exports premium", desc:"Chevalets imprimables, PDF plan de table, QR code invitÃÂ©s." },
   ];
 
   return (
     <div style={{ minHeight:"100vh", background:`radial-gradient(ellipse at 20% 10%, #2a1a0e 0%, ${C.dark} 60%)`, fontFamily:"Georgia,'Palatino Linotype',serif", color:C.cream, overflowX:"hidden" }}>
-      {/* Orbes dÃ©co */}
+      {/* Orbes dÃÂ©co */}
       {[...Array(4)].map((_,i)=>(
         <div key={i} style={{ position:"fixed", borderRadius:"50%", border:`1px solid ${C.gold}${["12","0c","08","05"][i]}`, width:300+i*220, height:300+i*220, top:"30%", left:"50%", transform:"translate(-50%,-50%)", pointerEvents:"none", zIndex:0 }}/>
       ))}
 
       {/* NAV */}
       <nav style={{ position:"sticky", top:0, zIndex:50, background:C.card+"ee", backdropFilter:"blur(12px)", borderBottom:`1px solid ${C.border}`, padding:"0 40px", height:60, display:"flex", alignItems:"center" }}>
-        <span style={{ fontSize:18, color:C.gold, letterSpacing:2, fontWeight:400 }}>ðª TableMaÃ®tre</span>
+        <span style={{ fontSize:18, color:C.gold, letterSpacing:2, fontWeight:400 }}>Ã°ÂÂªÂ TableMaÃÂ®tre</span>
         <div style={{ flex:1 }}/>
-        {/* Sélecteur de langue */}
+        {/* SÃ©lecteur de langue */}
         <div style={{ display:"flex", gap:4, marginRight:16 }}>
           {Object.entries(LANG_FLAGS).map(([lk, flag]) => (
             <button key={lk} onClick={()=>setLang(lk)} title={LANG_NAMES[lk]} style={{
@@ -1536,21 +1532,21 @@ function LoginScreen({ onLogin, t: tProp }) {
           ))}
         </div>
         <button onClick={onLogin} style={{ padding:"8px 22px", background:C.gold, border:"none", borderRadius:99, cursor:"pointer", color:C.dark, fontWeight:700, fontSize:13, fontFamily:"inherit", letterSpacing:.5 }}>
-          Se connecter â
+          Se connecter Ã¢ÂÂ
         </button>
       </nav>
 
       {/* HERO */}
       <div style={{ position:"relative", zIndex:1, maxWidth:800, margin:"0 auto", textAlign:"center", padding:"100px 24px 80px" }}>
         <div style={{ display:"inline-block", background:C.gold+"22", border:`1px solid ${C.gold}44`, borderRadius:99, padding:"6px 18px", fontSize:11, color:C.gold, letterSpacing:2, marginBottom:28 }}>
-          â¦ ORGANISEZ. PLACEZ. IMPRESSIONNEZ. â¦
+          Ã¢ÂÂ¦ ORGANISEZ. PLACEZ. IMPRESSIONNEZ. Ã¢ÂÂ¦
         </div>
         <h1 style={{ fontSize:"clamp(36px,6vw,72px)", fontWeight:400, margin:"0 0 24px", lineHeight:1.1, letterSpacing:1 }}>
           Le plan de table<br/>
           <span style={{ color:C.gold, fontStyle:"italic" }}>qui fait tout</span>
         </h1>
         <p style={{ fontSize:18, color:C.muted, maxWidth:520, margin:"0 auto 48px", lineHeight:1.7 }}>
-          De l'invitation Ã  la salle, gÃ©rez chaque dÃ©tail de votre Ã©vÃ©nement depuis une seule application Ã©lÃ©gante.
+          De l'invitation ÃÂ  la salle, gÃÂ©rez chaque dÃÂ©tail de votre ÃÂ©vÃÂ©nement depuis une seule application ÃÂ©lÃÂ©gante.
         </p>
         <button onClick={onLogin} style={{
           display:"inline-flex", alignItems:"center", gap:14, padding:"18px 40px",
@@ -1568,14 +1564,14 @@ function LoginScreen({ onLogin, t: tProp }) {
           </svg>
           Commencer gratuitement avec Google
         </button>
-        <p style={{ color:C.muted, fontSize:12, marginTop:16 }}>Gratuit Â· Sans carte bancaire Â· SynchronisÃ© cloud</p>
+        <p style={{ color:C.muted, fontSize:12, marginTop:16 }}>Gratuit ÃÂ· Sans carte bancaire ÃÂ· SynchronisÃÂ© cloud</p>
       </div>
 
       {/* FEATURES GRID */}
       <div style={{ maxWidth:960, margin:"0 auto", padding:"0 24px 100px" }}>
         <div style={{ textAlign:"center", marginBottom:56 }}>
           <h2 style={{ fontSize:28, fontWeight:400, letterSpacing:1, margin:"0 0 12px" }}>Tout ce dont vous avez besoin</h2>
-          <p style={{ color:C.muted, fontSize:14 }}>De la liste d'invitÃ©s au plan de salle, en passant par le budget et les prestataires.</p>
+          <p style={{ color:C.muted, fontSize:14 }}>De la liste d'invitÃÂ©s au plan de salle, en passant par le budget et les prestataires.</p>
         </div>
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))", gap:20 }}>
           {FEATURES.map((f,i)=>(
@@ -1591,7 +1587,7 @@ function LoginScreen({ onLogin, t: tProp }) {
 
         {/* Testimonials / stats */}
         <div style={{ marginTop:80, display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:24, textAlign:"center" }}>
-          {[["â","ÃvÃ©nements supportÃ©s"],["5","Langues disponibles"],["ð¤","IA intÃ©grÃ©e"]].map(([v,l])=>(
+          {[["Ã¢ÂÂ","ÃÂvÃÂ©nements supportÃÂ©s"],["5","Langues disponibles"],["Ã°ÂÂ¤Â","IA intÃÂ©grÃÂ©e"]].map(([v,l])=>(
             <div key={l} style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:16, padding:"32px 20px" }}>
               <div style={{ fontSize:36, color:C.gold, fontWeight:700, marginBottom:8 }}>{v}</div>
               <div style={{ color:C.muted, fontSize:13 }}>{l}</div>
@@ -1601,8 +1597,8 @@ function LoginScreen({ onLogin, t: tProp }) {
 
         {/* CTA final */}
         <div style={{ marginTop:80, textAlign:"center", background:C.card, border:`1px solid ${C.border}`, borderRadius:24, padding:"60px 40px" }}>
-          <h2 style={{ fontSize:28, fontWeight:400, margin:"0 0 16px" }}>PrÃªt Ã  organiser votre Ã©vÃ©nement ?</h2>
-          <p style={{ color:C.muted, fontSize:14, marginBottom:36 }}>Rejoignez les organisateurs qui font confiance Ã  TableMaÃ®tre.</p>
+          <h2 style={{ fontSize:28, fontWeight:400, margin:"0 0 16px" }}>PrÃÂªt ÃÂ  organiser votre ÃÂ©vÃÂ©nement ?</h2>
+          <p style={{ color:C.muted, fontSize:14, marginBottom:36 }}>Rejoignez les organisateurs qui font confiance ÃÂ  TableMaÃÂ®tre.</p>
           <button onClick={onLogin} style={{
             display:"inline-flex", alignItems:"center", gap:12, padding:"16px 36px",
             background:`linear-gradient(135deg,${C.gold},#E8C46A)`, border:"none", borderRadius:99,
@@ -1610,12 +1606,12 @@ function LoginScreen({ onLogin, t: tProp }) {
             boxShadow:`0 8px 24px ${C.gold}44`,
           }}>
             <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#1a0e08" opacity=".5" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34.5 6.5 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/></svg>
-            Se connecter avec Google â c'est gratuit
+            Se connecter avec Google Ã¢ÂÂ c'est gratuit
           </button>
         </div>
 
         <p style={{ textAlign:"center", color:C.muted+"66", fontSize:11, marginTop:40 }}>
-          Â© {new Date().getFullYear()} TableMaÃ®tre Â· PropulsÃ© par Anthropic Claude IA
+          ÃÂ© {new Date().getFullYear()} TableMaÃÂ®tre ÃÂ· PropulsÃÂ© par Anthropic Claude IA
         </p>
       </div>
     </div>
@@ -1660,17 +1656,17 @@ function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
     <div style={{ minHeight:"100vh", background:`linear-gradient(160deg,${C.dark},#1a0e08)`, fontFamily:"Georgia,serif", color:C.cream }}>
       {/* Nav */}
       <div style={{ background:C.card, borderBottom:`1px solid ${C.border}`, padding:"0 32px", display:"flex", alignItems:"center", height:60, position:"sticky", top:0, zIndex:100 }}>
-        <span style={{ fontSize:20, color:C.gold, letterSpacing:1 }}>ðª TableMaÃ®tre</span>
+        <span style={{ fontSize:20, color:C.gold, letterSpacing:1 }}>Ã°ÂÂªÂ TableMaÃÂ®tre</span>
         <Badge color={C.red} style={{marginLeft:10}}>Super Admin</Badge>
         <div style={{flex:1}}/>
-        {[["projects","ð Projets"],["users","ð¥ Utilisateurs"],["stats","ð Stats"]].map(([t,l])=>(
+        {[["projects","Ã°ÂÂÂ Projets"],["users","Ã°ÂÂÂ¥ Utilisateurs"],["stats","Ã°ÂÂÂ Stats"]].map(([t,l])=>(
           <button key={t} onClick={()=>setTab(t)} style={{
             background:tab===t?C.gold+"22":"none", border:"none", color:tab===t?C.gold:C.muted,
             padding:"8px 16px", borderRadius:8, cursor:"pointer", fontSize:13, fontWeight:600, fontFamily:"inherit",
           }}>{l}</button>
         ))}
         <div style={{width:1,height:24,background:C.border,margin:"0 12px"}}/>
-        <Btn variant="muted" small onClick={onLogout}>DÃ©connexion</Btn>
+        <Btn variant="muted" small onClick={onLogout}>DÃÂ©connexion</Btn>
       </div>
 
       <div style={{ maxWidth:1100, margin:"0 auto", padding:"40px 20px" }}>
@@ -1700,14 +1696,14 @@ function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
                       <Badge color={theme.color}>{theme.label}</Badge>
                     </div>
                     <div style={{ display:"flex", gap:16, fontSize:12, color:C.muted, marginBottom:12 }}>
-                      <span>ðª {ev.tables.length} tables</span>
-                      <span>ð¤ {ev.guests.length} invitÃ©s</span>
+                      <span>Ã°ÂÂªÂ {ev.tables.length} tables</span>
+                      <span>Ã°ÂÂÂ¤ {ev.guests.length} invitÃÂ©s</span>
                     </div>
                     <div style={{ display:"flex", alignItems:"center", gap:8 }}>
                       <div style={{ width:24,height:24,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:C.gold,fontSize:10,fontWeight:700 }}>
                         {owner?.avatar||"?"}
                       </div>
-                      <span style={{ color:C.muted, fontSize:12 }}>{owner?.name||"Sans propriÃ©taire"}</span>
+                      <span style={{ color:C.muted, fontSize:12 }}>{owner?.name||"Sans propriÃÂ©taire"}</span>
                       <div style={{flex:1}}/>
                       <Btn small variant="danger" onClick={()=>setEvents(prev=>prev.filter(e=>e.id!==ev.id))}>Supprimer</Btn>
                     </div>
@@ -1724,12 +1720,12 @@ function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
             <h2 style={{ margin:"0 0 28px", fontSize:26, fontWeight:400 }}>Tableau de bord</h2>
             <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))", gap:16, marginBottom:32 }}>
               {[
-                { label:"Projets total", val:events.length, icon:"ð", color:C.gold },
-                { label:"Utilisateurs", val:users.length, icon:"ð¥", color:C.blue },
-                { label:"InvitÃ©s total", val:events.reduce((s,e)=>s+e.guests.length,0), icon:"ð¤", color:C.green },
-                { label:"Tables", val:events.reduce((s,e)=>s+e.tables.length,0), icon:"ðª", color:C.gold },
-                { label:"Projets Pro", val:events.filter(e=>e.plan==="pro").length, icon:"â­", color:"#E8845A" },
-                { label:"Projets Free", val:events.filter(e=>e.plan==="free").length, icon:"ð", color:C.muted },
+                { label:"Projets total", val:events.length, icon:"Ã°ÂÂÂ", color:C.gold },
+                { label:"Utilisateurs", val:users.length, icon:"Ã°ÂÂÂ¥", color:C.blue },
+                { label:"InvitÃÂ©s total", val:events.reduce((s,e)=>s+e.guests.length,0), icon:"Ã°ÂÂÂ¤", color:C.green },
+                { label:"Tables", val:events.reduce((s,e)=>s+e.tables.length,0), icon:"Ã°ÂÂªÂ", color:C.gold },
+                { label:"Projets Pro", val:events.filter(e=>e.plan==="pro").length, icon:"Ã¢Â­Â", color:"#E8845A" },
+                { label:"Projets Free", val:events.filter(e=>e.plan==="free").length, icon:"Ã°ÂÂÂ", color:C.muted },
               ].map(s => (
                 <div key={s.label} style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:14, padding:"20px 24px" }}>
                   <div style={{ fontSize:28, marginBottom:8 }}>{s.icon}</div>
@@ -1739,7 +1735,7 @@ function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
               ))}
             </div>
             <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:16, padding:24 }}>
-              <h3 style={{ color:C.gold, margin:"0 0 16px", fontWeight:400, fontSize:16 }}>ðï¸ Codes promotionnels actifs</h3>
+              <h3 style={{ color:C.gold, margin:"0 0 16px", fontWeight:400, fontSize:16 }}>Ã°ÂÂÂÃ¯Â¸Â Codes promotionnels actifs</h3>
               <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
                 {Object.entries(VOUCHERS).map(([code, v]) => (
                   <div key={code} style={{ display:"flex", alignItems:"center", gap:12, padding:"12px 16px", background:C.mid, borderRadius:10 }}>
@@ -1790,31 +1786,31 @@ function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
       </div>
 
       {/* Modal new project */}
-      <Modal open={showNewProject} onClose={()=>setShowNewProject(false)} title="CrÃ©er un nouveau projet">
+      <Modal open={showNewProject} onClose={()=>setShowNewProject(false)} title="CrÃÂ©er un nouveau projet">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label="NOM DE L'ÃVÃNEMENT *">
-            <Input value={newProject.name} onChange={e=>setNewProject({...newProject,name:e.target.value})} placeholder="Mariage Dupont Ã Martin"/>
+          <Field label="NOM DE L'ÃÂVÃÂNEMENT *">
+            <Input value={newProject.name} onChange={e=>setNewProject({...newProject,name:e.target.value})} placeholder="Mariage Dupont ÃÂ Martin"/>
           </Field>
           <Field label={t.settingDate}>
             <Input type="date" value={newProject.date} onChange={e=>setNewProject({...newProject,date:e.target.value})}/>
           </Field>
-          <Field label="TYPE D'ÃVÃNEMENT">
+          <Field label="TYPE D'ÃÂVÃÂNEMENT">
             <Select value={newProject.type} onChange={e=>setNewProject({...newProject,type:e.target.value})}>
               {Object.entries(THEMES_CONFIG).map(([k,v])=><option key={k} value={k}>{v.icon} {v.label}</option>)}
             </Select>
           </Field>
-          <Field label="ASSIGNER Ã UN ADMIN">
+          <Field label="ASSIGNER ÃÂ UN ADMIN">
             <Select value={newProject.adminId} onChange={e=>setNewProject({...newProject,adminId:e.target.value})}>
-              <option value="">â Sans propriÃ©taire â</option>
+              <option value="">Ã¢ÂÂ Sans propriÃÂ©taire Ã¢ÂÂ</option>
               {users.filter(u=>u.role==="admin").map(u=><option key={u.id} value={u.id}>{u.name} ({u.email})</option>)}
             </Select>
           </Field>
-          <Btn onClick={createProject} style={{marginTop:8}}>CrÃ©er le projet</Btn>
+          <Btn onClick={createProject} style={{marginTop:8}}>CrÃÂ©er le projet</Btn>
         </div>
       </Modal>
 
       {/* Modal new user */}
-      <Modal open={showNewUser} onClose={()=>setShowNewUser(false)} title="CrÃ©er un utilisateur">
+      <Modal open={showNewUser} onClose={()=>setShowNewUser(false)} title="CrÃÂ©er un utilisateur">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <Field label="NOM COMPLET *">
             <Input value={newUser.name} onChange={e=>setNewUser({...newUser,name:e.target.value})} placeholder="Marie Dupont"/>
@@ -1825,22 +1821,22 @@ function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
           <Field label="MOT DE PASSE *">
             <Input type="password" value={newUser.password} onChange={e=>setNewUser({...newUser,password:e.target.value})} placeholder="Mot de passe temporaire"/>
           </Field>
-          <Field label="RÃLE">
+          <Field label="RÃÂLE">
             <Select value={newUser.role} onChange={e=>setNewUser({...newUser,role:e.target.value})}>
               <option value="admin">Admin Projet</option>
               <option value="superadmin">Super Admin</option>
             </Select>
           </Field>
-          <Btn onClick={createUser} style={{marginTop:8}}>CrÃ©er l'utilisateur</Btn>
+          <Btn onClick={createUser} style={{marginTop:8}}>CrÃÂ©er l'utilisateur</Btn>
         </div>
       </Modal>
     </div>
   );
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 // GUEST FORM (QR landing)
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 
 function GuestForm({ event, onBack }) {
   const { t } = useI18n();
@@ -1855,10 +1851,10 @@ function GuestForm({ event, onBack }) {
   if (done) return (
     <div style={{ minHeight:"100vh", background:C.dark, display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"Georgia,serif" }}>
       <div style={{ textAlign:"center", color:C.cream, padding:20 }}>
-        <div style={{ fontSize:64 }}>ð</div>
+        <div style={{ fontSize:64 }}>Ã°ÂÂÂ</div>
         <h2 style={{ fontFamily:"Georgia,serif", color:C.gold, fontSize:28, fontWeight:400 }}>Merci !</h2>
-        <p style={{ color:C.muted }}>Vos prÃ©fÃ©rences ont Ã©tÃ© enregistrÃ©es<br/>pour <strong style={{ color:C.cream }}>{event.name}</strong></p>
-        <Btn onClick={onBack} style={{ marginTop:24 }}>Retour Ã  l'accueil</Btn>
+        <p style={{ color:C.muted }}>Vos prÃÂ©fÃÂ©rences ont ÃÂ©tÃÂ© enregistrÃÂ©es<br/>pour <strong style={{ color:C.cream }}>{event.name}</strong></p>
+        <Btn onClick={onBack} style={{ marginTop:24 }}>Retour ÃÂ  l'accueil</Btn>
       </div>
     </div>
   );
@@ -1871,7 +1867,7 @@ function GuestForm({ event, onBack }) {
         <div style={{ textAlign:"center", marginBottom:28 }}>
           <div style={{ fontSize:40 }}>{theme.icon}</div>
           <h2 style={{ color:C.dark, margin:"8px 0 4px", fontSize:22, fontWeight:400 }}>{event.name}</h2>
-          <p style={{ color:C.muted, fontSize:13, margin:0 }}>Merci de renseigner vos prÃ©fÃ©rences</p>
+          <p style={{ color:C.muted, fontSize:13, margin:0 }}>Merci de renseigner vos prÃÂ©fÃÂ©rences</p>
         </div>
 
         {/* Progress */}
@@ -1885,7 +1881,7 @@ function GuestForm({ event, onBack }) {
           <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
             <Field label="VOTRE NOM *">
               <input value={form.name} onChange={e=>setForm({...form,name:e.target.value})}
-                style={{ ...inputStyle, background:"#fff", color:C.dark, border:`1px solid #ddd` }} placeholder="PrÃ©nom Nom"/>
+                style={{ ...inputStyle, background:"#fff", color:C.dark, border:`1px solid #ddd` }} placeholder="PrÃÂ©nom Nom"/>
             </Field>
             <Field label={t.fieldEmail}>
               <input value={form.email} onChange={e=>setForm({...form,email:e.target.value})}
@@ -1896,14 +1892,14 @@ function GuestForm({ event, onBack }) {
               Je viens avec un(e) accompagnant(e)
             </label>
             <Btn disabled={!form.name} onClick={()=>setStep(1)} style={{ width:"100%", padding:14, fontSize:15, marginTop:4 }}>
-              Continuer â
+              Continuer Ã¢ÂÂ
             </Btn>
           </div>
         )}
 
         {step===1 && (
           <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-            <Field label="RÃGIME ALIMENTAIRE">
+            <Field label="RÃÂGIME ALIMENTAIRE">
               <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
                 {DIET_OPTIONS.map(function(ditem){ return (
                   <button key={ditem.id} onClick={()=>setForm({...form,diet:ditem.id})} style={{
@@ -1917,7 +1913,7 @@ function GuestForm({ event, onBack }) {
                 );})}
               </div>
             </Field>
-            <Field label="ALLERGIES SPÃCIFIQUES">
+            <Field label="ALLERGIES SPÃÂCIFIQUES">
               <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
                 {DIET_OPTIONS.filter(function(ditem){ return ditem.id.startsWith("sans-")||ditem.id==="vegan"; }).map(function(ditem){ return (
                   <button key={ditem.id} onClick={()=>toggleAllergy(ditem.id)} style={{
@@ -1928,14 +1924,14 @@ function GuestForm({ event, onBack }) {
                 );})}
               </div>
             </Field>
-            <Field label="NOTES / PRÃCISIONS">
+            <Field label="NOTES / PRÃÂCISIONS">
               <textarea value={form.notes} onChange={e=>setForm({...form,notes:e.target.value})} rows={3}
-                placeholder="MobilitÃ© rÃ©duite, allergie sÃ©vÃ¨re, poussette..."
+                placeholder="MobilitÃÂ© rÃÂ©duite, allergie sÃÂ©vÃÂ¨re, poussette..."
                 style={{ ...inputStyle, background:"#fff", color:C.dark, border:`1px solid #ddd`, resize:"vertical" }}/>
             </Field>
             <div style={{ display:"flex", gap:10 }}>
-              <Btn variant="muted" onClick={()=>setStep(0)} style={{ flex:1 }}>â Retour</Btn>
-              <Btn onClick={()=>setDone(true)} style={{ flex:2, padding:14 }}>Confirmer â</Btn>
+              <Btn variant="muted" onClick={()=>setStep(0)} style={{ flex:1 }}>Ã¢ÂÂ Retour</Btn>
+              <Btn onClick={()=>setDone(true)} style={{ flex:2, padding:14 }}>Confirmer Ã¢ÂÂ</Btn>
             </div>
           </div>
         )}
@@ -1944,9 +1940,9 @@ function GuestForm({ event, onBack }) {
   );
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 // EVENT EDITOR
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 
 function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
   const { t: tHook } = useI18n();
@@ -1957,8 +1953,8 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
   const [showAddTable, setShowAddTable] = useState(false);
   const [showAddZone, setShowAddZone] = useState(false);
   const [showAddFurniture, setShowAddFurniture] = useState(false);
-  const [newZone, setNewZone] = useState({ label:"", icon:"ð", color:"#C9973A" });
-  const [newFurniture, setNewFurniture] = useState({ label:"", icon:"ðª", color:"#8A7355", width:80, height:40 });
+  const [newZone, setNewZone] = useState({ label:"", icon:"Ã°ÂÂÂ", color:"#C9973A" });
+  const [newFurniture, setNewFurniture] = useState({ label:"", icon:"Ã°ÂÂªÂ", color:"#8A7355", width:80, height:40 });
   const [planSubTab, setPlanSubTab] = useState("tables");
   const [showConstraint, setShowConstraint] = useState(false);
   // IA proactive
@@ -1968,16 +1964,16 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
   const [aiAssistLoading, setAiAssistLoading] = useState(false);
   // Budget
   const BUDGET_CATEGORIES = [
-    {id:"salle",label:"Salle / Lieu",icon:"ð"},
-    {id:"traiteur",label:"Traiteur",icon:"ð½"},
-    {id:"boissons",label:"Boissons",icon:"ð·"},
-    {id:"musique",label:"Musique / DJ",icon:"ðµ"},
-    {id:"fleurs",label:"Fleurs / DÃ©co",icon:"ð"},
-    {id:"photo",label:"Photo / VidÃ©o",icon:"ð¸"},
-    {id:"transport",label:"Transport",icon:"ð"},
-    {id:"tenues",label:"Tenues",icon:"ð"},
-    {id:"invitations",label:"Invitations",icon:"ð"},
-    {id:"divers",label:"Divers",icon:"ð¦"},
+    {id:"salle",label:"Salle / Lieu",icon:"Ã°ÂÂÂ"},
+    {id:"traiteur",label:"Traiteur",icon:"Ã°ÂÂÂ½"},
+    {id:"boissons",label:"Boissons",icon:"Ã°ÂÂÂ·"},
+    {id:"musique",label:"Musique / DJ",icon:"Ã°ÂÂÂµ"},
+    {id:"fleurs",label:"Fleurs / DÃÂ©co",icon:"Ã°ÂÂÂ"},
+    {id:"photo",label:"Photo / VidÃÂ©o",icon:"Ã°ÂÂÂ¸"},
+    {id:"transport",label:"Transport",icon:"Ã°ÂÂÂ"},
+    {id:"tenues",label:"Tenues",icon:"Ã°ÂÂÂ"},
+    {id:"invitations",label:"Invitations",icon:"Ã°ÂÂÂ"},
+    {id:"divers",label:"Divers",icon:"Ã°ÂÂÂ¦"},
   ];
   const [newBudgetLine, setNewBudgetLine] = useState({category:"salle",label:"",estimated:0,actual:0,paid:false,notes:""});
   const [showAddBudget, setShowAddBudget] = useState(false);
@@ -1985,7 +1981,7 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
   const [newTask, setNewTask] = useState({title:"",dueDate:"",responsible:"",priority:"medium",done:false,notes:""});
   const [showAddTask, setShowAddTask] = useState(false);
   // Programme
-  const [newProgramItem, setNewProgramItem] = useState({time:"",label:"",icon:"ð¤",notes:""});
+  const [newProgramItem, setNewProgramItem] = useState({time:"",label:"",icon:"Ã°ÂÂÂ¤",notes:""});
   const [showAddProgramItem, setShowAddProgramItem] = useState(false);
   const [newSupplier, setNewSupplier] = useState({name:"",role:"",phone:"",email:"",notes:""});
   const [showAddSupplier, setShowAddSupplier] = useState(false);
@@ -1993,7 +1989,7 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
   const [showSettings, setShowSettings] = useState(false);
   const [newGuest, setNewGuest] = useState({ name:"", email:"", diet:"standard", notes:"", allergies:[] });
   const [newTable, setNewTable] = useState({ number:"", capacity:8, shape:"round", label:"" });
-  // Auto-numÃ©rotation
+  // Auto-numÃÂ©rotation
   const nextTableNumber = ev.tables.reduce((mx, tbl) => Math.max(mx, tbl.number), 0) + 1;
   const [constraint, setConstraint] = useState({ a:"", b:"", type:"together" });
   const [search, setSearch] = useState("");
@@ -2057,11 +2053,11 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
       };
       const prompt = `Tu es un assistant de plans de table.
 Tables disponibles: ${JSON.stringify(context.tables)}
-InvitÃ©s: ${JSON.stringify(context.guests)}
+InvitÃÂ©s: ${JSON.stringify(context.guests)}
 Contraintes: ${JSON.stringify(context.constraints)}
-Assigne chaque invitÃ© Ã  une table en respectant la capacitÃ© max, les contraintes ensemble/sÃ©parÃ©s, et en regroupant les rÃ©gimes alimentaires similaires.
-RÃ©ponds UNIQUEMENT en JSON valide avec ce format exact:
-{"assignments": [{"guestId": "id_ici", "tableId": "id_table_ici"}], "explanation": "explication courte en franÃ§ais de tes choix"}`;
+Assigne chaque invitÃÂ© ÃÂ  une table en respectant la capacitÃÂ© max, les contraintes ensemble/sÃÂ©parÃÂ©s, et en regroupant les rÃÂ©gimes alimentaires similaires.
+RÃÂ©ponds UNIQUEMENT en JSON valide avec ce format exact:
+{"assignments": [{"guestId": "id_ici", "tableId": "id_table_ici"}], "explanation": "explication courte en franÃÂ§ais de tes choix"}`;
       const response = await fetch("https://api.anthropic.com/v1/messages", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -2076,7 +2072,7 @@ RÃ©ponds UNIQUEMENT en JSON valide avec ce format exact:
         return assignment ? { ...g, tableId: assignment.tableId } : g;
       });
       updateEv(function(evUp){ return { ...evUp, guests: newGuests }; });
-      setAiExplanation(result.explanation || "Placement optimisÃ© !");
+      setAiExplanation(result.explanation || "Placement optimisÃÂ© !");
     } catch (e) {
       // Fallback simple
       updateEv(function(evState){
@@ -2118,15 +2114,15 @@ RÃ©ponds UNIQUEMENT en JSON valide avec ce format exact:
     const budgReal = (ev.budget||[]).reduce((s,b)=>s+(parseFloat(b.actual)||0),0);
     const planDone = (ev.planning||[]).filter(p=>p.done).length;
     const planTot = (ev.planning||[]).length;
-    const context = `Tu es un assistant expert en organisation d'Ã©vÃ©nements intÃ©grÃ© Ã  l'app TableMaÃ®tre.
-ÃvÃ©nement : "${ev.name}" (${ev.type}, le ${ev.date||"date non dÃ©finie"})${daysLeft!==null?`, dans ${daysLeft} jours`:""}
-InvitÃ©s : ${ev.guests.length} total â ${rsvpC} confirmÃ©s, ${rsvpP} en attente
+    const context = `Tu es un assistant expert en organisation d'ÃÂ©vÃÂ©nements intÃÂ©grÃÂ© ÃÂ  l'app TableMaÃÂ®tre.
+ÃÂvÃÂ©nement : "${ev.name}" (${ev.type}, le ${ev.date||"date non dÃÂ©finie"})${daysLeft!==null?`, dans ${daysLeft} jours`:""}
+InvitÃÂ©s : ${ev.guests.length} total Ã¢ÂÂ ${rsvpC} confirmÃÂ©s, ${rsvpP} en attente
 Tables : ${ev.tables.length}, places assises : ${ev.guests.filter(g=>g.tableId).length}/${ev.guests.length}
-Budget : estimÃ© ${budgTot}â¬, rÃ©el ${budgReal}â¬ (${(ev.budget||[]).length} postes)
-Planning : ${planDone}/${planTot} tÃ¢ches faites
+Budget : estimÃÂ© ${budgTot}Ã¢ÂÂ¬, rÃÂ©el ${budgReal}Ã¢ÂÂ¬ (${(ev.budget||[]).length} postes)
+Planning : ${planDone}/${planTot} tÃÂ¢ches faites
 Prestataires : ${(ev.suppliers||[]).length}
-Programme : ${(ev.programme||[]).length} Ã©tapes
-RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. Max 3 paragraphes courts.`;
+Programme : ${(ev.programme||[]).length} ÃÂ©tapes
+RÃÂ©ponds en franÃÂ§ais, de faÃÂ§on concrÃÂ¨te, bienveillante et proactive. Max 3 paragraphes courts.`;
     try {
       const resp = await fetch("https://api.anthropic.com/v1/messages", {
         method:"POST",
@@ -2138,10 +2134,10 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
         })
       });
       const data = await resp.json();
-      const reply = (data.content&&data.content[0]&&data.content[0].text)||"DÃ©solÃ©, je n'ai pas pu rÃ©pondre.";
+      const reply = (data.content&&data.content[0]&&data.content[0].text)||"DÃÂ©solÃÂ©, je n'ai pas pu rÃÂ©pondre.";
       setAiAssistHistory(h=>[...h,{role:"assistant",content:reply}]);
     } catch(e) {
-      setAiAssistHistory(h=>[...h,{role:"assistant",content:"â IA temporairement indisponible."}]);
+      setAiAssistHistory(h=>[...h,{role:"assistant",content:"Ã¢ÂÂ IA temporairement indisponible."}]);
     }
     setAiAssistLoading(false);
   }
@@ -2155,25 +2151,25 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
   const planningTotal = (ev.planning||[]).length;
 
   const TABS = [
-    {id:"plan",         icon:"ðº",  label: t ? t.tabPlan.replace(/^\S+\s/,"") : "Plan"},
-    {id:"list",         icon:"ð",  label:"Liste"},
-    {id:"guests",       icon:"ð¥",  label:`${t ? t.tabGuests.replace(/^\S+\s/,"") : "Guests"} (${ev.guests.length})`},
-    {id:"rsvp",         icon:"ð",  label:`RSVP${rsvpPending>0?" ("+rsvpPending+"â³)":""}`},
-    {id:"budget",       icon:"ð°",  label:"Budget"},
-    {id:"planning",     icon:"ð",  label:`Planning${planningTotal>0?" ("+planningDone+"/"+planningTotal+")":""}`},
-    {id:"programme",    icon:"ðµ",  label:"Programme"},
-    {id:"diet",         icon:"ð½ï¸",  label: t ? t.tabFood.replace(/^\S+\s/,"") : "Dietary"},
-    {id:"constraints",  icon:"â",  label: t ? t.tabConstraints.replace(/^\S+\s/,"") : "Constraints"},
-    {id:"logistique",   icon:"ð",  label:"Logistique"},
+    {id:"plan",         icon:"Ã°ÂÂÂº",  label: t ? t.tabPlan.replace(/^\S+\s/,"") : "Plan"},
+    {id:"list",         icon:"Ã°ÂÂÂ",  label:"Liste"},
+    {id:"guests",       icon:"Ã°ÂÂÂ¥",  label:`${t ? t.tabGuests.replace(/^\S+\s/,"") : "Guests"} (${ev.guests.length})`},
+    {id:"rsvp",         icon:"Ã°ÂÂÂ",  label:`RSVP${rsvpPending>0?" ("+rsvpPending+"Ã¢ÂÂ³)":""}`},
+    {id:"budget",       icon:"Ã°ÂÂÂ°",  label:"Budget"},
+    {id:"planning",     icon:"Ã°ÂÂÂ",  label:`Planning${planningTotal>0?" ("+planningDone+"/"+planningTotal+")":""}`},
+    {id:"programme",    icon:"Ã°ÂÂÂµ",  label:"Programme"},
+    {id:"diet",         icon:"Ã°ÂÂÂ½Ã¯Â¸Â",  label: t ? t.tabFood.replace(/^\S+\s/,"") : "Dietary"},
+    {id:"constraints",  icon:"Ã¢ÂÂ",  label: t ? t.tabConstraints.replace(/^\S+\s/,"") : "Constraints"},
+    {id:"logistique",   icon:"Ã°ÂÂÂ",  label:"Logistique"},
   ];
 
   return (
     <div style={{ minHeight:"100vh", background:`linear-gradient(160deg,${C.dark},#1a0e08)`, fontFamily:"Georgia,serif", color:C.cream }}>
-      {/* Header Ã©purÃ© */}
+      {/* Header ÃÂ©purÃÂ© */}
       <div style={{ background:C.card+"f8", backdropFilter:"blur(10px)", borderBottom:`1px solid ${C.border}`, padding:"0 20px", display:"flex", alignItems:"center", height:54, position:"sticky", top:0, zIndex:100, gap:10 }}>
         {/* Retour + titre */}
         <button onClick={onBack} style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:13,fontFamily:"inherit",display:"flex",alignItems:"center",gap:4,padding:"6px 0",whiteSpace:"nowrap" }}>
-          â <span style={{display:"none"}}>{t.back}</span>
+          Ã¢ÂÂ <span style={{display:"none"}}>{t.back}</span>
         </button>
         <div style={{ width:1, height:24, background:C.border }}/>
         <div style={{ display:"flex", alignItems:"center", gap:8, flex:1, minWidth:0 }}>
@@ -2184,45 +2180,45 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
               {theme.label}
               {ev.date && (() => {
                 const d = Math.ceil((new Date(ev.date)-new Date())/86400000);
-                return d>=0 ? <span style={{color:d<=7?C.red:d<=30?"#E8845A":C.muted, marginLeft:8}}>Â· Jâ{d}</span> : <span style={{color:C.muted,marginLeft:8}}>Â· passÃ©</span>;
+                return d>=0 ? <span style={{color:d<=7?C.red:d<=30?"#E8845A":C.muted, marginLeft:8}}>ÃÂ· JÃ¢ÂÂ{d}</span> : <span style={{color:C.muted,marginLeft:8}}>ÃÂ· passÃÂ©</span>;
               })()}
             </div>
           </div>
         </div>
         {/* Groupe Partage */}
         <div style={{ display:"flex", gap:6, alignItems:"center" }}>
-          <button onClick={()=>setShowQR(true)} style={{ background:"none",border:`1px solid ${C.border}`,borderRadius:8,color:C.muted,cursor:"pointer",fontSize:12,padding:"6px 10px",fontFamily:"inherit" }}>ð± QR</button>
+          <button onClick={()=>setShowQR(true)} style={{ background:"none",border:`1px solid ${C.border}`,borderRadius:8,color:C.muted,cursor:"pointer",fontSize:12,padding:"6px 10px",fontFamily:"inherit" }}>Ã°ÂÂÂ± QR</button>
           <button onClick={()=>{ var fb=getFirebase(); var uid=fb&&fb.auth&&fb.auth.currentUser?fb.auth.currentUser.uid:""; var joinParam=uid?uid+"___"+ev.id:ev.id; var url=window.location.origin+"/?join="+joinParam; if(navigator.share){navigator.share({title:ev.name,url}).catch(()=>navigator.clipboard.writeText(url));}else{navigator.clipboard.writeText(url);} }}
-            style={{ background:"none",border:`1px solid ${C.border}`,borderRadius:8,color:C.muted,cursor:"pointer",fontSize:12,padding:"6px 10px",fontFamily:"inherit" }}>ð</button>
+            style={{ background:"none",border:`1px solid ${C.border}`,borderRadius:8,color:C.muted,cursor:"pointer",fontSize:12,padding:"6px 10px",fontFamily:"inherit" }}>Ã°ÂÂÂ</button>
         </div>
         <div style={{ width:1, height:24, background:C.border }}/>
         {/* Groupe Actions */}
         <div style={{ display:"flex", gap:6, alignItems:"center" }}>
-          <button onClick={()=>printPlaceCards(ev)} style={{ background:C.green+"22",border:`1px solid ${C.green}44`,borderRadius:8,color:C.green,cursor:"pointer",fontSize:12,padding:"6px 12px",fontFamily:"inherit",fontWeight:600 }}>ð¨ Chevalets</button>
-          <button onClick={()=>printFloorPlan(ev)} style={{ background:"none",border:`1px solid ${C.border}`,borderRadius:8,color:C.muted,cursor:"pointer",fontSize:12,padding:"6px 10px",fontFamily:"inherit" }}>ð PDF</button>
+          <button onClick={()=>printPlaceCards(ev)} style={{ background:C.green+"22",border:`1px solid ${C.green}44`,borderRadius:8,color:C.green,cursor:"pointer",fontSize:12,padding:"6px 12px",fontFamily:"inherit",fontWeight:600 }}>Ã°ÂÂÂ¨ Chevalets</button>
+          <button onClick={()=>printFloorPlan(ev)} style={{ background:"none",border:`1px solid ${C.border}`,borderRadius:8,color:C.muted,cursor:"pointer",fontSize:12,padding:"6px 10px",fontFamily:"inherit" }}>Ã°ÂÂÂ PDF</button>
           <button onClick={autoPlace} disabled={aiPlacing} style={{ background:aiPlacing?"none":C.gold,border:`1px solid ${aiPlacing?C.border:C.gold}`,borderRadius:8,color:aiPlacing?C.muted:C.dark,cursor:"pointer",fontSize:12,padding:"6px 12px",fontFamily:"inherit",fontWeight:700,opacity:aiPlacing?.7:1 }}>
-            {aiPlacing?"â³ IAâ¦":"â¨ Auto-placer"}
+            {aiPlacing?"Ã¢ÂÂ³ IAÃ¢ÂÂ¦":"Ã¢ÂÂ¨ Auto-placer"}
           </button>
-          <button onClick={()=>setAiAssistOpen(o=>!o)} style={{ background:aiAssistOpen?C.gold+"33":"none",border:`1px solid ${aiAssistOpen?C.gold:C.border}`,borderRadius:8,color:aiAssistOpen?C.gold:C.muted,cursor:"pointer",fontSize:12,padding:"6px 10px",fontFamily:"inherit" }}>ð¤</button>
-          <button onClick={()=>setShowSettings(true)} style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:16,padding:"6px" }}>â</button>
+          <button onClick={()=>setAiAssistOpen(o=>!o)} style={{ background:aiAssistOpen?C.gold+"33":"none",border:`1px solid ${aiAssistOpen?C.gold:C.border}`,borderRadius:8,color:aiAssistOpen?C.gold:C.muted,cursor:"pointer",fontSize:12,padding:"6px 10px",fontFamily:"inherit" }}>Ã°ÂÂ¤Â</button>
+          <button onClick={()=>setShowSettings(true)} style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:16,padding:"6px" }}>Ã¢ÂÂ</button>
         </div>
       </div>
 
       {/* Notes bar */}
       {ev.notes && (
         <div style={{ background:C.gold+"11", borderBottom:`1px solid ${C.gold}22`, padding:"6px 24px", fontSize:12, color:C.muted, fontStyle:"italic" }}>
-          ð {ev.notes}
+          Ã°ÂÂÂ {ev.notes}
         </div>
       )}
-      {/* Stats bar â KPIs */}
+      {/* Stats bar Ã¢ÂÂ KPIs */}
       <div style={{ background:C.mid+"44", borderBottom:`1px solid ${C.border}`, padding:"0 24px", display:"flex", gap:0, overflowX:"auto" }}>
         {[
-          {label:t.statTables, val:ev.tables.length, color:C.gold, icon:"ðª"},
-          {label:t.statGuests, val:ev.guests.length, color:C.gold, icon:"ð¥"},
-          {label:t.statSeated, val:seated.length, color:C.green, icon:"â"},
-          {label:t.statWaiting, val:unseated.length, color:unseated.length>0?C.red:C.green, icon:unseated.length>0?"â ":"â"},
-          {label:"RSVP â", val:ev.guests.filter(g=>g.rsvp==="confirmed").length, color:C.green, icon:"ð"},
-          {label:t.statDiets, val:dietStats.reduce((s,d)=>s+d.count,0), color:C.blue, icon:"ð½"},
+          {label:t.statTables, val:ev.tables.length, color:C.gold, icon:"Ã°ÂÂªÂ"},
+          {label:t.statGuests, val:ev.guests.length, color:C.gold, icon:"Ã°ÂÂÂ¥"},
+          {label:t.statSeated, val:seated.length, color:C.green, icon:"Ã¢ÂÂ"},
+          {label:t.statWaiting, val:unseated.length, color:unseated.length>0?C.red:C.green, icon:unseated.length>0?"Ã¢ÂÂ ":"Ã¢ÂÂ"},
+          {label:"RSVP Ã¢ÂÂ", val:ev.guests.filter(g=>g.rsvp==="confirmed").length, color:C.green, icon:"Ã°ÂÂÂ"},
+          {label:t.statDiets, val:dietStats.reduce((s,d)=>s+d.count,0), color:C.blue, icon:"Ã°ÂÂÂ½"},
         ].map(s=>(
           <div key={s.label} style={{ textAlign:"center", padding:"10px 20px", borderRight:`1px solid ${C.border}`, minWidth:80 }}>
             <div style={{ fontSize:17, fontWeight:700, color:s.color }}>{s.val}</div>
@@ -2234,9 +2230,9 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
           return (
             <div style={{ textAlign:"center", padding:"10px 20px", marginLeft:"auto" }}>
               <div style={{ fontSize:17, fontWeight:700, color:d<=0?C.muted:d<=7?C.red:d<=30?"#E8845A":C.gold }}>
-                {d<=0?"PassÃ©":d===0?"Auj.":"Jâ"+d}
+                {d<=0?"PassÃÂ©":d===0?"Auj.":"JÃ¢ÂÂ"+d}
               </div>
-              <div style={{ fontSize:9, color:C.muted, letterSpacing:.5, marginTop:2 }}>COMPTE Ã REBOURS</div>
+              <div style={{ fontSize:9, color:C.muted, letterSpacing:.5, marginTop:2 }}>COMPTE ÃÂ REBOURS</div>
             </div>
           );
         })()}
@@ -2253,34 +2249,34 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
         ))}
       </div>
 
-      {/* ââ AI ASSISTANT PANEL ââ */}
+      {/* Ã¢ÂÂÃ¢ÂÂ AI ASSISTANT PANEL Ã¢ÂÂÃ¢ÂÂ */}
       {aiAssistOpen && (
         <div style={{ position:"fixed", bottom:24, right:24, width:380, maxHeight:520, zIndex:200, display:"flex", flexDirection:"column", background:C.card, border:`1px solid ${C.gold}44`, borderRadius:20, boxShadow:"0 8px 40px #00000066", overflow:"hidden" }}>
           <div style={{ background:C.gold+"22", borderBottom:`1px solid ${C.gold}33`, padding:"14px 18px", display:"flex", alignItems:"center", gap:10 }}>
-            <span style={{ fontSize:20 }}>ð¤</span>
+            <span style={{ fontSize:20 }}>Ã°ÂÂ¤Â</span>
             <div style={{ flex:1 }}>
               <div style={{ color:C.gold, fontSize:14, fontWeight:700 }}>Assistant IA</div>
               <div style={{ color:C.muted, fontSize:11 }}>Votre conseiller pour {ev.name}</div>
             </div>
             {aiAssistHistory.length===0 && (
-              <button onClick={()=>sendAiAssist("Fais-moi un bilan rapide de l'Ã©tat de mon Ã©vÃ©nement et dis-moi ce qui est urgent.")}
+              <button onClick={()=>sendAiAssist("Fais-moi un bilan rapide de l'ÃÂ©tat de mon ÃÂ©vÃÂ©nement et dis-moi ce qui est urgent.")}
                 style={{ background:C.gold+"22", border:`1px solid ${C.gold}44`, borderRadius:8, padding:"4px 10px", cursor:"pointer", color:C.gold, fontSize:11, fontFamily:"inherit" }}>
-                â¨ Bilan auto
+                Ã¢ÂÂ¨ Bilan auto
               </button>
             )}
-            <button onClick={()=>setAiAssistOpen(false)} style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:18 }}>â</button>
+            <button onClick={()=>setAiAssistOpen(false)} style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:18 }}>Ã¢ÂÂ</button>
           </div>
           <div style={{ flex:1, overflowY:"auto", padding:"14px 16px", display:"flex", flexDirection:"column", gap:10, minHeight:200, maxHeight:340 }}>
             {aiAssistHistory.length===0 && (
               <div style={{ color:C.muted, fontSize:12, textAlign:"center", padding:"24px 0" }}>
-                <div style={{ fontSize:32, marginBottom:8 }}>ð¬</div>
-                Posez-moi une question sur votre Ã©vÃ©nement ou demandez un bilan rapide !
+                <div style={{ fontSize:32, marginBottom:8 }}>Ã°ÂÂÂ¬</div>
+                Posez-moi une question sur votre ÃÂ©vÃÂ©nement ou demandez un bilan rapide !
                 <div style={{ display:"flex", flexDirection:"column", gap:6, marginTop:14 }}>
-                  {["Qu'est-ce qui est urgent Ã  faire ?","Comment optimiser mon budget ?","Qui n'a pas encore rÃ©pondu ?","GÃ©nÃ¨re-moi un planning type"].map(q=>(
+                  {["Qu'est-ce qui est urgent ÃÂ  faire ?","Comment optimiser mon budget ?","Qui n'a pas encore rÃÂ©pondu ?","GÃÂ©nÃÂ¨re-moi un planning type"].map(q=>(
                     <button key={q} onClick={()=>sendAiAssist(q)} style={{
                       background:C.mid, border:`1px solid ${C.border}`, borderRadius:8, padding:"6px 12px",
                       color:C.muted, cursor:"pointer", fontSize:11, fontFamily:"inherit", textAlign:"left",
-                    }}>â {q}</button>
+                    }}>Ã¢ÂÂ {q}</button>
                   ))}
                 </div>
               </div>
@@ -2297,7 +2293,7 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
               </div>
             ))}
             {aiAssistLoading && (
-              <div style={{ color:C.muted, fontSize:12, fontStyle:"italic" }}>ð¤ RÃ©flexion en coursâ¦</div>
+              <div style={{ color:C.muted, fontSize:12, fontStyle:"italic" }}>Ã°ÂÂ¤Â RÃÂ©flexion en coursÃ¢ÂÂ¦</div>
             )}
           </div>
           <div style={{ padding:"10px 14px", borderTop:`1px solid ${C.border}`, display:"flex", gap:8 }}>
@@ -2305,12 +2301,12 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
               value={aiAssistMsg}
               onChange={e=>setAiAssistMsg(e.target.value)}
               onKeyDown={e=>{ if(e.key==="Enter"&&!e.shiftKey){ e.preventDefault(); sendAiAssist(aiAssistMsg); } }}
-              placeholder="Posez une questionâ¦"
+              placeholder="Posez une questionÃ¢ÂÂ¦"
               style={{ flex:1, padding:"8px 12px", background:C.mid, border:`1px solid ${C.border}`, borderRadius:10, color:C.cream, fontSize:12, fontFamily:"inherit" }}
             />
             <button onClick={()=>sendAiAssist(aiAssistMsg)} disabled={!aiAssistMsg.trim()||aiAssistLoading}
               style={{ background:C.gold, border:"none", borderRadius:10, padding:"8px 14px", cursor:"pointer", color:C.dark, fontWeight:700, fontSize:13, fontFamily:"inherit", opacity:!aiAssistMsg.trim()||aiAssistLoading?0.5:1 }}>
-              â
+              Ã¢ÂÂ
             </button>
           </div>
         </div>
@@ -2318,14 +2314,14 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
 
       <div style={{ maxWidth:1200, margin:"0 auto", padding:"28px 20px" }}>
 
-        {/* ââ PLAN TAB ââ */}
+        {/* Ã¢ÂÂÃ¢ÂÂ PLAN TAB Ã¢ÂÂÃ¢ÂÂ */}
         {tab==="plan" && (
           <div style={{ display:"flex", flexDirection:"column", gap:0 }}>
             {/* Sous-onglets Plan */}
             <div style={{ display:"flex", gap:0, marginBottom:20, borderBottom:`1px solid ${C.border}` }}>
               {[
-                {id:"tables", icon:"ðº", label:"Tables & Plan"},
-                {id:"salle",  icon:"ð", label:"Ãdition de salle"},
+                {id:"tables", icon:"Ã°ÂÂÂº", label:"Tables & Plan"},
+                {id:"salle",  icon:"Ã°ÂÂÂ", label:"ÃÂdition de salle"},
               ].map(sub=>(
                 <button key={sub.id} onClick={()=>setPlanSubTab(sub.id)} style={{
                   background:"none", border:"none", borderBottom:`2px solid ${planSubTab===sub.id?C.gold:"transparent"}`,
@@ -2372,7 +2368,7 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                   <div style={{ display:"flex", alignItems:"center", marginBottom:8 }}>
                     <div style={{ color:C.red, fontSize:12, letterSpacing:.5, flex:1 }}>{t.unseatedList} ({unseated.length})</div>
                     <button onClick={()=>setHighlightTables(h=>!h)} style={{ background:highlightTables?C.gold:"none", border:`1px solid ${highlightTables?C.gold:C.border}`, borderRadius:6, color:highlightTables?C.dark:C.muted, fontSize:11, padding:"3px 10px", cursor:"pointer", fontFamily:"inherit" }}>
-                      {highlightTables ? "â Tables visibles" : "ð Voir places libres"}
+                      {highlightTables ? "Ã¢ÂÂ Tables visibles" : "Ã°ÂÂÂ Voir places libres"}
                     </button>
                   </div>
                   <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
@@ -2388,12 +2384,12 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                           borderRadius:99, padding:"3px 12px", color:C.cream, fontSize:12, cursor:"pointer",
                           fontWeight:selectedUnseatedGuest?.id===g.id?700:400
                         }}>
-                        {selectedUnseatedGuest?.id===g.id ? "â " : ""}{g.name}
+                        {selectedUnseatedGuest?.id===g.id ? "Ã¢ÂÂ " : ""}{g.name}
                       </span>
                     ))}
                     {selectedUnseatedGuest && (
                       <div style={{width:"100%",marginTop:6,fontSize:11,color:C.gold}}>
-                        ð Cliquez sur une table pour y placer {selectedUnseatedGuest.name}
+                        Ã°ÂÂÂ Cliquez sur une table pour y placer {selectedUnseatedGuest.name}
                       </div>
                     )}
                   </div>
@@ -2411,7 +2407,7 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                     <div style={{ color:C.muted, fontSize:12 }}>{tableGuests.length}/{tableSel.capacity} places</div>
                   </div>
                   <div style={{flex:1}}/>
-                  <button onClick={()=>setSelectedTable(null)} style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:16 }}>â</button>
+                  <button onClick={()=>setSelectedTable(null)} style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:16 }}>Ã¢ÂÂ</button>
                 </div>
 
                 {/* Seated guests */}
@@ -2428,7 +2424,7 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                           {g.diet!=="standard" && <div style={{ color:d.color, fontSize:10 }}>{d.icon} {d.label}</div>}
                         </div>
                         <button onClick={()=>updateEv(e=>({...e,guests:e.guests.map(x=>x.id===g.id?{...x,tableId:null}:x)}))}
-                          style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:13 }}>â</button>
+                          style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:13 }}>Ã¢ÂÂ</button>
                       </div>
                     );
                   })}
@@ -2437,7 +2433,7 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                 {/* Add unseated */}
                 {unseated.length>0 && tableGuests.length<tableSel.capacity && (
                   <div>
-                    <div style={{ color:C.muted, fontSize:11, letterSpacing:.5, marginBottom:6 }}>AJOUTER Ã CETTE TABLE</div>
+                    <div style={{ color:C.muted, fontSize:11, letterSpacing:.5, marginBottom:6 }}>AJOUTER ÃÂ CETTE TABLE</div>
                     {unseated.map(g=>(
                       <button key={g.id} onClick={()=>updateEv(e=>({...e,guests:e.guests.map(x=>x.id===g.id?{...x,tableId:selectedTable}:x)}))}
                         style={{ display:"block",width:"100%",marginBottom:5,padding:"7px 12px",textAlign:"left",background:"none",border:`1px solid ${C.border}`,borderRadius:8,color:C.muted,cursor:"pointer",fontSize:12,fontFamily:"inherit" }}>
@@ -2463,11 +2459,11 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                   <h4 style={{ color:C.gold, fontWeight:400, fontSize:13, letterSpacing:1, marginBottom:10 }}>TEMPLATES RAPIDES</h4>
                   <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
                     {[
-                      { name:"Rectangle", icon:"â¬", pts:[{x:60,y:60},{x:900,y:60},{x:900,y:560},{x:60,y:560}] },
-                      { name:"Forme L", icon:"ð²", pts:[{x:60,y:60},{x:500,y:60},{x:500,y:300},{x:900,y:300},{x:900,y:560},{x:60,y:560}] },
-                      { name:"Forme U", icon:"ð³", pts:[{x:60,y:60},{x:300,y:60},{x:300,y:380},{x:640,y:380},{x:640,y:60},{x:900,y:60},{x:900,y:560},{x:60,y:560}] },
-                      { name:"Hexagone", icon:"â¬¡", pts:(function(){ var p=[]; for(var i=0;i<6;i++){var a=i*Math.PI*2/6-Math.PI/6;p.push({x:Math.round(480+280*Math.cos(a)),y:Math.round(310+220*Math.sin(a))});} return p; })() },
-                      { name:"Rond", icon:"â­", pts:(function(){ var p=[]; for(var i=0;i<16;i++){var a=i*Math.PI*2/16;p.push({x:Math.round(480+300*Math.cos(a)),y:Math.round(310+230*Math.sin(a))});} return p; })() },
+                      { name:"Rectangle", icon:"Ã¢Â¬Â", pts:[{x:60,y:60},{x:900,y:60},{x:900,y:560},{x:60,y:560}] },
+                      { name:"Forme L", icon:"Ã°ÂÂÂ²", pts:[{x:60,y:60},{x:500,y:60},{x:500,y:300},{x:900,y:300},{x:900,y:560},{x:60,y:560}] },
+                      { name:"Forme U", icon:"Ã°ÂÂÂ³", pts:[{x:60,y:60},{x:300,y:60},{x:300,y:380},{x:640,y:380},{x:640,y:60},{x:900,y:60},{x:900,y:560},{x:60,y:560}] },
+                      { name:"Hexagone", icon:"Ã¢Â¬Â¡", pts:(function(){ var p=[]; for(var i=0;i<6;i++){var a=i*Math.PI*2/6-Math.PI/6;p.push({x:Math.round(480+280*Math.cos(a)),y:Math.round(310+220*Math.sin(a))});} return p; })() },
+                      { name:"Rond", icon:"Ã¢Â­Â", pts:(function(){ var p=[]; for(var i=0;i<16;i++){var a=i*Math.PI*2/16;p.push({x:Math.round(480+300*Math.cos(a)),y:Math.round(310+230*Math.sin(a))});} return p; })() },
                     ].map(function(tmpl){ return (
                       <button key={tmpl.name}
                         onClick={function(){
@@ -2484,16 +2480,16 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                 </div>
                 <RoomShapeEditor shape={ev.roomShape||[]} onChange={shape=>updateEv(e=>({...e,roomShape:shape}))}/>
 
-                {/* Zones spÃ©ciales */}
+                {/* Zones spÃÂ©ciales */}
                 <div style={{ marginTop:20 }}>
-                  <h4 style={{ color:C.gold, fontWeight:400, fontSize:13, letterSpacing:1, marginBottom:10 }}>ZONES SPÃCIALES</h4>
+                  <h4 style={{ color:C.gold, fontWeight:400, fontSize:13, letterSpacing:1, marginBottom:10 }}>ZONES SPÃÂCIALES</h4>
                   <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginBottom:12 }}>
                     {(ev.zones||[]).map(function(zone, zi){ return (
                       <div key={zi} style={{ background:zone.color+"22", border:"1px solid "+zone.color+"66", borderRadius:8, padding:"6px 14px", display:"flex", alignItems:"center", gap:8 }}>
                         <span style={{ fontSize:16 }}>{zone.icon}</span>
                         <span style={{ color:zone.color, fontSize:13 }}>{zone.label}</span>
                         <button onClick={function(){ updateEv(function(evUp){ return {...evUp, zones:(evUp.zones||[]).filter(function(_,i){ return i!==zi; })}; }); }}
-                          style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:14, padding:0 }}>â</button>
+                          style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:14, padding:0 }}>Ã¢ÂÂ</button>
                       </div>
                     ); })}
                     <button onClick={()=>setShowAddZone(true)}
@@ -2502,7 +2498,7 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                     </button>
                   </div>
                   <p style={{ color:C.muted, fontSize:11, fontStyle:"italic" }}>
-                    Les zones apparaissent dans les exports PDF. Exemples : Estrade, ScÃ¨ne, Bar, Piste de danse, Photo Booth...
+                    Les zones apparaissent dans les exports PDF. Exemples : Estrade, ScÃÂ¨ne, Bar, Piste de danse, Photo Booth...
                   </p>
                 </div>
 
@@ -2514,9 +2510,9 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                       <div key={fi} style={{ background:item.color+"22", border:"1px solid "+item.color+"66", borderRadius:8, padding:"6px 14px", display:"flex", alignItems:"center", gap:8 }}>
                         <span style={{ fontSize:16 }}>{item.icon}</span>
                         <span style={{ color:item.color, fontSize:13 }}>{item.label}</span>
-                        <span style={{ color:C.muted, fontSize:11 }}>{item.width}Ã{item.height}</span>
+                        <span style={{ color:C.muted, fontSize:11 }}>{item.width}ÃÂ{item.height}</span>
                         <button onClick={function(){ updateEv(function(evUp){ return {...evUp, furniture:(evUp.furniture||[]).filter(function(_,i){ return i!==fi; })}; }); }}
-                          style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:14, padding:0 }}>â</button>
+                          style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:14, padding:0 }}>Ã¢ÂÂ</button>
                       </div>
                     ); })}
                     <button onClick={()=>setShowAddFurniture(true)}
@@ -2525,7 +2521,7 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                     </button>
                   </div>
                   <p style={{ color:C.muted, fontSize:11, fontStyle:"italic" }}>
-                    Exemples : ScÃ¨ne, Bar, Buffet, Photobooth, Podium, Piano...
+                    Exemples : ScÃÂ¨ne, Bar, Buffet, Photobooth, Podium, Piano...
                   </p>
                 </div>
               </div>
@@ -2533,13 +2529,13 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
           </div>
         )}
 
-        {/* ââ GUESTS TAB ââ */}
+        {/* Ã¢ÂÂÃ¢ÂÂ GUESTS TAB Ã¢ÂÂÃ¢ÂÂ */}
         
         {tab==="list" && (
           <div style={{ padding:"0 24px" }}>
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:20 }}>
-              <h3 style={{ color:C.gold, fontWeight:400, fontSize:18 }}>ð Plan par tables</h3>
-              <Btn small variant="ghost" onClick={function(){ exportGuestsCSV(ev); }}>â¬ Export CSV</Btn>
+              <h3 style={{ color:C.gold, fontWeight:400, fontSize:18 }}>Ã°ÂÂÂ Plan par tables</h3>
+              <Btn small variant="ghost" onClick={function(){ exportGuestsCSV(ev); }}>Ã¢Â¬Â Export CSV</Btn>
             </div>
             <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
               {ev.tables.map(function(tbl) {
@@ -2548,17 +2544,17 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                   <div key={tbl.id} style={{ background:C.card, border:"1px solid " + (tbl.color||C.border) + "44", borderRadius:14, overflow:"hidden" }}>
                     <div style={{ background:(tbl.color||C.gold)+"22", padding:"12px 20px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
                       <span style={{ color:tbl.color||C.gold, fontWeight:700, fontSize:15 }}>
-                        Table {tbl.number}{tbl.label ? " â " + tbl.label : ""}
+                        Table {tbl.number}{tbl.label ? " Ã¢ÂÂ " + tbl.label : ""}
                       </span>
                       <span style={{ color:C.muted, fontSize:12 }}>{tblGuests.length}/{tbl.capacity} places</span>
                     </div>
                     {tblGuests.length === 0 ? (
-                      <p style={{ color:C.muted, fontSize:13, padding:"12px 20px", fontStyle:"italic" }}>â Vide â</p>
+                      <p style={{ color:C.muted, fontSize:13, padding:"12px 20px", fontStyle:"italic" }}>Ã¢ÂÂ Vide Ã¢ÂÂ</p>
                     ) : (
                       <table style={{ width:"100%", borderCollapse:"collapse" }}>
                         <thead>
                           <tr style={{ borderBottom:"1px solid " + C.border }}>
-                            {["Nom","RÃ´le","RÃ©gime","Notes"].map(function(h){ return <th key={h} style={{ padding:"8px 20px", color:C.muted, fontSize:11, textAlign:"left", letterSpacing:1 }}>{h}</th>; })}
+                            {["Nom","RÃÂ´le","RÃÂ©gime","Notes"].map(function(h){ return <th key={h} style={{ padding:"8px 20px", color:C.muted, fontSize:11, textAlign:"left", letterSpacing:1 }}>{h}</th>; })}
                           </tr>
                         </thead>
                         <tbody>
@@ -2569,7 +2565,7 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                                 <td style={{ padding:"10px 20px", color:C.cream, fontSize:14 }}>
                                   {g.name}
                                   {g.role && <span style={{ marginLeft:6, background:C.gold+"22", border:"1px solid "+C.gold+"44", borderRadius:99, padding:"1px 8px", fontSize:10, color:C.gold }}>
-                                    {{"marie1":"ð","marie2":"ð","temoin":"ð","famille_proche":"ð¨âð©âð§","ami_proche":"â­","enfant":"ð§","vip":"ð","prestataire":"ð§"}[g.role]||""} {{"marie1":"MariÃ©(e)","marie2":"MariÃ©(e)","temoin":"TÃ©moin","famille_proche":"Famille","ami_proche":"Ami proche","enfant":"Enfant","vip":"VIP","prestataire":"Prestataire"}[g.role]||g.role}
+                                    {{"marie1":"Ã°ÂÂÂ","marie2":"Ã°ÂÂÂ","temoin":"Ã°ÂÂÂ","famille_proche":"Ã°ÂÂÂ¨Ã¢ÂÂÃ°ÂÂÂ©Ã¢ÂÂÃ°ÂÂÂ§","ami_proche":"Ã¢Â­Â","enfant":"Ã°ÂÂ§Â","vip":"Ã°ÂÂÂ","prestataire":"Ã°ÂÂÂ§"}[g.role]||""} {{"marie1":"MariÃÂ©(e)","marie2":"MariÃÂ©(e)","temoin":"TÃÂ©moin","famille_proche":"Famille","ami_proche":"Ami proche","enfant":"Enfant","vip":"VIP","prestataire":"Prestataire"}[g.role]||g.role}
                                   </span>}
                                 </td>
                                 <td style={{ padding:"10px 20px", fontSize:13, color:dinfo.color }}>{dinfo.icon} {dinfo.label}</td>
@@ -2585,7 +2581,7 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
               })}
               {ev.guests.filter(function(g){ return !g.tableId; }).length > 0 && (
                 <div style={{ background:C.red+"11", border:"1px solid "+C.red+"44", borderRadius:14, padding:"12px 20px" }}>
-                  <p style={{ color:C.red, fontSize:13, fontWeight:700, marginBottom:8 }}>â  Non placÃ©s ({ev.guests.filter(function(g){ return !g.tableId; }).length})</p>
+                  <p style={{ color:C.red, fontSize:13, fontWeight:700, marginBottom:8 }}>Ã¢ÂÂ  Non placÃÂ©s ({ev.guests.filter(function(g){ return !g.tableId; }).length})</p>
                   <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
                     {ev.guests.filter(function(g){ return !g.tableId; }).map(function(g){
                       return <span key={g.id} style={{ background:C.red+"22", borderRadius:99, padding:"4px 12px", fontSize:12, color:C.cream }}>{g.name}</span>;
@@ -2600,11 +2596,11 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
         {tab==="guests" && (
           <div style={{ maxWidth:860 }}>
             <div style={{ display:"flex", gap:12, marginBottom:20 }}>
-              <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Rechercher un invitÃ©â¦"
+              <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Rechercher un invitÃÂ©Ã¢ÂÂ¦"
                 style={{ ...inputStyle, flex:1 }}/>
-              <Btn variant="ghost" onClick={()=>exportGuestsCSV(ev)}>â¬ Export CSV</Btn>
-              <Btn variant="ghost" onClick={()=>setShowImportCSV(true)}>â¬ Import CSV</Btn>
-              <Btn onClick={()=>setShowAddGuest(true)}>+ InvitÃ©</Btn>
+              <Btn variant="ghost" onClick={()=>exportGuestsCSV(ev)}>Ã¢Â¬Â Export CSV</Btn>
+              <Btn variant="ghost" onClick={()=>setShowImportCSV(true)}>Ã¢Â¬Â Import CSV</Btn>
+              <Btn onClick={()=>setShowAddGuest(true)}>+ InvitÃÂ©</Btn>
             </div>
 
             {/* Diet filter legend */}
@@ -2612,7 +2608,7 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
               <div style={{ display:"flex", flexWrap:"wrap", gap:6, marginBottom:16 }}>
                 {dietStats.map(d=>(
                   <span key={d.id} style={{ background:d.color+"22",border:`1px solid ${d.color}44`,color:d.color,borderRadius:99,padding:"3px 12px",fontSize:11,fontWeight:700 }}>
-                    {d.icon} {d.label} Ã {d.count}
+                    {d.icon} {d.label} ÃÂ {d.count}
                   </span>
                 ))}
               </div>
@@ -2638,34 +2634,34 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                         {g.allergies.map(a=>{const ai=dietInfo(a);return <span key={a} style={{ fontSize:14 }} title={ai.label}>{ai.icon}</span>;})}
                       </div>
                     )}
-                    {table ? <Badge color={C.gold}>Table {table.number}</Badge> : <Badge color={C.red}>Non placÃ©</Badge>}
+                    {table ? <Badge color={C.gold}>Table {table.number}</Badge> : <Badge color={C.red}>Non placÃÂ©</Badge>}
                     <select value={g.tableId||""} onChange={function(evt){ var tid=evt.target.value?parseInt(evt.target.value):null; updateEv(function(evUp){ return {...evUp,guests:evUp.guests.map(function(x){ return x.id===g.id?{...x,tableId:tid}:x; })}; }); }}
                       style={{ background:C.mid,border:"1px solid "+C.border,borderRadius:8,color:C.cream,padding:"4px 8px",fontSize:12,cursor:"pointer",fontFamily:"inherit" }}>
-                      <option value="">â Non placÃ© â</option>
+                      <option value="">Ã¢ÂÂ Non placÃÂ© Ã¢ÂÂ</option>
                       {ev.tables.map(function(tbl){return <option key={tbl.id} value={tbl.id}>Table {tbl.number}{tbl.label?" ("+tbl.label+")":""}</option>;})}
                     </select>
                     <button onClick={()=>updateEv(e=>({...e,guests:e.guests.filter(x=>x.id!==g.id)}))}
-                      style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:16 }}>ð</button>
+                      style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:16 }}>Ã°ÂÂÂ</button>
                   </div>
                 );
               })}
-              {filtered.length===0 && <p style={{ color:C.muted, textAlign:"center", padding:32 }}>Aucun invitÃ© trouvÃ©</p>}
+              {filtered.length===0 && <p style={{ color:C.muted, textAlign:"center", padding:32 }}>Aucun invitÃÂ© trouvÃÂ©</p>}
             </div>
           </div>
         )}
 
-        {/* ââ DIET TAB ââ */}
+        {/* Ã¢ÂÂÃ¢ÂÂ DIET TAB Ã¢ÂÂÃ¢ÂÂ */}
         {tab==="diet" && (
           <div style={{ maxWidth:960, display:"flex", flexDirection:"column", gap:24 }}>
 
-            {/* ââ HEADER ââ */}
+            {/* Ã¢ÂÂÃ¢ÂÂ HEADER Ã¢ÂÂÃ¢ÂÂ */}
             <div style={{ display:"flex", alignItems:"center", gap:12 }}>
               <h3 style={{ margin:0, fontWeight:400, fontSize:20 }}>Gestion alimentaire</h3>
               <div style={{flex:1}}/>
-              <Btn small onClick={function(){ printDietSummary(ev); }}>ð¨ Imprimer rÃ©capitulatif</Btn>
+              <Btn small onClick={function(){ printDietSummary(ev); }}>Ã°ÂÂÂ¨ Imprimer rÃÂ©capitulatif</Btn>
             </div>
 
-            {/* ââ COMPTEURS RÃGIMES ââ */}
+            {/* Ã¢ÂÂÃ¢ÂÂ COMPTEURS RÃÂGIMES Ã¢ÂÂÃ¢ÂÂ */}
             <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(110px,1fr))", gap:12 }}>
               {DIET_OPTIONS.map(function(dopt){
                 var count = ev.guests.filter(function(g){ return g.diet===dopt.id || (g.allergies||[]).includes(dopt.id); }).length;
@@ -2679,15 +2675,15 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
               })}
             </div>
 
-            {/* ââ MENU MULTI-COURS ââ */}
+            {/* Ã¢ÂÂÃ¢ÂÂ MENU MULTI-COURS Ã¢ÂÂÃ¢ÂÂ */}
             <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
               <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:20 }}>
-                <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>ð½ Menu de l'Ã©vÃ©nement</h4>
+                <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>Ã°ÂÂÂ½ Menu de l'ÃÂ©vÃÂ©nement</h4>
                 <Btn small variant="muted" onClick={function(e){
                   var btn = e.currentTarget;
                   btn.disabled = true;
-                  btn.textContent = "â³ GÃ©nÃ©ration...";
-                  // IA gÃ©nÃ¨re le menu
+                  btn.textContent = "Ã¢ÂÂ³ GÃÂ©nÃÂ©ration...";
+                  // IA gÃÂ©nÃÂ¨re le menu
                   var diets = DIET_OPTIONS.filter(function(d){ return d.id!=="standard"; }).map(function(d){
                     var n = ev.guests.filter(function(g){ return g.diet===d.id || (g.allergies||[]).includes(d.id); }).length;
                     return n > 0 ? n+" "+d.label : null;
@@ -2706,29 +2702,29 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                       var menu = JSON.parse(clean);
                       updateEv(function(ev2){ return {...ev2, menu:{...ev2.menu, ...menu}}; });
                       btn.disabled = false;
-                      btn.textContent = "â Menu gÃ©nÃ©rÃ© !";
-                      setTimeout(function(){ btn.textContent = "â¨ GÃ©nÃ©rer avec l\'IA"; }, 3000);
+                      btn.textContent = "Ã¢ÂÂ Menu gÃÂ©nÃÂ©rÃÂ© !";
+                      setTimeout(function(){ btn.textContent = "Ã¢ÂÂ¨ GÃÂ©nÃÂ©rer avec l\'IA"; }, 3000);
                     } catch(e) {
                       console.error("Menu IA parse:", e);
                       btn.disabled = false;
-                      btn.textContent = "â¨ GÃ©nÃ©rer avec l\'IA";
+                      btn.textContent = "Ã¢ÂÂ¨ GÃÂ©nÃÂ©rer avec l\'IA";
                     }
                   }).catch(function(e){
                     console.error("Menu IA fetch:", e);
                     btn.disabled = false;
-                    btn.textContent = "â¨ GÃ©nÃ©rer avec l\'IA";
-                    alert("GÃ©nÃ©ration IA indisponible depuis cette interface. Saisissez le menu manuellement.");
+                    btn.textContent = "Ã¢ÂÂ¨ GÃÂ©nÃÂ©rer avec l\'IA";
+                    alert("GÃÂ©nÃÂ©ration IA indisponible depuis cette interface. Saisissez le menu manuellement.");
                   });
-                }}>â¨ GÃ©nÃ©rer avec l'IA</Btn>
+                }}>Ã¢ÂÂ¨ GÃÂ©nÃÂ©rer avec l'IA</Btn>
               </div>
               <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(240px,1fr))", gap:14 }}>
                 {[
-                  ["appetizer","ð¥ ApÃ©ritif","ex: Verrines saumon, mini-quiches"],
-                  ["starter","ð¥ EntrÃ©e","ex: VeloutÃ© de butternut"],
-                  ["main","ð Plat principal","ex: Filet de bÅuf sauce bordelaise"],
-                  ["cheese","ð§ Fromage","ex: Plateau affinÃ© (optionnel)"],
-                  ["dessert","ð° Dessert","ex: PiÃ¨ce montÃ©e"],
-                  ["vegOption","ð± Option vÃ©gÃ©tarienne","ex: Risotto aux champignons"],
+                  ["appetizer","Ã°ÂÂ¥Â ApÃÂ©ritif","ex: Verrines saumon, mini-quiches"],
+                  ["starter","Ã°ÂÂ¥Â EntrÃÂ©e","ex: VeloutÃÂ© de butternut"],
+                  ["main","Ã°ÂÂÂ Plat principal","ex: Filet de bÃÂuf sauce bordelaise"],
+                  ["cheese","Ã°ÂÂ§Â Fromage","ex: Plateau affinÃÂ© (optionnel)"],
+                  ["dessert","Ã°ÂÂÂ° Dessert","ex: PiÃÂ¨ce montÃÂ©e"],
+                  ["vegOption","Ã°ÂÂÂ± Option vÃÂ©gÃÂ©tarienne","ex: Risotto aux champignons"],
                 ].map(function(item){
                   var key = item[0]; var label = item[1]; var ph = item[2];
                   return (
@@ -2746,24 +2742,24 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
               </div>
               {ev.menu&&ev.menu.note && (
                 <div style={{ marginTop:14, background:C.gold+"11", border:"1px solid "+C.gold+"44", borderRadius:10, padding:"10px 16px", color:C.gold, fontSize:13, fontStyle:"italic" }}>
-                  ð¡ {ev.menu.note}
+                  Ã°ÂÂÂ¡ {ev.menu.note}
                 </div>
               )}
             </div>
 
-            {/* ââ BOISSONS ââ */}
+            {/* Ã¢ÂÂÃ¢ÂÂ BOISSONS Ã¢ÂÂÃ¢ÂÂ */}
             <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
-              <h4 style={{ margin:"0 0 16px", color:C.gold, fontWeight:400, fontSize:16 }}>ð· Boissons</h4>
+              <h4 style={{ margin:"0 0 16px", color:C.gold, fontWeight:400, fontSize:16 }}>Ã°ÂÂÂ· Boissons</h4>
               <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))", gap:12 }}>
                 {[
-                  ["champagne","ð¥ Champagne/Prosecco","ex: Veuve Clicquot Brut"],
-                  ["vin_blanc","ð¾ Vin blanc","ex: Sancerre 2022"],
-                  ["vin_rouge","ð· Vin rouge","ex: Bordeaux Saint-Ãmilion"],
-                  ["eau","ð§ Eau","ex: Ãvian, San Pellegrino"],
-                  ["softs","ð¥¤ Softs / Jus","ex: Orange, Citron, Cola"],
-                  ["cocktail","ð¹ Cocktail de bienvenue","ex: Kir Royal"],
-                  ["biere","ðº BiÃ¨re","ex: IPA artisanale"],
-                  ["cafe","â CafÃ© / ThÃ©","ex: Nespresso + ThÃ© Mariage FrÃ¨res"],
+                  ["champagne","Ã°ÂÂ¥Â Champagne/Prosecco","ex: Veuve Clicquot Brut"],
+                  ["vin_blanc","Ã°ÂÂÂ¾ Vin blanc","ex: Sancerre 2022"],
+                  ["vin_rouge","Ã°ÂÂÂ· Vin rouge","ex: Bordeaux Saint-ÃÂmilion"],
+                  ["eau","Ã°ÂÂÂ§ Eau","ex: ÃÂvian, San Pellegrino"],
+                  ["softs","Ã°ÂÂ¥Â¤ Softs / Jus","ex: Orange, Citron, Cola"],
+                  ["cocktail","Ã°ÂÂÂ¹ Cocktail de bienvenue","ex: Kir Royal"],
+                  ["biere","Ã°ÂÂÂº BiÃÂ¨re","ex: IPA artisanale"],
+                  ["cafe","Ã¢ÂÂ CafÃÂ© / ThÃÂ©","ex: Nespresso + ThÃÂ© Mariage FrÃÂ¨res"],
                 ].map(function(item){
                   var key = item[0]; var label = item[1]; var ph = item[2];
                   return (
@@ -2784,20 +2780,20 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                 <input
                   value={(ev.drinks&&ev.drinks.notes)||""}
                   onChange={function(e){ var v=e.target.value; updateEv(function(ev2){ return {...ev2, drinks:{...(ev2.drinks||{}), notes:v}}; }); }}
-                  placeholder="Ex: Pas d'alcool sur les tables enfants, service champagne Ã  l'arrivÃ©e..."
+                  placeholder="Ex: Pas d'alcool sur les tables enfants, service champagne ÃÂ  l'arrivÃÂ©e..."
                   style={{ width:"100%", padding:"8px 12px", background:"#fff1", border:"1px solid "+C.border, borderRadius:8, color:C.cream, fontSize:13, fontFamily:"inherit", boxSizing:"border-box" }}
                 />
               </div>
             </div>
 
-            {/* ââ SYNTHÃSE TRAITEUR ââ */}
+            {/* Ã¢ÂÂÃ¢ÂÂ SYNTHÃÂSE TRAITEUR Ã¢ÂÂÃ¢ÂÂ */}
             <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
               <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:20 }}>
-                <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>ð SynthÃ¨se traiteur</h4>
+                <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>Ã°ÂÂÂ SynthÃÂ¨se traiteur</h4>
                 <div style={{ display:"flex", gap:8, marginLeft:"auto" }}>
                   <Btn small variant="ghost" onClick={function(){
                     // Export CSV traiteur
-                    var rows = ["Table,Nom,RÃ©gime,Allergies,Notes"];
+                    var rows = ["Table,Nom,RÃÂ©gime,Allergies,Notes"];
                     ev.tables.forEach(function(tbl){
                       var tGuests = ev.guests.filter(function(g){ return g.tableId===tbl.id; });
                       tGuests.forEach(function(g){
@@ -2807,8 +2803,8 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                     });
                     var blob = new Blob([rows.join("\n")], {type:"text/csv"});
                     var a = document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="synthese_traiteur.csv"; a.click();
-                  }}>â¬ CSV Traiteur</Btn>
-                  <Btn small variant="ghost" onClick={function(){ printDietSummary(ev); }}>ð¨ PDF</Btn>
+                  }}>Ã¢Â¬Â CSV Traiteur</Btn>
+                  <Btn small variant="ghost" onClick={function(){ printDietSummary(ev); }}>Ã°ÂÂÂ¨ PDF</Btn>
                 </div>
               </div>
 
@@ -2821,7 +2817,7 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                   var specials = tGuests.filter(function(g){ return g.diet!=="standard" || (g.allergies||[]).length>0; });
                   return (
                     <div key={tbl.id} style={{ background:C.mid+"44", border:"1px solid "+C.border, borderRadius:10, padding:"12px 16px", display:"flex", alignItems:"center", gap:12, flexWrap:"wrap" }}>
-                      <span style={{ color:tbl.color||C.gold, fontWeight:700, minWidth:80 }}>Table {tbl.number}{tbl.label?" â "+tbl.label:""}</span>
+                      <span style={{ color:tbl.color||C.gold, fontWeight:700, minWidth:80 }}>Table {tbl.number}{tbl.label?" Ã¢ÂÂ "+tbl.label:""}</span>
                       <span style={{ color:C.muted, fontSize:12 }}>{tGuests.length} couverts</span>
                       <div style={{ flex:1, display:"flex", flexWrap:"wrap", gap:6 }}>
                         {specials.length===0 ? (
@@ -2830,7 +2826,7 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                           var dinfo = dietInfo(g.diet);
                           return (
                             <span key={g.id} style={{ background:dinfo.color+"22", border:"1px solid "+dinfo.color+"44", borderRadius:99, padding:"2px 10px", fontSize:11, color:dinfo.color }}>
-                              {g.name} â {dinfo.icon} {dinfo.label}{(g.allergies||[]).map(function(a){ var ai=dietInfo(a); return " +"+ai.icon; }).join("")}
+                              {g.name} Ã¢ÂÂ {dinfo.icon} {dinfo.label}{(g.allergies||[]).map(function(a){ var ai=dietInfo(a); return " +"+ai.icon; }).join("")}
                             </span>
                           );
                         })}
@@ -2840,8 +2836,8 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                 }).filter(Boolean)}
               </div>
 
-              {/* Par rÃ©gime */}
-              <h5 style={{ color:C.muted, fontSize:12, letterSpacing:1, marginBottom:12 }}>PAR RÃGIME</h5>
+              {/* Par rÃÂ©gime */}
+              <h5 style={{ color:C.muted, fontSize:12, letterSpacing:1, marginBottom:12 }}>PAR RÃÂGIME</h5>
               <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
                 {DIET_OPTIONS.filter(function(d){ return d.id!=="standard"; }).map(function(dopt){
                   var concerned = ev.guests.filter(function(g){ return g.diet===dopt.id || (g.allergies||[]).includes(dopt.id); });
@@ -2866,10 +2862,10 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
               </div>
             </div>
 
-            {/* ââ INVITÃS AVEC RÃGIME SPÃCIAL ââ */}
+            {/* Ã¢ÂÂÃ¢ÂÂ INVITÃÂS AVEC RÃÂGIME SPÃÂCIAL Ã¢ÂÂÃ¢ÂÂ */}
             {ev.guests.filter(function(g){ return g.diet!=="standard"||(g.allergies||[]).length>0; }).length > 0 && (
               <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
-                <h4 style={{ margin:"0 0 16px", color:C.gold, fontWeight:400, fontSize:16 }}>â  InvitÃ©s avec besoins spÃ©cifiques</h4>
+                <h4 style={{ margin:"0 0 16px", color:C.gold, fontWeight:400, fontSize:16 }}>Ã¢ÂÂ  InvitÃÂ©s avec besoins spÃÂ©cifiques</h4>
                 <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
                   {ev.guests.filter(function(g){ return g.diet!=="standard"||(g.allergies||[]).length>0; }).map(function(g){
                     var dinfo = dietInfo(g.diet);
@@ -2881,8 +2877,8 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                           <div style={{ color:C.cream, fontWeight:600 }}>{g.name}</div>
                           <div style={{ color:C.muted, fontSize:12 }}>
                             {dinfo.label}
-                            {(g.allergies||[]).map(function(a){ var ai=dietInfo(a); return " Â· "+ai.icon+" "+ai.label; }).join("")}
-                            {g.notes ? " Â· "+g.notes : ""}
+                            {(g.allergies||[]).map(function(a){ var ai=dietInfo(a); return " ÃÂ· "+ai.icon+" "+ai.label; }).join("")}
+                            {g.notes ? " ÃÂ· "+g.notes : ""}
                           </div>
                         </div>
                         {tbl && <span style={{ color:tbl.color||C.gold, fontSize:12, fontWeight:700 }}>Table {tbl.number}</span>}
@@ -2896,19 +2892,19 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
           </div>
         )}
 
-        {/* ââââââââââââââââââââââââââââââââââââââââââ
-            ââ RSVP TAB ââ
-        ââââââââââââââââââââââââââââââââââââââââââ */}
+        {/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+            Ã¢ÂÂÃ¢ÂÂ RSVP TAB Ã¢ÂÂÃ¢ÂÂ
+        Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */}
         {tab==="rsvp" && (
           <div style={{ maxWidth:900 }}>
 
-            {/* ââ SynthÃ¨se RSVP ââ */}
+            {/* Ã¢ÂÂÃ¢ÂÂ SynthÃÂ¨se RSVP Ã¢ÂÂÃ¢ÂÂ */}
             <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))", gap:14, marginBottom:28 }}>
               {[
-                {label:"ConfirmÃ©s",   val:rsvpConfirmed, color:C.green,  icon:"â"},
-                {label:"RefusÃ©s",     val:rsvpDeclined,  color:C.red,    icon:"â"},
-                {label:"En attente",  val:rsvpPending,   color:"#FF9800", icon:"â³"},
-                {label:"Total",       val:ev.guests.length, color:C.gold, icon:"ð¥"},
+                {label:"ConfirmÃÂ©s",   val:rsvpConfirmed, color:C.green,  icon:"Ã¢ÂÂ"},
+                {label:"RefusÃÂ©s",     val:rsvpDeclined,  color:C.red,    icon:"Ã¢ÂÂ"},
+                {label:"En attente",  val:rsvpPending,   color:"#FF9800", icon:"Ã¢ÂÂ³"},
+                {label:"Total",       val:ev.guests.length, color:C.gold, icon:"Ã°ÂÂÂ¥"},
               ].map(s=>(
                 <div key={s.label} style={{ background:C.card, border:"1px solid "+C.border, borderRadius:14, padding:"18px 20px", textAlign:"center" }}>
                   <div style={{ fontSize:28, marginBottom:6 }}>{s.icon}</div>
@@ -2918,11 +2914,11 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
               ))}
             </div>
 
-            {/* ââ Barre progression ââ */}
+            {/* Ã¢ÂÂÃ¢ÂÂ Barre progression Ã¢ÂÂÃ¢ÂÂ */}
             {ev.guests.length > 0 && (
               <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px", marginBottom:24 }}>
                 <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8 }}>
-                  <span style={{ color:C.muted, fontSize:12 }}>Taux de rÃ©ponse</span>
+                  <span style={{ color:C.muted, fontSize:12 }}>Taux de rÃÂ©ponse</span>
                   <span style={{ color:C.gold, fontSize:12, fontWeight:700 }}>
                     {Math.round((rsvpConfirmed+rsvpDeclined)/ev.guests.length*100)}%
                   </span>
@@ -2932,16 +2928,16 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                   <div style={{ width:`${rsvpDeclined/ev.guests.length*100}%`, background:C.red, transition:"width .4s" }}/>
                 </div>
                 <div style={{ display:"flex", gap:16, marginTop:8, fontSize:11, color:C.muted }}>
-                  <span style={{ color:C.green }}>â  ConfirmÃ©s {rsvpConfirmed}</span>
-                  <span style={{ color:C.red }}>â  RefusÃ©s {rsvpDeclined}</span>
-                  <span style={{ color:"#FF9800" }}>â  En attente {rsvpPending}</span>
+                  <span style={{ color:C.green }}>Ã¢ÂÂ  ConfirmÃÂ©s {rsvpConfirmed}</span>
+                  <span style={{ color:C.red }}>Ã¢ÂÂ  RefusÃÂ©s {rsvpDeclined}</span>
+                  <span style={{ color:"#FF9800" }}>Ã¢ÂÂ  En attente {rsvpPending}</span>
                 </div>
               </div>
             )}
 
-            {/* ââ Lien RSVP ââ */}
+            {/* Ã¢ÂÂÃ¢ÂÂ Lien RSVP Ã¢ÂÂÃ¢ÂÂ */}
             <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px", marginBottom:24 }}>
-              <h4 style={{ color:C.gold, fontWeight:400, fontSize:14, margin:"0 0 12px" }}>ð Lien de confirmation invitÃ©s</h4>
+              <h4 style={{ color:C.gold, fontWeight:400, fontSize:14, margin:"0 0 12px" }}>Ã°ÂÂÂ Lien de confirmation invitÃÂ©s</h4>
               {(function(){
                 var fb = null; try{fb=getFirebase();}catch(e){}
                 var uid = fb&&fb.auth&&fb.auth.currentUser ? fb.auth.currentUser.uid : "";
@@ -2951,22 +2947,22 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
               <div style={{ display:"flex", gap:8, alignItems:"center" }}>
                 <input readOnly value={joinUrl}
                   style={{ flex:1, padding:"8px 12px", background:C.mid, border:"1px solid "+C.border, borderRadius:8, color:C.muted, fontSize:12, fontFamily:"monospace" }}/>
-                <Btn small onClick={function(){ navigator.clipboard.writeText(joinUrl); }}>ð Copier</Btn>
+                <Btn small onClick={function(){ navigator.clipboard.writeText(joinUrl); }}>Ã°ÂÂÂ Copier</Btn>
               </div>
                 );
               })()}
-              <p style={{ color:C.muted, fontSize:11, marginTop:8, fontStyle:"italic" }}>Partagez ce lien â les invitÃ©s confirment leur prÃ©sence et rÃ©gime alimentaire directement.</p>
+              <p style={{ color:C.muted, fontSize:11, marginTop:8, fontStyle:"italic" }}>Partagez ce lien Ã¢ÂÂ les invitÃÂ©s confirment leur prÃÂ©sence et rÃÂ©gime alimentaire directement.</p>
             </div>
 
-            {/* ââ Liste invitÃ©s avec statut RSVP ââ */}
+            {/* Ã¢ÂÂÃ¢ÂÂ Liste invitÃÂ©s avec statut RSVP Ã¢ÂÂÃ¢ÂÂ */}
             <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px" }}>
-              <h4 style={{ color:C.gold, fontWeight:400, fontSize:14, margin:"0 0 16px" }}>ð¥ Statut par invitÃ©</h4>
+              <h4 style={{ color:C.gold, fontWeight:400, fontSize:14, margin:"0 0 16px" }}>Ã°ÂÂÂ¥ Statut par invitÃÂ©</h4>
               <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-                {ev.guests.length === 0 && <p style={{ color:C.muted, fontStyle:"italic" }}>Aucun invitÃ© ajoutÃ©.</p>}
+                {ev.guests.length === 0 && <p style={{ color:C.muted, fontStyle:"italic" }}>Aucun invitÃÂ© ajoutÃÂ©.</p>}
                 {ev.guests.map(function(g){
                   var rsvp = g.rsvp || "pending";
                   var rsvpColor = rsvp==="confirmed" ? C.green : rsvp==="declined" ? C.red : "#FF9800";
-                  var rsvpIcon  = rsvp==="confirmed" ? "â" : rsvp==="declined" ? "â" : "â³";
+                  var rsvpIcon  = rsvp==="confirmed" ? "Ã¢ÂÂ" : rsvp==="declined" ? "Ã¢ÂÂ" : "Ã¢ÂÂ³";
                   return (
                     <div key={g.id} style={{ display:"flex", alignItems:"center", gap:12, padding:"10px 14px", background:C.mid+"44", borderRadius:10, border:"1px solid "+C.border+"33" }}>
                       <div style={{ width:32,height:32,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:C.gold,fontSize:13,fontWeight:700 }}>{g.name[0]}</div>
@@ -2977,7 +2973,7 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                       <span style={{ fontSize:18 }}>{rsvpIcon}</span>
                       <div style={{ display:"flex", gap:4 }}>
                         {["confirmed","declined","pending"].map(function(s){
-                          var icons = {confirmed:"â",declined:"â",pending:"â³"};
+                          var icons = {confirmed:"Ã¢ÂÂ",declined:"Ã¢ÂÂ",pending:"Ã¢ÂÂ³"};
                           var labels = {confirmed:"Oui",declined:"Non",pending:"?"};
                           return (
                             <button key={s} onClick={function(){
@@ -3000,19 +2996,19 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
           </div>
         )}
 
-        {/* ââââââââââââââââââââââââââââââââââââââââââ
-            ââ BUDGET TAB ââ
-        ââââââââââââââââââââââââââââââââââââââââââ */}
+        {/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+            Ã¢ÂÂÃ¢ÂÂ BUDGET TAB Ã¢ÂÂÃ¢ÂÂ
+        Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */}
         {tab==="budget" && (
           <div style={{ maxWidth:900 }}>
 
-            {/* ââ KPIs budget ââ */}
+            {/* Ã¢ÂÂÃ¢ÂÂ KPIs budget Ã¢ÂÂÃ¢ÂÂ */}
             <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(180px,1fr))", gap:14, marginBottom:28 }}>
               {[
-                {label:"Budget estimÃ©",  val:budgetTotal.toFixed(0)+"â¬",  color:C.gold,  icon:"ð"},
-                {label:"DÃ©pensÃ©",        val:budgetSpent.toFixed(0)+"â¬",  color:budgetSpent>budgetTotal?C.red:C.green, icon:"ð³"},
-                {label:"Restant",        val:(budgetTotal-budgetSpent).toFixed(0)+"â¬", color:budgetTotal-budgetSpent<0?C.red:C.green, icon:"ð¦"},
-                {label:"CoÃ»t / invitÃ©",  val:ev.guests.length>0?(budgetSpent/ev.guests.length).toFixed(0)+"â¬":"â", color:C.blue, icon:"ð¤"},
+                {label:"Budget estimÃÂ©",  val:budgetTotal.toFixed(0)+"Ã¢ÂÂ¬",  color:C.gold,  icon:"Ã°ÂÂÂ"},
+                {label:"DÃÂ©pensÃÂ©",        val:budgetSpent.toFixed(0)+"Ã¢ÂÂ¬",  color:budgetSpent>budgetTotal?C.red:C.green, icon:"Ã°ÂÂÂ³"},
+                {label:"Restant",        val:(budgetTotal-budgetSpent).toFixed(0)+"Ã¢ÂÂ¬", color:budgetTotal-budgetSpent<0?C.red:C.green, icon:"Ã°ÂÂÂ¦"},
+                {label:"CoÃÂ»t / invitÃÂ©",  val:ev.guests.length>0?(budgetSpent/ev.guests.length).toFixed(0)+"Ã¢ÂÂ¬":"Ã¢ÂÂ", color:C.blue, icon:"Ã°ÂÂÂ¤"},
               ].map(s=>(
                 <div key={s.label} style={{ background:C.card, border:"1px solid "+C.border, borderRadius:14, padding:"18px 20px" }}>
                   <div style={{ fontSize:24, marginBottom:6 }}>{s.icon}</div>
@@ -3022,7 +3018,7 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
               ))}
             </div>
 
-            {/* ââ Barre budget ââ */}
+            {/* Ã¢ÂÂÃ¢ÂÂ Barre budget Ã¢ÂÂÃ¢ÂÂ */}
             {budgetTotal > 0 && (
               <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px", marginBottom:24 }}>
                 <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8 }}>
@@ -3037,22 +3033,22 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
               </div>
             )}
 
-            {/* ââ Postes de dÃ©penses ââ */}
+            {/* Ã¢ÂÂÃ¢ÂÂ Postes de dÃÂ©penses Ã¢ÂÂÃ¢ÂÂ */}
             <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px", marginBottom:16 }}>
               <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:16 }}>
-                <h4 style={{ color:C.gold, fontWeight:400, fontSize:14, margin:0 }}>ð¼ Postes de dÃ©penses</h4>
+                <h4 style={{ color:C.gold, fontWeight:400, fontSize:14, margin:0 }}>Ã°ÂÂÂ¼ Postes de dÃÂ©penses</h4>
                 <div style={{ flex:1 }}/>
                 <Btn small onClick={function(){
                   var cats = [
-                    {cat:"Traiteur",     icon:"ð½"},
-                    {cat:"Salle",        icon:"ð"},
-                    {cat:"Musique/DJ",   icon:"ðµ"},
-                    {cat:"Fleurs/DÃ©co",  icon:"ð¸"},
-                    {cat:"Photo/VidÃ©o",  icon:"ð·"},
-                    {cat:"Transport",    icon:"ð"},
-                    {cat:"Invitations",  icon:"ð"},
-                    {cat:"Tenue",        icon:"ð"},
-                    {cat:"Divers",       icon:"ð¦"},
+                    {cat:"Traiteur",     icon:"Ã°ÂÂÂ½"},
+                    {cat:"Salle",        icon:"Ã°ÂÂÂ"},
+                    {cat:"Musique/DJ",   icon:"Ã°ÂÂÂµ"},
+                    {cat:"Fleurs/DÃÂ©co",  icon:"Ã°ÂÂÂ¸"},
+                    {cat:"Photo/VidÃÂ©o",  icon:"Ã°ÂÂÂ·"},
+                    {cat:"Transport",    icon:"Ã°ÂÂÂ"},
+                    {cat:"Invitations",  icon:"Ã°ÂÂÂ"},
+                    {cat:"Tenue",        icon:"Ã°ÂÂÂ"},
+                    {cat:"Divers",       icon:"Ã°ÂÂÂ¦"},
                   ];
                   updateEv(function(evUp){
                     var existing = (evUp.budget||[]).map(function(b){ return b.category; });
@@ -3060,16 +3056,16 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                       .map(function(c){ return {id:Date.now()+Math.random(), category:c.cat, icon:c.icon, estimated:"", actual:"", notes:""}; });
                     return {...evUp, budget:[...(evUp.budget||[]), ...toAdd]};
                   });
-                }}>â¨ Remplir avec modÃ¨le</Btn>
+                }}>Ã¢ÂÂ¨ Remplir avec modÃÂ¨le</Btn>
                 <Btn small variant="ghost" onClick={function(){
                   updateEv(function(evUp){
-                    return {...evUp, budget:[...(evUp.budget||[]), {id:Date.now(), category:"Nouveau poste", icon:"ð¦", estimated:"", actual:"", notes:""}]};
+                    return {...evUp, budget:[...(evUp.budget||[]), {id:Date.now(), category:"Nouveau poste", icon:"Ã°ÂÂÂ¦", estimated:"", actual:"", notes:""}]};
                   });
                 }}>+ Poste</Btn>
               </div>
 
               {(ev.budget||[]).length === 0 && (
-                <p style={{ color:C.muted, fontStyle:"italic", textAlign:"center", padding:20 }}>Aucun poste. Cliquez sur "Remplir avec modÃ¨le" pour dÃ©marrer.</p>
+                <p style={{ color:C.muted, fontStyle:"italic", textAlign:"center", padding:20 }}>Aucun poste. Cliquez sur "Remplir avec modÃÂ¨le" pour dÃÂ©marrer.</p>
               )}
 
               <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
@@ -3079,21 +3075,21 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                   return (
                     <div key={item.id} style={{ background:C.mid+"44", border:"1px solid "+(over?C.red:C.border)+"44", borderRadius:12, padding:"12px 16px" }}>
                       <div style={{ display:"flex", gap:10, alignItems:"center", marginBottom:8 }}>
-                        <span style={{ fontSize:18 }}>{item.icon||"ð¦"}</span>
+                        <span style={{ fontSize:18 }}>{item.icon||"Ã°ÂÂÂ¦"}</span>
                         <input value={item.category} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var b=[...(evUp.budget||[])]; b[bi]={...b[bi],category:v}; return {...evUp,budget:b}; }); }}
                           style={{ flex:1, background:"none", border:"none", color:C.cream, fontSize:14, fontFamily:"inherit", outline:"none" }}/>
-                        {over && <span style={{ color:C.red, fontSize:11, fontWeight:700 }}>â  DÃ©passement</span>}
+                        {over && <span style={{ color:C.red, fontSize:11, fontWeight:700 }}>Ã¢ÂÂ  DÃÂ©passement</span>}
                         <button onClick={function(){ updateEv(function(evUp){ return {...evUp, budget:(evUp.budget||[]).filter(function(_,i){ return i!==bi; })}; }); }}
-                          style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:14 }}>ð</button>
+                          style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:14 }}>Ã°ÂÂÂ</button>
                       </div>
                       <div style={{ display:"flex", gap:8, alignItems:"center", flexWrap:"wrap" }}>
                         <div style={{ flex:1, minWidth:120 }}>
-                          <label style={{ color:C.muted, fontSize:10, letterSpacing:1 }}>ESTIMÃ (â¬)</label>
+                          <label style={{ color:C.muted, fontSize:10, letterSpacing:1 }}>ESTIMÃÂ (Ã¢ÂÂ¬)</label>
                           <input type="number" value={item.estimated} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var b=[...(evUp.budget||[])]; b[bi]={...b[bi],estimated:v}; return {...evUp,budget:b}; }); }}
                             placeholder="0" style={{ width:"100%", padding:"6px 10px", background:C.card, border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:13, fontFamily:"inherit" }}/>
                         </div>
                         <div style={{ flex:1, minWidth:120 }}>
-                          <label style={{ color:C.muted, fontSize:10, letterSpacing:1 }}>RÃEL (â¬)</label>
+                          <label style={{ color:C.muted, fontSize:10, letterSpacing:1 }}>RÃÂEL (Ã¢ÂÂ¬)</label>
                           <input type="number" value={item.actual} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var b=[...(evUp.budget||[])]; b[bi]={...b[bi],actual:v}; return {...evUp,budget:b}; }); }}
                             placeholder="0" style={{ width:"100%", padding:"6px 10px", background:C.card, border:"1px solid "+(over?C.red:C.border), borderRadius:6, color:over?C.red:C.cream, fontSize:13, fontFamily:"inherit" }}/>
                         </div>
@@ -3115,28 +3111,28 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
 
               {(ev.budget||[]).length > 0 && (
                 <div style={{ marginTop:16, padding:"14px 16px", background:C.gold+"11", border:"1px solid "+C.gold+"33", borderRadius:10, display:"flex", gap:24 }}>
-                  <span style={{ color:C.gold, fontSize:14 }}>Total estimÃ© : <strong>{budgetTotal.toFixed(0)}â¬</strong></span>
-                  <span style={{ color:budgetSpent>budgetTotal?C.red:C.green, fontSize:14 }}>Total rÃ©el : <strong>{budgetSpent.toFixed(0)}â¬</strong></span>
-                  <span style={{ color:C.muted, fontSize:14 }}>Ãcart : <strong>{(budgetTotal-budgetSpent).toFixed(0)}â¬</strong></span>
+                  <span style={{ color:C.gold, fontSize:14 }}>Total estimÃÂ© : <strong>{budgetTotal.toFixed(0)}Ã¢ÂÂ¬</strong></span>
+                  <span style={{ color:budgetSpent>budgetTotal?C.red:C.green, fontSize:14 }}>Total rÃÂ©el : <strong>{budgetSpent.toFixed(0)}Ã¢ÂÂ¬</strong></span>
+                  <span style={{ color:C.muted, fontSize:14 }}>ÃÂcart : <strong>{(budgetTotal-budgetSpent).toFixed(0)}Ã¢ÂÂ¬</strong></span>
                 </div>
               )}
             </div>
           </div>
         )}
 
-        {/* ââââââââââââââââââââââââââââââââââââââââââ
-            ââ PLANNING TAB ââ
-        ââââââââââââââââââââââââââââââââââââââââââ */}
+        {/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+            Ã¢ÂÂÃ¢ÂÂ PLANNING TAB Ã¢ÂÂÃ¢ÂÂ
+        Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */}
         {tab==="planning" && (
           <div style={{ maxWidth:860 }}>
 
-            {/* ââ KPIs planning ââ */}
+            {/* Ã¢ÂÂÃ¢ÂÂ KPIs planning Ã¢ÂÂÃ¢ÂÂ */}
             <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))", gap:14, marginBottom:28 }}>
               {[
-                {label:"TÃ¢ches totales", val:planningTotal, color:C.gold,  icon:"ð"},
-                {label:"TerminÃ©es",      val:planningDone,  color:C.green, icon:"â"},
-                {label:"Restantes",      val:planningTotal-planningDone, color:planningTotal-planningDone>0?"#FF9800":C.green, icon:"â³"},
-                {label:"Avancement",     val:planningTotal>0?Math.round(planningDone/planningTotal*100)+"%":"â", color:C.blue, icon:"ð"},
+                {label:"TÃÂ¢ches totales", val:planningTotal, color:C.gold,  icon:"Ã°ÂÂÂ"},
+                {label:"TerminÃÂ©es",      val:planningDone,  color:C.green, icon:"Ã¢ÂÂ"},
+                {label:"Restantes",      val:planningTotal-planningDone, color:planningTotal-planningDone>0?"#FF9800":C.green, icon:"Ã¢ÂÂ³"},
+                {label:"Avancement",     val:planningTotal>0?Math.round(planningDone/planningTotal*100)+"%":"Ã¢ÂÂ", color:C.blue, icon:"Ã°ÂÂÂ"},
               ].map(s=>(
                 <div key={s.label} style={{ background:C.card, border:"1px solid "+C.border, borderRadius:14, padding:"18px 20px" }}>
                   <div style={{ fontSize:24, marginBottom:6 }}>{s.icon}</div>
@@ -3146,7 +3142,7 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
               ))}
             </div>
 
-            {/* ââ Barre avancement ââ */}
+            {/* Ã¢ÂÂÃ¢ÂÂ Barre avancement Ã¢ÂÂÃ¢ÂÂ */}
             {planningTotal > 0 && (
               <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:14, padding:"14px 24px", marginBottom:24 }}>
                 <div style={{ display:"flex", justifyContent:"space-between", marginBottom:6 }}>
@@ -3159,25 +3155,25 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
               </div>
             )}
 
-            {/* ââ Liste de tÃ¢ches ââ */}
+            {/* Ã¢ÂÂÃ¢ÂÂ Liste de tÃÂ¢ches Ã¢ÂÂÃ¢ÂÂ */}
             <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px" }}>
               <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:16 }}>
-                <h4 style={{ color:C.gold, fontWeight:400, fontSize:14, margin:0 }}>ð RÃ©troplanning & tÃ¢ches</h4>
+                <h4 style={{ color:C.gold, fontWeight:400, fontSize:14, margin:0 }}>Ã°ÂÂÂ RÃÂ©troplanning & tÃÂ¢ches</h4>
                 <div style={{ flex:1 }}/>
                 <Btn small onClick={function(){
                   var tpl = [
-                    {label:"RÃ©server la salle",          icon:"ð", deadline:"", priority:"high"},
-                    {label:"Choisir le traiteur",         icon:"ð½", deadline:"", priority:"high"},
-                    {label:"Envoyer les faire-parts",     icon:"ð", deadline:"", priority:"high"},
-                    {label:"Confirmer le DJ / musiciens", icon:"ðµ", deadline:"", priority:"medium"},
-                    {label:"Choisir les fleurs",          icon:"ð¸", deadline:"", priority:"medium"},
-                    {label:"RÃ©server le photographe",    icon:"ð·", deadline:"", priority:"medium"},
-                    {label:"Finaliser le menu",           icon:"ð", deadline:"", priority:"medium"},
-                    {label:"Relancer les non-rÃ©pondants", icon:"ð", deadline:"", priority:"low"},
-                    {label:"Valider le plan de table",    icon:"ðº", deadline:"", priority:"low"},
-                    {label:"PrÃ©parer les chevalets",      icon:"ð¨", deadline:"", priority:"low"},
-                    {label:"Briefer les prestataires",    icon:"ð¤", deadline:"", priority:"low"},
-                    {label:"Jour J â Accueil invitÃ©s",    icon:"ð", deadline:"", priority:"low"},
+                    {label:"RÃÂ©server la salle",          icon:"Ã°ÂÂÂ", deadline:"", priority:"high"},
+                    {label:"Choisir le traiteur",         icon:"Ã°ÂÂÂ½", deadline:"", priority:"high"},
+                    {label:"Envoyer les faire-parts",     icon:"Ã°ÂÂÂ", deadline:"", priority:"high"},
+                    {label:"Confirmer le DJ / musiciens", icon:"Ã°ÂÂÂµ", deadline:"", priority:"medium"},
+                    {label:"Choisir les fleurs",          icon:"Ã°ÂÂÂ¸", deadline:"", priority:"medium"},
+                    {label:"RÃÂ©server le photographe",    icon:"Ã°ÂÂÂ·", deadline:"", priority:"medium"},
+                    {label:"Finaliser le menu",           icon:"Ã°ÂÂÂ", deadline:"", priority:"medium"},
+                    {label:"Relancer les non-rÃÂ©pondants", icon:"Ã°ÂÂÂ", deadline:"", priority:"low"},
+                    {label:"Valider le plan de table",    icon:"Ã°ÂÂÂº", deadline:"", priority:"low"},
+                    {label:"PrÃÂ©parer les chevalets",      icon:"Ã°ÂÂÂ¨", deadline:"", priority:"low"},
+                    {label:"Briefer les prestataires",    icon:"Ã°ÂÂ¤Â", deadline:"", priority:"low"},
+                    {label:"Jour J Ã¢ÂÂ Accueil invitÃÂ©s",    icon:"Ã°ÂÂÂ", deadline:"", priority:"low"},
                   ];
                   updateEv(function(evUp){
                     var existing = (evUp.planning||[]).map(function(t){ return t.label; });
@@ -3185,23 +3181,23 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                       .map(function(t){ return {...t, id:Date.now()+Math.random(), done:false, notes:""}; });
                     return {...evUp, planning:[...(evUp.planning||[]), ...toAdd]};
                   });
-                }}>â¨ ModÃ¨le type</Btn>
+                }}>Ã¢ÂÂ¨ ModÃÂ¨le type</Btn>
                 <Btn small variant="ghost" onClick={function(){
                   updateEv(function(evUp){
-                    return {...evUp, planning:[...(evUp.planning||[]), {id:Date.now(), label:"Nouvelle tÃ¢che", icon:"ð", deadline:"", priority:"medium", done:false, notes:""}]};
+                    return {...evUp, planning:[...(evUp.planning||[]), {id:Date.now(), label:"Nouvelle tÃÂ¢che", icon:"Ã°ÂÂÂ", deadline:"", priority:"medium", done:false, notes:""}]};
                   });
-                }}>+ TÃ¢che</Btn>
+                }}>+ TÃÂ¢che</Btn>
               </div>
 
               {(ev.planning||[]).length === 0 && (
-                <p style={{ color:C.muted, fontStyle:"italic", textAlign:"center", padding:20 }}>Aucune tÃ¢che. Cliquez "ModÃ¨le type" pour dÃ©marrer.</p>
+                <p style={{ color:C.muted, fontStyle:"italic", textAlign:"center", padding:20 }}>Aucune tÃÂ¢che. Cliquez "ModÃÂ¨le type" pour dÃÂ©marrer.</p>
               )}
 
-              {/* Grouper par prioritÃ© */}
+              {/* Grouper par prioritÃÂ© */}
               {["high","medium","low"].map(function(prio){
                 var tasks = (ev.planning||[]).filter(function(t){ return (t.priority||"medium") === prio; });
                 if (!tasks.length) return null;
-                var prioLabel = {high:"ð´ PrioritÃ© haute", medium:"ð¡ PrioritÃ© moyenne", low:"ð¢ PrioritÃ© faible"}[prio];
+                var prioLabel = {high:"Ã°ÂÂÂ´ PrioritÃÂ© haute", medium:"Ã°ÂÂÂ¡ PrioritÃÂ© moyenne", low:"Ã°ÂÂÂ¢ PrioritÃÂ© faible"}[prio];
                 var prioColor = {high:C.red, medium:"#FF9800", low:C.green}[prio];
                 return (
                   <div key={prio} style={{ marginBottom:20 }}>
@@ -3214,9 +3210,9 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                           <div key={task.id} style={{ display:"flex", alignItems:"center", gap:10, padding:"10px 14px", background:task.done?C.green+"11":isLate?C.red+"11":C.mid+"44", borderRadius:10, border:"1px solid "+(task.done?C.green:isLate?C.red:C.border)+"33" }}>
                             <button onClick={function(){ updateEv(function(evUp){ var p=[...(evUp.planning||[])]; p[ti]={...p[ti],done:!p[ti].done}; return {...evUp,planning:p}; }); }}
                               style={{ width:22,height:22,borderRadius:"50%",border:"2px solid "+(task.done?C.green:C.muted),background:task.done?C.green:"none",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,color:"#fff",flexShrink:0 }}>
-                              {task.done ? "â" : ""}
+                              {task.done ? "Ã¢ÂÂ" : ""}
                             </button>
-                            <span style={{ fontSize:16 }}>{task.icon||"ð"}</span>
+                            <span style={{ fontSize:16 }}>{task.icon||"Ã°ÂÂÂ"}</span>
                             <input value={task.label} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var p=[...(evUp.planning||[])]; p[ti]={...p[ti],label:v}; return {...evUp,planning:p}; }); }}
                               style={{ flex:1, background:"none", border:"none", color:task.done?C.muted:C.cream, fontSize:13, fontFamily:"inherit", outline:"none", textDecoration:task.done?"line-through":"none" }}/>
                             <input type="date" value={task.deadline||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var p=[...(evUp.planning||[])]; p[ti]={...p[ti],deadline:v}; return {...evUp,planning:p}; }); }}
@@ -3224,12 +3220,12 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                             {isLate && <span style={{ color:C.red, fontSize:11, fontWeight:700 }}>EN RETARD</span>}
                             <select value={task.priority||"medium"} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var p=[...(evUp.planning||[])]; p[ti]={...p[ti],priority:v}; return {...evUp,planning:p}; }); }}
                               style={{ background:C.card, border:"1px solid "+C.border, borderRadius:6, color:C.muted, fontSize:11, padding:"4px 8px", fontFamily:"inherit" }}>
-                              <option value="high">ð´ Haute</option>
-                              <option value="medium">ð¡ Moyenne</option>
-                              <option value="low">ð¢ Faible</option>
+                              <option value="high">Ã°ÂÂÂ´ Haute</option>
+                              <option value="medium">Ã°ÂÂÂ¡ Moyenne</option>
+                              <option value="low">Ã°ÂÂÂ¢ Faible</option>
                             </select>
                             <button onClick={function(){ updateEv(function(evUp){ return {...evUp, planning:(evUp.planning||[]).filter(function(_,i){ return i!==ti; })}; }); }}
-                              style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:13 }}>ð</button>
+                              style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:13 }}>Ã°ÂÂÂ</button>
                           </div>
                         );
                       })}
@@ -3241,28 +3237,28 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
           </div>
         )}
 
-        {/* ââââââââââââââââââââââââââââââââââââââââââ
-            ââ PROGRAMME TAB ââ
-        ââââââââââââââââââââââââââââââââââââââââââ */}
+        {/* Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+            Ã¢ÂÂÃ¢ÂÂ PROGRAMME TAB Ã¢ÂÂÃ¢ÂÂ
+        Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ */}
         {tab==="programme" && (
           <div style={{ maxWidth:860 }}>
 
-            {/* ââ Programme de la journÃ©e ââ */}
+            {/* Ã¢ÂÂÃ¢ÂÂ Programme de la journÃÂ©e Ã¢ÂÂÃ¢ÂÂ */}
             <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px", marginBottom:24 }}>
               <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:16 }}>
-                <h4 style={{ color:C.gold, fontWeight:400, fontSize:14, margin:0 }}>ðµ Programme de la journÃ©e</h4>
+                <h4 style={{ color:C.gold, fontWeight:400, fontSize:14, margin:0 }}>Ã°ÂÂÂµ Programme de la journÃÂ©e</h4>
                 <div style={{ flex:1 }}/>
                 <Btn small onClick={function(){
                   var tpl = [
-                    {time:"10:00", label:"Accueil des invitÃ©s",      icon:"ð", duration:30,  notes:""},
-                    {time:"10:30", label:"CÃ©rÃ©monie",                icon:"ð", duration:45,  notes:""},
-                    {time:"11:30", label:"Vin d'honneur / Cocktail", icon:"ð¥", duration:90,  notes:""},
-                    {time:"13:00", label:"DÃ©jeuner",                  icon:"ð½", duration:120, notes:""},
-                    {time:"15:00", label:"Discours & animations",     icon:"ð¤", duration:60,  notes:""},
-                    {time:"16:00", label:"PiÃ¨ce montÃ©e",              icon:"ð", duration:30,  notes:""},
-                    {time:"17:00", label:"Ouverture de bal",          icon:"ð", duration:30,  notes:""},
-                    {time:"20:00", label:"DÃ®ner",                     icon:"ð·", duration:120, notes:""},
-                    {time:"22:00", label:"SoirÃ©e dansante",           icon:"ð¶", duration:180, notes:""},
+                    {time:"10:00", label:"Accueil des invitÃÂ©s",      icon:"Ã°ÂÂÂ", duration:30,  notes:""},
+                    {time:"10:30", label:"CÃÂ©rÃÂ©monie",                icon:"Ã°ÂÂÂ", duration:45,  notes:""},
+                    {time:"11:30", label:"Vin d'honneur / Cocktail", icon:"Ã°ÂÂ¥Â", duration:90,  notes:""},
+                    {time:"13:00", label:"DÃÂ©jeuner",                  icon:"Ã°ÂÂÂ½", duration:120, notes:""},
+                    {time:"15:00", label:"Discours & animations",     icon:"Ã°ÂÂÂ¤", duration:60,  notes:""},
+                    {time:"16:00", label:"PiÃÂ¨ce montÃÂ©e",              icon:"Ã°ÂÂÂ", duration:30,  notes:""},
+                    {time:"17:00", label:"Ouverture de bal",          icon:"Ã°ÂÂÂ", duration:30,  notes:""},
+                    {time:"20:00", label:"DÃÂ®ner",                     icon:"Ã°ÂÂÂ·", duration:120, notes:""},
+                    {time:"22:00", label:"SoirÃÂ©e dansante",           icon:"Ã°ÂÂÂ¶", duration:180, notes:""},
                   ];
                   updateEv(function(evUp){
                     var existing = (evUp.programme||[]).map(function(p){ return p.label; });
@@ -3270,16 +3266,16 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                       .map(function(p){ return {...p, id:Date.now()+Math.random()}; });
                     return {...evUp, programme:[...(evUp.programme||[]), ...toAdd]};
                   });
-                }}>â¨ ModÃ¨le mariage</Btn>
+                }}>Ã¢ÂÂ¨ ModÃÂ¨le mariage</Btn>
                 <Btn small variant="ghost" onClick={function(){
                   updateEv(function(evUp){
-                    return {...evUp, programme:[...(evUp.programme||[]), {id:Date.now(), time:"", label:"Nouvelle Ã©tape", icon:"ð", duration:60, notes:""}]};
+                    return {...evUp, programme:[...(evUp.programme||[]), {id:Date.now(), time:"", label:"Nouvelle ÃÂ©tape", icon:"Ã°ÂÂÂ", duration:60, notes:""}]};
                   });
-                }}>+ Ãtape</Btn>
+                }}>+ ÃÂtape</Btn>
               </div>
 
               {(ev.programme||[]).length === 0 && (
-                <p style={{ color:C.muted, fontStyle:"italic", textAlign:"center", padding:20 }}>Aucune Ã©tape. Cliquez "ModÃ¨le mariage" pour dÃ©marrer.</p>
+                <p style={{ color:C.muted, fontStyle:"italic", textAlign:"center", padding:20 }}>Aucune ÃÂ©tape. Cliquez "ModÃÂ¨le mariage" pour dÃÂ©marrer.</p>
               )}
 
               <div style={{ display:"flex", flexDirection:"column", gap:0 }}>
@@ -3296,7 +3292,7 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                       <div style={{ flex:1, background:C.mid+"44", border:"1px solid "+C.border+"33", borderRadius:12, padding:"12px 16px", marginBottom:8, display:"flex", gap:10, alignItems:"center", flexWrap:"wrap" }}>
                         <input type="time" value={step.time||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var p=[...(evUp.programme||[])]; p[pi]={...p[pi],time:v}; return {...evUp,programme:p}; }); }}
                           style={{ background:C.card, border:"1px solid "+C.border, borderRadius:6, color:C.gold, fontSize:13, padding:"4px 8px", fontFamily:"inherit", fontWeight:700, minWidth:80 }}/>
-                        <span style={{ fontSize:18 }}>{step.icon||"ð"}</span>
+                        <span style={{ fontSize:18 }}>{step.icon||"Ã°ÂÂÂ"}</span>
                         <input value={step.label} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var p=[...(evUp.programme||[])]; p[pi]={...p[pi],label:v}; return {...evUp,programme:p}; }); }}
                           style={{ flex:1, background:"none", border:"none", color:C.cream, fontSize:14, fontFamily:"inherit", outline:"none", minWidth:120 }}/>
                         <div style={{ display:"flex", alignItems:"center", gap:4 }}>
@@ -3305,9 +3301,9 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                           <span style={{ color:C.muted, fontSize:11 }}>min</span>
                         </div>
                         <input value={step.notes||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var p=[...(evUp.programme||[])]; p[pi]={...p[pi],notes:v}; return {...evUp,programme:p}; }); }}
-                          placeholder="Notes / responsableâ¦" style={{ flex:1, background:C.card, border:"1px solid "+C.border, borderRadius:6, color:C.muted, fontSize:12, padding:"4px 10px", fontFamily:"inherit", minWidth:100 }}/>
+                          placeholder="Notes / responsableÃ¢ÂÂ¦" style={{ flex:1, background:C.card, border:"1px solid "+C.border, borderRadius:6, color:C.muted, fontSize:12, padding:"4px 10px", fontFamily:"inherit", minWidth:100 }}/>
                         <button onClick={function(){ updateEv(function(evUp){ return {...evUp, programme:(evUp.programme||[]).filter(function(_,i){ return i!==pi; })}; }); }}
-                          style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:13 }}>ð</button>
+                          style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:13 }}>Ã°ÂÂÂ</button>
                       </div>
                     </div>
                   );
@@ -3315,10 +3311,10 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
               </div>
             </div>
 
-            {/* ââ Prestataires ââ */}
+            {/* Ã¢ÂÂÃ¢ÂÂ Prestataires Ã¢ÂÂÃ¢ÂÂ */}
             <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px" }}>
               <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:16 }}>
-                <h4 style={{ color:C.gold, fontWeight:400, fontSize:14, margin:0 }}>ð¤ Prestataires</h4>
+                <h4 style={{ color:C.gold, fontWeight:400, fontSize:14, margin:0 }}>Ã°ÂÂ¤Â Prestataires</h4>
                 <div style={{ flex:1 }}/>
                 <Btn small variant="ghost" onClick={function(){
                   updateEv(function(evUp){
@@ -3328,50 +3324,50 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
               </div>
 
               {(ev.suppliers||[]).length === 0 && (
-                <p style={{ color:C.muted, fontStyle:"italic", textAlign:"center", padding:20 }}>Aucun prestataire. Ajoutez vos contacts clÃ©s (traiteur, DJ, photographeâ¦).</p>
+                <p style={{ color:C.muted, fontStyle:"italic", textAlign:"center", padding:20 }}>Aucun prestataire. Ajoutez vos contacts clÃÂ©s (traiteur, DJ, photographeÃ¢ÂÂ¦).</p>
               )}
 
               <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
                 {(ev.suppliers||[]).map(function(sup, si){
                   var statusColor = {confirmed:C.green, pending:"#FF9800", cancelled:C.red}[sup.status||"pending"];
-                  var statusIcon  = {confirmed:"â", pending:"â³", cancelled:"â"}[sup.status||"pending"];
+                  var statusIcon  = {confirmed:"Ã¢ÂÂ", pending:"Ã¢ÂÂ³", cancelled:"Ã¢ÂÂ"}[sup.status||"pending"];
                   return (
                     <div key={sup.id} style={{ background:C.mid+"44", border:"1px solid "+C.border+"33", borderRadius:12, padding:"14px 16px" }}>
                       <div style={{ display:"flex", gap:10, alignItems:"center", marginBottom:8, flexWrap:"wrap" }}>
                         <select value={sup.role||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],role:v}; return {...evUp,suppliers:s}; }); }}
                           style={{ background:C.card, border:"1px solid "+C.border, borderRadius:6, color:C.gold, fontSize:12, padding:"4px 8px", fontFamily:"inherit" }}>
-                          <option value="">â RÃ´le â</option>
-                          <option value="Traiteur">ð½ Traiteur</option>
-                          <option value="DJ">ðµ DJ</option>
-                          <option value="Musicien">ð¹ Musicien</option>
-                          <option value="Photographe">ð· Photographe</option>
-                          <option value="VidÃ©aste">ð¬ VidÃ©aste</option>
-                          <option value="Fleuriste">ð¸ Fleuriste</option>
-                          <option value="DÃ©corateur">ð¨ DÃ©corateur</option>
-                          <option value="Salle">ð Salle</option>
-                          <option value="Transport">ð Transport</option>
-                          <option value="Animation">ð­ Animation</option>
-                          <option value="Autre">ð¦ Autre</option>
+                          <option value="">Ã¢ÂÂ RÃÂ´le Ã¢ÂÂ</option>
+                          <option value="Traiteur">Ã°ÂÂÂ½ Traiteur</option>
+                          <option value="DJ">Ã°ÂÂÂµ DJ</option>
+                          <option value="Musicien">Ã°ÂÂÂ¹ Musicien</option>
+                          <option value="Photographe">Ã°ÂÂÂ· Photographe</option>
+                          <option value="VidÃÂ©aste">Ã°ÂÂÂ¬ VidÃÂ©aste</option>
+                          <option value="Fleuriste">Ã°ÂÂÂ¸ Fleuriste</option>
+                          <option value="DÃÂ©corateur">Ã°ÂÂÂ¨ DÃÂ©corateur</option>
+                          <option value="Salle">Ã°ÂÂÂ Salle</option>
+                          <option value="Transport">Ã°ÂÂÂ Transport</option>
+                          <option value="Animation">Ã°ÂÂÂ­ Animation</option>
+                          <option value="Autre">Ã°ÂÂÂ¦ Autre</option>
                         </select>
                         <input value={sup.name||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],name:v}; return {...evUp,suppliers:s}; }); }}
-                          placeholder="Nom / sociÃ©tÃ©" style={{ flex:1, background:"none", border:"none", color:C.cream, fontSize:14, fontFamily:"inherit", outline:"none" }}/>
+                          placeholder="Nom / sociÃÂ©tÃÂ©" style={{ flex:1, background:"none", border:"none", color:C.cream, fontSize:14, fontFamily:"inherit", outline:"none" }}/>
                         <span style={{ fontSize:16 }}>{statusIcon}</span>
                         <select value={sup.status||"pending"} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],status:v}; return {...evUp,suppliers:s}; }); }}
                           style={{ background:statusColor+"22", border:"1px solid "+statusColor+"66", borderRadius:6, color:statusColor, fontSize:11, padding:"4px 8px", fontFamily:"inherit" }}>
-                          <option value="pending">â³ En cours</option>
-                          <option value="confirmed">â ConfirmÃ©</option>
-                          <option value="cancelled">â AnnulÃ©</option>
+                          <option value="pending">Ã¢ÂÂ³ En cours</option>
+                          <option value="confirmed">Ã¢ÂÂ ConfirmÃÂ©</option>
+                          <option value="cancelled">Ã¢ÂÂ AnnulÃÂ©</option>
                         </select>
                         <button onClick={function(){ updateEv(function(evUp){ return {...evUp, suppliers:(evUp.suppliers||[]).filter(function(_,i){ return i!==si; })}; }); }}
-                          style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:13 }}>ð</button>
+                          style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:13 }}>Ã°ÂÂÂ</button>
                       </div>
                       <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
                         <input value={sup.phone||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],phone:v}; return {...evUp,suppliers:s}; }); }}
-                          placeholder="ð TÃ©lÃ©phone" style={{ flex:1, padding:"5px 10px", background:C.card, border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:12, fontFamily:"inherit", minWidth:120 }}/>
+                          placeholder="Ã°ÂÂÂ TÃÂ©lÃÂ©phone" style={{ flex:1, padding:"5px 10px", background:C.card, border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:12, fontFamily:"inherit", minWidth:120 }}/>
                         <input value={sup.email||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],email:v}; return {...evUp,suppliers:s}; }); }}
-                          placeholder="âï¸ Email" style={{ flex:1, padding:"5px 10px", background:C.card, border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:12, fontFamily:"inherit", minWidth:120 }}/>
+                          placeholder="Ã¢ÂÂÃ¯Â¸Â Email" style={{ flex:1, padding:"5px 10px", background:C.card, border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:12, fontFamily:"inherit", minWidth:120 }}/>
                         <input value={sup.notes||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],notes:v}; return {...evUp,suppliers:s}; }); }}
-                          placeholder="Notes, tarifs, contratâ¦" style={{ flex:2, padding:"5px 10px", background:C.card, border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:12, fontFamily:"inherit", minWidth:160 }}/>
+                          placeholder="Notes, tarifs, contratÃ¢ÂÂ¦" style={{ flex:2, padding:"5px 10px", background:C.card, border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:12, fontFamily:"inherit", minWidth:160 }}/>
                       </div>
                     </div>
                   );
@@ -3389,42 +3385,42 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
               <Btn onClick={()=>setShowConstraint(true)}>+ Contrainte</Btn>
             </div>
             <div style={{ display:"flex", flexDirection:"column", gap:10, marginBottom:24 }}>
-              {ev.constraints.length===0 && <p style={{ color:C.muted }}>Aucune contrainte dÃ©finie.</p>}
+              {ev.constraints.length===0 && <p style={{ color:C.muted }}>Aucune contrainte dÃÂ©finie.</p>}
               {ev.constraints.map(c=>{
                 const g1=ev.guests.find(g=>g.id===c.a)?.name||"?";
                 const g2=ev.guests.find(g=>g.id===c.b)?.name||"?";
                 return (
                   <div key={c.id} style={{ display:"flex",alignItems:"center",gap:10,padding:"12px 16px",borderRadius:12,background:c.type==="together"?C.green+"18":C.red+"18",border:`1px solid ${c.type==="together"?C.green:C.red}44` }}>
-                    <span style={{ fontSize:18 }}>{c.type==="together"?"ð¤":"â¡"}</span>
+                    <span style={{ fontSize:18 }}>{c.type==="together"?"Ã°ÂÂ¤Â":"Ã¢ÂÂ¡"}</span>
                     <strong style={{ color:C.cream }}>{g1}</strong>
                     <span style={{ color:C.muted }}>{c.type==="together"?"avec":"loin de"}</span>
                     <strong style={{ color:C.cream }}>{g2}</strong>
                     <div style={{flex:1}}/>
                     <button onClick={()=>updateEv(e=>({...e,constraints:e.constraints.filter(x=>x.id!==c.id)}))}
-                      style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:14 }}>â</button>
+                      style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:14 }}>Ã¢ÂÂ</button>
                   </div>
                 );
               })}
             </div>
             <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:20 }}>
               <p style={{ color:C.muted, margin:0, fontSize:13, lineHeight:1.8 }}>
-                <strong style={{ color:C.gold }}>ð¤ {t && t.lang === "fr" ? "Ensemble" : "Together"} :</strong> {t && t.lang === "fr" ? "ces invitÃ©s seront Ã  la mÃªme table" : "these guests will be at the same table"}.<br/>
-                <strong style={{ color:C.gold }}>â¡ SÃ©parÃ©s :</strong> ces invitÃ©s seront Ã  des tables diffÃ©rentes.<br/>
+                <strong style={{ color:C.gold }}>Ã°ÂÂ¤Â {t && t.lang === "fr" ? "Ensemble" : "Together"} :</strong> {t && t.lang === "fr" ? "ces invitÃÂ©s seront ÃÂ  la mÃÂªme table" : "these guests will be at the same table"}.<br/>
+                <strong style={{ color:C.gold }}>Ã¢ÂÂ¡ SÃÂ©parÃÂ©s :</strong> ces invitÃÂ©s seront ÃÂ  des tables diffÃÂ©rentes.<br/>
                 Cliquez <strong style={{ color:C.gold }}>{t.autoPlace}</strong> pour appliquer automatiquement.
               </p>
             </div>
           </div>
         )}
 
-        {/* ââ RSVP TAB ââ */}
+        {/* Ã¢ÂÂÃ¢ÂÂ RSVP TAB Ã¢ÂÂÃ¢ÂÂ */}
         {tab==="rsvp" && (
           <div style={{ maxWidth:900, display:"flex", flexDirection:"column", gap:20 }}>
             {/* Compteurs RSVP */}
             <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:14 }}>
               {[
-                {label:"ConfirmÃ©s",val:rsvpConfirmed,color:C.green,icon:"â"},
-                {label:"En attente",val:rsvpPending,color:C.gold,icon:"â³"},
-                {label:"DÃ©clinÃ©s",val:rsvpDeclined,color:C.red,icon:"â"},
+                {label:"ConfirmÃÂ©s",val:rsvpConfirmed,color:C.green,icon:"Ã¢ÂÂ"},
+                {label:"En attente",val:rsvpPending,color:C.gold,icon:"Ã¢ÂÂ³"},
+                {label:"DÃÂ©clinÃÂ©s",val:rsvpDeclined,color:C.red,icon:"Ã¢ÂÂ"},
               ].map(s=>(
                 <div key={s.label} style={{ background:C.card, border:`1px solid ${s.color}44`, borderRadius:14, padding:"20px 24px", textAlign:"center" }}>
                   <div style={{ fontSize:28 }}>{s.icon}</div>
@@ -3436,17 +3432,17 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
             {/* Progress bar */}
             <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:14, padding:"18px 24px" }}>
               <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8 }}>
-                <span style={{ color:C.muted, fontSize:12 }}>Taux de rÃ©ponse</span>
+                <span style={{ color:C.muted, fontSize:12 }}>Taux de rÃÂ©ponse</span>
                 <span style={{ color:C.gold, fontSize:12, fontWeight:700 }}>{ev.guests.length>0?Math.round((rsvpConfirmed+rsvpDeclined)/ev.guests.length*100):0}%</span>
               </div>
               <div style={{ height:8, background:C.mid, borderRadius:99, overflow:"hidden" }}>
                 <div style={{ height:"100%", width:`${ev.guests.length>0?(rsvpConfirmed+rsvpDeclined)/ev.guests.length*100:0}%`, background:`linear-gradient(90deg,${C.green},${C.gold})`, borderRadius:99 }}/>
               </div>
             </div>
-            {/* Liste invitÃ©s avec statut RSVP */}
+            {/* Liste invitÃÂ©s avec statut RSVP */}
             <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:14, padding:24 }}>
               <div style={{ display:"flex", alignItems:"center", marginBottom:16 }}>
-                <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>ð Suivi par invitÃ©</h4>
+                <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>Ã°ÂÂÂ Suivi par invitÃÂ©</h4>
                 <div style={{ flex:1 }}/>
                 <Btn small variant="muted" onClick={()=>{
                   updateEv(e=>({...e, guests:e.guests.map(g=>g.rsvp?g:{...g,rsvp:"pending"})}));
@@ -3461,7 +3457,7 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                       {g.email && <div style={{ color:C.muted, fontSize:11 }}>{g.email}</div>}
                     </div>
                     <div style={{ display:"flex", gap:6 }}>
-                      {[["confirmed","â","ConfirmÃ©",C.green],["pending","â³","En attente",C.gold],["declined","â","DÃ©clinÃ©",C.red]].map(([v,ic,lb,col])=>(
+                      {[["confirmed","Ã¢ÂÂ","ConfirmÃÂ©",C.green],["pending","Ã¢ÂÂ³","En attente",C.gold],["declined","Ã¢ÂÂ","DÃÂ©clinÃÂ©",C.red]].map(([v,ic,lb,col])=>(
                         <button key={v} onClick={()=>updateEv(e=>({...e,guests:e.guests.map(x=>x.id===g.id?{...x,rsvp:v}:x)}))}
                           style={{ padding:"4px 10px", borderRadius:8, border:`1.5px solid ${(!g.rsvp&&v==="pending")||g.rsvp===v?col:C.border}`,
                             background:(!g.rsvp&&v==="pending")||g.rsvp===v?col+"22":"none",
@@ -3473,7 +3469,7 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                     {g.rsvpNote && <span style={{ color:C.muted, fontSize:11, fontStyle:"italic", maxWidth:120, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{g.rsvpNote}</span>}
                     <input
                       value={g.rsvpNote||""} onChange={e=>{const v=e.target.value; updateEv(ev2=>({...ev2,guests:ev2.guests.map(x=>x.id===g.id?{...x,rsvpNote:v}:x)}));}}
-                      placeholder="Noteâ¦"
+                      placeholder="NoteÃ¢ÂÂ¦"
                       style={{ width:120, padding:"4px 8px", background:"#fff1", border:`1px solid ${C.border}`, borderRadius:6, color:C.cream, fontSize:11, fontFamily:"inherit" }}
                     />
                   </div>
@@ -3483,15 +3479,15 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
           </div>
         )}
 
-        {/* ââ BUDGET TAB ââ */}
+        {/* Ã¢ÂÂÃ¢ÂÂ BUDGET TAB Ã¢ÂÂÃ¢ÂÂ */}
         {tab==="budget" && (
           <div style={{ maxWidth:900, display:"flex", flexDirection:"column", gap:20 }}>
-            {/* RÃ©sumÃ© */}
+            {/* RÃÂ©sumÃÂ© */}
             <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:14 }}>
               {[
-                {label:"Budget estimÃ©",val:budgetTotal.toLocaleString("fr-FR",{minimumFractionDigits:0})+" â¬",color:C.gold,icon:"ð"},
-                {label:"DÃ©penses rÃ©elles",val:budgetSpent.toLocaleString("fr-FR",{minimumFractionDigits:0})+" â¬",color:budgetSpent>budgetTotal?C.red:C.green,icon:"ð³"},
-                {label:"Ãcart",val:(budgetTotal-budgetSpent>=0?"+":"")+((budgetTotal-budgetSpent).toLocaleString("fr-FR",{minimumFractionDigits:0}))+" â¬",color:budgetTotal-budgetSpent>=0?C.green:C.red,icon:budgetTotal-budgetSpent>=0?"â":"â ï¸"},
+                {label:"Budget estimÃÂ©",val:budgetTotal.toLocaleString("fr-FR",{minimumFractionDigits:0})+" Ã¢ÂÂ¬",color:C.gold,icon:"Ã°ÂÂÂ"},
+                {label:"DÃÂ©penses rÃÂ©elles",val:budgetSpent.toLocaleString("fr-FR",{minimumFractionDigits:0})+" Ã¢ÂÂ¬",color:budgetSpent>budgetTotal?C.red:C.green,icon:"Ã°ÂÂÂ³"},
+                {label:"ÃÂcart",val:(budgetTotal-budgetSpent>=0?"+":"")+((budgetTotal-budgetSpent).toLocaleString("fr-FR",{minimumFractionDigits:0}))+" Ã¢ÂÂ¬",color:budgetTotal-budgetSpent>=0?C.green:C.red,icon:budgetTotal-budgetSpent>=0?"Ã¢ÂÂ":"Ã¢ÂÂ Ã¯Â¸Â"},
               ].map(s=>(
                 <div key={s.label} style={{ background:C.card, border:`1px solid ${s.color}44`, borderRadius:14, padding:"18px 22px" }}>
                   <div style={{ fontSize:24, marginBottom:4 }}>{s.icon}</div>
@@ -3515,11 +3511,11 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
             {/* Lignes budget */}
             <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:14, padding:24 }}>
               <div style={{ display:"flex", alignItems:"center", marginBottom:16 }}>
-                <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>ð Postes budgÃ©taires</h4>
+                <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>Ã°ÂÂÂ Postes budgÃÂ©taires</h4>
                 <div style={{ flex:1 }}/>
                 <Btn small onClick={()=>setShowAddBudget(true)}>+ Ajouter un poste</Btn>
               </div>
-              {(ev.budget||[]).length===0 && <p style={{ color:C.muted, fontSize:13, fontStyle:"italic", textAlign:"center", padding:24 }}>Aucun poste budgÃ©taire. Ajoutez vos premiÃ¨res dÃ©penses !</p>}
+              {(ev.budget||[]).length===0 && <p style={{ color:C.muted, fontSize:13, fontStyle:"italic", textAlign:"center", padding:24 }}>Aucun poste budgÃÂ©taire. Ajoutez vos premiÃÂ¨res dÃÂ©penses !</p>}
               <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
                 {(ev.budget||[]).map((b,bi)=>{
                   const cat = BUDGET_CATEGORIES.find(c=>c.id===b.category)||BUDGET_CATEGORIES[0];
@@ -3533,15 +3529,15 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                           {b.notes && <div style={{ color:C.muted, fontSize:11, fontStyle:"italic" }}>{b.notes}</div>}
                         </div>
                         <div style={{ textAlign:"right" }}>
-                          <div style={{ color:C.muted, fontSize:11 }}>EstimÃ© : <span style={{ color:C.gold }}>{(parseFloat(b.estimated)||0).toLocaleString("fr-FR")} â¬</span></div>
-                          <div style={{ color:C.muted, fontSize:11 }}>RÃ©el : <span style={{ color:(b.actual||0)>(b.estimated||0)?C.red:C.green }}>{(parseFloat(b.actual)||0).toLocaleString("fr-FR")} â¬</span></div>
+                          <div style={{ color:C.muted, fontSize:11 }}>EstimÃÂ© : <span style={{ color:C.gold }}>{(parseFloat(b.estimated)||0).toLocaleString("fr-FR")} Ã¢ÂÂ¬</span></div>
+                          <div style={{ color:C.muted, fontSize:11 }}>RÃÂ©el : <span style={{ color:(b.actual||0)>(b.estimated||0)?C.red:C.green }}>{(parseFloat(b.actual)||0).toLocaleString("fr-FR")} Ã¢ÂÂ¬</span></div>
                         </div>
-                        <span style={{ fontSize:18, cursor:"pointer", color:b.paid?"#4CAF50":C.muted }} title={b.paid?"PayÃ©":"Non payÃ©"}
+                        <span style={{ fontSize:18, cursor:"pointer", color:b.paid?"#4CAF50":C.muted }} title={b.paid?"PayÃÂ©":"Non payÃÂ©"}
                           onClick={()=>updateEv(ev2=>({...ev2,budget:ev2.budget.map((x,i)=>i===bi?{...x,paid:!x.paid}:x)}))}>
-                          {b.paid?"â":"ð³"}
+                          {b.paid?"Ã¢ÂÂ":"Ã°ÂÂÂ³"}
                         </span>
                         <button onClick={()=>updateEv(ev2=>({...ev2,budget:(ev2.budget||[]).filter((_,i)=>i!==bi)}))}
-                          style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:14 }}>ð</button>
+                          style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:14 }}>Ã°ÂÂÂ</button>
                       </div>
                       {b.estimated>0 && (
                         <div style={{ height:4, background:C.mid, borderRadius:99, overflow:"hidden" }}>
@@ -3552,10 +3548,10 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                   );
                 })}
               </div>
-              {/* RÃ©partition par catÃ©gorie */}
+              {/* RÃÂ©partition par catÃÂ©gorie */}
               {(ev.budget||[]).length>0 && (
                 <div style={{ marginTop:20, borderTop:`1px solid ${C.border}`, paddingTop:16 }}>
-                  <h5 style={{ color:C.muted, fontSize:12, letterSpacing:1, marginBottom:12 }}>RÃPARTITION PAR CATÃGORIE</h5>
+                  <h5 style={{ color:C.muted, fontSize:12, letterSpacing:1, marginBottom:12 }}>RÃÂPARTITION PAR CATÃÂGORIE</h5>
                   <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
                     {BUDGET_CATEGORIES.map(cat=>{
                       const total = (ev.budget||[]).filter(b=>b.category===cat.id).reduce((s,b)=>s+(parseFloat(b.estimated)||0),0);
@@ -3564,7 +3560,7 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                         <div key={cat.id} style={{ background:C.mid, borderRadius:8, padding:"6px 12px", display:"flex", alignItems:"center", gap:6 }}>
                           <span>{cat.icon}</span>
                           <span style={{ color:C.cream, fontSize:12 }}>{cat.label}</span>
-                          <span style={{ color:C.gold, fontSize:12, fontWeight:700 }}>{total.toLocaleString("fr-FR")} â¬</span>
+                          <span style={{ color:C.gold, fontSize:12, fontWeight:700 }}>{total.toLocaleString("fr-FR")} Ã¢ÂÂ¬</span>
                         </div>
                       );
                     })}
@@ -3575,14 +3571,14 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
           </div>
         )}
 
-        {/* ââ PLANNING TAB ââ */}
+        {/* Ã¢ÂÂÃ¢ÂÂ PLANNING TAB Ã¢ÂÂÃ¢ÂÂ */}
         {tab==="planning" && (
           <div style={{ maxWidth:900, display:"flex", flexDirection:"column", gap:20 }}>
             {/* Progress */}
             {planningTotal>0 && (
               <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:14, padding:"16px 22px" }}>
                 <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8 }}>
-                  <span style={{ color:C.muted, fontSize:12 }}>TÃ¢ches complÃ©tÃ©es</span>
+                  <span style={{ color:C.muted, fontSize:12 }}>TÃÂ¢ches complÃÂ©tÃÂ©es</span>
                   <span style={{ color:C.gold, fontSize:12, fontWeight:700 }}>{planningDone}/{planningTotal}</span>
                 </div>
                 <div style={{ height:8, background:C.mid, borderRadius:99, overflow:"hidden" }}>
@@ -3592,22 +3588,22 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
             )}
             <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:14, padding:24 }}>
               <div style={{ display:"flex", alignItems:"center", marginBottom:16 }}>
-                <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>ð RÃ©troplanning</h4>
+                <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>Ã°ÂÂÂ RÃÂ©troplanning</h4>
                 <div style={{ flex:1 }}/>
                 <Btn small variant="muted" onClick={()=>{
-                  // GÃ©nÃ©rer un rÃ©troplanning IA
+                  // GÃÂ©nÃÂ©rer un rÃÂ©troplanning IA
                   setAiAssistOpen(true);
-                  sendAiAssist && setTimeout(()=>sendAiAssist("GÃ©nÃ¨re-moi un rÃ©troplanning type pour "+ev.name+" (type: "+ev.type+") avec des tÃ¢ches concrÃ¨tes J-90, J-60, J-30, J-14, J-7, J-1 et Jour J. Format : une tÃ¢che par ligne avec la date relative."),100);
-                }}>â¨ GÃ©nÃ©rer avec l'IA</Btn>
+                  sendAiAssist && setTimeout(()=>sendAiAssist("GÃÂ©nÃÂ¨re-moi un rÃÂ©troplanning type pour "+ev.name+" (type: "+ev.type+") avec des tÃÂ¢ches concrÃÂ¨tes J-90, J-60, J-30, J-14, J-7, J-1 et Jour J. Format : une tÃÂ¢che par ligne avec la date relative."),100);
+                }}>Ã¢ÂÂ¨ GÃÂ©nÃÂ©rer avec l'IA</Btn>
                 <div style={{ width:8 }}/>
-                <Btn small onClick={()=>setShowAddTask(true)}>+ TÃ¢che</Btn>
+                <Btn small onClick={()=>setShowAddTask(true)}>+ TÃÂ¢che</Btn>
               </div>
-              {(ev.planning||[]).length===0 && <p style={{ color:C.muted, fontSize:13, fontStyle:"italic", textAlign:"center", padding:24 }}>Aucune tÃ¢che. Ajoutez vos premiÃ¨res Ã©tapes ou demandez Ã  l'IA de gÃ©nÃ©rer un rÃ©troplanning !</p>}
-              {/* GroupÃ© par prioritÃ© / date */}
+              {(ev.planning||[]).length===0 && <p style={{ color:C.muted, fontSize:13, fontStyle:"italic", textAlign:"center", padding:24 }}>Aucune tÃÂ¢che. Ajoutez vos premiÃÂ¨res ÃÂ©tapes ou demandez ÃÂ  l'IA de gÃÂ©nÃÂ©rer un rÃÂ©troplanning !</p>}
+              {/* GroupÃÂ© par prioritÃÂ© / date */}
               {["high","medium","low"].map(prio=>{
                 const tasks = (ev.planning||[]).filter(t=>t.priority===prio);
                 if (!tasks.length) return null;
-                const prioConfig = {high:{label:"ð´ Urgent",color:C.red},medium:{label:"ð¡ Normal",color:C.gold},low:{label:"ð¢ Faible prioritÃ©",color:C.green}};
+                const prioConfig = {high:{label:"Ã°ÂÂÂ´ Urgent",color:C.red},medium:{label:"Ã°ÂÂÂ¡ Normal",color:C.gold},low:{label:"Ã°ÂÂÂ¢ Faible prioritÃÂ©",color:C.green}};
                 const pc = prioConfig[prio];
                 return (
                   <div key={prio} style={{ marginBottom:16 }}>
@@ -3619,18 +3615,18 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                         return (
                           <div key={ti} style={{ display:"flex", alignItems:"center", gap:12, padding:"12px 16px", background:task.done?"#0a2a0a":overdue?C.red+"11":C.mid+"55", borderRadius:10, border:`1px solid ${task.done?C.green+"44":overdue?C.red+"44":C.border}` }}>
                             <span style={{ fontSize:20, cursor:"pointer" }} onClick={()=>updateEv(ev2=>({...ev2,planning:ev2.planning.map((x,i)=>i===tIdx?{...x,done:!x.done}:x)}))}>
-                              {task.done?"â":"â¬"}
+                              {task.done?"Ã¢ÂÂ":"Ã¢Â¬Â"}
                             </span>
                             <div style={{ flex:1 }}>
                               <div style={{ color:task.done?C.muted:C.cream, fontSize:14, textDecoration:task.done?"line-through":"none" }}>{task.title}</div>
                               <div style={{ display:"flex", gap:12, marginTop:2 }}>
-                                {task.dueDate && <span style={{ color:overdue?C.red:C.muted, fontSize:11 }}>ð {task.dueDate}{overdue?" â ï¸ En retard":""}</span>}
-                                {task.responsible && <span style={{ color:C.muted, fontSize:11 }}>ð¤ {task.responsible}</span>}
+                                {task.dueDate && <span style={{ color:overdue?C.red:C.muted, fontSize:11 }}>Ã°ÂÂÂ {task.dueDate}{overdue?" Ã¢ÂÂ Ã¯Â¸Â En retard":""}</span>}
+                                {task.responsible && <span style={{ color:C.muted, fontSize:11 }}>Ã°ÂÂÂ¤ {task.responsible}</span>}
                                 {task.notes && <span style={{ color:C.muted, fontSize:11, fontStyle:"italic" }}>{task.notes}</span>}
                               </div>
                             </div>
                             <button onClick={()=>updateEv(ev2=>({...ev2,planning:(ev2.planning||[]).filter((_,i)=>i!==tIdx)}))}
-                              style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:14 }}>ð</button>
+                              style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:14 }}>Ã°ÂÂÂ</button>
                           </div>
                         );
                       })}
@@ -3642,18 +3638,18 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
           </div>
         )}
 
-        {/* ââ PROGRAMME TAB ââ */}
+        {/* Ã¢ÂÂÃ¢ÂÂ PROGRAMME TAB Ã¢ÂÂÃ¢ÂÂ */}
         {tab==="programme" && (
           <div style={{ maxWidth:900, display:"flex", gap:24, flexWrap:"wrap", alignItems:"start" }}>
             {/* Programme / Timeline jour J */}
             <div style={{ flex:"1 1 400px", display:"flex", flexDirection:"column", gap:20 }}>
               <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:14, padding:24 }}>
                 <div style={{ display:"flex", alignItems:"center", marginBottom:16 }}>
-                  <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>ðµ Programme du jour J</h4>
+                  <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>Ã°ÂÂÂµ Programme du jour J</h4>
                   <div style={{ flex:1 }}/>
-                  <Btn small onClick={()=>setShowAddProgramItem(true)}>+ Ãtape</Btn>
+                  <Btn small onClick={()=>setShowAddProgramItem(true)}>+ ÃÂtape</Btn>
                 </div>
-                {(ev.programme||[]).length===0 && <p style={{ color:C.muted, fontSize:13, fontStyle:"italic", textAlign:"center", padding:24 }}>Aucune Ã©tape. Construisez le dÃ©roulÃ© de votre journÃ©e !</p>}
+                {(ev.programme||[]).length===0 && <p style={{ color:C.muted, fontSize:13, fontStyle:"italic", textAlign:"center", padding:24 }}>Aucune ÃÂ©tape. Construisez le dÃÂ©roulÃÂ© de votre journÃÂ©e !</p>}
                 <div style={{ display:"flex", flexDirection:"column", position:"relative" }}>
                   {(ev.programme||[]).sort((a,b)=>a.time.localeCompare(b.time)).map((item,ii)=>(
                     <div key={ii} style={{ display:"flex", gap:14, position:"relative", paddingBottom:16 }}>
@@ -3669,7 +3665,7 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                         {item.notes && <div style={{ color:C.muted, fontSize:12, fontStyle:"italic", marginTop:2 }}>{item.notes}</div>}
                       </div>
                       <button onClick={()=>updateEv(ev2=>({...ev2,programme:(ev2.programme||[]).filter((_,i)=>i!==ii)}))}
-                        style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:13,alignSelf:"start",marginTop:6 }}>ð</button>
+                        style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:13,alignSelf:"start",marginTop:6 }}>Ã°ÂÂÂ</button>
                     </div>
                   ))}
                 </div>
@@ -3679,11 +3675,11 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
             <div style={{ flex:"1 1 340px", display:"flex", flexDirection:"column", gap:16 }}>
               <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:14, padding:24 }}>
                 <div style={{ display:"flex", alignItems:"center", marginBottom:16 }}>
-                  <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>ð¤ Prestataires</h4>
+                  <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>Ã°ÂÂ¤Â Prestataires</h4>
                   <div style={{ flex:1 }}/>
                   <Btn small onClick={()=>setShowAddSupplier(true)}>+ Prestataire</Btn>
                 </div>
-                {(ev.suppliers||[]).length===0 && <p style={{ color:C.muted, fontSize:13, fontStyle:"italic", textAlign:"center", padding:24 }}>Aucun prestataire. Ajoutez vos contacts clÃ©s !</p>}
+                {(ev.suppliers||[]).length===0 && <p style={{ color:C.muted, fontSize:13, fontStyle:"italic", textAlign:"center", padding:24 }}>Aucun prestataire. Ajoutez vos contacts clÃÂ©s !</p>}
                 <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
                   {(ev.suppliers||[]).map((s,si)=>(
                     <div key={si} style={{ background:C.mid+"55", borderRadius:12, padding:"14px 16px" }}>
@@ -3694,12 +3690,12 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                         <div style={{ flex:1 }}>
                           <div style={{ color:C.cream, fontSize:14, fontWeight:600 }}>{s.name}</div>
                           {s.role && <div style={{ color:C.gold, fontSize:11 }}>{s.role}</div>}
-                          {s.phone && <a href={"tel:"+s.phone} style={{ color:C.muted, fontSize:12, display:"block", textDecoration:"none" }}>ð {s.phone}</a>}
-                          {s.email && <a href={"mailto:"+s.email} style={{ color:C.muted, fontSize:12, display:"block", textDecoration:"none" }}>âï¸ {s.email}</a>}
+                          {s.phone && <a href={"tel:"+s.phone} style={{ color:C.muted, fontSize:12, display:"block", textDecoration:"none" }}>Ã°ÂÂÂ {s.phone}</a>}
+                          {s.email && <a href={"mailto:"+s.email} style={{ color:C.muted, fontSize:12, display:"block", textDecoration:"none" }}>Ã¢ÂÂÃ¯Â¸Â {s.email}</a>}
                           {s.notes && <div style={{ color:C.muted, fontSize:11, fontStyle:"italic", marginTop:4 }}>{s.notes}</div>}
                         </div>
                         <button onClick={()=>updateEv(ev2=>({...ev2,suppliers:(ev2.suppliers||[]).filter((_,i)=>i!==si)}))}
-                          style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:14 }}>ð</button>
+                          style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:14 }}>Ã°ÂÂÂ</button>
                       </div>
                     </div>
                   ))}
@@ -3709,31 +3705,31 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
           </div>
         )}
 
-        {/* ââ ROOM TAB ââ */}
+        {/* Ã¢ÂÂÃ¢ÂÂ ROOM TAB Ã¢ÂÂÃ¢ÂÂ */}
         {tab==="logistique" && (
           <div style={{ maxWidth:900, display:"flex", flexDirection:"column", gap:24 }}>
 
-            {/* ââ LIEUX & ADRESSES ââ */}
+            {/* Ã¢ÂÂÃ¢ÂÂ LIEUX & ADRESSES Ã¢ÂÂÃ¢ÂÂ */}
             <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
-              <h4 style={{ margin:"0 0 16px", color:C.gold, fontWeight:400, fontSize:16 }}>ð Lieux & Rendez-vous</h4>
+              <h4 style={{ margin:"0 0 16px", color:C.gold, fontWeight:400, fontSize:16 }}>Ã°ÂÂÂ Lieux & Rendez-vous</h4>
               <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
                 {(ev.venues||[]).map(function(venue, vi){ return (
                   <div key={vi} style={{ background:C.mid+"44", border:"1px solid "+C.border, borderRadius:12, padding:16, display:"flex", flexDirection:"column", gap:8 }}>
                     <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                      <span style={{ fontSize:20 }}>{venue.icon||"ð"}</span>
+                      <span style={{ fontSize:20 }}>{venue.icon||"Ã°ÂÂÂ"}</span>
                       <input
                         value={venue.name||""}
                         onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var vens=[...(evUp.venues||[])]; vens[vi]={...vens[vi],name:v}; return {...evUp,venues:vens}; }); }}
-                        placeholder="Nom du lieu (ex: Mairie, Ãglise, Salle des fÃªtes...)"
+                        placeholder="Nom du lieu (ex: Mairie, ÃÂglise, Salle des fÃÂªtes...)"
                         style={{ flex:1, padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:14, fontFamily:"inherit" }}
                       />
                       <button onClick={function(){ updateEv(function(evUp){ return {...evUp, venues:(evUp.venues||[]).filter(function(_,i){ return i!==vi; })}; }); }}
-                        style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:16 }}>ð</button>
+                        style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:16 }}>Ã°ÂÂÂ</button>
                     </div>
                     <input
                       value={venue.address||""}
                       onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var vens=[...(evUp.venues||[])]; vens[vi]={...vens[vi],address:v}; return {...evUp,venues:vens}; }); }}
-                      placeholder="Adresse complÃ¨te"
+                      placeholder="Adresse complÃÂ¨te"
                       style={{ padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:13, fontFamily:"inherit" }}
                     />
                     <div style={{ display:"flex", gap:8, alignItems:"center", flexWrap:"wrap" }}>
@@ -3746,21 +3742,21 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                       <input
                         value={venue.notes||""}
                         onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var vens=[...(evUp.venues||[])]; vens[vi]={...vens[vi],notes:v}; return {...evUp,venues:vens}; }); }}
-                        placeholder="Notes (parking, code entrÃ©e...)"
+                        placeholder="Notes (parking, code entrÃÂ©e...)"
                         style={{ flex:1, padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:12, fontFamily:"inherit" }}
                       />
                       {venue.address && (
                         <a href={"https://maps.google.com/?q="+encodeURIComponent(venue.address)}
                           target="_blank" rel="noopener noreferrer"
                           style={{ background:C.gold+"22", border:"1px solid "+C.gold+"44", borderRadius:6, padding:"6px 12px", color:C.gold, fontSize:12, textDecoration:"none" }}>
-                          ðº Voir sur Maps
+                          Ã°ÂÂÂº Voir sur Maps
                         </a>
                       )}
                     </div>
                   </div>
                 ); })}
                 <button onClick={function(){
-                  var icons = ["âª","ð","ð©","ð¿","ð ","ð½","ð","ð","ð","ð"];
+                  var icons = ["Ã¢ÂÂª","Ã°ÂÂÂ","Ã°ÂÂÂ©","Ã°ÂÂÂ¿","Ã°ÂÂÂ ","Ã°ÂÂÂ½","Ã°ÂÂÂ","Ã°ÂÂÂ","Ã°ÂÂÂ","Ã°ÂÂÂ"];
                   updateEv(function(evUp){ return {...evUp, venues:[...(evUp.venues||[]), {name:"",address:"",time:"",notes:"",icon:icons[Math.floor(Math.random()*icons.length)]}]}; });
                 }} style={{ background:C.card, border:"1px dashed "+C.border, borderRadius:10, padding:"12px", cursor:"pointer", color:C.muted, fontFamily:"inherit", fontSize:13 }}>
                   + Ajouter un lieu
@@ -3768,16 +3764,16 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
               </div>
             </div>
 
-            {/* ââ LISTE DE CADEAUX ââ */}
+            {/* Ã¢ÂÂÃ¢ÂÂ LISTE DE CADEAUX Ã¢ÂÂÃ¢ÂÂ */}
             <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
               <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:16 }}>
-                <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>ð Liste de cadeaux</h4>
+                <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>Ã°ÂÂÂ Liste de cadeaux</h4>
                 <div style={{ flex:1 }}/>
                 <button onClick={function(){
                   var url = ev.giftList && ev.giftList.url;
                   if (url) { window.open(url, "_blank"); }
                 }} style={{ background:C.gold+"22", border:"1px solid "+C.gold+"44", borderRadius:8, padding:"6px 14px", cursor:"pointer", color:C.gold, fontFamily:"inherit", fontSize:12, display:ev.giftList&&ev.giftList.url?"flex":"none", alignItems:"center", gap:6 }}>
-                  ð Voir la liste en ligne
+                  Ã°ÂÂÂ Voir la liste en ligne
                 </button>
               </div>
               <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
@@ -3791,26 +3787,26 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                   />
                 </div>
                 <div>
-                  <label style={{ color:C.muted, fontSize:11, letterSpacing:1, display:"block", marginBottom:4 }}>MESSAGE POUR LES INVITÃS</label>
+                  <label style={{ color:C.muted, fontSize:11, letterSpacing:1, display:"block", marginBottom:4 }}>MESSAGE POUR LES INVITÃÂS</label>
                   <input
                     value={(ev.giftList&&ev.giftList.message)||""}
                     onChange={function(e){ var v=e.target.value; updateEv(function(ev2){ return {...ev2, giftList:{...(ev2.giftList||{}), message:v}}; }); }}
-                    placeholder="Ex: Votre prÃ©sence est le plus beau cadeau. Si vous souhaitez nÃ©anmoins nous gÃ¢ter..."
+                    placeholder="Ex: Votre prÃÂ©sence est le plus beau cadeau. Si vous souhaitez nÃÂ©anmoins nous gÃÂ¢ter..."
                     style={{ width:"100%", padding:"8px 12px", background:"#fff1", border:"1px solid "+C.border, borderRadius:8, color:C.cream, fontSize:13, fontFamily:"inherit", boxSizing:"border-box" }}
                   />
                 </div>
                 <div>
-                  <label style={{ color:C.muted, fontSize:11, letterSpacing:1, display:"block", marginBottom:8 }}>CADEAUX REÃUS</label>
+                  <label style={{ color:C.muted, fontSize:11, letterSpacing:1, display:"block", marginBottom:8 }}>CADEAUX REÃÂUS</label>
                   {(ev.gifts||[]).map(function(gift, gi){ return (
                     <div key={gi} style={{ display:"flex", gap:8, marginBottom:6, alignItems:"center" }}>
                       <span style={{ color:gift.received?"#4CAF50":C.muted, fontSize:18, cursor:"pointer" }}
                         onClick={function(){ updateEv(function(evUp){ var gifts=[...(evUp.gifts||[])]; gifts[gi]={...gifts[gi],received:!gifts[gi].received}; return {...evUp,gifts}; }); }}>
-                        {gift.received?"â":"â¬"}
+                        {gift.received?"Ã¢ÂÂ":"Ã¢Â¬Â"}
                       </span>
                       <input
                         value={gift.name||""}
                         onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var gifts=[...(evUp.gifts||[])]; gifts[gi]={...gifts[gi],name:v}; return {...evUp,gifts}; }); }}
-                        placeholder="Nom du cadeau ou de l'expÃ©diteur"
+                        placeholder="Nom du cadeau ou de l'expÃÂ©diteur"
                         style={{ flex:1, padding:"6px 10px", background:gift.received?"#0a2a0a":"#fff1", border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:13, fontFamily:"inherit", textDecoration:gift.received?"line-through":"none" }}
                       />
                       <input
@@ -3820,7 +3816,7 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                         style={{ width:150, padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:12, fontFamily:"inherit" }}
                       />
                       <button onClick={function(){ updateEv(function(evUp){ return {...evUp,gifts:(evUp.gifts||[]).filter(function(_,i){ return i!==gi; })}; }); }}
-                        style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:14 }}>ð</button>
+                        style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:14 }}>Ã°ÂÂÂ</button>
                     </div>
                   ); })}
                   <button onClick={function(){
@@ -3837,13 +3833,13 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
 
       </div>
 
-      {/* ââ MODALS ââ */}
-      <Modal open={showImportCSV} onClose={()=>setShowImportCSV(false)} title="Importer des invitÃ©s (CSV)" width={500}>
+      {/* Ã¢ÂÂÃ¢ÂÂ MODALS Ã¢ÂÂÃ¢ÂÂ */}
+      <Modal open={showImportCSV} onClose={()=>setShowImportCSV(false)} title="Importer des invitÃÂ©s (CSV)" width={500}>
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <div style={{ background:C.mid, borderRadius:10, padding:"12px 16px", fontSize:12, color:C.muted, lineHeight:1.8 }}>
-            <strong style={{color:C.gold}}>Format attendu (1 invitÃ© par ligne) :</strong><br/>
-            <code style={{color:C.cream}}>PrÃ©nom Nom, email@example.fr, standard</code><br/>
-            RÃ©gimes : standard, vegetarien, vegan, sans-gluten, halal, casher, sans-lactose, sans-noix, diabetique
+            <strong style={{color:C.gold}}>Format attendu (1 invitÃÂ© par ligne) :</strong><br/>
+            <code style={{color:C.cream}}>PrÃÂ©nom Nom, email@example.fr, standard</code><br/>
+            RÃÂ©gimes : standard, vegetarien, vegan, sans-gluten, halal, casher, sans-lactose, sans-noix, diabetique
           </div>
           <textarea
             rows={10}
@@ -3859,7 +3855,7 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
               const validDiets = ["standard","vegetarien","vegan","sans-gluten","halal","casher","sans-lactose","sans-noix","diabetique"];
               return {
                 id: Date.now() + Math.random(),
-                name: parts[0] || "InvitÃ©",
+                name: parts[0] || "InvitÃÂ©",
                 email: parts[1] || "",
                 diet: validDiets.includes(parts[2]) ? parts[2] : "standard",
                 notes: parts[3] || "",
@@ -3870,16 +3866,16 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
             updateEv(e => ({ ...e, guests: [...e.guests, ...newGuests] }));
             setShowImportCSV(false);
           }} style={{marginTop:4}}>
-            â¬ Importer {""} invitÃ©s
+            Ã¢Â¬Â Importer {""} invitÃÂ©s
           </Btn>
         </div>
       </Modal>
 
-      <Modal open={showAddGuest} onClose={()=>setShowAddGuest(false)} title="Ajouter un invitÃ©">
+      <Modal open={showAddGuest} onClose={()=>setShowAddGuest(false)} title="Ajouter un invitÃÂ©">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label={t.fieldName}><Input value={newGuest.name} onChange={e=>setNewGuest({...newGuest,name:e.target.value})} placeholder="PrÃ©nom Nom"/></Field>
+          <Field label={t.fieldName}><Input value={newGuest.name} onChange={e=>setNewGuest({...newGuest,name:e.target.value})} placeholder="PrÃÂ©nom Nom"/></Field>
           <Field label={t.fieldEmail}><Input type="email" value={newGuest.email} onChange={e=>setNewGuest({...newGuest,email:e.target.value})} placeholder="email@example.fr"/></Field>
-          <Field label="RÃGIME ALIMENTAIRE">
+          <Field label="RÃÂGIME ALIMENTAIRE">
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:6 }}>
               {DIET_OPTIONS.map(function(ditem){ return (
                 <button key={ditem.id} onClick={()=>setNewGuest({...newGuest,diet:ditem.id})} style={{
@@ -3891,22 +3887,22 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
               );})}
             </div>
           </Field>
-          <Field label="RÃLE / FONCTION">
+          <Field label="RÃÂLE / FONCTION">
             <select value={newGuest.role||""} onChange={e=>setNewGuest({...newGuest,role:e.target.value})}
               style={{ width:"100%", padding:"8px 12px", background:C.mid, border:"1px solid "+C.border, borderRadius:8, color:C.cream, fontSize:13, fontFamily:"inherit" }}>
-              <option value="">â Aucun rÃ´le spÃ©cial â</option>
-              <option value="marie1">ð MariÃ©(e) 1</option>
-              <option value="marie2">ð MariÃ©(e) 2</option>
-              <option value="temoin">ð TÃ©moin</option>
-              <option value="famille_proche">ð¨âð©âð§ Famille proche</option>
-              <option value="ami_proche">â­ Ami proche</option>
-              <option value="enfant">ð§ Enfant</option>
-              <option value="vip">ð VIP</option>
-              <option value="prestataire">ð§ Prestataire</option>
+              <option value="">Ã¢ÂÂ Aucun rÃÂ´le spÃÂ©cial Ã¢ÂÂ</option>
+              <option value="marie1">Ã°ÂÂÂ MariÃÂ©(e) 1</option>
+              <option value="marie2">Ã°ÂÂÂ MariÃÂ©(e) 2</option>
+              <option value="temoin">Ã°ÂÂÂ TÃÂ©moin</option>
+              <option value="famille_proche">Ã°ÂÂÂ¨Ã¢ÂÂÃ°ÂÂÂ©Ã¢ÂÂÃ°ÂÂÂ§ Famille proche</option>
+              <option value="ami_proche">Ã¢Â­Â Ami proche</option>
+              <option value="enfant">Ã°ÂÂ§Â Enfant</option>
+              <option value="vip">Ã°ÂÂÂ VIP</option>
+              <option value="prestataire">Ã°ÂÂÂ§ Prestataire</option>
             </select>
           </Field>
-          <Field label="NOTES / ALLERGIES"><Input value={newGuest.notes} onChange={e=>setNewGuest({...newGuest,notes:e.target.value})} placeholder="Allergies, mobilitÃ© rÃ©duiteâ¦"/></Field>
-          <Btn onClick={addGuest} style={{marginTop:4}}>Ajouter l'invitÃ©</Btn>
+          <Field label="NOTES / ALLERGIES"><Input value={newGuest.notes} onChange={e=>setNewGuest({...newGuest,notes:e.target.value})} placeholder="Allergies, mobilitÃÂ© rÃÂ©duiteÃ¢ÂÂ¦"/></Field>
+          <Btn onClick={addGuest} style={{marginTop:4}}>Ajouter l'invitÃÂ©</Btn>
         </div>
       </Modal>
 
@@ -3916,7 +3912,7 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
           <Field label={t.fieldCapacity}><Input type="number" value={newTable.capacity} onChange={e=>setNewTable({...newTable,capacity:e.target.value})}/></Field>
           <Field label={t.fieldShape}>
             <div style={{ display:"flex", gap:8 }}>
-              {[["round","â¬¤ Ronde"],["rect","â¬ Rectangle"]].map(([v,l])=>(
+              {[["round","Ã¢Â¬Â¤ Ronde"],["rect","Ã¢ÂÂ¬ Rectangle"]].map(([v,l])=>(
                 <button key={v} onClick={()=>setNewTable({...newTable,shape:v})} style={{
                   flex:1, padding:"10px", borderRadius:10, border:`2px solid ${newTable.shape===v?C.gold:C.border}`,
                   background:newTable.shape===v?C.gold+"22":C.mid, cursor:"pointer", color:newTable.shape===v?C.gold:C.muted,
@@ -3925,7 +3921,7 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
               ))}
             </div>
           </Field>
-          <Field label={`${t.fieldLabel} (optionnel)`}><Input value={newTable.label} onChange={e=>setNewTable({...newTable,label:e.target.value})} placeholder="ex: Famille, Amisâ¦"/></Field>
+          <Field label={`${t.fieldLabel} (optionnel)`}><Input value={newTable.label} onChange={e=>setNewTable({...newTable,label:e.target.value})} placeholder="ex: Famille, AmisÃ¢ÂÂ¦"/></Field>
           <Field label={`${t.fieldColor} (optionnel)`}>
             <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
               {["#C9973A","#E84A6A","#4CAF50","#2196F3","#9C27B0","#FF9800","#8B7EC8","#E8845A"].map(col=>(
@@ -3934,21 +3930,21 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
                   cursor:"pointer", padding:0
                 }}/>
               ))}
-              <button onClick={()=>setNewTable({...newTable,color:undefined})} style={{width:28,height:28,borderRadius:"50%",background:"none",border:`2px solid ${C.border}`,cursor:"pointer",color:C.muted,fontSize:10}}>â</button>
+              <button onClick={()=>setNewTable({...newTable,color:undefined})} style={{width:28,height:28,borderRadius:"50%",background:"none",border:`2px solid ${C.border}`,cursor:"pointer",color:C.muted,fontSize:10}}>Ã¢ÂÂ</button>
             </div>
           </Field>
-          <Btn onClick={addTable} style={{marginTop:4}}>CrÃ©er la table</Btn>
+          <Btn onClick={addTable} style={{marginTop:4}}>CrÃÂ©er la table</Btn>
         </div>
       </Modal>
 
-      <Modal open={showAddZone} onClose={()=>{setShowAddZone(false);setNewZone({label:"",icon:"ð",color:"#C9973A"});}} title="Ajouter une zone">
+      <Modal open={showAddZone} onClose={()=>{setShowAddZone(false);setNewZone({label:"",icon:"Ã°ÂÂÂ",color:"#C9973A"});}} title="Ajouter une zone">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <Field label="NOM DE LA ZONE *">
-            <Input value={newZone.label} onChange={e=>setNewZone({...newZone,label:e.target.value})} placeholder="ex: Piste de danse, Bar, ScÃ¨ne, Photo Boothâ¦"/>
+            <Input value={newZone.label} onChange={e=>setNewZone({...newZone,label:e.target.value})} placeholder="ex: Piste de danse, Bar, ScÃÂ¨ne, Photo BoothÃ¢ÂÂ¦"/>
           </Field>
-          <Field label="ICÃNE">
+          <Field label="ICÃÂNE">
             <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
-              {["ð","ð­","ð¹","ð¸","ð§","ð¿","ð½","ð¥","ð¤","ð°","â²","ðª","ð","ð"].map(ic=>(
+              {["Ã°ÂÂÂ","Ã°ÂÂÂ­","Ã°ÂÂÂ¹","Ã°ÂÂÂ¸","Ã°ÂÂ§Â","Ã°ÂÂÂ¿","Ã°ÂÂÂ½","Ã°ÂÂ¥Â","Ã°ÂÂÂ¤","Ã°ÂÂÂ°","Ã¢ÂÂ²","Ã°ÂÂªÂ","Ã°ÂÂÂ","Ã°ÂÂÂ"].map(ic=>(
                 <button key={ic} onClick={()=>setNewZone({...newZone,icon:ic})} style={{
                   width:38,height:38,borderRadius:8,fontSize:20,background:newZone.icon===ic?C.gold+"33":C.mid,
                   border:`2px solid ${newZone.icon===ic?C.gold:C.border}`,cursor:"pointer",
@@ -3967,20 +3963,20 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
           </Field>
           <Btn disabled={!newZone.label.trim()} onClick={()=>{
             updateEv(function(evUp){ return {...evUp, zones:[...(evUp.zones||[]), {...newZone}]}; });
-            setNewZone({label:"",icon:"ð",color:"#C9973A"});
+            setNewZone({label:"",icon:"Ã°ÂÂÂ",color:"#C9973A"});
             setShowAddZone(false);
           }} style={{marginTop:4}}>Ajouter la zone</Btn>
         </div>
       </Modal>
 
-      <Modal open={showAddFurniture} onClose={()=>{setShowAddFurniture(false);setNewFurniture({label:"",icon:"ðª",color:"#8A7355",width:80,height:40});}} title="Ajouter du mobilier">
+      <Modal open={showAddFurniture} onClose={()=>{setShowAddFurniture(false);setNewFurniture({label:"",icon:"Ã°ÂÂªÂ",color:"#8A7355",width:80,height:40});}} title="Ajouter du mobilier">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <Field label="NOM *">
-            <Input value={newFurniture.label} onChange={e=>setNewFurniture({...newFurniture,label:e.target.value})} placeholder="ex: Buffet, Piano, Podium, Bar, ScÃ¨neâ¦"/>
+            <Input value={newFurniture.label} onChange={e=>setNewFurniture({...newFurniture,label:e.target.value})} placeholder="ex: Buffet, Piano, Podium, Bar, ScÃÂ¨neÃ¢ÂÂ¦"/>
           </Field>
-          <Field label="ICÃNE">
+          <Field label="ICÃÂNE">
             <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
-              {["ðª","ð","ð¹","ð¤","ð½","ð¹","ð°","ðº","ð¼","ð¿","ð¯","ð","ð­","ð²"].map(ic=>(
+              {["Ã°ÂÂªÂ","Ã°ÂÂÂ","Ã°ÂÂÂ¹","Ã°ÂÂÂ¤","Ã°ÂÂÂ½","Ã°ÂÂÂ¹","Ã°ÂÂÂ°","Ã°ÂÂÂº","Ã°ÂÂÂ¼","Ã°ÂÂÂ¿","Ã°ÂÂÂ¯","Ã°ÂÂÂ","Ã°ÂÂÂ­","Ã°ÂÂÂ²"].map(ic=>(
                 <button key={ic} onClick={()=>setNewFurniture({...newFurniture,icon:ic})} style={{
                   width:38,height:38,borderRadius:8,fontSize:20,background:newFurniture.icon===ic?C.gold+"33":C.mid,
                   border:`2px solid ${newFurniture.icon===ic?C.gold:C.border}`,cursor:"pointer",
@@ -4007,16 +4003,16 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
           </Field>
           <Btn disabled={!newFurniture.label.trim()} onClick={()=>{
             updateEv(function(evUp){ return {...evUp, furniture:[...(evUp.furniture||[]), {...newFurniture,id:Date.now(),x:200,y:200}]}; });
-            setNewFurniture({label:"",icon:"ðª",color:"#8A7355",width:80,height:40});
+            setNewFurniture({label:"",icon:"Ã°ÂÂªÂ",color:"#8A7355",width:80,height:40});
             setShowAddFurniture(false);
           }} style={{marginTop:4}}>Ajouter le mobilier</Btn>
         </div>
       </Modal>
 
-      {/* ââ MODAL BUDGET ââ */}
-      <Modal open={showAddBudget} onClose={()=>{setShowAddBudget(false);setNewBudgetLine({category:"salle",label:"",estimated:0,actual:0,paid:false,notes:""}); }} title="Ajouter un poste budgÃ©taire">
+      {/* Ã¢ÂÂÃ¢ÂÂ MODAL BUDGET Ã¢ÂÂÃ¢ÂÂ */}
+      <Modal open={showAddBudget} onClose={()=>{setShowAddBudget(false);setNewBudgetLine({category:"salle",label:"",estimated:0,actual:0,paid:false,notes:""}); }} title="Ajouter un poste budgÃÂ©taire">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label="CATÃGORIE">
+          <Field label="CATÃÂGORIE">
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:6 }}>
               {BUDGET_CATEGORIES.map(cat=>(
                 <button key={cat.id} onClick={()=>setNewBudgetLine({...newBudgetLine,category:cat.id})} style={{
@@ -4028,23 +4024,23 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
               ))}
             </div>
           </Field>
-          <Field label="LIBELLÃ (optionnel)">
-            <Input value={newBudgetLine.label} onChange={e=>setNewBudgetLine({...newBudgetLine,label:e.target.value})} placeholder="ex: ChÃ¢teau de Vincennes, DJ Martinâ¦"/>
+          <Field label="LIBELLÃÂ (optionnel)">
+            <Input value={newBudgetLine.label} onChange={e=>setNewBudgetLine({...newBudgetLine,label:e.target.value})} placeholder="ex: ChÃÂ¢teau de Vincennes, DJ MartinÃ¢ÂÂ¦"/>
           </Field>
           <div style={{ display:"flex", gap:12 }}>
-            <Field label="MONTANT ESTIMÃ (â¬)">
+            <Field label="MONTANT ESTIMÃÂ (Ã¢ÂÂ¬)">
               <Input type="number" value={newBudgetLine.estimated} onChange={e=>setNewBudgetLine({...newBudgetLine,estimated:parseFloat(e.target.value)||0})} placeholder="0"/>
             </Field>
-            <Field label="MONTANT RÃEL (â¬)">
+            <Field label="MONTANT RÃÂEL (Ã¢ÂÂ¬)">
               <Input type="number" value={newBudgetLine.actual} onChange={e=>setNewBudgetLine({...newBudgetLine,actual:parseFloat(e.target.value)||0})} placeholder="0"/>
             </Field>
           </div>
           <Field label="NOTES">
-            <Input value={newBudgetLine.notes} onChange={e=>setNewBudgetLine({...newBudgetLine,notes:e.target.value})} placeholder="Acompte versÃ©, devis reÃ§uâ¦"/>
+            <Input value={newBudgetLine.notes} onChange={e=>setNewBudgetLine({...newBudgetLine,notes:e.target.value})} placeholder="Acompte versÃÂ©, devis reÃÂ§uÃ¢ÂÂ¦"/>
           </Field>
           <label style={{ display:"flex", gap:10, alignItems:"center", fontSize:13, color:C.muted, cursor:"pointer" }}>
             <input type="checkbox" checked={newBudgetLine.paid} onChange={e=>setNewBudgetLine({...newBudgetLine,paid:e.target.checked})} style={{ width:16,height:16 }}/>
-            DÃ©jÃ  payÃ© â
+            DÃÂ©jÃÂ  payÃÂ© Ã¢ÂÂ
           </label>
           <Btn onClick={()=>{
             updateEv(ev2=>({...ev2, budget:[...(ev2.budget||[]), {...newBudgetLine}]}));
@@ -4054,23 +4050,23 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
         </div>
       </Modal>
 
-      {/* ââ MODAL TÃCHE PLANNING ââ */}
-      <Modal open={showAddTask} onClose={()=>{setShowAddTask(false);setNewTask({title:"",dueDate:"",responsible:"",priority:"medium",done:false,notes:""});}} title="Ajouter une tÃ¢che">
+      {/* Ã¢ÂÂÃ¢ÂÂ MODAL TÃÂCHE PLANNING Ã¢ÂÂÃ¢ÂÂ */}
+      <Modal open={showAddTask} onClose={()=>{setShowAddTask(false);setNewTask({title:"",dueDate:"",responsible:"",priority:"medium",done:false,notes:""});}} title="Ajouter une tÃÂ¢che">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label="TÃCHE *">
-            <Input value={newTask.title} onChange={e=>setNewTask({...newTask,title:e.target.value})} placeholder="ex: Confirmer le traiteur, Envoyer les invitationsâ¦"/>
+          <Field label="TÃÂCHE *">
+            <Input value={newTask.title} onChange={e=>setNewTask({...newTask,title:e.target.value})} placeholder="ex: Confirmer le traiteur, Envoyer les invitationsÃ¢ÂÂ¦"/>
           </Field>
           <div style={{ display:"flex", gap:12 }}>
             <Field label="DATE LIMITE">
               <Input type="date" value={newTask.dueDate} onChange={e=>setNewTask({...newTask,dueDate:e.target.value})}/>
             </Field>
             <Field label="RESPONSABLE">
-              <Input value={newTask.responsible} onChange={e=>setNewTask({...newTask,responsible:e.target.value})} placeholder="ex: Marie, Traiteurâ¦"/>
+              <Input value={newTask.responsible} onChange={e=>setNewTask({...newTask,responsible:e.target.value})} placeholder="ex: Marie, TraiteurÃ¢ÂÂ¦"/>
             </Field>
           </div>
-          <Field label="PRIORITÃ">
+          <Field label="PRIORITÃÂ">
             <div style={{ display:"flex", gap:8 }}>
-              {[["high","ð´ Urgent",C.red],["medium","ð¡ Normal",C.gold],["low","ð¢ Faible",C.green]].map(([v,l,col])=>(
+              {[["high","Ã°ÂÂÂ´ Urgent",C.red],["medium","Ã°ÂÂÂ¡ Normal",C.gold],["low","Ã°ÂÂÂ¢ Faible",C.green]].map(([v,l,col])=>(
                 <button key={v} onClick={()=>setNewTask({...newTask,priority:v})} style={{
                   flex:1, padding:"9px 6px", borderRadius:10, border:`2px solid ${newTask.priority===v?col:C.border}`,
                   background:newTask.priority===v?col+"22":C.mid, cursor:"pointer", color:newTask.priority===v?col:C.muted,
@@ -4080,30 +4076,30 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
             </div>
           </Field>
           <Field label="NOTES (optionnel)">
-            <Input value={newTask.notes} onChange={e=>setNewTask({...newTask,notes:e.target.value})} placeholder="PrÃ©cisionsâ¦"/>
+            <Input value={newTask.notes} onChange={e=>setNewTask({...newTask,notes:e.target.value})} placeholder="PrÃÂ©cisionsÃ¢ÂÂ¦"/>
           </Field>
           <Btn disabled={!newTask.title.trim()} onClick={()=>{
             updateEv(ev2=>({...ev2, planning:[...(ev2.planning||[]), {...newTask}]}));
             setNewTask({title:"",dueDate:"",responsible:"",priority:"medium",done:false,notes:""});
             setShowAddTask(false);
-          }} style={{marginTop:4}}>Ajouter la tÃ¢che</Btn>
+          }} style={{marginTop:4}}>Ajouter la tÃÂ¢che</Btn>
         </div>
       </Modal>
 
-      {/* ââ MODAL PROGRAMME ââ */}
-      <Modal open={showAddProgramItem} onClose={()=>{setShowAddProgramItem(false);setNewProgramItem({time:"",label:"",icon:"ð¤",notes:""}); }} title="Ajouter une Ã©tape au programme">
+      {/* Ã¢ÂÂÃ¢ÂÂ MODAL PROGRAMME Ã¢ÂÂÃ¢ÂÂ */}
+      <Modal open={showAddProgramItem} onClose={()=>{setShowAddProgramItem(false);setNewProgramItem({time:"",label:"",icon:"Ã°ÂÂÂ¤",notes:""}); }} title="Ajouter une ÃÂ©tape au programme">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <div style={{ display:"flex", gap:12 }}>
             <Field label="HEURE">
               <Input type="time" value={newProgramItem.time} onChange={e=>setNewProgramItem({...newProgramItem,time:e.target.value})}/>
             </Field>
-            <Field label="ÃTAPE *">
-              <Input value={newProgramItem.label} onChange={e=>setNewProgramItem({...newProgramItem,label:e.target.value})} placeholder="ex: Vin d'honneur, DÃ®ner, Ouverture de balâ¦"/>
+            <Field label="ÃÂTAPE *">
+              <Input value={newProgramItem.label} onChange={e=>setNewProgramItem({...newProgramItem,label:e.target.value})} placeholder="ex: Vin d'honneur, DÃÂ®ner, Ouverture de balÃ¢ÂÂ¦"/>
             </Field>
           </div>
-          <Field label="ICÃNE">
+          <Field label="ICÃÂNE">
             <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
-              {["ð¥","ð½","ð","ð¤","ð¸","ð","ð","ð­","ð»","ðµ","ð","ð","ð","ð"].map(ic=>(
+              {["Ã°ÂÂ¥Â","Ã°ÂÂÂ½","Ã°ÂÂÂ","Ã°ÂÂÂ¤","Ã°ÂÂÂ¸","Ã°ÂÂÂ","Ã°ÂÂÂ","Ã°ÂÂÂ­","Ã°ÂÂÂ»","Ã°ÂÂÂµ","Ã°ÂÂÂ","Ã°ÂÂÂ","Ã°ÂÂÂ","Ã°ÂÂÂ"].map(ic=>(
                 <button key={ic} onClick={()=>setNewProgramItem({...newProgramItem,icon:ic})} style={{
                   width:38,height:38,borderRadius:8,fontSize:20,background:newProgramItem.icon===ic?C.gold+"33":C.mid,
                   border:`2px solid ${newProgramItem.icon===ic?C.gold:C.border}`,cursor:"pointer",
@@ -4112,35 +4108,35 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
             </div>
           </Field>
           <Field label="NOTES (optionnel)">
-            <Input value={newProgramItem.notes} onChange={e=>setNewProgramItem({...newProgramItem,notes:e.target.value})} placeholder="DurÃ©e, lieu, responsableâ¦"/>
+            <Input value={newProgramItem.notes} onChange={e=>setNewProgramItem({...newProgramItem,notes:e.target.value})} placeholder="DurÃÂ©e, lieu, responsableÃ¢ÂÂ¦"/>
           </Field>
           <Btn disabled={!newProgramItem.label.trim()||!newProgramItem.time} onClick={()=>{
             updateEv(ev2=>({...ev2, programme:[...(ev2.programme||[]), {...newProgramItem}]}));
-            setNewProgramItem({time:"",label:"",icon:"ð¤",notes:""});
+            setNewProgramItem({time:"",label:"",icon:"Ã°ÂÂÂ¤",notes:""});
             setShowAddProgramItem(false);
-          }} style={{marginTop:4}}>Ajouter l'Ã©tape</Btn>
+          }} style={{marginTop:4}}>Ajouter l'ÃÂ©tape</Btn>
         </div>
       </Modal>
 
-      {/* ââ MODAL PRESTATAIRE ââ */}
+      {/* Ã¢ÂÂÃ¢ÂÂ MODAL PRESTATAIRE Ã¢ÂÂÃ¢ÂÂ */}
       <Modal open={showAddSupplier} onClose={()=>{setShowAddSupplier(false);setNewSupplier({name:"",role:"",phone:"",email:"",notes:""}); }} title="Ajouter un prestataire">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label="NOM / SOCIÃTÃ *">
-            <Input value={newSupplier.name} onChange={e=>setNewSupplier({...newSupplier,name:e.target.value})} placeholder="ex: DJ Martin, Fleurs du Soleil, Photos by Julieâ¦"/>
+          <Field label="NOM / SOCIÃÂTÃÂ *">
+            <Input value={newSupplier.name} onChange={e=>setNewSupplier({...newSupplier,name:e.target.value})} placeholder="ex: DJ Martin, Fleurs du Soleil, Photos by JulieÃ¢ÂÂ¦"/>
           </Field>
-          <Field label="RÃLE / PRESTATION">
-            <Input value={newSupplier.role} onChange={e=>setNewSupplier({...newSupplier,role:e.target.value})} placeholder="ex: DJ, Fleuriste, Photographe, Traiteurâ¦"/>
+          <Field label="RÃÂLE / PRESTATION">
+            <Input value={newSupplier.role} onChange={e=>setNewSupplier({...newSupplier,role:e.target.value})} placeholder="ex: DJ, Fleuriste, Photographe, TraiteurÃ¢ÂÂ¦"/>
           </Field>
           <div style={{ display:"flex", gap:12 }}>
-            <Field label="TÃLÃPHONE">
+            <Field label="TÃÂLÃÂPHONE">
               <Input type="tel" value={newSupplier.phone} onChange={e=>setNewSupplier({...newSupplier,phone:e.target.value})} placeholder="06 00 00 00 00"/>
             </Field>
             <Field label="EMAIL">
               <Input type="email" value={newSupplier.email} onChange={e=>setNewSupplier({...newSupplier,email:e.target.value})} placeholder="contact@prestataire.fr"/>
             </Field>
           </div>
-          <Field label="NOTES (contrat, acompte, horairesâ¦)">
-            <Input value={newSupplier.notes} onChange={e=>setNewSupplier({...newSupplier,notes:e.target.value})} placeholder="Contrat signÃ©, acompte versÃ©, arrivÃ©e 14hâ¦"/>
+          <Field label="NOTES (contrat, acompte, horairesÃ¢ÂÂ¦)">
+            <Input value={newSupplier.notes} onChange={e=>setNewSupplier({...newSupplier,notes:e.target.value})} placeholder="Contrat signÃÂ©, acompte versÃÂ©, arrivÃÂ©e 14hÃ¢ÂÂ¦"/>
           </Field>
           <Btn disabled={!newSupplier.name.trim()} onClick={()=>{
             updateEv(ev2=>({...ev2, suppliers:[...(ev2.suppliers||[]), {...newSupplier,id:Date.now()}]}));
@@ -4152,15 +4148,15 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
 
       <Modal open={showConstraint} onClose={()=>setShowConstraint(false)} title="Nouvelle contrainte">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label="PREMIER INVITÃ">
+          <Field label="PREMIER INVITÃÂ">
             <Select value={constraint.a} onChange={e=>setConstraint({...constraint,a:parseInt(e.target.value)||e.target.value})}>
-              <option value="">â Choisir â</option>
+              <option value="">Ã¢ÂÂ Choisir Ã¢ÂÂ</option>
               {ev.guests.map(g=><option key={g.id} value={g.id}>{g.name}</option>)}
             </Select>
           </Field>
           <Field label={t.settingType}>
             <div style={{ display:"flex", gap:8 }}>
-              {[["together","ð¤ Ensemble",C.green],["apart","â¡ SÃ©parÃ©s",C.red]].map(([v,l,col])=>(
+              {[["together","Ã°ÂÂ¤Â Ensemble",C.green],["apart","Ã¢ÂÂ¡ SÃÂ©parÃÂ©s",C.red]].map(([v,l,col])=>(
                 <button key={v} onClick={()=>setConstraint({...constraint,type:v})} style={{
                   flex:1, padding:"10px", borderRadius:10, border:`2px solid ${constraint.type===v?col:C.border}`,
                   background:constraint.type===v?col+"22":C.mid, cursor:"pointer", color:constraint.type===v?col:C.muted,
@@ -4169,9 +4165,9 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
               ))}
             </div>
           </Field>
-          <Field label="DEUXIÃME INVITÃ">
+          <Field label="DEUXIÃÂME INVITÃÂ">
             <Select value={constraint.b} onChange={e=>setConstraint({...constraint,b:parseInt(e.target.value)||e.target.value})}>
-              <option value="">â Choisir â</option>
+              <option value="">Ã¢ÂÂ Choisir Ã¢ÂÂ</option>
               {ev.guests.filter(g=>g.id!==constraint.a).map(g=><option key={g.id} value={g.id}>{g.name}</option>)}
             </Select>
           </Field>
@@ -4179,9 +4175,9 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
         </div>
       </Modal>
 
-      <Modal open={showQR} onClose={()=>setShowQR(false)} title={`QR Code â ${ev.name}`} width={400}>
+      <Modal open={showQR} onClose={()=>setShowQR(false)} title={`QR Code Ã¢ÂÂ ${ev.name}`} width={400}>
         <div style={{ textAlign:"center" }} id="qr-modal">
-          <p style={{ color:C.muted, fontSize:13, marginBottom:20 }}>Partagez ce QR code avec vos invitÃ©s pour qu'ils renseignent leurs prÃ©fÃ©rences.</p>
+          <p style={{ color:C.muted, fontSize:13, marginBottom:20 }}>Partagez ce QR code avec vos invitÃÂ©s pour qu'ils renseignent leurs prÃÂ©fÃÂ©rences.</p>
           <div style={{ display:"flex", justifyContent:"center", marginBottom:20 }}>
             <div style={{ padding:16,background:C.cream,borderRadius:16,border:`2px solid ${C.border}`,display:"inline-block" }}>
               <QRCodeWidget value={`https://tableplan-seven.vercel.app/?join=${(window.firebase?.auth?.().currentUser?.uid||"")}___${ev.id}`} size={180}/>
@@ -4189,23 +4185,23 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
           </div>
           <div style={{ background:C.mid,borderRadius:8,padding:"8px 16px",fontSize:12,color:C.muted,marginBottom:20,fontFamily:"monospace",cursor:"pointer",display:"flex",alignItems:"center",gap:8 }}
             onClick={()=>{navigator.clipboard.writeText(`https://tableplan-seven.vercel.app/?join=${(window.firebase?.auth?.().currentUser?.uid||"")}___${ev.id}`);}} title="Cliquer pour copier">
-            tableplan-seven.vercel.app/?join={ev.id} (ð via Partager) <span style={{fontSize:10}}>ð</span>
+            tableplan-seven.vercel.app/?join={ev.id} (Ã°ÂÂÂ via Partager) <span style={{fontSize:10}}>Ã°ÂÂÂ</span>
           </div>
           <div style={{ display:"flex", gap:10, justifyContent:"center", flexWrap:"wrap" }}>
-            <Btn small onClick={()=>{const c=document.querySelector("#qr-modal canvas");if(!c){alert("QR non disponible");return;}const l=document.createElement("a");l.download=`QR-${ev.name}.png`;l.href=c.toDataURL("image/png");l.click();}}>â¬ PNG</Btn>
-            <Btn small variant="ghost" onClick={()=>{navigator.clipboard.writeText(`https://tableplan-seven.vercel.app/?join=${(window.firebase?.auth?.().currentUser?.uid||"")}___${ev.id}`).then(()=>alert("Lien copiÃ© !"))}}>ð Copier le lien</Btn>
-            <Btn small variant="muted" onClick={()=>setShowSettings(false)}>ð¨ Imprimer</Btn>
+            <Btn small onClick={()=>{const c=document.querySelector("#qr-modal canvas");if(!c){alert("QR non disponible");return;}const l=document.createElement("a");l.download=`QR-${ev.name}.png`;l.href=c.toDataURL("image/png");l.click();}}>Ã¢Â¬Â PNG</Btn>
+            <Btn small variant="ghost" onClick={()=>{navigator.clipboard.writeText(`https://tableplan-seven.vercel.app/?join=${(window.firebase?.auth?.().currentUser?.uid||"")}___${ev.id}`).then(()=>alert("Lien copiÃÂ© !"))}}>Ã°ÂÂÂ Copier le lien</Btn>
+            <Btn small variant="muted" onClick={()=>setShowSettings(false)}>Ã°ÂÂÂ¨ Imprimer</Btn>
           </div>
         </div>
       </Modal>
 
-      <Modal open={showSettings} onClose={()=>setShowSettings(false)} title="ParamÃ¨tres de l'Ã©vÃ©nement">
+      <Modal open={showSettings} onClose={()=>setShowSettings(false)} title="ParamÃÂ¨tres de l'ÃÂ©vÃÂ©nement">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <Field label={t.settingName}><Input value={ev.name} onChange={e=>updateEv(evUp=>({...evUp,name:e.target.value}))}/></Field>
           <Field label={t.settingDate}><Input type="date" value={ev.date} onChange={e=>updateEv(evUp=>({...evUp,date:e.target.value}))}/></Field>
           <Field label={t.eventNotes}>
             <textarea value={ev.notes||""} onChange={e=>updateEv(evUp=>({...evUp,notes:e.target.value}))} rows={3}
-              placeholder="Salle des fÃªtes, traiteur, prestataires..."
+              placeholder="Salle des fÃÂªtes, traiteur, prestataires..."
               style={{...inputStyle, resize:"vertical", lineHeight:1.6}}/>
           </Field>
           <Field label={t.settingType}>
@@ -4225,10 +4221,10 @@ RÃ©ponds en franÃ§ais, de faÃ§on concrÃ¨te, bienveillante et proactive. 
   );
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 // VOUCHER MODAL
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 
 function VoucherModal({ onClose, onApply }) {
   const [code, setCode] = useState("");
@@ -4238,21 +4234,21 @@ function VoucherModal({ onClose, onApply }) {
   const handleApply = () => {
     const v = VOUCHERS[code.trim().toUpperCase()];
     if (!v) {
-      setMsg({ type: "error", text: "â Code invalide ou expirÃ©" });
+      setMsg({ type: "error", text: "Ã¢ÂÂ Code invalide ou expirÃÂ©" });
       return;
     }
     setSuccess(true);
-    setMsg({ type: "success", text: `â Code appliquÃ© : ${v.description}` });
+    setMsg({ type: "success", text: `Ã¢ÂÂ Code appliquÃÂ© : ${v.description}` });
     setTimeout(() => { onApply(code.trim().toUpperCase(), v); onClose(); }, 1800);
   };
 
   return (
     <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.75)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:2000 }}>
       <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:20, padding:40, width:380, textAlign:"center", boxShadow:"0 20px 60px rgba(0,0,0,0.5)" }}>
-        <div style={{ fontSize:48, marginBottom:12 }}>ðï¸</div>
+        <div style={{ fontSize:48, marginBottom:12 }}>Ã°ÂÂÂÃ¯Â¸Â</div>
         <h2 style={{ color:C.gold, margin:"0 0 8px", fontSize:22, fontWeight:400, letterSpacing:1 }}>Code promotionnel</h2>
         <p style={{ color:C.muted, fontSize:13, margin:"0 0 24px", lineHeight:1.6 }}>
-          Entrez votre bon de rÃ©duction pour activer votre offre
+          Entrez votre bon de rÃÂ©duction pour activer votre offre
         </p>
         <input
           value={code}
@@ -4295,11 +4291,11 @@ function VoucherModal({ onClose, onApply }) {
               opacity: !code ? 0.5 : 1, transition:"all 0.2s"
             }}
           >
-            {success ? "â AppliquÃ© !" : "Appliquer le code"}
+            {success ? "Ã¢ÂÂ AppliquÃÂ© !" : "Appliquer le code"}
           </button>
         </div>
         <div style={{ marginTop:20, fontSize:11, color:C.muted, lineHeight:1.8 }}>
-          Codes actifs : <span style={{color:C.gold}}>BIENVENUE</span> Â· <span style={{color:C.gold}}>MARIAGE2026</span> Â· <span style={{color:C.gold}}>PARTENAIRE</span> Â· <span style={{color:C.gold}}>VIP100</span>
+          Codes actifs : <span style={{color:C.gold}}>BIENVENUE</span> ÃÂ· <span style={{color:C.gold}}>MARIAGE2026</span> ÃÂ· <span style={{color:C.gold}}>PARTENAIRE</span> ÃÂ· <span style={{color:C.gold}}>VIP100</span>
         </div>
       </div>
     </div>
@@ -4307,7 +4303,7 @@ function VoucherModal({ onClose, onApply }) {
 }
 
 // DASHBOARD (Admin view)
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 
 function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, onToggleTheme, t, lang, setLang }) {
   const [appliedVoucher, setAppliedVoucher] = useState(null);
@@ -4347,14 +4343,14 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
       tables:[], guests:[], constraints:[], menu:null,
     };
     setEvents(prev=>[...prev,ev]);
-    showToast(`â "${ev.name}" crÃ©Ã© !`);
+    showToast(`Ã¢ÂÂ "${ev.name}" crÃÂ©ÃÂ© !`);
     onOpenEvent(ev.id);
     setShowNew(false);
   }
 
   const handleApplyVoucher = (code, voucher) => {
     setAppliedVoucher({ code, ...voucher });
-    showToast(`ðï¸ Code "${code}" appliquÃ© !`);
+    showToast(`Ã°ÂÂÂÃ¯Â¸Â Code "${code}" appliquÃÂ© !`);
   };
 
   // Calculs stats globales
@@ -4381,17 +4377,17 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
 
       {/* NAV */}
       <div style={{ background:C.card+"ee", backdropFilter:"blur(8px)", borderBottom:`1px solid ${C.border}`, padding:"0 32px", display:"flex", alignItems:"center", height:60, position:"sticky", top:0, zIndex:100 }}>
-        <span style={{ fontSize:18, color:C.gold, letterSpacing:2, fontWeight:400 }}>ðª TableMaÃ®tre</span>
+        <span style={{ fontSize:18, color:C.gold, letterSpacing:2, fontWeight:400 }}>Ã°ÂÂªÂ TableMaÃÂ®tre</span>
         <div style={{flex:1}}/>
         <div style={{ display:"flex", alignItems:"center", gap:10 }}>
           <select value={lang} onChange={e=>setLang(e.target.value)} style={{ background:"none", border:`1px solid ${C.border}`, borderRadius:8, color:C.muted, cursor:"pointer", fontSize:12, padding:"5px 8px", fontFamily:"inherit", outline:"none" }}>
             {Object.entries(LANG_FLAGS).map(([code, flag]) => (<option key={code} value={code}>{flag} {LANG_NAMES[code]}</option>))}
           </select>
           <button onClick={onToggleTheme} style={{ padding:"6px 10px", background:"none", border:`1px solid ${C.border}`, borderRadius:8, color:C.muted, cursor:"pointer", fontSize:15 }}>
-            {lightMode ? "ð" : "âï¸"}
+            {lightMode ? "Ã°ÂÂÂ" : "Ã¢ÂÂÃ¯Â¸Â"}
           </button>
           <button onClick={()=>setShowVoucher(true)} style={{ padding:"6px 14px", background:"none", border:`1px solid ${C.gold}`, borderRadius:8, color:C.gold, cursor:"pointer", fontSize:12, fontFamily:"inherit", display:"flex", alignItems:"center", gap:6 }}>
-            ðï¸ Code promo{appliedVoucher && <span style={{background:C.gold,color:C.dark,borderRadius:4,padding:"1px 5px",fontSize:10,fontWeight:700}}>â</span>}
+            Ã°ÂÂÂÃ¯Â¸Â Code promo{appliedVoucher && <span style={{background:C.gold,color:C.dark,borderRadius:4,padding:"1px 5px",fontSize:10,fontWeight:700}}>Ã¢ÂÂ</span>}
           </button>
           <div style={{ display:"flex", alignItems:"center", gap:8, padding:"4px 10px", background:C.mid, borderRadius:99 }}>
             {user.photoURL
@@ -4400,7 +4396,7 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
             }
             <span style={{ color:C.muted, fontSize:12 }}>{user.name.split(" ")[0]}</span>
           </div>
-          <button onClick={onLogout} style={{ background:"none", border:`1px solid ${C.border}`, borderRadius:8, color:C.muted, cursor:"pointer", fontSize:12, padding:"6px 12px", fontFamily:"inherit" }}>DÃ©connexion</button>
+          <button onClick={onLogout} style={{ background:"none", border:`1px solid ${C.border}`, borderRadius:8, color:C.muted, cursor:"pointer", fontSize:12, padding:"6px 12px", fontFamily:"inherit" }}>DÃÂ©connexion</button>
         </div>
       </div>
 
@@ -4410,20 +4406,20 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
         <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:40, flexWrap:"wrap", gap:20 }}>
           <div>
             <h1 style={{ fontSize:32, fontWeight:400, margin:"0 0 6px", letterSpacing:.5 }}>
-              Bonjour, <span style={{ color:C.gold }}>{user.name.split(" ")[0]}</span> ð
+              Bonjour, <span style={{ color:C.gold }}>{user.name.split(" ")[0]}</span> Ã°ÂÂÂ
             </h1>
             <p style={{ color:C.muted, margin:0, fontSize:14 }}>
-              {myEventsRaw.length === 0 ? "PrÃªt Ã  crÃ©er votre premier Ã©vÃ©nement ?" : `${myEventsRaw.length} Ã©vÃ©nement${myEventsRaw.length>1?"s":""} Â· ${totalGuests} invitÃ©s Â· ${totalTables} tables`}
+              {myEventsRaw.length === 0 ? "PrÃÂªt ÃÂ  crÃÂ©er votre premier ÃÂ©vÃÂ©nement ?" : `${myEventsRaw.length} ÃÂ©vÃÂ©nement${myEventsRaw.length>1?"s":""} ÃÂ· ${totalGuests} invitÃÂ©s ÃÂ· ${totalTables} tables`}
             </p>
           </div>
-          <Btn onClick={()=>setShowNew(true)} style={{ fontSize:14, padding:"12px 28px" }}>+ Nouvel Ã©vÃ©nement</Btn>
+          <Btn onClick={()=>setShowNew(true)} style={{ fontSize:14, padding:"12px 28px" }}>+ Nouvel ÃÂ©vÃÂ©nement</Btn>
         </div>
 
         {/* KPI bar si on a des events */}
         {myEventsRaw.length > 0 && nextEvent && (
           <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:16, padding:"16px 24px", marginBottom:32, display:"flex", gap:32, alignItems:"center", flexWrap:"wrap" }}>
             <div>
-              <div style={{ color:C.muted, fontSize:11, letterSpacing:1, marginBottom:4 }}>PROCHAIN ÃVÃNEMENT</div>
+              <div style={{ color:C.muted, fontSize:11, letterSpacing:1, marginBottom:4 }}>PROCHAIN ÃÂVÃÂNEMENT</div>
               <div style={{ color:C.cream, fontSize:15, fontWeight:600 }}>{nextEvent.name}</div>
             </div>
             <div style={{ width:1, height:36, background:C.border }}/>
@@ -4431,9 +4427,9 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
               const days = Math.ceil((new Date(nextEvent.date)-new Date())/86400000);
               return (
                 <div>
-                  <div style={{ color:C.muted, fontSize:11, letterSpacing:1, marginBottom:4 }}>COMPTE Ã REBOURS</div>
+                  <div style={{ color:C.muted, fontSize:11, letterSpacing:1, marginBottom:4 }}>COMPTE ÃÂ REBOURS</div>
                   <div style={{ color:days<=7?C.red:days<=30?"#E8845A":C.gold, fontSize:22, fontWeight:700 }}>
-                    {days===0?"Aujourd'hui !":days<0?"PassÃ©":`Jâ${days}`}
+                    {days===0?"Aujourd'hui !":days<0?"PassÃÂ©":`JÃ¢ÂÂ${days}`}
                   </div>
                 </div>
               );
@@ -4442,52 +4438,52 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
             <div>
               <div style={{ color:C.muted, fontSize:11, letterSpacing:1, marginBottom:4 }}>RSVP</div>
               <div style={{ display:"flex", gap:10, alignItems:"center" }}>
-                <span style={{ color:C.green, fontSize:14, fontWeight:700 }}>â {(nextEvent.guests||[]).filter(g=>g.rsvp==="confirmed").length}</span>
-                <span style={{ color:C.gold, fontSize:14 }}>â³ {(nextEvent.guests||[]).filter(g=>!g.rsvp||g.rsvp==="pending").length}</span>
-                <span style={{ color:C.red, fontSize:14 }}>â {(nextEvent.guests||[]).filter(g=>g.rsvp==="declined").length}</span>
+                <span style={{ color:C.green, fontSize:14, fontWeight:700 }}>Ã¢ÂÂ {(nextEvent.guests||[]).filter(g=>g.rsvp==="confirmed").length}</span>
+                <span style={{ color:C.gold, fontSize:14 }}>Ã¢ÂÂ³ {(nextEvent.guests||[]).filter(g=>!g.rsvp||g.rsvp==="pending").length}</span>
+                <span style={{ color:C.red, fontSize:14 }}>Ã¢ÂÂ {(nextEvent.guests||[]).filter(g=>g.rsvp==="declined").length}</span>
               </div>
             </div>
             <div style={{ flex:1 }}/>
-            <Btn small onClick={()=>onOpenEvent(nextEvent.id)}>Ouvrir â</Btn>
+            <Btn small onClick={()=>onOpenEvent(nextEvent.id)}>Ouvrir Ã¢ÂÂ</Btn>
           </div>
         )}
 
         {/* Search */}
         <div style={{ position:"relative", marginBottom:28 }}>
-          <span style={{ position:"absolute", left:16, top:"50%", transform:"translateY(-50%)", color:C.muted, fontSize:16, pointerEvents:"none" }}>ð</span>
-          <input value={globalSearch} onChange={e=>setGlobalSearch(e.target.value)} placeholder="Rechercher un Ã©vÃ©nement ou un invitÃ©â¦"
+          <span style={{ position:"absolute", left:16, top:"50%", transform:"translateY(-50%)", color:C.muted, fontSize:16, pointerEvents:"none" }}>Ã°ÂÂÂ</span>
+          <input value={globalSearch} onChange={e=>setGlobalSearch(e.target.value)} placeholder="Rechercher un ÃÂ©vÃÂ©nement ou un invitÃÂ©Ã¢ÂÂ¦"
             style={{ width:"100%", padding:"12px 16px 12px 44px", background:C.card, border:`1px solid ${C.border}`, borderRadius:12, color:C.cream, fontSize:14, fontFamily:"Georgia,serif", outline:"none", boxSizing:"border-box" }}/>
-          {globalSearch && <button onClick={()=>setGlobalSearch("")} style={{ position:"absolute", right:14, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:16 }}>â</button>}
+          {globalSearch && <button onClick={()=>setGlobalSearch("")} style={{ position:"absolute", right:14, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:16 }}>Ã¢ÂÂ</button>}
         </div>
 
         {/* ONBOARDING vide */}
         {myEvents.length === 0 && !globalSearch && (
           <div style={{ textAlign:"center", padding:"80px 20px" }}>
-            <div style={{ fontSize:64, marginBottom:20 }}>ð</div>
-            <h2 style={{ fontSize:24, fontWeight:400, color:C.gold, marginBottom:12 }}>CrÃ©ez votre premier Ã©vÃ©nement</h2>
+            <div style={{ fontSize:64, marginBottom:20 }}>Ã°ÂÂÂ</div>
+            <h2 style={{ fontSize:24, fontWeight:400, color:C.gold, marginBottom:12 }}>CrÃÂ©ez votre premier ÃÂ©vÃÂ©nement</h2>
             <p style={{ color:C.muted, fontSize:14, maxWidth:400, margin:"0 auto 32px", lineHeight:1.7 }}>
-              Plan de table, invitÃ©s, budget, programmeâ¦ tout est ici. Commencez en 30 secondes.
+              Plan de table, invitÃÂ©s, budget, programmeÃ¢ÂÂ¦ tout est ici. Commencez en 30 secondes.
             </p>
             <div style={{ display:"flex", justifyContent:"center", gap:16, flexWrap:"wrap", marginBottom:40 }}>
-              {["1. CrÃ©ez votre Ã©vÃ©nement","2. Ajoutez vos invitÃ©s","3. Placez-les sur le plan"].map((step,i)=>(
+              {["1. CrÃÂ©ez votre ÃÂ©vÃÂ©nement","2. Ajoutez vos invitÃÂ©s","3. Placez-les sur le plan"].map((step,i)=>(
                 <div key={i} style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:12, padding:"14px 20px", fontSize:13, color:C.muted, display:"flex", alignItems:"center", gap:8 }}>
                   <span style={{ width:24, height:24, borderRadius:"50%", background:C.gold+"22", color:C.gold, display:"flex", alignItems:"center", justifyContent:"center", fontSize:12, fontWeight:700, flexShrink:0 }}>{i+1}</span>
                   {step.replace(/^\d\. /,"")}
                 </div>
               ))}
             </div>
-            <Btn onClick={()=>setShowNew(true)} style={{ fontSize:15, padding:"14px 36px" }}>â¨ CrÃ©er mon premier Ã©vÃ©nement</Btn>
+            <Btn onClick={()=>setShowNew(true)} style={{ fontSize:15, padding:"14px 36px" }}>Ã¢ÂÂ¨ CrÃÂ©er mon premier ÃÂ©vÃÂ©nement</Btn>
           </div>
         )}
 
         {myEvents.length === 0 && globalSearch && (
           <div style={{ textAlign:"center", padding:"60px 20px", color:C.muted }}>
-            <div style={{ fontSize:48, marginBottom:16 }}>ð</div>
-            <p>Aucun rÃ©sultat pour Â«&nbsp;{globalSearch}&nbsp;Â»</p>
+            <div style={{ fontSize:48, marginBottom:16 }}>Ã°ÂÂÂ</div>
+            <p>Aucun rÃÂ©sultat pour ÃÂ«&nbsp;{globalSearch}&nbsp;ÃÂ»</p>
           </div>
         )}
 
-        {/* GRILLE ÃVÃNEMENTS */}
+        {/* GRILLE ÃÂVÃÂNEMENTS */}
         <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))", gap:20 }}>
           {myEvents.map(ev=>{
             const theme = THEMES_CONFIG[ev.type]||THEMES_CONFIG.autre;
@@ -4526,26 +4522,26 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
                     <div style={{ display:"flex", gap:6, alignItems:"center" }}>
                       {days !== null && (
                         <div style={{ background:days<=0?C.red+"22":days<=7?C.red+"22":days<=30?"#E8845A22":C.gold+"22", border:`1px solid ${days<=7?C.red:days<=30?"#E8845A":C.gold}44`, borderRadius:8, padding:"4px 10px", fontSize:11, fontWeight:700, color:days<=7?C.red:days<=30?"#E8845A":C.gold }}>
-                          {days<=0?"PassÃ©":days===0?"Auj.":"Jâ"+days}
+                          {days<=0?"PassÃÂ©":days===0?"Auj.":"JÃ¢ÂÂ"+days}
                         </div>
                       )}
-                      <button onClick={e=>{e.stopPropagation();const copy={...ev,id:Date.now(),name:ev.name+" (copie)",ownerId:user.id};setEvents(prev=>[...prev,copy]);showToast("ÃvÃ©nement dupliquÃ© !");}}
-                        style={{background:"none",border:`1px solid ${C.border}`,borderRadius:8,color:C.muted,cursor:"pointer",fontSize:13,padding:"4px 8px"}}>â§</button>
+                      <button onClick={e=>{e.stopPropagation();const copy={...ev,id:Date.now(),name:ev.name+" (copie)",ownerId:user.id};setEvents(prev=>[...prev,copy]);showToast("ÃÂvÃÂ©nement dupliquÃÂ© !");}}
+                        style={{background:"none",border:`1px solid ${C.border}`,borderRadius:8,color:C.muted,cursor:"pointer",fontSize:13,padding:"4px 8px"}}>Ã¢Â§Â</button>
                       <button onClick={e=>{e.stopPropagation();setDeleteConfirm(ev.id);}}
-                        style={{background:"none",border:`1px solid ${C.border}`,borderRadius:8,color:C.muted,cursor:"pointer",fontSize:13,padding:"4px 8px"}}>ð</button>
+                        style={{background:"none",border:`1px solid ${C.border}`,borderRadius:8,color:C.muted,cursor:"pointer",fontSize:13,padding:"4px 8px"}}>Ã°ÂÂÂ</button>
                     </div>
                   </div>
 
                   {/* Date */}
                   <div style={{ color:C.muted, fontSize:12, marginBottom:16 }}>
-                    ð {ev.date || "Date non dÃ©finie"}
+                    Ã°ÂÂÂ {ev.date || "Date non dÃÂ©finie"}
                   </div>
 
                   {/* Stats row */}
                   <div style={{ display:"flex", gap:16, marginBottom:14, flexWrap:"wrap" }}>
-                    <span style={{ color:C.muted, fontSize:12 }}>ðª {ev.tables.length} tables</span>
-                    <span style={{ color:C.muted, fontSize:12 }}>ð¤ {ev.guests.length} invitÃ©s</span>
-                    {unseated>0 && <span style={{ color:C.red, fontSize:12 }}>â  {unseated} non placÃ©s</span>}
+                    <span style={{ color:C.muted, fontSize:12 }}>Ã°ÂÂªÂ {ev.tables.length} tables</span>
+                    <span style={{ color:C.muted, fontSize:12 }}>Ã°ÂÂÂ¤ {ev.guests.length} invitÃÂ©s</span>
+                    {unseated>0 && <span style={{ color:C.red, fontSize:12 }}>Ã¢ÂÂ  {unseated} non placÃÂ©s</span>}
                   </div>
 
                   {/* Placement bar */}
@@ -4564,16 +4560,16 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
                   {/* RSVP mini chips */}
                   {ev.guests.length > 0 && (
                     <div style={{ display:"flex", gap:8, marginBottom:12 }}>
-                      <span style={{ background:C.green+"22", border:`1px solid ${C.green}33`, borderRadius:6, padding:"3px 8px", fontSize:11, color:C.green }}>â {rsvpConf}</span>
-                      <span style={{ background:C.gold+"22", border:`1px solid ${C.gold}33`, borderRadius:6, padding:"3px 8px", fontSize:11, color:C.gold }}>â³ {rsvpPend}</span>
-                      {budgetTotal>0 && <span style={{ background:C.blue+"22", border:`1px solid ${C.blue}33`, borderRadius:6, padding:"3px 8px", fontSize:11, color:C.blue, marginLeft:"auto" }}>ð° {budgetTotal.toLocaleString("fr-FR")} â¬</span>}
+                      <span style={{ background:C.green+"22", border:`1px solid ${C.green}33`, borderRadius:6, padding:"3px 8px", fontSize:11, color:C.green }}>Ã¢ÂÂ {rsvpConf}</span>
+                      <span style={{ background:C.gold+"22", border:`1px solid ${C.gold}33`, borderRadius:6, padding:"3px 8px", fontSize:11, color:C.gold }}>Ã¢ÂÂ³ {rsvpPend}</span>
+                      {budgetTotal>0 && <span style={{ background:C.blue+"22", border:`1px solid ${C.blue}33`, borderRadius:6, padding:"3px 8px", fontSize:11, color:C.blue, marginLeft:"auto" }}>Ã°ÂÂÂ° {budgetTotal.toLocaleString("fr-FR")} Ã¢ÂÂ¬</span>}
                     </div>
                   )}
 
-                  {/* RÃ©sultats de recherche */}
+                  {/* RÃÂ©sultats de recherche */}
                   {globalSearch && ev.guests.some(g=>g.name.toLowerCase().includes(globalSearch.toLowerCase())) && (
                     <div style={{ background:C.gold+"11", border:`1px solid ${C.gold}22`, borderRadius:8, padding:"6px 10px", fontSize:11, color:C.gold }}>
-                      ð {ev.guests.filter(g=>g.name.toLowerCase().includes(globalSearch.toLowerCase())).map(g=>g.name).join(", ")}
+                      Ã°ÂÂÂ {ev.guests.filter(g=>g.name.toLowerCase().includes(globalSearch.toLowerCase())).map(g=>g.name).join(", ")}
                     </div>
                   )}
                 </div>
@@ -4587,12 +4583,12 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
       {deleteConfirm && (
         <div style={{ position:"fixed", inset:0, background:"#00000088", zIndex:200, display:"flex", alignItems:"center", justifyContent:"center" }} onClick={()=>setDeleteConfirm(null)}>
           <div style={{ background:C.card, border:`1px solid ${C.red}44`, borderRadius:20, padding:32, maxWidth:360, width:"90%", textAlign:"center" }} onClick={e=>e.stopPropagation()}>
-            <div style={{ fontSize:40, marginBottom:12 }}>ð</div>
-            <h3 style={{ color:C.cream, fontWeight:400, marginBottom:8 }}>Supprimer cet Ã©vÃ©nement ?</h3>
-            <p style={{ color:C.muted, fontSize:13, marginBottom:24 }}>Cette action est irrÃ©versible. Toutes les donnÃ©es seront perdues.</p>
+            <div style={{ fontSize:40, marginBottom:12 }}>Ã°ÂÂÂ</div>
+            <h3 style={{ color:C.cream, fontWeight:400, marginBottom:8 }}>Supprimer cet ÃÂ©vÃÂ©nement ?</h3>
+            <p style={{ color:C.muted, fontSize:13, marginBottom:24 }}>Cette action est irrÃÂ©versible. Toutes les donnÃÂ©es seront perdues.</p>
             <div style={{ display:"flex", gap:12 }}>
               <button onClick={()=>setDeleteConfirm(null)} style={{ flex:1, padding:"10px", background:"none", border:`1px solid ${C.border}`, borderRadius:10, color:C.muted, cursor:"pointer", fontFamily:"inherit", fontSize:13 }}>Annuler</button>
-              <button onClick={()=>{setEvents(prev=>prev.filter(e=>e.id!==deleteConfirm));showToast("ÃvÃ©nement supprimÃ©","error");setDeleteConfirm(null);}}
+              <button onClick={()=>{setEvents(prev=>prev.filter(e=>e.id!==deleteConfirm));showToast("ÃÂvÃÂ©nement supprimÃÂ©","error");setDeleteConfirm(null);}}
                 style={{ flex:1, padding:"10px", background:C.red, border:"none", borderRadius:10, color:"#fff", cursor:"pointer", fontFamily:"inherit", fontSize:13, fontWeight:700 }}>Supprimer</button>
             </div>
           </div>
@@ -4602,19 +4598,19 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
       {/* Modals */}
       {showVoucher && <VoucherModal onClose={()=>setShowVoucher(false)} onApply={handleApplyVoucher} t={t}/>}
       {showUpgrade && (
-        <Modal open={showUpgrade} onClose={()=>setShowUpgrade(false)} title="Passez Pro ð">
-          <p style={{color:C.muted,fontSize:14,lineHeight:1.7}}>Le plan gratuit est limitÃ© Ã  1 Ã©vÃ©nement. Entrez un code promo ou passez Pro pour accÃ¨s illimitÃ©.</p>
+        <Modal open={showUpgrade} onClose={()=>setShowUpgrade(false)} title="Passez Pro Ã°ÂÂÂ">
+          <p style={{color:C.muted,fontSize:14,lineHeight:1.7}}>Le plan gratuit est limitÃÂ© ÃÂ  1 ÃÂ©vÃÂ©nement. Entrez un code promo ou passez Pro pour accÃÂ¨s illimitÃÂ©.</p>
           <div style={{display:"flex",gap:10,marginTop:20}}>
-            <Btn onClick={()=>{setShowUpgrade(false);setShowVoucher(true);}}>ðï¸ J'ai un code promo</Btn>
+            <Btn onClick={()=>{setShowUpgrade(false);setShowVoucher(true);}}>Ã°ÂÂÂÃ¯Â¸Â J'ai un code promo</Btn>
             <Btn variant="muted" onClick={()=>setShowUpgrade(false)}>Plus tard</Btn>
           </div>
         </Modal>
       )}
-      <Modal open={showNew} onClose={()=>setShowNew(false)} title="Nouvel Ã©vÃ©nement â¨">
+      <Modal open={showNew} onClose={()=>setShowNew(false)} title="Nouvel ÃÂ©vÃÂ©nement Ã¢ÂÂ¨">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label="NOM DE L'ÃVÃNEMENT *"><Input value={newEv.name} onChange={e=>setNewEv({...newEv,name:e.target.value})} placeholder="Mariage Dupont Ã Martin"/></Field>
+          <Field label="NOM DE L'ÃÂVÃÂNEMENT *"><Input value={newEv.name} onChange={e=>setNewEv({...newEv,name:e.target.value})} placeholder="Mariage Dupont ÃÂ Martin"/></Field>
           <Field label={t.settingDate}><Input type="date" value={newEv.date} onChange={e=>setNewEv({...newEv,date:e.target.value})}/></Field>
-          <Field label="TYPE D'ÃVÃNEMENT">
+          <Field label="TYPE D'ÃÂVÃÂNEMENT">
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
               {Object.entries(THEMES_CONFIG).map(([k,v])=>(
                 <button key={k} onClick={()=>setNewEv({...newEv,type:k})} style={{
@@ -4626,29 +4622,29 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
               ))}
             </div>
           </Field>
-          <Btn onClick={createEvent} style={{marginTop:4}}>CrÃ©er l'Ã©vÃ©nement â</Btn>
+          <Btn onClick={createEvent} style={{marginTop:4}}>CrÃÂ©er l'ÃÂ©vÃÂ©nement Ã¢ÂÂ</Btn>
         </div>
       </Modal>
     </div>
   );
 }
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 // ROOT APP
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 // FIREBASE HOOKS
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 
 function useFirebaseAuth() {
-  const [fbUser, setFbUser] = useState(undefined); // undefined = chargement, null = dÃ©connectÃ©
+  const [fbUser, setFbUser] = useState(undefined); // undefined = chargement, null = dÃÂ©connectÃÂ©
   useEffect(() => {
     let unsub;
-    // Attendre que Firebase soit disponible (scripts CDN chargÃ©s)
+    // Attendre que Firebase soit disponible (scripts CDN chargÃÂ©s)
     const tryInit = () => {
       const fb = getFirebase();
       if (!fb) {
-        // Firebase pas encore prÃªt, rÃ©essayer dans 200ms
+        // Firebase pas encore prÃÂªt, rÃÂ©essayer dans 200ms
         setTimeout(tryInit, 200);
         return;
       }
@@ -4685,9 +4681,9 @@ async function loadEventsFromFirestore(userId) {
   } catch(e) { console.error("Load error:", e); return []; }
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 // LOADING SCREEN
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 
 function LoadingScreen() {
   return (
@@ -4695,9 +4691,9 @@ function LoadingScreen() {
       <div style={{ position:"relative" }}>
         <div style={{ width:80, height:80, borderRadius:"50%", border:`2px solid ${C.gold}22`, position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", animation:"pulse 2s ease-in-out infinite" }}/>
         <div style={{ width:60, height:60, borderRadius:"50%", border:`2px solid ${C.gold}44`, position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", animation:"pulse 2s ease-in-out infinite .3s" }}/>
-        <div style={{ fontSize:40, position:"relative", zIndex:1 }}>ðª</div>
+        <div style={{ fontSize:40, position:"relative", zIndex:1 }}>Ã°ÂÂªÂ</div>
       </div>
-      <div style={{ color:C.gold, fontSize:20, letterSpacing:3, fontFamily:"Georgia,serif" }}>TableMaÃ®tre</div>
+      <div style={{ color:C.gold, fontSize:20, letterSpacing:3, fontFamily:"Georgia,serif" }}>TableMaÃÂ®tre</div>
       <div style={{ display:"flex", gap:6 }}>
         {[0,1,2].map(i=>(
           <div key={i} style={{ width:6, height:6, borderRadius:"50%", background:C.gold, opacity:.4, animation:`bounce 1s ease-in-out ${i*.15}s infinite` }}/>
@@ -4712,13 +4708,13 @@ function LoadingScreen() {
   );
 }
 
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 // ROOT APP
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
-// PAGE PUBLIQUE INVITÃ (?join=eventId)
-// âââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// PAGE PUBLIQUE INVITÃÂ (?join=eventId)
+// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 function GuestJoinPage({ eventId }) {
   const [ev, setEv] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -4727,7 +4723,7 @@ function GuestJoinPage({ eventId }) {
   const [found, setFound] = useState(null);
 
   useEffect(() => {
-    // Charger l'Ã©vÃ©nement public depuis Firestore
+    // Charger l'ÃÂ©vÃÂ©nement public depuis Firestore
     async function loadEvent() {
       const fb = getFirebase();
       if (!fb) { setLoading(false); return; }
@@ -4741,7 +4737,7 @@ function GuestJoinPage({ eventId }) {
           var doc = await fb.db.collection("users").doc(userId).collection("events").doc(evId).get();
           if (doc.exists) setEv(doc.data());
         } else {
-          // Ancien format: collectionGroup (peut Ã©chouer si rÃ¨gles restrictives)
+          // Ancien format: collectionGroup (peut ÃÂ©chouer si rÃÂ¨gles restrictives)
           try {
             var snap = await fb.db.collectionGroup("events").where("id","==",eventId).limit(1).get();
             if (!snap.empty) setEv(snap.docs[0].data());
@@ -4759,17 +4755,17 @@ function GuestJoinPage({ eventId }) {
 
   if (loading) return (
     <div style={{ minHeight:"100vh", background:"#120C08", display:"flex", alignItems:"center", justifyContent:"center" }}>
-      <div style={{ color:"#C9973A", fontSize:18 }}>ðª Chargementâ¦</div>
+      <div style={{ color:"#C9973A", fontSize:18 }}>Ã°ÂÂªÂ ChargementÃ¢ÂÂ¦</div>
     </div>
   );
 
   if (!ev) return (
     <div style={{ minHeight:"100vh", background:"#120C08", display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", fontFamily:"Georgia,serif", padding:20, textAlign:"center" }}>
-      <div style={{ fontSize:48, marginBottom:16 }}>ð</div>
-      <h2 style={{ color:"#C9973A", fontWeight:400 }}>ÃvÃ©nement introuvable</h2>
-      <p style={{ color:"#8A7355", marginBottom:8 }}>Le lien est peut-Ãªtre expirÃ© ou invalide.</p>
-      <p style={{ color:"#5a3a1a", fontSize:12 }}>Demandez Ã  l'organisateur de partager le lien via le bouton "ð Partager" de l'application.</p>
-      <a href="/" style={{ marginTop:24, color:"#C9973A", fontSize:14 }}>â Retour Ã  TableMaÃ®tre</a>
+      <div style={{ fontSize:48, marginBottom:16 }}>Ã°ÂÂÂ</div>
+      <h2 style={{ color:"#C9973A", fontWeight:400 }}>ÃÂvÃÂ©nement introuvable</h2>
+      <p style={{ color:"#8A7355", marginBottom:8 }}>Le lien est peut-ÃÂªtre expirÃÂ© ou invalide.</p>
+      <p style={{ color:"#5a3a1a", fontSize:12 }}>Demandez ÃÂ  l'organisateur de partager le lien via le bouton "Ã°ÂÂÂ Partager" de l'application.</p>
+      <a href="/" style={{ marginTop:24, color:"#C9973A", fontSize:14 }}>Ã¢ÂÂ Retour ÃÂ  TableMaÃÂ®tre</a>
     </div>
   );
 
@@ -4786,7 +4782,7 @@ function GuestJoinPage({ eventId }) {
           <div style={{ fontSize:48, marginBottom:8 }}>{theme.icon}</div>
           <h1 style={{ fontSize:28, fontWeight:400, color:"#C9973A", letterSpacing:2, margin:"0 0 8px" }}>{ev.name}</h1>
           <p style={{ color:"#8A7355", fontSize:14 }}>
-            ð {new Date(ev.date).toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long", year:"numeric" })}
+            Ã°ÂÂÂ {new Date(ev.date).toLocaleDateString("fr-FR", { weekday:"long", day:"numeric", month:"long", year:"numeric" })}
           </p>
           {ev.notes && <p style={{ color:"#A89060", fontSize:13, fontStyle:"italic", marginTop:8 }}>{ev.notes}</p>}
         </div>
@@ -4794,9 +4790,9 @@ function GuestJoinPage({ eventId }) {
         {/* Stats */}
         <div style={{ display:"flex", gap:12, justifyContent:"center", marginBottom:28 }}>
           {[
-            { label:"Tables", val:ev.tables?.length||0, icon:"ðª" },
-            { label:"InvitÃ©s", val:totalGuests, icon:"ð¥" },
-            { label:"PlacÃ©s", val:seatedCount, icon:"â" },
+            { label:"Tables", val:ev.tables?.length||0, icon:"Ã°ÂÂªÂ" },
+            { label:"InvitÃÂ©s", val:totalGuests, icon:"Ã°ÂÂÂ¥" },
+            { label:"PlacÃÂ©s", val:seatedCount, icon:"Ã¢ÂÂ" },
           ].map(s => (
             <div key={s.label} style={{ background:"#1E1208", border:"1px solid #3a2a1a", borderRadius:12, padding:"12px 20px", textAlign:"center", flex:1 }}>
               <div style={{ fontSize:20 }}>{s.icon}</div>
@@ -4808,9 +4804,9 @@ function GuestJoinPage({ eventId }) {
 
         {/* Rechercher sa place */}
         <div style={{ background:"#1E1208", border:"1px solid #3a2a1a", borderRadius:16, padding:24, marginBottom:20 }}>
-          <h3 style={{ color:"#C9973A", fontWeight:400, fontSize:16, marginBottom:16 }}>ð Trouver ma place</h3>
+          <h3 style={{ color:"#C9973A", fontWeight:400, fontSize:16, marginBottom:16 }}>Ã°ÂÂÂ Trouver ma place</h3>
           <input
-            placeholder="Votre prÃ©nom ou nomâ¦"
+            placeholder="Votre prÃÂ©nom ou nomÃ¢ÂÂ¦"
             onChange={e => {
               const q = e.target.value.toLowerCase();
               if (!q) { setFound(null); return; }
@@ -4822,40 +4818,40 @@ function GuestJoinPage({ eventId }) {
 
           {found === false && (
             <div style={{ marginTop:12, color:"#E8845A", fontSize:13 }}>
-              â PrÃ©nom non trouvÃ© dans la liste des invitÃ©s
+              Ã¢ÂÂ PrÃÂ©nom non trouvÃÂ© dans la liste des invitÃÂ©s
             </div>
           )}
 
           {found && (
             <div style={{ marginTop:16, background:"#0a2a0a", border:"1px solid #2a5a2a", borderRadius:12, padding:16 }}>
               <p style={{ color:"#81C784", fontWeight:700, fontSize:16, margin:"0 0 8px" }}>
-                â Bonjour {found.name}{found.role && found.role === "temoin" ? " ð (TÃ©moin)" : found.role === "marie1" || found.role === "marie2" ? " ð (MariÃ©(e))" : ""} !
+                Ã¢ÂÂ Bonjour {found.name}{found.role && found.role === "temoin" ? " Ã°ÂÂÂ (TÃÂ©moin)" : found.role === "marie1" || found.role === "marie2" ? " Ã°ÂÂÂ (MariÃÂ©(e))" : ""} !
               </p>
               {myTable ? (
                 <div>
                   <p style={{ color:"#A5D6A7", margin:"0 0 4px" }}>
-                    Vous Ãªtes Ã  la <strong style={{ color:"#C9973A" }}>Table {myTable.number}{myTable.label ? ` â ${myTable.label}` : ""}</strong>
+                    Vous ÃÂªtes ÃÂ  la <strong style={{ color:"#C9973A" }}>Table {myTable.number}{myTable.label ? ` Ã¢ÂÂ ${myTable.label}` : ""}</strong>
                   </p>
                   <p style={{ color:"#6a8a6a", fontSize:12, marginBottom:12 }}>
-                    {(ev.guests||[]).filter(function(g){ return g.tableId === myTable.id; }).length} personnes Ã  cette table
+                    {(ev.guests||[]).filter(function(g){ return g.tableId === myTable.id; }).length} personnes ÃÂ  cette table
                   </p>
                 </div>
               ) : (
-                <p style={{ color:"#E8845A", fontSize:14, marginBottom:12 }}>Votre placement n'est pas encore dÃ©fini</p>
+                <p style={{ color:"#E8845A", fontSize:14, marginBottom:12 }}>Votre placement n'est pas encore dÃÂ©fini</p>
               )}
 
-              {/* Formulaire rÃ©gime alimentaire */}
+              {/* Formulaire rÃÂ©gime alimentaire */}
               <div style={{ borderTop:"1px solid #2a5a2a", paddingTop:12, marginTop:4 }}>
-                <p style={{ color:"#A5D6A7", fontSize:13, marginBottom:8 }}>ð½ Votre rÃ©gime alimentaire</p>
+                <p style={{ color:"#A5D6A7", fontSize:13, marginBottom:8 }}>Ã°ÂÂÂ½ Votre rÃÂ©gime alimentaire</p>
                 <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginBottom:12 }}>
                   {["standard","vegetarien","vegan","sans-gluten","halal","casher","sans-lactose"].map(function(dietId){
-                    var icons = {"standard":"ð½","vegetarien":"ð¥","vegan":"ð±","sans-gluten":"ð¾","halal":"âªï¸","casher":"â¡ï¸","sans-lactose":"ð¥"};
-                    var labels = {"standard":"Standard","vegetarien":"VÃ©gÃ©tarien","vegan":"Vegan","sans-gluten":"Sans gluten","halal":"Halal","casher":"Casher","sans-lactose":"Sans lactose"};
+                    var icons = {"standard":"Ã°ÂÂÂ½","vegetarien":"Ã°ÂÂ¥Â","vegan":"Ã°ÂÂÂ±","sans-gluten":"Ã°ÂÂÂ¾","halal":"Ã¢ÂÂªÃ¯Â¸Â","casher":"Ã¢ÂÂ¡Ã¯Â¸Â","sans-lactose":"Ã°ÂÂ¥Â"};
+                    var labels = {"standard":"Standard","vegetarien":"VÃÂ©gÃÂ©tarien","vegan":"Vegan","sans-gluten":"Sans gluten","halal":"Halal","casher":"Casher","sans-lactose":"Sans lactose"};
                     var isSelected = found.diet === dietId;
                     return (
                       <button key={dietId}
                         onClick={function(){
-                          // Mettre Ã  jour le state local immÃ©diatement
+                          // Mettre ÃÂ  jour le state local immÃÂ©diatement
                           var updatedGuests = (ev.guests||[]).map(function(g){ return g.id===found.id ? {...g, diet:dietId} : g; });
                           setEv(function(prev){ return {...prev, guests: updatedGuests}; });
                           setFound(function(prev){ return {...prev, diet: dietId}; });
@@ -4873,7 +4869,7 @@ function GuestJoinPage({ eventId }) {
                   })}
                 </div>
                 <textarea
-                  placeholder="Notes spÃ©ciales (allergie sÃ©vÃ¨re, handicap, siÃ¨ge bÃ©bÃ©...)"
+                  placeholder="Notes spÃÂ©ciales (allergie sÃÂ©vÃÂ¨re, handicap, siÃÂ¨ge bÃÂ©bÃÂ©...)"
                   defaultValue={found.notes||""}
                   rows={2}
                   style={{ width:"100%", padding:"8px 12px", background:"#1a2a1a", border:"1px solid #2a5a2a", borderRadius:8, color:"#A5D6A7", fontSize:12, fontFamily:"Georgia,serif", resize:"vertical", boxSizing:"border-box" }}
@@ -4896,8 +4892,8 @@ function GuestJoinPage({ eventId }) {
                   }}
                 />
                 <p style={{ color:"#4a7a4a", fontSize:11, marginTop:6 }}>
-                  {found.diet && found.diet !== "standard" ? "â RÃ©gime enregistrÃ© â " : ""}
-                  Vos prÃ©fÃ©rences seront transmises Ã  l'organisateur
+                  {found.diet && found.diet !== "standard" ? "Ã¢ÂÂ RÃÂ©gime enregistrÃÂ© Ã¢ÂÂ " : ""}
+                  Vos prÃÂ©fÃÂ©rences seront transmises ÃÂ  l'organisateur
                 </p>
               </div>
             </div>
@@ -4907,7 +4903,7 @@ function GuestJoinPage({ eventId }) {
         {/* Plan par tables */}
         {(ev.tables||[]).length > 0 && (
           <div style={{ background:"#1E1208", border:"1px solid #3a2a1a", borderRadius:16, padding:24 }}>
-            <h3 style={{ color:"#C9973A", fontWeight:400, fontSize:16, marginBottom:16 }}>ðª Plan de table</h3>
+            <h3 style={{ color:"#C9973A", fontWeight:400, fontSize:16, marginBottom:16 }}>Ã°ÂÂªÂ Plan de table</h3>
             <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
               {(ev.tables||[]).map(tbl => {
                 const tGuests = (ev.guests||[]).filter(g => g.tableId === tbl.id);
@@ -4915,13 +4911,13 @@ function GuestJoinPage({ eventId }) {
                   <div key={tbl.id} style={{ background:"#2a1a0e", borderRadius:10, overflow:"hidden", border:`1px solid ${tbl.color||"#5a3a1a"}44` }}>
                     <div style={{ background:(tbl.color||"#C9973A")+"22", padding:"8px 16px", display:"flex", justifyContent:"space-between" }}>
                       <span style={{ color:tbl.color||"#C9973A", fontWeight:700, fontSize:14 }}>
-                        Table {tbl.number}{tbl.label ? ` â ${tbl.label}` : ""}
+                        Table {tbl.number}{tbl.label ? ` Ã¢ÂÂ ${tbl.label}` : ""}
                       </span>
                       <span style={{ color:"#8A7355", fontSize:12 }}>{tGuests.length}/{tbl.capacity}</span>
                     </div>
                     <div style={{ padding:"8px 16px", display:"flex", flexWrap:"wrap", gap:6 }}>
                       {tGuests.length === 0 ? (
-                        <span style={{ color:"#5a3a1a", fontSize:12, fontStyle:"italic" }}>â Vide â</span>
+                        <span style={{ color:"#5a3a1a", fontSize:12, fontStyle:"italic" }}>Ã¢ÂÂ Vide Ã¢ÂÂ</span>
                       ) : tGuests.map(g => (
                         <span key={g.id} style={{
                           background: found && found.id === g.id ? "#C9973A22" : "#3a2a1a",
@@ -4940,7 +4936,7 @@ function GuestJoinPage({ eventId }) {
         )}
 
         <p style={{ textAlign:"center", color:"#5a3a1a", fontSize:11, marginTop:24 }}>
-          PropulsÃ© par TableMaÃ®tre ðª
+          PropulsÃÂ© par TableMaÃÂ®tre Ã°ÂÂªÂ
         </p>
       </div>
     </div>
@@ -4964,8 +4960,8 @@ export default function App() {
   }, []);
   const { t, lang, setLang } = useI18n();
 
-  // ThÃ¨me
-  // Rappel J-7 â notifications browser
+  // ThÃÂ¨me
+  // Rappel J-7 Ã¢ÂÂ notifications browser
   useEffect(() => {
     if (!events || !events.length) return;
     if (!("Notification" in window)) return;
@@ -4979,8 +4975,8 @@ export default function App() {
         if (!localStorage.getItem(key)) {
           localStorage.setItem(key, "1");
           if (Notification.permission === "granted") {
-            new Notification("ðª TableMaÃ®tre â " + ev.name, {
-              body: diffDays === 1 ? "C'est demain ! Votre plan est-il prÃªt ?" : "Dans " + diffDays + " jours â Finalisez votre plan de table.",
+            new Notification("Ã°ÂÂªÂ TableMaÃÂ®tre Ã¢ÂÂ " + ev.name, {
+              body: diffDays === 1 ? "C'est demain ! Votre plan est-il prÃÂªt ?" : "Dans " + diffDays + " jours Ã¢ÂÂ Finalisez votre plan de table.",
             });
           }
         }
@@ -4991,7 +4987,7 @@ export default function App() {
   useEffect(() => {
     document.body.style.background = lightMode ? "#F5F0E8" : "#120C08";
     document.body.style.color = lightMode ? "#2A1A0E" : "#F5EAD4";
-    // AccessibilitÃ© : focus visible pour navigation clavier
+    // AccessibilitÃÂ© : focus visible pour navigation clavier
     const styleId = 'a11y-focus-style';
     if (!document.getElementById(styleId)) {
       const style = document.createElement('style');
@@ -5011,7 +5007,7 @@ export default function App() {
     }
   }, [lightMode]);
 
-  // Chargement temps rÃ©el via Firestore onSnapshot
+  // Chargement temps rÃÂ©el via Firestore onSnapshot
   useEffect(() => {
     if (!fbUser) { setEvents([]); setEventsLoaded(false); return; }
     setEventsLoaded(false);
@@ -5023,7 +5019,7 @@ export default function App() {
       });
       return;
     }
-    // onSnapshot = temps rÃ©el â se met Ã  jour automatiquement
+    // onSnapshot = temps rÃÂ©el Ã¢ÂÂ se met ÃÂ  jour automatiquement
     const unsub = fb.db
       .collection("users").doc(fbUser.uid).collection("events")
       .onSnapshot(function(snap) {
@@ -5048,18 +5044,7 @@ export default function App() {
     } catch(e) { console.error("Login error:", e); }
   };
 
-  // Connexion Microsoft
-  const handleMicrosoftLogin = async () => {
-    const fb = getFirebase();
-    if (!fb) { alert('Firebase non disponible'); return; }
-    try {
-      const provider = new window.firebase.auth.OAuthProvider('microsoft.com');
-      provider.setCustomParameters({ tenant: 'common' });
-      await fb.auth.signInWithPopup(provider);
-    } catch(e) { console.error('Microsoft Login error:', e); }
-  };
-
-  // DÃ©connexion
+  // DÃÂ©connexion
   const handleLogout = async () => {
     const fb = getFirebase();
     if (fb) await fb.auth.signOut();
@@ -5068,10 +5053,10 @@ export default function App() {
     setEvents([]);
   };
 
-  // Ouvrir un Ã©vÃ©nement
+  // Ouvrir un ÃÂ©vÃÂ©nement
   const handleOpenEvent = (id) => { setSelectedEventId(id); setView("event"); };
 
-  // Mise Ã  jour + sauvegarde auto Firestore
+  // Mise ÃÂ  jour + sauvegarde auto Firestore
   const [editorSaveToast, setEditorSaveToast] = useState(false);
   const handleUpdateEvent = (updatedEv) => {
     setEvents(prev => prev.map(e => e.id === updatedEv.id ? updatedEv : e));
@@ -5082,11 +5067,11 @@ export default function App() {
     }
   };
 
-  // CrÃ©ation d'Ã©vÃ©nement avec sauvegarde
+  // CrÃÂ©ation d'ÃÂ©vÃÂ©nement avec sauvegarde
   const handleSetEvents = (updater) => {
     setEvents(prev => {
       const next = typeof updater === "function" ? updater(prev) : updater;
-      // Sauvegarder les nouveaux/modifiÃ©s
+      // Sauvegarder les nouveaux/modifiÃÂ©s
       if (fbUser) {
         const prevIds = new Set(prev.map(e => e.id));
         next.forEach(ev => {
@@ -5094,18 +5079,18 @@ export default function App() {
             saveEventToFirestore(fbUser.uid, ev);
           }
         });
-        // Supprimer les supprimÃ©s
+        // Supprimer les supprimÃÂ©s
         const nextIds = new Set(next.map(e => e.id));
         prev.forEach(ev => {
           if (!nextIds.has(ev.id)) deleteEventFromFirestore(fbUser.uid, ev.id);
         });
-        // sauvegarde cloud notifiÃ©e dans Dashboard
+        // sauvegarde cloud notifiÃÂ©e dans Dashboard
       }
       return next;
     });
   };
 
-  // Construire l'objet user Ã  partir de fbUser
+  // Construire l'objet user ÃÂ  partir de fbUser
   const user = fbUser ? {
     id: fbUser.uid,
     email: fbUser.email,
@@ -5116,14 +5101,14 @@ export default function App() {
     projectIds: events.map(e => e.id),
   } : null;
 
-  // Page publique invitÃ© (?join=eventId) â accessible sans connexion
+  // Page publique invitÃÂ© (?join=eventId) Ã¢ÂÂ accessible sans connexion
   var joinId = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("join") : null;
   if (joinId) return <GuestJoinPage eventId={joinId} />;
 
-  // Ãtats de chargement
+  // ÃÂtats de chargement
   if (fbUser === undefined) return <LoadingScreen />;
 
-  // Non connectÃ© â Ã©cran de connexion Google
+  // Non connectÃÂ© Ã¢ÂÂ ÃÂ©cran de connexion Google
   if (!fbUser) return <LoginScreen onLogin={handleGoogleLogin} />;
 
   // Chargement des events en cours
