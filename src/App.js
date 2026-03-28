@@ -1,4 +1,22 @@
 /* eslint-disable */
+/* === TABLEMAÎTRE PRO GLOBAL STYLES === */
+if (typeof document !== 'undefined') {
+  const _tmStyle = document.getElementById('tm-pro-styles') || document.createElement('style');
+  _tmStyle.id = 'tm-pro-styles';
+  _tmStyle.textContent = `
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #0d0d14; color: #fff; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #0d0d14; }
+    ::-webkit-scrollbar-thumb { background: rgba(201,151,58,0.35); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: rgba(201,151,58,0.6); }
+    input, select, textarea { font-family: inherit; }
+    ::placeholder { color: rgba(255,255,255,0.3) !important; }
+    * { -webkit-font-smoothing: antialiased; }
+  `;
+  if (!document.getElementById('tm-pro-styles')) document.head.appendChild(_tmStyle);
+}
+
 import { useState, useEffect, useRef, useCallback } from "react";
 
 // ═══════════════════════════════════════════════════════════════
@@ -722,7 +740,7 @@ function useI18n() {
     setLangState(l);
     document.documentElement.lang = l;
   };
-  const t = TRANSLATIONS[lang] || TRANSLATIONS.fr;
+  const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
   return { t, lang, setLang };
 }
 
@@ -932,49 +950,80 @@ function exportGuestsCSV(ev) {
 // SHARED UI COMPONENTS
 // ═══════════════════════════════════════════════════════════════
 
-function Btn({ children, onClick, variant = "primary", small, style: s, disabled }) {
+function Btn({ children, onClick, variant="primary", small, style={}, disabled }) {
+  const [hov, setHov] = React.useState(false);
   const base = {
-    border: "none", borderRadius: 99, cursor: disabled ? "not-allowed" : "pointer",
-    fontFamily: "inherit", fontWeight: 700, transition: "all .15s",
-    padding: small ? "6px 14px" : "10px 22px",
-    fontSize: small ? 12 : 14, opacity: disabled ? .5 : 1,
+    display:"inline-flex", alignItems:"center", gap:6,
+    padding: small ? "5px 12px" : "9px 18px",
+    borderRadius:8,
+    fontSize: small ? 12 : 13,
+    fontWeight:600, letterSpacing:.3,
+    cursor: disabled ? "not-allowed" : "pointer",
+    border:"none",
+    transition:"all .18s",
+    fontFamily:"inherit",
+    opacity: disabled ? 0.45 : 1,
   };
   const variants = {
-    primary:  { background: `linear-gradient(135deg,${C.gold},${C.gold2})`, color: C.dark },
-    ghost:    { background: "transparent", border: `1px solid ${C.border}`, color: C.gold },
-    danger:   { background: C.red + "22", border: `1px solid ${C.red}55`, color: C.red },
-    muted:    { background: "transparent", border: `1px solid ${C.muted}44`, color: C.muted },
-    success:  { background: C.green + "22", border: `1px solid ${C.green}55`, color: C.green },
+    primary: {
+      background: hov ? "linear-gradient(135deg,#d4a035,#F0C97A)" : "linear-gradient(135deg,#C9973A,#e8b85a)",
+      color:"#0d0d14",
+      boxShadow: hov ? "0 4px 16px rgba(201,151,58,0.45)" : "0 2px 8px rgba(201,151,58,0.25)",
+    },
+    ghost: {
+      background: hov ? "rgba(201,151,58,0.12)" : "transparent",
+      color: hov ? "#F0C97A" : "#C9973A",
+      border:"1px solid rgba(201,151,58,0.35)",
+      boxShadow:"none",
+    },
+    danger: {
+      background: hov ? "#c94040" : "rgba(224,82,82,0.12)",
+      color: hov ? "#fff" : "#e05252",
+      border: hov ? "none" : "1px solid rgba(224,82,82,0.35)",
+    },
+    secondary: {
+      background: hov ? "rgba(255,255,255,0.08)" : "rgba(255,255,255,0.04)",
+      color:"rgba(255,255,255,0.8)",
+      border:"1px solid rgba(255,255,255,0.12)",
+    },
   };
-  return <button onClick={onClick} disabled={disabled} style={{ ...base, ...variants[variant], ...s }}>{children}</button>;
-}
-
-function Badge({ children, color = C.gold }) {
   return (
-    <span style={{
-      background: color + "22", color, border: `1px solid ${color}44`,
-      borderRadius: 99, padding: "2px 10px", fontSize: 11, fontWeight: 700,
-      letterSpacing: .8, textTransform: "uppercase", whiteSpace: "nowrap",
-    }}>{children}</span>
+    <button onClick={disabled?undefined:onClick}
+      onMouseEnter={()=>setHov(true)} onMouseLeave={()=>setHov(false)}
+      style={{...base, ...(variants[variant]||variants.primary), ...style}}>
+      {children}
+    </button>
   );
 }
 
-function Modal({ open, onClose, title, width = 520, children }) {
-  if (!open) return null;
+function Badge({ children, color, style={} }) {
   return (
-    <div style={{
-      position: "fixed", inset: 0, background: "rgba(0,0,0,.75)", zIndex: 2000,
-      display: "flex", alignItems: "center", justifyContent: "center", padding: 16,
-    }} onClick={onClose}>
-      <div style={{
-        background: C.card, borderRadius: 20, padding: 32, width: "100%", maxWidth: width,
-        border: `1px solid ${C.border}`, boxShadow: `0 32px 80px #000a`,
-        maxHeight: "90vh", overflowY: "auto",
-      }} onClick={e => e.stopPropagation()}>
-        <div style={{ display: "flex", alignItems: "center", marginBottom: 24 }}>
-          <h3 style={{ margin: 0, color: C.cream, fontFamily: "Georgia,serif", fontSize: 18, fontWeight: 400 }}>{title}</h3>
-          <div style={{ flex: 1 }} />
-          <button onClick={onClose} style={{ background: "none", border: "none", color: C.muted, cursor: "pointer", fontSize: 20, lineHeight: 1 }}>✕</button>
+    <span style={{
+      display:"inline-flex", alignItems:"center",
+      padding:"3px 9px", borderRadius:99,
+      fontSize:10, fontWeight:700, letterSpacing:.8, textTransform:"uppercase",
+      background: (color||"#C9973A")+"22",
+      color: color||"#C9973A",
+      border:`1px solid ${(color||"#C9973A")}44`,
+      ...style
+    }}>
+      {children}
+    </span>
+  );
+}
+
+function Modal({ title, onClose, children, width=520 }) {
+  return (
+    <div style={{ position:"fixed", inset:0, zIndex:1000, display:"flex", alignItems:"center", justifyContent:"center", background:"rgba(0,0,0,0.7)", backdropFilter:"blur(6px)" }}
+      onClick={e=>{ if(e.target===e.currentTarget) onClose(); }}>
+      <div style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.2)", borderRadius:16, padding:"28px 32px", width:"90%", maxWidth:width, maxHeight:"88vh", overflowY:"auto", boxShadow:"0 24px 80px rgba(0,0,0,0.6)", position:"relative" }}>
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:22, paddingBottom:16, borderBottom:"1px solid rgba(255,255,255,0.07)" }}>
+          <h2 style={{ margin:0, fontSize:17, fontWeight:700, color:"#ffffff", letterSpacing:.3 }}>{title}</h2>
+          <button onClick={onClose} style={{ background:"rgba(255,255,255,0.07)", border:"1px solid rgba(255,255,255,0.1)", borderRadius:8, width:30, height:30, cursor:"pointer", color:"rgba(255,255,255,0.5)", fontSize:16, display:"flex", alignItems:"center", justifyContent:"center", transition:"all .15s" }}
+            onMouseEnter={e=>{ e.currentTarget.style.background="rgba(255,255,255,0.12)"; e.currentTarget.style.color="#fff"; }}
+            onMouseLeave={e=>{ e.currentTarget.style.background="rgba(255,255,255,0.07)"; e.currentTarget.style.color="rgba(255,255,255,0.5)"; }}>
+            ✕
+          </button>
         </div>
         {children}
       </div>
@@ -982,38 +1031,33 @@ function Modal({ open, onClose, title, width = 520, children }) {
   );
 }
 
-function Field({ label, children, hint }) {
+function Field({ label, children, style={} }) {
   return (
-    <label style={{ display: "block" }}>
-      <div style={{ fontSize: 12, color: C.muted, marginBottom: 5, letterSpacing: .5 }}>{label}</div>
+    <div style={{ marginBottom:16, ...style }}>
+      {label && <label style={{ display:"block", marginBottom:6, fontSize:12, fontWeight:600, color:"rgba(255,255,255,0.5)", letterSpacing:.8, textTransform:"uppercase" }}>{label}</label>}
       {children}
-      {hint && <div style={{ fontSize: 11, color: C.muted, marginTop: 3 }}>{hint}</div>}
-    </label>
+    </div>
   );
 }
 
-const inputStyle = {
-  display: "block", width: "100%", padding: "10px 14px",
-  background: C.mid, border: `1px solid ${C.border}`, borderRadius: 10,
-  color: C.cream, fontSize: 14, boxSizing: "border-box", fontFamily: "inherit",
-  outline: "none",
-};
-
-function Input({ value, onChange, placeholder, type = "text", ...rest }) {
-  return <input type={type} value={value} onChange={onChange} placeholder={placeholder} style={inputStyle} {...rest} />;
+function Input({ value, onChange, placeholder, type="text", style={} }) {
+  const [foc, setFoc] = React.useState(false);
+  return (
+    <input value={value} onChange={onChange} placeholder={placeholder} type={type}
+      onFocus={()=>setFoc(true)} onBlur={()=>setFoc(false)}
+      style={{ width:"100%", padding:"9px 12px", background:"rgba(255,255,255,0.05)", border: foc ? "1px solid rgba(201,151,58,0.6)" : "1px solid rgba(255,255,255,0.1)", borderRadius:8, color:"#ffffff", fontSize:14, outline:"none", transition:"border .15s", boxSizing:"border-box", fontFamily:"inherit", ...style }}
+    />
+  );
 }
 
-function Select({ value, onChange, children }) {
+function Select({ value, onChange, children, style={} }) {
   return (
-    <select value={value} onChange={onChange} style={{ ...inputStyle, cursor: "pointer" }}>
+    <select value={value} onChange={onChange}
+      style={{ width:"100%", padding:"9px 12px", background:"#18182a", border:"1px solid rgba(255,255,255,0.1)", borderRadius:8, color:"#ffffff", fontSize:14, outline:"none", cursor:"pointer", fontFamily:"inherit", ...style }}>
       {children}
     </select>
   );
 }
-
-// ═══════════════════════════════════════════════════════════════
-// QR LIB
-// ═══════════════════════════════════════════════════════════════
 
 function useQRLib() {
   const [ready, setReady] = useState(typeof window !== "undefined" && !!window.QRCode);
@@ -1124,7 +1168,7 @@ function RoomShapeEditor({ shape, onChange }) {
     <div>
       {/* Toolbar */}
       <div style={{ display:"flex", gap:8, marginBottom:12, flexWrap:"wrap", alignItems:"center" }}>
-        <span style={{color:C.muted,fontSize:12,letterSpacing:.5}}>FORME DE LA SALLE</span>
+        <span style={{color:"rgba(255,255,255,0.45)",fontSize:12,letterSpacing:.5}}>FORME DE LA SALLE</span>
         <div style={{flex:1}}/>
         <Btn small variant={mode==="draw"?"primary":"ghost"} onClick={()=>{setMode(mode==="draw"?"view":"draw");setDrawing([])}}>
           {mode==="draw" ? "✏️ Annuler dessin" : "✏️ Dessiner"}
@@ -1133,7 +1177,7 @@ function RoomShapeEditor({ shape, onChange }) {
           {mode==="edit" ? "✔ Terminer" : "⦿ Modifier points"}
         </Btn>
         <div style={{width:1,height:20,background:C.border}}/>
-        <span style={{color:C.muted,fontSize:12}}>Présets :</span>
+        <span style={{color:"rgba(255,255,255,0.45)",fontSize:12}}>Présets :</span>
         <Btn small variant="muted" onClick={presetRectangle}>▭ Rect</Btn>
         <Btn small variant="muted" onClick={presetL}>⌐ L</Btn>
         <Btn small variant="muted" onClick={presetU}>U</Btn>
@@ -1141,7 +1185,7 @@ function RoomShapeEditor({ shape, onChange }) {
       </div>
 
       {mode === "draw" && (
-        <div style={{background:C.gold+"18",border:`1px solid ${C.gold}44`,borderRadius:8,padding:"8px 14px",marginBottom:10,fontSize:12,color:C.gold}}>
+        <div style={{background:C.gold+"18",border:`1px solid ${C.gold}44`,borderRadius:8,padding:"8px 14px",marginBottom:10,fontSize:12,color:"#C9973A"}}>
           Cliquez pour ajouter des points · Cliquez près du premier point pour fermer la forme ({drawing.length} points placés)
         </div>
       )}
@@ -1157,7 +1201,7 @@ function RoomShapeEditor({ shape, onChange }) {
         viewBox={`0 0 ${CANVAS_W} ${CANVAS_H}`}
         style={{
           width:"100%", display:"block", background:"#0a0604",
-          borderRadius:12, border:`1px solid ${C.border}`,
+          borderRadius:12, border:"1px solid rgba(201,151,58,0.15)",
           cursor: mode==="draw" ? "crosshair" : mode==="edit" ? "default" : "default",
         }}
         onClick={handleSVGClick}
@@ -1262,7 +1306,7 @@ function FloorPlan({ ev, onUpdateTables, onSelectTable, selectedTable, highlight
       role="img"
       aria-label={`Plan de table de l'événement. ${ev.tables.length} tables, ${ev.guests.filter(g=>g.tableId).length} invités placés sur ${ev.guests.length} au total.`}
       viewBox={`0 0 ${CANVAS_W} ${CANVAS_H}`}
-      style={{ width:"100%", display:"block", background:"#0a0604", borderRadius:12, border:`1px solid ${C.border}`, cursor:"default", userSelect:"none" }}
+      style={{ width:"100%", display:"block", background:"#0a0604", borderRadius:12, border:"1px solid rgba(201,151,58,0.15)", cursor:"default", userSelect:"none" }}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
@@ -1730,10 +1774,10 @@ function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
   };
 
   return (
-    <div style={{ minHeight:"100vh", background:`linear-gradient(160deg,${C.dark},#1a0e08)`, fontFamily:"Georgia,serif", color:C.cream }}>
+    <div style={{ minHeight:"100vh", background:`linear-gradient(160deg,${C.dark},#1a0e08)`, fontFamily:"Georgia,serif", color:"#ffffff" }}>
       {/* Nav */}
-      <div style={{ background:C.card, borderBottom:`1px solid ${C.border}`, padding:"0 32px", display:"flex", alignItems:"center", height:60, position:"sticky", top:0, zIndex:100 }}>
-        <span style={{ fontSize:20, color:C.gold, letterSpacing:1 }}>🪑 TableMaître</span>
+      <div style={{ background:"#18182a", borderBottom:"1px solid rgba(201,151,58,0.12)", padding:"0 32px", display:"flex", alignItems:"center", height:60, position:"sticky", top:0, zIndex:100 }}>
+        <span style={{ fontSize:20, color:"#C9973A", letterSpacing:1 }}>🪑 TableMaître</span>
         <Badge color={C.red} style={{marginLeft:10}}>Super Admin</Badge>
         <div style={{flex:1}}/>
         {[["projects","📁 Projets"],["users","👥 Utilisateurs"],["stats","📊 Stats"]].map(([t,l])=>(
@@ -1753,7 +1797,7 @@ function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
             <div style={{ display:"flex", alignItems:"center", marginBottom:28 }}>
               <div>
                 <h2 style={{ margin:0, fontSize:26, fontWeight:400 }}>Tous les projets</h2>
-                <p style={{ color:C.muted, margin:"4px 0 0", fontSize:13 }}>{events.length} projet{events.length>1?"s":""}</p>
+                <p style={{ color:"rgba(255,255,255,0.45)", margin:"4px 0 0", fontSize:13 }}>{events.length} projet{events.length>1?"s":""}</p>
               </div>
               <div style={{flex:1}}/>
               <Btn onClick={()=>setShowNewProject(true)}>+ Nouveau projet</Btn>
@@ -1763,24 +1807,24 @@ function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
                 const owner = users.find(u=>u.id===ev.ownerId);
                 const theme = THEMES_CONFIG[ev.type]||THEMES_CONFIG.autre;
                 return (
-                  <div key={ev.id} style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:16, padding:24, transition:"all .2s" }}>
+                  <div key={ev.id} style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:16, padding:24, transition:"all .2s" }}>
                     <div style={{ display:"flex", alignItems:"start", gap:12, marginBottom:12 }}>
                       <span style={{ fontSize:28 }}>{theme.icon}</span>
                       <div style={{flex:1}}>
-                        <div style={{ color:C.cream, fontSize:16, marginBottom:2 }}>{ev.name}</div>
-                        <div style={{ color:C.muted, fontSize:12 }}>{ev.date}</div>
+                        <div style={{ color:"#ffffff", fontSize:16, marginBottom:2 }}>{ev.name}</div>
+                        <div style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>{ev.date}</div>
                       </div>
                       <Badge color={theme.color}>{theme.label}</Badge>
                     </div>
-                    <div style={{ display:"flex", gap:16, fontSize:12, color:C.muted, marginBottom:12 }}>
+                    <div style={{ display:"flex", gap:16, fontSize:12, color:"rgba(255,255,255,0.45)", marginBottom:12 }}>
                       <span>🪑 {ev.tables.length} tables</span>
                       <span>👤 {ev.guests.length} invités</span>
                     </div>
                     <div style={{ display:"flex", alignItems:"center", gap:8 }}>
-                      <div style={{ width:24,height:24,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:C.gold,fontSize:10,fontWeight:700 }}>
+                      <div style={{ width:24,height:24,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:10,fontWeight:700 }}>
                         {owner?.avatar||"?"}
                       </div>
-                      <span style={{ color:C.muted, fontSize:12 }}>{owner?.name||"Sans propriétaire"}</span>
+                      <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>{owner?.name||"Sans propriétaire"}</span>
                       <div style={{flex:1}}/>
                       <Btn small variant="danger" onClick={()=>setEvents(prev=>prev.filter(e=>e.id!==ev.id))}>Supprimer</Btn>
                     </div>
@@ -1797,29 +1841,29 @@ function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
             <h2 style={{ margin:"0 0 28px", fontSize:26, fontWeight:400 }}>Tableau de bord</h2>
             <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))", gap:16, marginBottom:32 }}>
               {[
-                { label:"Projets total", val:events.length, icon:"📁", color:C.gold },
+                { label:"Projets total", val:events.length, icon:"📁", color:"#C9973A" },
                 { label:"Utilisateurs", val:users.length, icon:"👥", color:C.blue },
                 { label:"Invités total", val:events.reduce((s,e)=>s+e.guests.length,0), icon:"👤", color:C.green },
-                { label:"Tables", val:events.reduce((s,e)=>s+e.tables.length,0), icon:"🪑", color:C.gold },
+                { label:"Tables", val:events.reduce((s,e)=>s+e.tables.length,0), icon:"🪑", color:"#C9973A" },
                 { label:"Projets Pro", val:events.filter(e=>e.plan==="pro").length, icon:"⭐", color:"#E8845A" },
-                { label:"Projets Free", val:events.filter(e=>e.plan==="free").length, icon:"🆓", color:C.muted },
+                { label:"Projets Free", val:events.filter(e=>e.plan==="free").length, icon:"🆓", color:"rgba(255,255,255,0.45)" },
               ].map(s => (
-                <div key={s.label} style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:14, padding:"20px 24px" }}>
+                <div key={s.label} style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:14, padding:"20px 24px" }}>
                   <div style={{ fontSize:28, marginBottom:8 }}>{s.icon}</div>
                   <div style={{ fontSize:28, fontWeight:700, color:s.color }}>{s.val}</div>
-                  <div style={{ color:C.muted, fontSize:12, marginTop:4 }}>{s.label}</div>
+                  <div style={{ color:"rgba(255,255,255,0.45)", fontSize:12, marginTop:4 }}>{s.label}</div>
                 </div>
               ))}
             </div>
-            <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:16, padding:24 }}>
-              <h3 style={{ color:C.gold, margin:"0 0 16px", fontWeight:400, fontSize:16 }}>🎟️ Codes promotionnels actifs</h3>
+            <div style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:16, padding:24 }}>
+              <h3 style={{ color:"#C9973A", margin:"0 0 16px", fontWeight:400, fontSize:16 }}>🎟️ Codes promotionnels actifs</h3>
               <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
                 {Object.entries(VOUCHERS).map(([code, v]) => (
-                  <div key={code} style={{ display:"flex", alignItems:"center", gap:12, padding:"12px 16px", background:C.mid, borderRadius:10 }}>
-                    <span style={{ fontFamily:"monospace", color:C.gold, fontWeight:700, fontSize:14, minWidth:120 }}>{code}</span>
-                    <span style={{ color:C.cream, fontSize:13, flex:1 }}>{v.description}</span>
-                    <span style={{ color:C.muted, fontSize:12 }}>-{v.discount}%</span>
-                    <span style={{ color:C.muted, fontSize:12 }}>max {v.maxUses} utilisations</span>
+                  <div key={code} style={{ display:"flex", alignItems:"center", gap:12, padding:"12px 16px", background:"#13131e", borderRadius:10 }}>
+                    <span style={{ fontFamily:"monospace", color:"#C9973A", fontWeight:700, fontSize:14, minWidth:120 }}>{code}</span>
+                    <span style={{ color:"#ffffff", fontSize:13, flex:1 }}>{v.description}</span>
+                    <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>-{v.discount}%</span>
+                    <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>max {v.maxUses} utilisations</span>
                   </div>
                 ))}
               </div>
@@ -1833,23 +1877,23 @@ function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
             <div style={{ display:"flex", alignItems:"center", marginBottom:28 }}>
               <div>
                 <h2 style={{ margin:0, fontSize:26, fontWeight:400 }}>Utilisateurs</h2>
-                <p style={{ color:C.muted, margin:"4px 0 0", fontSize:13 }}>{users.length} comptes</p>
+                <p style={{ color:"rgba(255,255,255,0.45)", margin:"4px 0 0", fontSize:13 }}>{users.length} comptes</p>
               </div>
               <div style={{flex:1}}/>
               <Btn onClick={()=>setShowNewUser(true)}>+ Nouvel utilisateur</Btn>
             </div>
             <div style={{ display:"flex", flexDirection:"column", gap:12 }}>
               {users.map(u=>(
-                <div key={u.id} style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:14, padding:"18px 24px", display:"flex", alignItems:"center", gap:16 }}>
+                <div key={u.id} style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:14, padding:"18px 24px", display:"flex", alignItems:"center", gap:16 }}>
                   <div style={{ width:42,height:42,borderRadius:"50%",background:u.role==="superadmin"?C.red+"33":C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:u.role==="superadmin"?C.red:C.gold,fontSize:15,fontWeight:700 }}>
                     {u.avatar}
                   </div>
                   <div style={{flex:1}}>
-                    <div style={{ color:C.cream, fontSize:15 }}>{u.name}</div>
-                    <div style={{ color:C.muted, fontSize:12 }}>{u.email}</div>
+                    <div style={{ color:"#ffffff", fontSize:15 }}>{u.name}</div>
+                    <div style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>{u.email}</div>
                   </div>
                   <Badge color={u.role==="superadmin"?C.red:C.gold}>{u.role}</Badge>
-                  <span style={{ color:C.muted, fontSize:12 }}>
+                  <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>
                     {u.role!=="superadmin" && `${(u.projectIds||[]).length} projet${(u.projectIds||[]).length>1?"s":""}`}
                   </span>
                   {u.role!=="superadmin" && (
@@ -1926,11 +1970,11 @@ function GuestForm({ event, onBack }) {
   };
 
   if (done) return (
-    <div style={{ minHeight:"100vh", background:C.dark, display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"Georgia,serif" }}>
-      <div style={{ textAlign:"center", color:C.cream, padding:20 }}>
+    <div style={{ minHeight:"100vh", background:"#0d0d14", display:"flex", alignItems:"center", justifyContent:"center", fontFamily:"Georgia,serif" }}>
+      <div style={{ textAlign:"center", color:"#ffffff", padding:20 }}>
         <div style={{ fontSize:64 }}>🎉</div>
-        <h2 style={{ fontFamily:"Georgia,serif", color:C.gold, fontSize:28, fontWeight:400 }}>Merci !</h2>
-        <p style={{ color:C.muted }}>Vos préférences ont été enregistrées<br/>pour <strong style={{ color:C.cream }}>{event.name}</strong></p>
+        <h2 style={{ fontFamily:"Georgia,serif", color:"#C9973A", fontSize:28, fontWeight:400 }}>Merci !</h2>
+        <p style={{ color:"rgba(255,255,255,0.45)" }}>Vos préférences ont été enregistrées<br/>pour <strong style={{ color:"#ffffff" }}>{event.name}</strong></p>
         <Btn onClick={onBack} style={{ marginTop:24 }}>Retour à l'accueil</Btn>
       </div>
     </div>
@@ -1944,7 +1988,7 @@ function GuestForm({ event, onBack }) {
         <div style={{ textAlign:"center", marginBottom:28 }}>
           <div style={{ fontSize:40 }}>{theme.icon}</div>
           <h2 style={{ color:C.dark, margin:"8px 0 4px", fontSize:22, fontWeight:400 }}>{event.name}</h2>
-          <p style={{ color:C.muted, fontSize:13, margin:0 }}>Merci de renseigner vos préférences</p>
+          <p style={{ color:"rgba(255,255,255,0.45)", fontSize:13, margin:0 }}>Merci de renseigner vos préférences</p>
         </div>
 
         {/* Progress */}
@@ -2241,13 +2285,13 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
   ];
 
   return (
-    <div style={{ minHeight:"100vh", background:`linear-gradient(160deg,${C.dark},#1a0e08)`, fontFamily:"Georgia,serif", color:C.cream }}>
+    <div style={{ minHeight:"100vh", background:`linear-gradient(160deg,${C.dark},#1a0e08)`, fontFamily:"Georgia,serif", color:"#ffffff" }}>
       {/* Header */}
-      <div style={{ background:C.card, borderBottom:`1px solid ${C.border}`, padding:"0 24px", display:"flex", alignItems:"center", height:56, position:"sticky", top:0, zIndex:100, gap:12, flexWrap:"wrap" }}>
-        <button onClick={onBack} style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:13,fontFamily:"inherit" }}>{t.back}</button>
+      <div style={{ background:"#18182a", borderBottom:"1px solid rgba(201,151,58,0.12)", padding:"0 24px", display:"flex", alignItems:"center", height:56, position:"sticky", top:0, zIndex:100, gap:12, flexWrap:"wrap" }}>
+        <button onClick={onBack} style={{ background:"none",border:"none",color:"rgba(255,255,255,0.45)",cursor:"pointer",fontSize:13,fontFamily:"inherit" }}>{t.back}</button>
         <span style={{ color:C.border }}>|</span>
         <span style={{ fontSize:20 }}>{theme.icon}</span>
-        <span style={{ color:C.cream, fontSize:16, fontWeight:400 }}>{ev.name}</span>
+        <span style={{ color:"#ffffff", fontSize:16, fontWeight:400 }}>{ev.name}</span>
         <Badge color={theme.color}>{theme.label}</Badge>
         <div style={{flex:1}}/>
         <Btn small variant="ghost" onClick={()=>setShowQR(true)}>📱 QR Code</Btn>
@@ -2270,33 +2314,33 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         <Btn small variant="ghost" onClick={()=>printFloorPlan(ev)}>{t.floorPlan}</Btn>
         <Btn small onClick={autoPlace} style={{opacity:aiPlacing?0.7:1}}>{aiPlacing?"🤖 IA en cours...":t.autoPlace}</Btn>
         <Btn small variant="ghost" onClick={()=>{setAiAssistOpen(o=>!o);}} style={{background:aiAssistOpen?C.gold+"33":"none",border:`1px solid ${aiAssistOpen?C.gold:C.border}`}}>🤖 Assistant IA</Btn>
-        <button onClick={()=>setShowSettings(true)} style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:18 }}>⚙</button>
+        <button onClick={()=>setShowSettings(true)} style={{ background:"none",border:"none",color:"rgba(255,255,255,0.45)",cursor:"pointer",fontSize:18 }}>⚙</button>
       </div>
 
       {/* Notes bar */}
       {ev.notes && (
-        <div style={{ background:C.gold+"11", borderBottom:`1px solid ${C.gold}22`, padding:"8px 24px", fontSize:12, color:C.muted, fontStyle:"italic" }}>
+        <div style={{ background:C.gold+"11", borderBottom:`1px solid ${C.gold}22`, padding:"8px 24px", fontSize:12, color:"rgba(255,255,255,0.45)", fontStyle:"italic" }}>
           {t.note} {ev.notes}
         </div>
       )}
       {/* Stats bar */}
-      <div style={{ background:C.mid+"55", borderBottom:`1px solid ${C.border}`, padding:"10px 24px", display:"flex", gap:24, overflowX:"auto" }}>
+      <div style={{ background:C.mid+"55", borderBottom:"1px solid rgba(201,151,58,0.12)", padding:"10px 24px", display:"flex", gap:24, overflowX:"auto" }}>
         {[
-          {label:t.statTables,    val:ev.tables.length,  color:C.gold},
-          {label:t.statGuests,   val:ev.guests.length,  color:C.gold},
+          {label:t.statTables,    val:ev.tables.length,  color:"#C9973A"},
+          {label:t.statGuests,   val:ev.guests.length,  color:"#C9973A"},
           {label:t.statSeated,    val:seated.length,     color:C.green},
           {label:t.statWaiting,val:unseated.length,   color:unseated.length>0?C.red:C.green},
           {label:t.statDiets, val:dietStats.reduce((s,d)=>s+d.count,0), color:C.blue},
         ].map(s=>(
           <div key={s.label} style={{ textAlign:"center", minWidth:80 }}>
             <div style={{ fontSize:20, fontWeight:700, color:s.color }}>{s.val}</div>
-            <div style={{ fontSize:10, color:C.muted, letterSpacing:.5 }}>{s.label}</div>
+            <div style={{ fontSize:10, color:"rgba(255,255,255,0.45)", letterSpacing:.5 }}>{s.label}</div>
           </div>
         ))}
       </div>
 
       {/* Tab bar */}
-      <div style={{ background:C.card+"dd", borderBottom:`1px solid ${C.border}`, padding:"0 24px", display:"flex", gap:0, overflowX:"auto" }}>
+      <div style={{ background:"rgba(13,13,20,0.95)", borderBottom:"1px solid rgba(201,151,58,0.12)", padding:"0 24px", display:"flex", gap:0, overflowX:"auto" }}>
         {TABS.map(tabItem=>(
           <button key={tabItem.id} onClick={()=>setTab(tabItem.id)} style={{
             background:"none", border:"none", borderBottom:`2px solid ${tab===tabItem.id?C.gold:"transparent"}`,
@@ -2308,31 +2352,31 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
 
       {/* ── AI ASSISTANT PANEL ── */}
       {aiAssistOpen && (
-        <div style={{ position:"fixed", bottom:24, right:24, width:380, maxHeight:520, zIndex:200, display:"flex", flexDirection:"column", background:C.card, border:`1px solid ${C.gold}44`, borderRadius:20, boxShadow:"0 8px 40px #00000066", overflow:"hidden" }}>
+        <div style={{ position:"fixed", bottom:24, right:24, width:380, maxHeight:520, zIndex:200, display:"flex", flexDirection:"column", background:"#18182a", border:`1px solid ${C.gold}44`, borderRadius:20, boxShadow:"0 8px 40px #00000066", overflow:"hidden" }}>
           <div style={{ background:C.gold+"22", borderBottom:`1px solid ${C.gold}33`, padding:"14px 18px", display:"flex", alignItems:"center", gap:10 }}>
             <span style={{ fontSize:20 }}>🤖</span>
             <div style={{ flex:1 }}>
-              <div style={{ color:C.gold, fontSize:14, fontWeight:700 }}>Assistant IA</div>
-              <div style={{ color:C.muted, fontSize:11 }}>Votre conseiller pour {ev.name}</div>
+              <div style={{ color:"#C9973A", fontSize:14, fontWeight:700 }}>Assistant IA</div>
+              <div style={{ color:"rgba(255,255,255,0.45)", fontSize:11 }}>Votre conseiller pour {ev.name}</div>
             </div>
             {aiAssistHistory.length===0 && (
               <button onClick={()=>sendAiAssist("Fais-moi un bilan rapide de l'état de mon événement et dis-moi ce qui est urgent.")}
-                style={{ background:C.gold+"22", border:`1px solid ${C.gold}44`, borderRadius:8, padding:"4px 10px", cursor:"pointer", color:C.gold, fontSize:11, fontFamily:"inherit" }}>
+                style={{ background:C.gold+"22", border:`1px solid ${C.gold}44`, borderRadius:8, padding:"4px 10px", cursor:"pointer", color:"#C9973A", fontSize:11, fontFamily:"inherit" }}>
                 ✨ Bilan auto
               </button>
             )}
-            <button onClick={()=>setAiAssistOpen(false)} style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:18 }}>✕</button>
+            <button onClick={()=>setAiAssistOpen(false)} style={{ background:"none",border:"none",color:"rgba(255,255,255,0.45)",cursor:"pointer",fontSize:18 }}>✕</button>
           </div>
           <div style={{ flex:1, overflowY:"auto", padding:"14px 16px", display:"flex", flexDirection:"column", gap:10, minHeight:200, maxHeight:340 }}>
             {aiAssistHistory.length===0 && (
-              <div style={{ color:C.muted, fontSize:12, textAlign:"center", padding:"24px 0" }}>
+              <div style={{ color:"rgba(255,255,255,0.45)", fontSize:12, textAlign:"center", padding:"24px 0" }}>
                 <div style={{ fontSize:32, marginBottom:8 }}>💬</div>
                 Posez-moi une question sur votre événement ou demandez un bilan rapide !
                 <div style={{ display:"flex", flexDirection:"column", gap:6, marginTop:14 }}>
                   {["Qu'est-ce qui est urgent à faire ?","Comment optimiser mon budget ?","Qui n'a pas encore répondu ?","Génère-moi un planning type"].map(q=>(
                     <button key={q} onClick={()=>sendAiAssist(q)} style={{
-                      background:C.mid, border:`1px solid ${C.border}`, borderRadius:8, padding:"6px 12px",
-                      color:C.muted, cursor:"pointer", fontSize:11, fontFamily:"inherit", textAlign:"left",
+                      background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:8, padding:"6px 12px",
+                      color:"rgba(255,255,255,0.45)", cursor:"pointer", fontSize:11, fontFamily:"inherit", textAlign:"left",
                     }}>→ {q}</button>
                   ))}
                 </div>
@@ -2344,25 +2388,25 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                   background:msg.role==="user"?C.gold+"33":C.mid,
                   border:`1px solid ${msg.role==="user"?C.gold+"44":C.border}`,
                   borderRadius:msg.role==="user"?"16px 16px 4px 16px":"16px 16px 16px 4px",
-                  padding:"8px 14px", maxWidth:"90%", fontSize:12, color:C.cream, lineHeight:1.6,
+                  padding:"8px 14px", maxWidth:"90%", fontSize:12, color:"#ffffff", lineHeight:1.6,
                   whiteSpace:"pre-wrap",
                 }}>{msg.content}</div>
               </div>
             ))}
             {aiAssistLoading && (
-              <div style={{ color:C.muted, fontSize:12, fontStyle:"italic" }}>🤖 Réflexion en cours…</div>
+              <div style={{ color:"rgba(255,255,255,0.45)", fontSize:12, fontStyle:"italic" }}>🤖 Réflexion en cours…</div>
             )}
           </div>
-          <div style={{ padding:"10px 14px", borderTop:`1px solid ${C.border}`, display:"flex", gap:8 }}>
+          <div style={{ padding:"10px 14px", borderTop:"1px solid rgba(201,151,58,0.12)", display:"flex", gap:8 }}>
             <input
               value={aiAssistMsg}
               onChange={e=>setAiAssistMsg(e.target.value)}
               onKeyDown={e=>{ if(e.key==="Enter"&&!e.shiftKey){ e.preventDefault(); sendAiAssist(aiAssistMsg); } }}
               placeholder="Posez une question…"
-              style={{ flex:1, padding:"8px 12px", background:C.mid, border:`1px solid ${C.border}`, borderRadius:10, color:C.cream, fontSize:12, fontFamily:"inherit" }}
+              style={{ flex:1, padding:"8px 12px", background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:10, color:"#ffffff", fontSize:12, fontFamily:"inherit" }}
             />
             <button onClick={()=>sendAiAssist(aiAssistMsg)} disabled={!aiAssistMsg.trim()||aiAssistLoading}
-              style={{ background:C.gold, border:"none", borderRadius:10, padding:"8px 14px", cursor:"pointer", color:C.dark, fontWeight:700, fontSize:13, fontFamily:"inherit", opacity:!aiAssistMsg.trim()||aiAssistLoading?0.5:1 }}>
+              style={{ background:"linear-gradient(135deg,#C9973A,#F0C97A)", border:"none", borderRadius:10, padding:"8px 14px", cursor:"pointer", color:C.dark, fontWeight:700, fontSize:13, fontFamily:"inherit", opacity:!aiAssistMsg.trim()||aiAssistLoading?0.5:1 }}>
               →
             </button>
           </div>
@@ -2375,7 +2419,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         {tab==="plan" && (
           <div style={{ display:"flex", flexDirection:"column", gap:0 }}>
             {/* Sous-onglets Plan */}
-            <div style={{ display:"flex", gap:0, marginBottom:20, borderBottom:`1px solid ${C.border}` }}>
+            <div style={{ display:"flex", gap:0, marginBottom:20, borderBottom:"1px solid rgba(201,151,58,0.12)" }}>
               {[
                 {id:"tables", icon:"🗺", label:"Tables & Plan"},
                 {id:"salle",  icon:"📐", label:"Édition de salle"},
@@ -2438,14 +2482,14 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                         style={{
                           background:selectedUnseatedGuest?.id===g.id?C.gold+"44":C.red+"22",
                           border:`1px solid ${selectedUnseatedGuest?.id===g.id?C.gold:C.red}44`,
-                          borderRadius:99, padding:"3px 12px", color:C.cream, fontSize:12, cursor:"pointer",
+                          borderRadius:99, padding:"3px 12px", color:"#ffffff", fontSize:12, cursor:"pointer",
                           fontWeight:selectedUnseatedGuest?.id===g.id?700:400
                         }}>
                         {selectedUnseatedGuest?.id===g.id ? "→ " : ""}{g.name}
                       </span>
                     ))}
                     {selectedUnseatedGuest && (
-                      <div style={{width:"100%",marginTop:6,fontSize:11,color:C.gold}}>
+                      <div style={{width:"100%",marginTop:6,fontSize:11,color:"#C9973A"}}>
                         👆 Cliquez sur une table pour y placer {selectedUnseatedGuest.name}
                       </div>
                     )}
@@ -2456,15 +2500,15 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
 
             {/* Side panel */}
             {tableSel && (
-              <div style={{ width:260, background:C.card, border:`1px solid ${C.border}`, borderRadius:16, padding:20 }}>
+              <div style={{ width:260, background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:16, padding:20 }}>
                 <div style={{ display:"flex", alignItems:"center", marginBottom:16 }}>
                   <div>
-                    <div style={{ color:C.gold, fontSize:16 }}>Table {tableSel.number}</div>
-                    {tableSel.label && <div style={{ color:C.muted, fontSize:12 }}>{tableSel.label}</div>}
-                    <div style={{ color:C.muted, fontSize:12 }}>{tableGuests.length}/{tableSel.capacity} places</div>
+                    <div style={{ color:"#C9973A", fontSize:16 }}>Table {tableSel.number}</div>
+                    {tableSel.label && <div style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>{tableSel.label}</div>}
+                    <div style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>{tableGuests.length}/{tableSel.capacity} places</div>
                   </div>
                   <div style={{flex:1}}/>
-                  <button onClick={()=>setSelectedTable(null)} style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:16 }}>✕</button>
+                  <button onClick={()=>setSelectedTable(null)} style={{ background:"none",border:"none",color:"rgba(255,255,255,0.45)",cursor:"pointer",fontSize:16 }}>✕</button>
                 </div>
 
                 {/* Seated guests */}
@@ -2473,15 +2517,15 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                     const d=dietInfo(g.diet);
                     return (
                       <div key={g.id} style={{ background:C.mid+"88",borderRadius:10,padding:"8px 12px",display:"flex",alignItems:"center",gap:8 }}>
-                        <div style={{ width:26,height:26,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:C.gold,fontSize:11,fontWeight:700 }}>
+                        <div style={{ width:26,height:26,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:11,fontWeight:700 }}>
                           {g.name[0]}
                         </div>
                         <div style={{flex:1}}>
-                          <div style={{ color:C.cream, fontSize:12 }}>{g.name}</div>
+                          <div style={{ color:"#ffffff", fontSize:12 }}>{g.name}</div>
                           {g.diet!=="standard" && <div style={{ color:d.color, fontSize:10 }}>{d.icon} {d.label}</div>}
                         </div>
                         <button onClick={()=>updateEv(e=>({...e,guests:e.guests.map(x=>x.id===g.id?{...x,tableId:null}:x)}))}
-                          style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:13 }}>✕</button>
+                          style={{ background:"none",border:"none",color:"rgba(255,255,255,0.45)",cursor:"pointer",fontSize:13 }}>✕</button>
                       </div>
                     );
                   })}
@@ -2490,10 +2534,10 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 {/* Add unseated */}
                 {unseated.length>0 && tableGuests.length<tableSel.capacity && (
                   <div>
-                    <div style={{ color:C.muted, fontSize:11, letterSpacing:.5, marginBottom:6 }}>AJOUTER À CETTE TABLE</div>
+                    <div style={{ color:"rgba(255,255,255,0.45)", fontSize:11, letterSpacing:.5, marginBottom:6 }}>AJOUTER À CETTE TABLE</div>
                     {unseated.map(g=>(
                       <button key={g.id} onClick={()=>updateEv(e=>({...e,guests:e.guests.map(x=>x.id===g.id?{...x,tableId:selectedTable}:x)}))}
-                        style={{ display:"block",width:"100%",marginBottom:5,padding:"7px 12px",textAlign:"left",background:"none",border:`1px solid ${C.border}`,borderRadius:8,color:C.muted,cursor:"pointer",fontSize:12,fontFamily:"inherit" }}>
+                        style={{ display:"block",width:"100%",marginBottom:5,padding:"7px 12px",textAlign:"left",background:"none",border:"1px solid rgba(201,151,58,0.15)",borderRadius:8,color:"rgba(255,255,255,0.45)",cursor:"pointer",fontSize:12,fontFamily:"inherit" }}>
                         + {g.name}
                       </button>
                     ))}
@@ -2513,7 +2557,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               <div style={{ maxWidth:900 }}>
                 <h3 style={{ fontWeight:400, fontSize:20, marginBottom:20 }}>Forme de la salle</h3>
                 <div style={{ marginBottom:20 }}>
-                  <h4 style={{ color:C.gold, fontWeight:400, fontSize:13, letterSpacing:1, marginBottom:10 }}>TEMPLATES RAPIDES</h4>
+                  <h4 style={{ color:"#C9973A", fontWeight:400, fontSize:13, letterSpacing:1, marginBottom:10 }}>TEMPLATES RAPIDES</h4>
                   <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
                     {[
                       { name:"Rectangle", icon:"⬛", pts:[{x:60,y:60},{x:900,y:60},{x:900,y:560},{x:60,y:560}] },
@@ -2528,7 +2572,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                             updateEv(function(evUp){ return {...evUp, roomShape: tmpl.pts.map(function(p){ return {x:p.x, y:p.y}; })}; });
                           }
                         }}
-                        style={{ background:C.card, border:"1px solid "+C.border, borderRadius:8, padding:"8px 14px", cursor:"pointer", color:C.cream, fontFamily:"inherit", fontSize:12, display:"flex", alignItems:"center", gap:6 }}
+                        style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:8, padding:"8px 14px", cursor:"pointer", color:"#ffffff", fontFamily:"inherit", fontSize:12, display:"flex", alignItems:"center", gap:6 }}
                       >
                         <span>{tmpl.icon}</span><span>{tmpl.name}</span>
                       </button>
@@ -2539,45 +2583,45 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
 
                 {/* Zones spéciales */}
                 <div style={{ marginTop:20 }}>
-                  <h4 style={{ color:C.gold, fontWeight:400, fontSize:13, letterSpacing:1, marginBottom:10 }}>ZONES SPÉCIALES</h4>
+                  <h4 style={{ color:"#C9973A", fontWeight:400, fontSize:13, letterSpacing:1, marginBottom:10 }}>ZONES SPÉCIALES</h4>
                   <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginBottom:12 }}>
                     {(ev.zones||[]).map(function(zone, zi){ return (
                       <div key={zi} style={{ background:zone.color+"22", border:"1px solid "+zone.color+"66", borderRadius:8, padding:"6px 14px", display:"flex", alignItems:"center", gap:8 }}>
                         <span style={{ fontSize:16 }}>{zone.icon}</span>
                         <span style={{ color:zone.color, fontSize:13 }}>{zone.label}</span>
                         <button onClick={function(){ updateEv(function(evUp){ return {...evUp, zones:(evUp.zones||[]).filter(function(_,i){ return i!==zi; })}; }); }}
-                          style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:14, padding:0 }}>✕</button>
+                          style={{ background:"none", border:"none", color:"rgba(255,255,255,0.45)", cursor:"pointer", fontSize:14, padding:0 }}>✕</button>
                       </div>
                     ); })}
                     <button onClick={()=>setShowAddZone(true)}
-                      style={{ background:C.card, border:"1px dashed "+C.border, borderRadius:8, padding:"6px 14px", cursor:"pointer", color:C.muted, fontFamily:"inherit", fontSize:12 }}>
+                      style={{ background:"#18182a", border:"1px dashed "+C.border, borderRadius:8, padding:"6px 14px", cursor:"pointer", color:"rgba(255,255,255,0.45)", fontFamily:"inherit", fontSize:12 }}>
                       + Ajouter une zone
                     </button>
                   </div>
-                  <p style={{ color:C.muted, fontSize:11, fontStyle:"italic" }}>
+                  <p style={{ color:"rgba(255,255,255,0.45)", fontSize:11, fontStyle:"italic" }}>
                     Les zones apparaissent dans les exports PDF. Exemples : Estrade, Scène, Bar, Piste de danse, Photo Booth...
                   </p>
                 </div>
 
                 {/* Mobilier */}
                 <div style={{ marginTop:24 }}>
-                  <h4 style={{ color:C.gold, fontWeight:400, fontSize:13, letterSpacing:1, marginBottom:10 }}>MOBILIER</h4>
+                  <h4 style={{ color:"#C9973A", fontWeight:400, fontSize:13, letterSpacing:1, marginBottom:10 }}>MOBILIER</h4>
                   <div style={{ display:"flex", flexWrap:"wrap", gap:8, marginBottom:12 }}>
                     {(ev.furniture||[]).map(function(item, fi){ return (
                       <div key={fi} style={{ background:item.color+"22", border:"1px solid "+item.color+"66", borderRadius:8, padding:"6px 14px", display:"flex", alignItems:"center", gap:8 }}>
                         <span style={{ fontSize:16 }}>{item.icon}</span>
                         <span style={{ color:item.color, fontSize:13 }}>{item.label}</span>
-                        <span style={{ color:C.muted, fontSize:11 }}>{item.width}×{item.height}</span>
+                        <span style={{ color:"rgba(255,255,255,0.45)", fontSize:11 }}>{item.width}×{item.height}</span>
                         <button onClick={function(){ updateEv(function(evUp){ return {...evUp, furniture:(evUp.furniture||[]).filter(function(_,i){ return i!==fi; })}; }); }}
-                          style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:14, padding:0 }}>✕</button>
+                          style={{ background:"none", border:"none", color:"rgba(255,255,255,0.45)", cursor:"pointer", fontSize:14, padding:0 }}>✕</button>
                       </div>
                     ); })}
                     <button onClick={()=>setShowAddFurniture(true)}
-                      style={{ background:C.card, border:"1px dashed "+C.border, borderRadius:8, padding:"6px 14px", cursor:"pointer", color:C.muted, fontFamily:"inherit", fontSize:12 }}>
+                      style={{ background:"#18182a", border:"1px dashed "+C.border, borderRadius:8, padding:"6px 14px", cursor:"pointer", color:"rgba(255,255,255,0.45)", fontFamily:"inherit", fontSize:12 }}>
                       + Ajouter du mobilier
                     </button>
                   </div>
-                  <p style={{ color:C.muted, fontSize:11, fontStyle:"italic" }}>
+                  <p style={{ color:"rgba(255,255,255,0.45)", fontSize:11, fontStyle:"italic" }}>
                     Exemples : Scène, Bar, Buffet, Photobooth, Podium, Piano...
                   </p>
                 </div>
@@ -2591,27 +2635,27 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         {tab==="list" && (
           <div style={{ padding:"0 24px" }}>
             <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:20 }}>
-              <h3 style={{ color:C.gold, fontWeight:400, fontSize:18 }}>📋 Plan par tables</h3>
+              <h3 style={{ color:"#C9973A", fontWeight:400, fontSize:18 }}>📋 Plan par tables</h3>
               <Btn small variant="ghost" onClick={function(){ exportGuestsCSV(ev); }}>⬇ Export CSV</Btn>
             </div>
             <div style={{ display:"flex", flexDirection:"column", gap:16 }}>
               {ev.tables.map(function(tbl) {
                 var tblGuests = ev.guests.filter(function(g){ return g.tableId === tbl.id; });
                 return (
-                  <div key={tbl.id} style={{ background:C.card, border:"1px solid " + (tbl.color||C.border) + "44", borderRadius:14, overflow:"hidden" }}>
+                  <div key={tbl.id} style={{ background:"#18182a", border:"1px solid " + (tbl.color||C.border) + "44", borderRadius:14, overflow:"hidden" }}>
                     <div style={{ background:(tbl.color||C.gold)+"22", padding:"12px 20px", display:"flex", justifyContent:"space-between", alignItems:"center" }}>
                       <span style={{ color:tbl.color||C.gold, fontWeight:700, fontSize:15 }}>
                         Table {tbl.number}{tbl.label ? " — " + tbl.label : ""}
                       </span>
-                      <span style={{ color:C.muted, fontSize:12 }}>{tblGuests.length}/{tbl.capacity} places</span>
+                      <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>{tblGuests.length}/{tbl.capacity} places</span>
                     </div>
                     {tblGuests.length === 0 ? (
-                      <p style={{ color:C.muted, fontSize:13, padding:"12px 20px", fontStyle:"italic" }}>— Vide —</p>
+                      <p style={{ color:"rgba(255,255,255,0.45)", fontSize:13, padding:"12px 20px", fontStyle:"italic" }}>— Vide —</p>
                     ) : (
                       <table style={{ width:"100%", borderCollapse:"collapse" }}>
                         <thead>
                           <tr style={{ borderBottom:"1px solid " + C.border }}>
-                            {["Nom","Rôle","Régime","Notes"].map(function(h){ return <th key={h} style={{ padding:"8px 20px", color:C.muted, fontSize:11, textAlign:"left", letterSpacing:1 }}>{h}</th>; })}
+                            {["Nom","Rôle","Régime","Notes"].map(function(h){ return <th key={h} style={{ padding:"8px 20px", color:"rgba(255,255,255,0.45)", fontSize:11, textAlign:"left", letterSpacing:1 }}>{h}</th>; })}
                           </tr>
                         </thead>
                         <tbody>
@@ -2619,14 +2663,14 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                             var dinfo = dietInfo(g.diet);
                             return (
                               <tr key={g.id} style={{ borderBottom:idx<tblGuests.length-1?"1px solid "+C.border+"33":"none", background:idx%2===0?"transparent":C.mid+"33" }}>
-                                <td style={{ padding:"10px 20px", color:C.cream, fontSize:14 }}>
+                                <td style={{ padding:"10px 20px", color:"#ffffff", fontSize:14 }}>
                                   {g.name}
-                                  {g.role && <span style={{ marginLeft:6, background:C.gold+"22", border:"1px solid "+C.gold+"44", borderRadius:99, padding:"1px 8px", fontSize:10, color:C.gold }}>
+                                  {g.role && <span style={{ marginLeft:6, background:C.gold+"22", border:"1px solid "+C.gold+"44", borderRadius:99, padding:"1px 8px", fontSize:10, color:"#C9973A" }}>
                                     {{"marie1":"💍","marie2":"💍","temoin":"🎖","famille_proche":"👨‍👩‍👧","ami_proche":"⭐","enfant":"🧒","vip":"🌟","prestataire":"🔧"}[g.role]||""} {{"marie1":"Marié(e)","marie2":"Marié(e)","temoin":"Témoin","famille_proche":"Famille","ami_proche":"Ami proche","enfant":"Enfant","vip":"VIP","prestataire":"Prestataire"}[g.role]||g.role}
                                   </span>}
                                 </td>
                                 <td style={{ padding:"10px 20px", fontSize:13, color:dinfo.color }}>{dinfo.icon} {dinfo.label}</td>
-                                <td style={{ padding:"10px 20px", color:C.muted, fontSize:12, fontStyle:"italic" }}>{g.notes||""}</td>
+                                <td style={{ padding:"10px 20px", color:"rgba(255,255,255,0.45)", fontSize:12, fontStyle:"italic" }}>{g.notes||""}</td>
                               </tr>
                             );
                           })}
@@ -2641,7 +2685,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                   <p style={{ color:C.red, fontSize:13, fontWeight:700, marginBottom:8 }}>⚠ Non placés ({ev.guests.filter(function(g){ return !g.tableId; }).length})</p>
                   <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
                     {ev.guests.filter(function(g){ return !g.tableId; }).map(function(g){
-                      return <span key={g.id} style={{ background:C.red+"22", borderRadius:99, padding:"4px 12px", fontSize:12, color:C.cream }}>{g.name}</span>;
+                      return <span key={g.id} style={{ background:C.red+"22", borderRadius:99, padding:"4px 12px", fontSize:12, color:"#ffffff" }}>{g.name}</span>;
                     })}
                   </div>
                 </div>
@@ -2676,14 +2720,14 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 const table=ev.tables.find(t=>t.id===g.tableId);
                 const d=dietInfo(g.diet);
                 return (
-                  <div key={g.id} style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:"14px 18px",display:"flex",alignItems:"center",gap:14 }}>
-                    <div style={{ width:38,height:38,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:C.gold,fontSize:15,fontWeight:700 }}>
+                  <div key={g.id} style={{ background:"#18182a",border:"1px solid rgba(201,151,58,0.15)",borderRadius:12,padding:"14px 18px",display:"flex",alignItems:"center",gap:14 }}>
+                    <div style={{ width:38,height:38,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:15,fontWeight:700 }}>
                       {g.name[0]}
                     </div>
                     <div style={{flex:1}}>
-                      <div style={{ color:C.cream, fontSize:15 }}>{g.name}</div>
-                      {g.email && <div style={{ color:C.muted, fontSize:12 }}>{g.email}</div>}
-                      {g.notes && <div style={{ color:C.muted, fontSize:12, fontStyle:"italic" }}>{g.notes}</div>}
+                      <div style={{ color:"#ffffff", fontSize:15 }}>{g.name}</div>
+                      {g.email && <div style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>{g.email}</div>}
+                      {g.notes && <div style={{ color:"rgba(255,255,255,0.45)", fontSize:12, fontStyle:"italic" }}>{g.notes}</div>}
                     </div>
                     {g.diet!=="standard" && <Badge color={d.color}>{d.icon} {d.label}</Badge>}
                     {g.allergies?.length>0 && (
@@ -2693,16 +2737,16 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                     )}
                     {table ? <Badge color={C.gold}>Table {table.number}</Badge> : <Badge color={C.red}>Non placé</Badge>}
                     <select value={g.tableId||""} onChange={function(evt){ var tid=evt.target.value?parseInt(evt.target.value):null; updateEv(function(evUp){ return {...evUp,guests:evUp.guests.map(function(x){ return x.id===g.id?{...x,tableId:tid}:x; })}; }); }}
-                      style={{ background:C.mid,border:"1px solid "+C.border,borderRadius:8,color:C.cream,padding:"4px 8px",fontSize:12,cursor:"pointer",fontFamily:"inherit" }}>
+                      style={{ background:"#13131e",border:"1px solid "+C.border,borderRadius:8,color:"#ffffff",padding:"4px 8px",fontSize:12,cursor:"pointer",fontFamily:"inherit" }}>
                       <option value="">— Non placé —</option>
                       {ev.tables.map(function(tbl){return <option key={tbl.id} value={tbl.id}>Table {tbl.number}{tbl.label?" ("+tbl.label+")":""}</option>;})}
                     </select>
                     <button onClick={()=>updateEv(e=>({...e,guests:e.guests.filter(x=>x.id!==g.id)}))}
-                      style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:16 }}>🗑</button>
+                      style={{ background:"none",border:"none",color:"rgba(255,255,255,0.45)",cursor:"pointer",fontSize:16 }}>🗑</button>
                   </div>
                 );
               })}
-              {filtered.length===0 && <p style={{ color:C.muted, textAlign:"center", padding:32 }}>Aucun invité trouvé</p>}
+              {filtered.length===0 && <p style={{ color:"rgba(255,255,255,0.45)", textAlign:"center", padding:32 }}>Aucun invité trouvé</p>}
             </div>
           </div>
         )}
@@ -2725,17 +2769,17 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 return (
                   <div key={dopt.id} style={{ background:count>0?dopt.color+"22":C.card, border:"1px solid "+(count>0?dopt.color:C.border), borderRadius:12, padding:"14px 10px", textAlign:"center" }}>
                     <div style={{ fontSize:28 }}>{dopt.icon}</div>
-                    <div style={{ color:count>0?dopt.color:C.muted, fontSize:22, fontWeight:700 }}>{count}</div>
-                    <div style={{ color:C.muted, fontSize:11, marginTop:2 }}>{dopt.label}</div>
+                    <div style={{ color:count>0?dopt.color:"rgba(255,255,255,0.45)", fontSize:22, fontWeight:700 }}>{count}</div>
+                    <div style={{ color:"rgba(255,255,255,0.45)", fontSize:11, marginTop:2 }}>{dopt.label}</div>
                   </div>
                 );
               })}
             </div>
 
             {/* ── MENU MULTI-COURS ── */}
-            <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
+            <div style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
               <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:20 }}>
-                <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>🍽 Menu de l'événement</h4>
+                <h4 style={{ margin:0, color:"#C9973A", fontWeight:400, fontSize:16 }}>🍽 Menu de l'événement</h4>
                 <Btn small variant="muted" onClick={function(e){
                   var btn = e.currentTarget;
                   btn.disabled = true;
@@ -2786,27 +2830,27 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                   var key = item[0]; var label = item[1]; var ph = item[2];
                   return (
                     <div key={key}>
-                      <label style={{ color:C.muted, fontSize:11, letterSpacing:1, display:"block", marginBottom:6 }}>{label.toUpperCase()}</label>
+                      <label style={{ color:"rgba(255,255,255,0.45)", fontSize:11, letterSpacing:1, display:"block", marginBottom:6 }}>{label.toUpperCase()}</label>
                       <input
                         value={(ev.menu&&ev.menu[key])||""}
                         onChange={function(e){ var v=e.target.value; updateEv(function(ev2){ return {...ev2, menu:{...(ev2.menu||{}), [key]:v}}; }); }}
                         placeholder={ph}
-                        style={{ width:"100%", padding:"8px 12px", background:"#fff1", border:"1px solid "+C.border, borderRadius:8, color:C.cream, fontSize:13, fontFamily:"inherit", boxSizing:"border-box" }}
+                        style={{ width:"100%", padding:"8px 12px", background:"#fff1", border:"1px solid "+C.border, borderRadius:8, color:"#ffffff", fontSize:13, fontFamily:"inherit", boxSizing:"border-box" }}
                       />
                     </div>
                   );
                 })}
               </div>
               {ev.menu&&ev.menu.note && (
-                <div style={{ marginTop:14, background:C.gold+"11", border:"1px solid "+C.gold+"44", borderRadius:10, padding:"10px 16px", color:C.gold, fontSize:13, fontStyle:"italic" }}>
+                <div style={{ marginTop:14, background:C.gold+"11", border:"1px solid "+C.gold+"44", borderRadius:10, padding:"10px 16px", color:"#C9973A", fontSize:13, fontStyle:"italic" }}>
                   💡 {ev.menu.note}
                 </div>
               )}
             </div>
 
             {/* ── BOISSONS ── */}
-            <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
-              <h4 style={{ margin:"0 0 16px", color:C.gold, fontWeight:400, fontSize:16 }}>🍷 Boissons</h4>
+            <div style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
+              <h4 style={{ margin:"0 0 16px", color:"#C9973A", fontWeight:400, fontSize:16 }}>🍷 Boissons</h4>
               <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(200px,1fr))", gap:12 }}>
                 {[
                   ["champagne","🥂 Champagne/Prosecco","ex: Veuve Clicquot Brut"],
@@ -2821,32 +2865,32 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                   var key = item[0]; var label = item[1]; var ph = item[2];
                   return (
                     <div key={key}>
-                      <label style={{ color:C.muted, fontSize:11, letterSpacing:1, display:"block", marginBottom:4 }}>{label.toUpperCase()}</label>
+                      <label style={{ color:"rgba(255,255,255,0.45)", fontSize:11, letterSpacing:1, display:"block", marginBottom:4 }}>{label.toUpperCase()}</label>
                       <input
                         value={(ev.drinks&&ev.drinks[key])||""}
                         onChange={function(e){ var v=e.target.value; updateEv(function(ev2){ return {...ev2, drinks:{...(ev2.drinks||{}), [key]:v}}; }); }}
                         placeholder={ph}
-                        style={{ width:"100%", padding:"7px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:12, fontFamily:"inherit", boxSizing:"border-box" }}
+                        style={{ width:"100%", padding:"7px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit", boxSizing:"border-box" }}
                       />
                     </div>
                   );
                 })}
               </div>
               <div style={{ marginTop:14 }}>
-                <label style={{ color:C.muted, fontSize:11, letterSpacing:1, display:"block", marginBottom:4 }}>NOTES BOISSONS</label>
+                <label style={{ color:"rgba(255,255,255,0.45)", fontSize:11, letterSpacing:1, display:"block", marginBottom:4 }}>NOTES BOISSONS</label>
                 <input
                   value={(ev.drinks&&ev.drinks.notes)||""}
                   onChange={function(e){ var v=e.target.value; updateEv(function(ev2){ return {...ev2, drinks:{...(ev2.drinks||{}), notes:v}}; }); }}
                   placeholder="Ex: Pas d'alcool sur les tables enfants, service champagne à l'arrivée..."
-                  style={{ width:"100%", padding:"8px 12px", background:"#fff1", border:"1px solid "+C.border, borderRadius:8, color:C.cream, fontSize:13, fontFamily:"inherit", boxSizing:"border-box" }}
+                  style={{ width:"100%", padding:"8px 12px", background:"#fff1", border:"1px solid "+C.border, borderRadius:8, color:"#ffffff", fontSize:13, fontFamily:"inherit", boxSizing:"border-box" }}
                 />
               </div>
             </div>
 
             {/* ── SYNTHÈSE TRAITEUR ── */}
-            <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
+            <div style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
               <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:20 }}>
-                <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>📊 Synthèse traiteur</h4>
+                <h4 style={{ margin:0, color:"#C9973A", fontWeight:400, fontSize:16 }}>📊 Synthèse traiteur</h4>
                 <div style={{ display:"flex", gap:8, marginLeft:"auto" }}>
                   <Btn small variant="ghost" onClick={function(){
                     // Export CSV traiteur
@@ -2866,7 +2910,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               </div>
 
               {/* Par table */}
-              <h5 style={{ color:C.muted, fontSize:12, letterSpacing:1, marginBottom:12 }}>PAR TABLE</h5>
+              <h5 style={{ color:"rgba(255,255,255,0.45)", fontSize:12, letterSpacing:1, marginBottom:12 }}>PAR TABLE</h5>
               <div style={{ display:"flex", flexDirection:"column", gap:8, marginBottom:24 }}>
                 {ev.tables.map(function(tbl){
                   var tGuests = ev.guests.filter(function(g){ return g.tableId===tbl.id; });
@@ -2875,10 +2919,10 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                   return (
                     <div key={tbl.id} style={{ background:C.mid+"44", border:"1px solid "+C.border, borderRadius:10, padding:"12px 16px", display:"flex", alignItems:"center", gap:12, flexWrap:"wrap" }}>
                       <span style={{ color:tbl.color||C.gold, fontWeight:700, minWidth:80 }}>Table {tbl.number}{tbl.label?" — "+tbl.label:""}</span>
-                      <span style={{ color:C.muted, fontSize:12 }}>{tGuests.length} couverts</span>
+                      <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>{tGuests.length} couverts</span>
                       <div style={{ flex:1, display:"flex", flexWrap:"wrap", gap:6 }}>
                         {specials.length===0 ? (
-                          <span style={{ color:C.muted, fontSize:12, fontStyle:"italic" }}>Tous standard</span>
+                          <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12, fontStyle:"italic" }}>Tous standard</span>
                         ) : specials.map(function(g){
                           var dinfo = dietInfo(g.diet);
                           return (
@@ -2894,7 +2938,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               </div>
 
               {/* Par régime */}
-              <h5 style={{ color:C.muted, fontSize:12, letterSpacing:1, marginBottom:12 }}>PAR RÉGIME</h5>
+              <h5 style={{ color:"rgba(255,255,255,0.45)", fontSize:12, letterSpacing:1, marginBottom:12 }}>PAR RÉGIME</h5>
               <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
                 {DIET_OPTIONS.filter(function(d){ return d.id!=="standard"; }).map(function(dopt){
                   var concerned = ev.guests.filter(function(g){ return g.diet===dopt.id || (g.allergies||[]).includes(dopt.id); });
@@ -2907,7 +2951,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                         {concerned.map(function(g){
                           var tbl = ev.tables.find(function(tb){ return tb.id===g.tableId; });
                           return (
-                            <span key={g.id} style={{ background:C.card, border:"1px solid "+C.border, borderRadius:99, padding:"2px 10px", fontSize:11, color:C.cream }}>
+                            <span key={g.id} style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:99, padding:"2px 10px", fontSize:11, color:"#ffffff" }}>
                               {g.name}{tbl?" (T."+tbl.number+")":""} 
                             </span>
                           );
@@ -2921,8 +2965,8 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
 
             {/* ── INVITÉS AVEC RÉGIME SPÉCIAL ── */}
             {ev.guests.filter(function(g){ return g.diet!=="standard"||(g.allergies||[]).length>0; }).length > 0 && (
-              <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
-                <h4 style={{ margin:"0 0 16px", color:C.gold, fontWeight:400, fontSize:16 }}>⚠ Invités avec besoins spécifiques</h4>
+              <div style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
+                <h4 style={{ margin:"0 0 16px", color:"#C9973A", fontWeight:400, fontSize:16 }}>⚠ Invités avec besoins spécifiques</h4>
                 <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
                   {ev.guests.filter(function(g){ return g.diet!=="standard"||(g.allergies||[]).length>0; }).map(function(g){
                     var dinfo = dietInfo(g.diet);
@@ -2931,8 +2975,8 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                       <div key={g.id} style={{ background:dinfo.color+"11", border:"1px solid "+dinfo.color+"33", borderRadius:10, padding:"10px 16px", display:"flex", alignItems:"center", gap:12 }}>
                         <span style={{ fontSize:22 }}>{dinfo.icon}</span>
                         <div style={{ flex:1 }}>
-                          <div style={{ color:C.cream, fontWeight:600 }}>{g.name}</div>
-                          <div style={{ color:C.muted, fontSize:12 }}>
+                          <div style={{ color:"#ffffff", fontWeight:600 }}>{g.name}</div>
+                          <div style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>
                             {dinfo.label}
                             {(g.allergies||[]).map(function(a){ var ai=dietInfo(a); return " · "+ai.icon+" "+ai.label; }).join("")}
                             {g.notes ? " · "+g.notes : ""}
@@ -2961,30 +3005,30 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 {label:"Confirmés",   val:rsvpConfirmed, color:C.green,  icon:"✅"},
                 {label:"Refusés",     val:rsvpDeclined,  color:C.red,    icon:"❌"},
                 {label:"En attente",  val:rsvpPending,   color:"#FF9800", icon:"⏳"},
-                {label:"Total",       val:ev.guests.length, color:C.gold, icon:"👥"},
+                {label:"Total",       val:ev.guests.length, color:"#C9973A", icon:"👥"},
               ].map(s=>(
-                <div key={s.label} style={{ background:C.card, border:"1px solid "+C.border, borderRadius:14, padding:"18px 20px", textAlign:"center" }}>
+                <div key={s.label} style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:14, padding:"18px 20px", textAlign:"center" }}>
                   <div style={{ fontSize:28, marginBottom:6 }}>{s.icon}</div>
                   <div style={{ fontSize:30, fontWeight:700, color:s.color }}>{s.val}</div>
-                  <div style={{ color:C.muted, fontSize:12, marginTop:4 }}>{s.label}</div>
+                  <div style={{ color:"rgba(255,255,255,0.45)", fontSize:12, marginTop:4 }}>{s.label}</div>
                 </div>
               ))}
             </div>
 
             {/* ── Barre progression ── */}
             {ev.guests.length > 0 && (
-              <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px", marginBottom:24 }}>
+              <div style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px", marginBottom:24 }}>
                 <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8 }}>
-                  <span style={{ color:C.muted, fontSize:12 }}>Taux de réponse</span>
-                  <span style={{ color:C.gold, fontSize:12, fontWeight:700 }}>
+                  <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>Taux de réponse</span>
+                  <span style={{ color:"#C9973A", fontSize:12, fontWeight:700 }}>
                     {Math.round((rsvpConfirmed+rsvpDeclined)/ev.guests.length*100)}%
                   </span>
                 </div>
-                <div style={{ height:8, background:C.mid, borderRadius:99, overflow:"hidden", display:"flex" }}>
+                <div style={{ height:8, background:"#13131e", borderRadius:99, overflow:"hidden", display:"flex" }}>
                   <div style={{ width:`${rsvpConfirmed/ev.guests.length*100}%`, background:C.green, transition:"width .4s" }}/>
                   <div style={{ width:`${rsvpDeclined/ev.guests.length*100}%`, background:C.red, transition:"width .4s" }}/>
                 </div>
-                <div style={{ display:"flex", gap:16, marginTop:8, fontSize:11, color:C.muted }}>
+                <div style={{ display:"flex", gap:16, marginTop:8, fontSize:11, color:"rgba(255,255,255,0.45)" }}>
                   <span style={{ color:C.green }}>■ Confirmés {rsvpConfirmed}</span>
                   <span style={{ color:C.red }}>■ Refusés {rsvpDeclined}</span>
                   <span style={{ color:"#FF9800" }}>■ En attente {rsvpPending}</span>
@@ -2993,8 +3037,8 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             )}
 
             {/* ── Lien RSVP ── */}
-            <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px", marginBottom:24 }}>
-              <h4 style={{ color:C.gold, fontWeight:400, fontSize:14, margin:"0 0 12px" }}>🔗 Lien de confirmation invités</h4>
+            <div style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px", marginBottom:24 }}>
+              <h4 style={{ color:"#C9973A", fontWeight:400, fontSize:14, margin:"0 0 12px" }}>🔗 Lien de confirmation invités</h4>
               {(function(){
                 var fb = null; try{fb=getFirebase();}catch(e){}
                 var uid = fb&&fb.auth&&fb.auth.currentUser ? fb.auth.currentUser.uid : "";
@@ -3003,29 +3047,29 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 return (
               <div style={{ display:"flex", gap:8, alignItems:"center" }}>
                 <input readOnly value={joinUrl}
-                  style={{ flex:1, padding:"8px 12px", background:C.mid, border:"1px solid "+C.border, borderRadius:8, color:C.muted, fontSize:12, fontFamily:"monospace" }}/>
+                  style={{ flex:1, padding:"8px 12px", background:"#13131e", border:"1px solid "+C.border, borderRadius:8, color:"rgba(255,255,255,0.45)", fontSize:12, fontFamily:"monospace" }}/>
                 <Btn small onClick={function(){ navigator.clipboard.writeText(joinUrl); }}>📋 Copier</Btn>
               </div>
                 );
               })()}
-              <p style={{ color:C.muted, fontSize:11, marginTop:8, fontStyle:"italic" }}>Partagez ce lien — les invités confirment leur présence et régime alimentaire directement.</p>
+              <p style={{ color:"rgba(255,255,255,0.45)", fontSize:11, marginTop:8, fontStyle:"italic" }}>Partagez ce lien — les invités confirment leur présence et régime alimentaire directement.</p>
             </div>
 
             {/* ── Liste invités avec statut RSVP ── */}
-            <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px" }}>
-              <h4 style={{ color:C.gold, fontWeight:400, fontSize:14, margin:"0 0 16px" }}>👥 Statut par invité</h4>
+            <div style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px" }}>
+              <h4 style={{ color:"#C9973A", fontWeight:400, fontSize:14, margin:"0 0 16px" }}>👥 Statut par invité</h4>
               <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
-                {ev.guests.length === 0 && <p style={{ color:C.muted, fontStyle:"italic" }}>Aucun invité ajouté.</p>}
+                {ev.guests.length === 0 && <p style={{ color:"rgba(255,255,255,0.45)", fontStyle:"italic" }}>Aucun invité ajouté.</p>}
                 {ev.guests.map(function(g){
                   var rsvp = g.rsvp || "pending";
                   var rsvpColor = rsvp==="confirmed" ? C.green : rsvp==="declined" ? C.red : "#FF9800";
                   var rsvpIcon  = rsvp==="confirmed" ? "✅" : rsvp==="declined" ? "❌" : "⏳";
                   return (
                     <div key={g.id} style={{ display:"flex", alignItems:"center", gap:12, padding:"10px 14px", background:C.mid+"44", borderRadius:10, border:"1px solid "+C.border+"33" }}>
-                      <div style={{ width:32,height:32,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:C.gold,fontSize:13,fontWeight:700 }}>{g.name[0]}</div>
+                      <div style={{ width:32,height:32,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:13,fontWeight:700 }}>{g.name[0]}</div>
                       <div style={{ flex:1 }}>
-                        <div style={{ color:C.cream, fontSize:14 }}>{g.name}</div>
-                        {g.email && <div style={{ color:C.muted, fontSize:11 }}>{g.email}</div>}
+                        <div style={{ color:"#ffffff", fontSize:14 }}>{g.name}</div>
+                        {g.email && <div style={{ color:"rgba(255,255,255,0.45)", fontSize:11 }}>{g.email}</div>}
                       </div>
                       <span style={{ fontSize:18 }}>{rsvpIcon}</span>
                       <div style={{ display:"flex", gap:4 }}>
@@ -3062,38 +3106,38 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             {/* ── KPIs budget ── */}
             <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(180px,1fr))", gap:14, marginBottom:28 }}>
               {[
-                {label:"Budget estimé",  val:budgetTotal.toFixed(0)+"€",  color:C.gold,  icon:"📋"},
+                {label:"Budget estimé",  val:budgetTotal.toFixed(0)+"€",  color:"#C9973A",  icon:"📋"},
                 {label:"Dépensé",        val:budgetSpent.toFixed(0)+"€",  color:budgetSpent>budgetTotal?C.red:C.green, icon:"💳"},
                 {label:"Restant",        val:(budgetTotal-budgetSpent).toFixed(0)+"€", color:budgetTotal-budgetSpent<0?C.red:C.green, icon:"🏦"},
                 {label:"Coût / invité",  val:ev.guests.length>0?(budgetSpent/ev.guests.length).toFixed(0)+"€":"—", color:C.blue, icon:"👤"},
               ].map(s=>(
-                <div key={s.label} style={{ background:C.card, border:"1px solid "+C.border, borderRadius:14, padding:"18px 20px" }}>
+                <div key={s.label} style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:14, padding:"18px 20px" }}>
                   <div style={{ fontSize:24, marginBottom:6 }}>{s.icon}</div>
                   <div style={{ fontSize:26, fontWeight:700, color:s.color }}>{s.val}</div>
-                  <div style={{ color:C.muted, fontSize:12, marginTop:4 }}>{s.label}</div>
+                  <div style={{ color:"rgba(255,255,255,0.45)", fontSize:12, marginTop:4 }}>{s.label}</div>
                 </div>
               ))}
             </div>
 
             {/* ── Barre budget ── */}
             {budgetTotal > 0 && (
-              <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px", marginBottom:24 }}>
+              <div style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px", marginBottom:24 }}>
                 <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8 }}>
-                  <span style={{ color:C.muted, fontSize:12 }}>Consommation du budget</span>
+                  <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>Consommation du budget</span>
                   <span style={{ color:budgetSpent>budgetTotal?C.red:C.gold, fontSize:12, fontWeight:700 }}>
                     {Math.round(budgetSpent/budgetTotal*100)}%
                   </span>
                 </div>
-                <div style={{ height:10, background:C.mid, borderRadius:99, overflow:"hidden" }}>
+                <div style={{ height:10, background:"#13131e", borderRadius:99, overflow:"hidden" }}>
                   <div style={{ width:`${Math.min(100,budgetSpent/budgetTotal*100)}%`, background:budgetSpent>budgetTotal?C.red:C.green, transition:"width .4s", height:"100%" }}/>
                 </div>
               </div>
             )}
 
             {/* ── Postes de dépenses ── */}
-            <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px", marginBottom:16 }}>
+            <div style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px", marginBottom:16 }}>
               <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:16 }}>
-                <h4 style={{ color:C.gold, fontWeight:400, fontSize:14, margin:0 }}>💼 Postes de dépenses</h4>
+                <h4 style={{ color:"#C9973A", fontWeight:400, fontSize:14, margin:0 }}>💼 Postes de dépenses</h4>
                 <div style={{ flex:1 }}/>
                 <Btn small onClick={function(){
                   var cats = [
@@ -3122,7 +3166,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               </div>
 
               {(ev.budget||[]).length === 0 && (
-                <p style={{ color:C.muted, fontStyle:"italic", textAlign:"center", padding:20 }}>Aucun poste. Cliquez sur "Remplir avec modèle" pour démarrer.</p>
+                <p style={{ color:"rgba(255,255,255,0.45)", fontStyle:"italic", textAlign:"center", padding:20 }}>Aucun poste. Cliquez sur "Remplir avec modèle" pour démarrer.</p>
               )}
 
               <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
@@ -3134,30 +3178,30 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                       <div style={{ display:"flex", gap:10, alignItems:"center", marginBottom:8 }}>
                         <span style={{ fontSize:18 }}>{item.icon||"📦"}</span>
                         <input value={item.category} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var b=[...(evUp.budget||[])]; b[bi]={...b[bi],category:v}; return {...evUp,budget:b}; }); }}
-                          style={{ flex:1, background:"none", border:"none", color:C.cream, fontSize:14, fontFamily:"inherit", outline:"none" }}/>
+                          style={{ flex:1, background:"none", border:"none", color:"#ffffff", fontSize:14, fontFamily:"inherit", outline:"none" }}/>
                         {over && <span style={{ color:C.red, fontSize:11, fontWeight:700 }}>⚠ Dépassement</span>}
                         <button onClick={function(){ updateEv(function(evUp){ return {...evUp, budget:(evUp.budget||[]).filter(function(_,i){ return i!==bi; })}; }); }}
-                          style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:14 }}>🗑</button>
+                          style={{ background:"none", border:"none", color:"rgba(255,255,255,0.45)", cursor:"pointer", fontSize:14 }}>🗑</button>
                       </div>
                       <div style={{ display:"flex", gap:8, alignItems:"center", flexWrap:"wrap" }}>
                         <div style={{ flex:1, minWidth:120 }}>
-                          <label style={{ color:C.muted, fontSize:10, letterSpacing:1 }}>ESTIMÉ (€)</label>
+                          <label style={{ color:"rgba(255,255,255,0.45)", fontSize:10, letterSpacing:1 }}>ESTIMÉ (€)</label>
                           <input type="number" value={item.estimated} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var b=[...(evUp.budget||[])]; b[bi]={...b[bi],estimated:v}; return {...evUp,budget:b}; }); }}
-                            placeholder="0" style={{ width:"100%", padding:"6px 10px", background:C.card, border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:13, fontFamily:"inherit" }}/>
+                            placeholder="0" style={{ width:"100%", padding:"6px 10px", background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:13, fontFamily:"inherit" }}/>
                         </div>
                         <div style={{ flex:1, minWidth:120 }}>
-                          <label style={{ color:C.muted, fontSize:10, letterSpacing:1 }}>RÉEL (€)</label>
+                          <label style={{ color:"rgba(255,255,255,0.45)", fontSize:10, letterSpacing:1 }}>RÉEL (€)</label>
                           <input type="number" value={item.actual} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var b=[...(evUp.budget||[])]; b[bi]={...b[bi],actual:v}; return {...evUp,budget:b}; }); }}
-                            placeholder="0" style={{ width:"100%", padding:"6px 10px", background:C.card, border:"1px solid "+(over?C.red:C.border), borderRadius:6, color:over?C.red:C.cream, fontSize:13, fontFamily:"inherit" }}/>
+                            placeholder="0" style={{ width:"100%", padding:"6px 10px", background:"#18182a", border:"1px solid "+(over?C.red:C.border), borderRadius:6, color:over?C.red:C.cream, fontSize:13, fontFamily:"inherit" }}/>
                         </div>
                         <div style={{ flex:2, minWidth:160 }}>
-                          <label style={{ color:C.muted, fontSize:10, letterSpacing:1 }}>NOTES</label>
+                          <label style={{ color:"rgba(255,255,255,0.45)", fontSize:10, letterSpacing:1 }}>NOTES</label>
                           <input value={item.notes||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var b=[...(evUp.budget||[])]; b[bi]={...b[bi],notes:v}; return {...evUp,budget:b}; }); }}
-                            placeholder="Prestataire, devis..." style={{ width:"100%", padding:"6px 10px", background:C.card, border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:13, fontFamily:"inherit" }}/>
+                            placeholder="Prestataire, devis..." style={{ width:"100%", padding:"6px 10px", background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:13, fontFamily:"inherit" }}/>
                         </div>
                       </div>
                       {parseFloat(item.estimated||0) > 0 && (
-                        <div style={{ marginTop:8, height:4, background:C.mid, borderRadius:99 }}>
+                        <div style={{ marginTop:8, height:4, background:"#13131e", borderRadius:99 }}>
                           <div style={{ width:`${pct}%`, height:"100%", background:over?C.red:C.green, borderRadius:99, transition:"width .4s" }}/>
                         </div>
                       )}
@@ -3168,9 +3212,9 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
 
               {(ev.budget||[]).length > 0 && (
                 <div style={{ marginTop:16, padding:"14px 16px", background:C.gold+"11", border:"1px solid "+C.gold+"33", borderRadius:10, display:"flex", gap:24 }}>
-                  <span style={{ color:C.gold, fontSize:14 }}>Total estimé : <strong>{budgetTotal.toFixed(0)}€</strong></span>
+                  <span style={{ color:"#C9973A", fontSize:14 }}>Total estimé : <strong>{budgetTotal.toFixed(0)}€</strong></span>
                   <span style={{ color:budgetSpent>budgetTotal?C.red:C.green, fontSize:14 }}>Total réel : <strong>{budgetSpent.toFixed(0)}€</strong></span>
-                  <span style={{ color:C.muted, fontSize:14 }}>Écart : <strong>{(budgetTotal-budgetSpent).toFixed(0)}€</strong></span>
+                  <span style={{ color:"rgba(255,255,255,0.45)", fontSize:14 }}>Écart : <strong>{(budgetTotal-budgetSpent).toFixed(0)}€</strong></span>
                 </div>
               )}
             </div>
@@ -3186,36 +3230,36 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             {/* ── KPIs planning ── */}
             <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))", gap:14, marginBottom:28 }}>
               {[
-                {label:"Tâches totales", val:planningTotal, color:C.gold,  icon:"📋"},
+                {label:"Tâches totales", val:planningTotal, color:"#C9973A",  icon:"📋"},
                 {label:"Terminées",      val:planningDone,  color:C.green, icon:"✅"},
                 {label:"Restantes",      val:planningTotal-planningDone, color:planningTotal-planningDone>0?"#FF9800":C.green, icon:"⏳"},
                 {label:"Avancement",     val:planningTotal>0?Math.round(planningDone/planningTotal*100)+"%":"—", color:C.blue, icon:"📈"},
               ].map(s=>(
-                <div key={s.label} style={{ background:C.card, border:"1px solid "+C.border, borderRadius:14, padding:"18px 20px" }}>
+                <div key={s.label} style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:14, padding:"18px 20px" }}>
                   <div style={{ fontSize:24, marginBottom:6 }}>{s.icon}</div>
                   <div style={{ fontSize:26, fontWeight:700, color:s.color }}>{s.val}</div>
-                  <div style={{ color:C.muted, fontSize:12, marginTop:4 }}>{s.label}</div>
+                  <div style={{ color:"rgba(255,255,255,0.45)", fontSize:12, marginTop:4 }}>{s.label}</div>
                 </div>
               ))}
             </div>
 
             {/* ── Barre avancement ── */}
             {planningTotal > 0 && (
-              <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:14, padding:"14px 24px", marginBottom:24 }}>
+              <div style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:14, padding:"14px 24px", marginBottom:24 }}>
                 <div style={{ display:"flex", justifyContent:"space-between", marginBottom:6 }}>
-                  <span style={{ color:C.muted, fontSize:12 }}>Progression globale</span>
-                  <span style={{ color:C.gold, fontSize:12, fontWeight:700 }}>{Math.round(planningDone/planningTotal*100)}%</span>
+                  <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>Progression globale</span>
+                  <span style={{ color:"#C9973A", fontSize:12, fontWeight:700 }}>{Math.round(planningDone/planningTotal*100)}%</span>
                 </div>
-                <div style={{ height:8, background:C.mid, borderRadius:99, overflow:"hidden" }}>
+                <div style={{ height:8, background:"#13131e", borderRadius:99, overflow:"hidden" }}>
                   <div style={{ width:`${planningDone/planningTotal*100}%`, background:C.green, transition:"width .4s", height:"100%" }}/>
                 </div>
               </div>
             )}
 
             {/* ── Liste de tâches ── */}
-            <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px" }}>
+            <div style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px" }}>
               <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:16 }}>
-                <h4 style={{ color:C.gold, fontWeight:400, fontSize:14, margin:0 }}>🗓 Rétroplanning & tâches</h4>
+                <h4 style={{ color:"#C9973A", fontWeight:400, fontSize:14, margin:0 }}>🗓 Rétroplanning & tâches</h4>
                 <div style={{ flex:1 }}/>
                 <Btn small onClick={function(){
                   var tpl = [
@@ -3247,7 +3291,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               </div>
 
               {(ev.planning||[]).length === 0 && (
-                <p style={{ color:C.muted, fontStyle:"italic", textAlign:"center", padding:20 }}>Aucune tâche. Cliquez "Modèle type" pour démarrer.</p>
+                <p style={{ color:"rgba(255,255,255,0.45)", fontStyle:"italic", textAlign:"center", padding:20 }}>Aucune tâche. Cliquez "Modèle type" pour démarrer.</p>
               )}
 
               {/* Grouper par priorité */}
@@ -3273,16 +3317,16 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                             <input value={task.label} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var p=[...(evUp.planning||[])]; p[ti]={...p[ti],label:v}; return {...evUp,planning:p}; }); }}
                               style={{ flex:1, background:"none", border:"none", color:task.done?C.muted:C.cream, fontSize:13, fontFamily:"inherit", outline:"none", textDecoration:task.done?"line-through":"none" }}/>
                             <input type="date" value={task.deadline||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var p=[...(evUp.planning||[])]; p[ti]={...p[ti],deadline:v}; return {...evUp,planning:p}; }); }}
-                              style={{ background:C.card, border:"1px solid "+(isLate?C.red:C.border), borderRadius:6, color:isLate?C.red:C.muted, fontSize:11, padding:"4px 8px", fontFamily:"inherit" }}/>
+                              style={{ background:"#18182a", border:"1px solid "+(isLate?C.red:C.border), borderRadius:6, color:isLate?C.red:C.muted, fontSize:11, padding:"4px 8px", fontFamily:"inherit" }}/>
                             {isLate && <span style={{ color:C.red, fontSize:11, fontWeight:700 }}>EN RETARD</span>}
                             <select value={task.priority||"medium"} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var p=[...(evUp.planning||[])]; p[ti]={...p[ti],priority:v}; return {...evUp,planning:p}; }); }}
-                              style={{ background:C.card, border:"1px solid "+C.border, borderRadius:6, color:C.muted, fontSize:11, padding:"4px 8px", fontFamily:"inherit" }}>
+                              style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"rgba(255,255,255,0.45)", fontSize:11, padding:"4px 8px", fontFamily:"inherit" }}>
                               <option value="high">🔴 Haute</option>
                               <option value="medium">🟡 Moyenne</option>
                               <option value="low">🟢 Faible</option>
                             </select>
                             <button onClick={function(){ updateEv(function(evUp){ return {...evUp, planning:(evUp.planning||[]).filter(function(_,i){ return i!==ti; })}; }); }}
-                              style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:13 }}>🗑</button>
+                              style={{ background:"none", border:"none", color:"rgba(255,255,255,0.45)", cursor:"pointer", fontSize:13 }}>🗑</button>
                           </div>
                         );
                       })}
@@ -3301,9 +3345,9 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
           <div style={{ maxWidth:860 }}>
 
             {/* ── Programme de la journée ── */}
-            <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px", marginBottom:24 }}>
+            <div style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px", marginBottom:24 }}>
               <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:16 }}>
-                <h4 style={{ color:C.gold, fontWeight:400, fontSize:14, margin:0 }}>🎵 Programme de la journée</h4>
+                <h4 style={{ color:"#C9973A", fontWeight:400, fontSize:14, margin:0 }}>🎵 Programme de la journée</h4>
                 <div style={{ flex:1 }}/>
                 <Btn small onClick={function(){
                   var tpl = [
@@ -3332,7 +3376,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               </div>
 
               {(ev.programme||[]).length === 0 && (
-                <p style={{ color:C.muted, fontStyle:"italic", textAlign:"center", padding:20 }}>Aucune étape. Cliquez "Modèle mariage" pour démarrer.</p>
+                <p style={{ color:"rgba(255,255,255,0.45)", fontStyle:"italic", textAlign:"center", padding:20 }}>Aucune étape. Cliquez "Modèle mariage" pour démarrer.</p>
               )}
 
               <div style={{ display:"flex", flexDirection:"column", gap:0 }}>
@@ -3342,25 +3386,25 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                     <div key={step.id} style={{ display:"flex", gap:0 }}>
                       {/* Timeline line */}
                       <div style={{ display:"flex", flexDirection:"column", alignItems:"center", marginRight:16, flexShrink:0 }}>
-                        <div style={{ width:12,height:12,borderRadius:"50%",background:C.gold,border:"2px solid "+C.gold,marginTop:18,flexShrink:0 }}/>
+                        <div style={{ width:12,height:12,borderRadius:"50%",background:"linear-gradient(135deg,#C9973A,#F0C97A)",border:"2px solid "+C.gold,marginTop:18,flexShrink:0 }}/>
                         {si < (ev.programme||[]).length-1 && <div style={{ width:2,flex:1,background:C.border,minHeight:20 }}/>}
                       </div>
                       {/* Content */}
                       <div style={{ flex:1, background:C.mid+"44", border:"1px solid "+C.border+"33", borderRadius:12, padding:"12px 16px", marginBottom:8, display:"flex", gap:10, alignItems:"center", flexWrap:"wrap" }}>
                         <input type="time" value={step.time||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var p=[...(evUp.programme||[])]; p[pi]={...p[pi],time:v}; return {...evUp,programme:p}; }); }}
-                          style={{ background:C.card, border:"1px solid "+C.border, borderRadius:6, color:C.gold, fontSize:13, padding:"4px 8px", fontFamily:"inherit", fontWeight:700, minWidth:80 }}/>
+                          style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#C9973A", fontSize:13, padding:"4px 8px", fontFamily:"inherit", fontWeight:700, minWidth:80 }}/>
                         <span style={{ fontSize:18 }}>{step.icon||"📌"}</span>
                         <input value={step.label} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var p=[...(evUp.programme||[])]; p[pi]={...p[pi],label:v}; return {...evUp,programme:p}; }); }}
-                          style={{ flex:1, background:"none", border:"none", color:C.cream, fontSize:14, fontFamily:"inherit", outline:"none", minWidth:120 }}/>
+                          style={{ flex:1, background:"none", border:"none", color:"#ffffff", fontSize:14, fontFamily:"inherit", outline:"none", minWidth:120 }}/>
                         <div style={{ display:"flex", alignItems:"center", gap:4 }}>
                           <input type="number" value={step.duration||60} onChange={function(e){ var v=parseInt(e.target.value)||60; updateEv(function(evUp){ var p=[...(evUp.programme||[])]; p[pi]={...p[pi],duration:v}; return {...evUp,programme:p}; }); }}
-                            style={{ width:56, background:C.card, border:"1px solid "+C.border, borderRadius:6, color:C.muted, fontSize:11, padding:"4px 6px", fontFamily:"inherit", textAlign:"center" }}/>
-                          <span style={{ color:C.muted, fontSize:11 }}>min</span>
+                            style={{ width:56, background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"rgba(255,255,255,0.45)", fontSize:11, padding:"4px 6px", fontFamily:"inherit", textAlign:"center" }}/>
+                          <span style={{ color:"rgba(255,255,255,0.45)", fontSize:11 }}>min</span>
                         </div>
                         <input value={step.notes||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var p=[...(evUp.programme||[])]; p[pi]={...p[pi],notes:v}; return {...evUp,programme:p}; }); }}
-                          placeholder="Notes / responsable…" style={{ flex:1, background:C.card, border:"1px solid "+C.border, borderRadius:6, color:C.muted, fontSize:12, padding:"4px 10px", fontFamily:"inherit", minWidth:100 }}/>
+                          placeholder="Notes / responsable…" style={{ flex:1, background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"rgba(255,255,255,0.45)", fontSize:12, padding:"4px 10px", fontFamily:"inherit", minWidth:100 }}/>
                         <button onClick={function(){ updateEv(function(evUp){ return {...evUp, programme:(evUp.programme||[]).filter(function(_,i){ return i!==pi; })}; }); }}
-                          style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:13 }}>🗑</button>
+                          style={{ background:"none", border:"none", color:"rgba(255,255,255,0.45)", cursor:"pointer", fontSize:13 }}>🗑</button>
                       </div>
                     </div>
                   );
@@ -3369,9 +3413,9 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             </div>
 
             {/* ── Prestataires ── */}
-            <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px" }}>
+            <div style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px" }}>
               <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:16 }}>
-                <h4 style={{ color:C.gold, fontWeight:400, fontSize:14, margin:0 }}>🤝 Prestataires</h4>
+                <h4 style={{ color:"#C9973A", fontWeight:400, fontSize:14, margin:0 }}>🤝 Prestataires</h4>
                 <div style={{ flex:1 }}/>
                 <Btn small variant="ghost" onClick={function(){
                   updateEv(function(evUp){
@@ -3381,7 +3425,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               </div>
 
               {(ev.suppliers||[]).length === 0 && (
-                <p style={{ color:C.muted, fontStyle:"italic", textAlign:"center", padding:20 }}>Aucun prestataire. Ajoutez vos contacts clés (traiteur, DJ, photographe…).</p>
+                <p style={{ color:"rgba(255,255,255,0.45)", fontStyle:"italic", textAlign:"center", padding:20 }}>Aucun prestataire. Ajoutez vos contacts clés (traiteur, DJ, photographe…).</p>
               )}
 
               <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
@@ -3392,7 +3436,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                     <div key={sup.id} style={{ background:C.mid+"44", border:"1px solid "+C.border+"33", borderRadius:12, padding:"14px 16px" }}>
                       <div style={{ display:"flex", gap:10, alignItems:"center", marginBottom:8, flexWrap:"wrap" }}>
                         <select value={sup.role||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],role:v}; return {...evUp,suppliers:s}; }); }}
-                          style={{ background:C.card, border:"1px solid "+C.border, borderRadius:6, color:C.gold, fontSize:12, padding:"4px 8px", fontFamily:"inherit" }}>
+                          style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#C9973A", fontSize:12, padding:"4px 8px", fontFamily:"inherit" }}>
                           <option value="">— Rôle —</option>
                           <option value="Traiteur">🍽 Traiteur</option>
                           <option value="DJ">🎵 DJ</option>
@@ -3407,7 +3451,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                           <option value="Autre">📦 Autre</option>
                         </select>
                         <input value={sup.name||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],name:v}; return {...evUp,suppliers:s}; }); }}
-                          placeholder="Nom / société" style={{ flex:1, background:"none", border:"none", color:C.cream, fontSize:14, fontFamily:"inherit", outline:"none" }}/>
+                          placeholder="Nom / société" style={{ flex:1, background:"none", border:"none", color:"#ffffff", fontSize:14, fontFamily:"inherit", outline:"none" }}/>
                         <span style={{ fontSize:16 }}>{statusIcon}</span>
                         <select value={sup.status||"pending"} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],status:v}; return {...evUp,suppliers:s}; }); }}
                           style={{ background:statusColor+"22", border:"1px solid "+statusColor+"66", borderRadius:6, color:statusColor, fontSize:11, padding:"4px 8px", fontFamily:"inherit" }}>
@@ -3416,15 +3460,15 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                           <option value="cancelled">❌ Annulé</option>
                         </select>
                         <button onClick={function(){ updateEv(function(evUp){ return {...evUp, suppliers:(evUp.suppliers||[]).filter(function(_,i){ return i!==si; })}; }); }}
-                          style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:13 }}>🗑</button>
+                          style={{ background:"none", border:"none", color:"rgba(255,255,255,0.45)", cursor:"pointer", fontSize:13 }}>🗑</button>
                       </div>
                       <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
                         <input value={sup.phone||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],phone:v}; return {...evUp,suppliers:s}; }); }}
-                          placeholder="📞 Téléphone" style={{ flex:1, padding:"5px 10px", background:C.card, border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:12, fontFamily:"inherit", minWidth:120 }}/>
+                          placeholder="📞 Téléphone" style={{ flex:1, padding:"5px 10px", background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit", minWidth:120 }}/>
                         <input value={sup.email||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],email:v}; return {...evUp,suppliers:s}; }); }}
-                          placeholder="✉️ Email" style={{ flex:1, padding:"5px 10px", background:C.card, border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:12, fontFamily:"inherit", minWidth:120 }}/>
+                          placeholder="✉️ Email" style={{ flex:1, padding:"5px 10px", background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit", minWidth:120 }}/>
                         <input value={sup.notes||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],notes:v}; return {...evUp,suppliers:s}; }); }}
-                          placeholder="Notes, tarifs, contrat…" style={{ flex:2, padding:"5px 10px", background:C.card, border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:12, fontFamily:"inherit", minWidth:160 }}/>
+                          placeholder="Notes, tarifs, contrat…" style={{ flex:2, padding:"5px 10px", background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit", minWidth:160 }}/>
                       </div>
                     </div>
                   );
@@ -3442,28 +3486,28 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               <Btn onClick={()=>setShowConstraint(true)}>+ Contrainte</Btn>
             </div>
             <div style={{ display:"flex", flexDirection:"column", gap:10, marginBottom:24 }}>
-              {ev.constraints.length===0 && <p style={{ color:C.muted }}>Aucune contrainte définie.</p>}
+              {ev.constraints.length===0 && <p style={{ color:"rgba(255,255,255,0.45)" }}>Aucune contrainte définie.</p>}
               {ev.constraints.map(c=>{
                 const g1=ev.guests.find(g=>g.id===c.a)?.name||"?";
                 const g2=ev.guests.find(g=>g.id===c.b)?.name||"?";
                 return (
                   <div key={c.id} style={{ display:"flex",alignItems:"center",gap:10,padding:"12px 16px",borderRadius:12,background:c.type==="together"?C.green+"18":C.red+"18",border:`1px solid ${c.type==="together"?C.green:C.red}44` }}>
                     <span style={{ fontSize:18 }}>{c.type==="together"?"🤝":"⚡"}</span>
-                    <strong style={{ color:C.cream }}>{g1}</strong>
-                    <span style={{ color:C.muted }}>{c.type==="together"?"avec":"loin de"}</span>
-                    <strong style={{ color:C.cream }}>{g2}</strong>
+                    <strong style={{ color:"#ffffff" }}>{g1}</strong>
+                    <span style={{ color:"rgba(255,255,255,0.45)" }}>{c.type==="together"?"avec":"loin de"}</span>
+                    <strong style={{ color:"#ffffff" }}>{g2}</strong>
                     <div style={{flex:1}}/>
                     <button onClick={()=>updateEv(e=>({...e,constraints:e.constraints.filter(x=>x.id!==c.id)}))}
-                      style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:14 }}>✕</button>
+                      style={{ background:"none",border:"none",color:"rgba(255,255,255,0.45)",cursor:"pointer",fontSize:14 }}>✕</button>
                   </div>
                 );
               })}
             </div>
-            <div style={{ background:C.card,border:`1px solid ${C.border}`,borderRadius:12,padding:20 }}>
-              <p style={{ color:C.muted, margin:0, fontSize:13, lineHeight:1.8 }}>
-                <strong style={{ color:C.gold }}>🤝 {t && t.lang === "fr" ? "Ensemble" : "Together"} :</strong> {t && t.lang === "fr" ? "ces invités seront à la même table" : "these guests will be at the same table"}.<br/>
-                <strong style={{ color:C.gold }}>⚡ Séparés :</strong> ces invités seront à des tables différentes.<br/>
-                Cliquez <strong style={{ color:C.gold }}>{t.autoPlace}</strong> pour appliquer automatiquement.
+            <div style={{ background:"#18182a",border:"1px solid rgba(201,151,58,0.15)",borderRadius:12,padding:20 }}>
+              <p style={{ color:"rgba(255,255,255,0.45)", margin:0, fontSize:13, lineHeight:1.8 }}>
+                <strong style={{ color:"#C9973A" }}>🤝 {t && t.lang === "fr" ? "Ensemble" : "Together"} :</strong> {t && t.lang === "fr" ? "ces invités seront à la même table" : "these guests will be at the same table"}.<br/>
+                <strong style={{ color:"#C9973A" }}>⚡ Séparés :</strong> ces invités seront à des tables différentes.<br/>
+                Cliquez <strong style={{ color:"#C9973A" }}>{t.autoPlace}</strong> pour appliquer automatiquement.
               </p>
             </div>
           </div>
@@ -3476,30 +3520,30 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:14 }}>
               {[
                 {label:"Confirmés",val:rsvpConfirmed,color:C.green,icon:"✅"},
-                {label:"En attente",val:rsvpPending,color:C.gold,icon:"⏳"},
+                {label:"En attente",val:rsvpPending,color:"#C9973A",icon:"⏳"},
                 {label:"Déclinés",val:rsvpDeclined,color:C.red,icon:"❌"},
               ].map(s=>(
-                <div key={s.label} style={{ background:C.card, border:`1px solid ${s.color}44`, borderRadius:14, padding:"20px 24px", textAlign:"center" }}>
+                <div key={s.label} style={{ background:"#18182a", border:`1px solid ${s.color}44`, borderRadius:14, padding:"20px 24px", textAlign:"center" }}>
                   <div style={{ fontSize:28 }}>{s.icon}</div>
                   <div style={{ fontSize:28, fontWeight:700, color:s.color, margin:"4px 0" }}>{s.val}</div>
-                  <div style={{ color:C.muted, fontSize:12 }}>{s.label}</div>
+                  <div style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>{s.label}</div>
                 </div>
               ))}
             </div>
             {/* Progress bar */}
-            <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:14, padding:"18px 24px" }}>
+            <div style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:14, padding:"18px 24px" }}>
               <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8 }}>
-                <span style={{ color:C.muted, fontSize:12 }}>Taux de réponse</span>
-                <span style={{ color:C.gold, fontSize:12, fontWeight:700 }}>{ev.guests.length>0?Math.round((rsvpConfirmed+rsvpDeclined)/ev.guests.length*100):0}%</span>
+                <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>Taux de réponse</span>
+                <span style={{ color:"#C9973A", fontSize:12, fontWeight:700 }}>{ev.guests.length>0?Math.round((rsvpConfirmed+rsvpDeclined)/ev.guests.length*100):0}%</span>
               </div>
-              <div style={{ height:8, background:C.mid, borderRadius:99, overflow:"hidden" }}>
+              <div style={{ height:8, background:"#13131e", borderRadius:99, overflow:"hidden" }}>
                 <div style={{ height:"100%", width:`${ev.guests.length>0?(rsvpConfirmed+rsvpDeclined)/ev.guests.length*100:0}%`, background:`linear-gradient(90deg,${C.green},${C.gold})`, borderRadius:99 }}/>
               </div>
             </div>
             {/* Liste invités avec statut RSVP */}
-            <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:14, padding:24 }}>
+            <div style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:14, padding:24 }}>
               <div style={{ display:"flex", alignItems:"center", marginBottom:16 }}>
-                <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>💌 Suivi par invité</h4>
+                <h4 style={{ margin:0, color:"#C9973A", fontWeight:400, fontSize:16 }}>💌 Suivi par invité</h4>
                 <div style={{ flex:1 }}/>
                 <Btn small variant="muted" onClick={()=>{
                   updateEv(e=>({...e, guests:e.guests.map(g=>g.rsvp?g:{...g,rsvp:"pending"})}));
@@ -3508,10 +3552,10 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
                 {ev.guests.map(g=>(
                   <div key={g.id} style={{ display:"flex", alignItems:"center", gap:12, padding:"10px 14px", background:C.mid+"55", borderRadius:10 }}>
-                    <div style={{ width:32,height:32,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:C.gold,fontSize:13,fontWeight:700 }}>{g.name[0]}</div>
+                    <div style={{ width:32,height:32,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:13,fontWeight:700 }}>{g.name[0]}</div>
                     <div style={{ flex:1 }}>
-                      <div style={{ color:C.cream, fontSize:14 }}>{g.name}</div>
-                      {g.email && <div style={{ color:C.muted, fontSize:11 }}>{g.email}</div>}
+                      <div style={{ color:"#ffffff", fontSize:14 }}>{g.name}</div>
+                      {g.email && <div style={{ color:"rgba(255,255,255,0.45)", fontSize:11 }}>{g.email}</div>}
                     </div>
                     <div style={{ display:"flex", gap:6 }}>
                       {[["confirmed","✅","Confirmé",C.green],["pending","⏳","En attente",C.gold],["declined","❌","Décliné",C.red]].map(([v,ic,lb,col])=>(
@@ -3523,11 +3567,11 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                         </button>
                       ))}
                     </div>
-                    {g.rsvpNote && <span style={{ color:C.muted, fontSize:11, fontStyle:"italic", maxWidth:120, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{g.rsvpNote}</span>}
+                    {g.rsvpNote && <span style={{ color:"rgba(255,255,255,0.45)", fontSize:11, fontStyle:"italic", maxWidth:120, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{g.rsvpNote}</span>}
                     <input
                       value={g.rsvpNote||""} onChange={e=>{const v=e.target.value; updateEv(ev2=>({...ev2,guests:ev2.guests.map(x=>x.id===g.id?{...x,rsvpNote:v}:x)}));}}
                       placeholder="Note…"
-                      style={{ width:120, padding:"4px 8px", background:"#fff1", border:`1px solid ${C.border}`, borderRadius:6, color:C.cream, fontSize:11, fontFamily:"inherit" }}
+                      style={{ width:120, padding:"4px 8px", background:"#fff1", border:"1px solid rgba(201,151,58,0.15)", borderRadius:6, color:"#ffffff", fontSize:11, fontFamily:"inherit" }}
                     />
                   </div>
                 ))}
@@ -3542,37 +3586,37 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             {/* Résumé */}
             <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:14 }}>
               {[
-                {label:"Budget estimé",val:budgetTotal.toLocaleString("fr-FR",{minimumFractionDigits:0})+" €",color:C.gold,icon:"📊"},
+                {label:"Budget estimé",val:budgetTotal.toLocaleString("fr-FR",{minimumFractionDigits:0})+" €",color:"#C9973A",icon:"📊"},
                 {label:"Dépenses réelles",val:budgetSpent.toLocaleString("fr-FR",{minimumFractionDigits:0})+" €",color:budgetSpent>budgetTotal?C.red:C.green,icon:"💳"},
                 {label:"Écart",val:(budgetTotal-budgetSpent>=0?"+":"")+((budgetTotal-budgetSpent).toLocaleString("fr-FR",{minimumFractionDigits:0}))+" €",color:budgetTotal-budgetSpent>=0?C.green:C.red,icon:budgetTotal-budgetSpent>=0?"✅":"⚠️"},
               ].map(s=>(
-                <div key={s.label} style={{ background:C.card, border:`1px solid ${s.color}44`, borderRadius:14, padding:"18px 22px" }}>
+                <div key={s.label} style={{ background:"#18182a", border:`1px solid ${s.color}44`, borderRadius:14, padding:"18px 22px" }}>
                   <div style={{ fontSize:24, marginBottom:4 }}>{s.icon}</div>
                   <div style={{ fontSize:22, fontWeight:700, color:s.color }}>{s.val}</div>
-                  <div style={{ color:C.muted, fontSize:11, marginTop:2 }}>{s.label}</div>
+                  <div style={{ color:"rgba(255,255,255,0.45)", fontSize:11, marginTop:2 }}>{s.label}</div>
                 </div>
               ))}
             </div>
             {/* Barre de progression */}
             {budgetTotal>0 && (
-              <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:14, padding:"16px 22px" }}>
+              <div style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:14, padding:"16px 22px" }}>
                 <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8 }}>
-                  <span style={{ color:C.muted, fontSize:12 }}>Consommation du budget</span>
+                  <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>Consommation du budget</span>
                   <span style={{ color:budgetSpent>budgetTotal?C.red:C.gold, fontSize:12, fontWeight:700 }}>{Math.round(budgetSpent/budgetTotal*100)}%</span>
                 </div>
-                <div style={{ height:10, background:C.mid, borderRadius:99, overflow:"hidden" }}>
+                <div style={{ height:10, background:"#13131e", borderRadius:99, overflow:"hidden" }}>
                   <div style={{ height:"100%", width:`${Math.min(budgetSpent/budgetTotal*100,100)}%`, background:budgetSpent>budgetTotal?C.red:`linear-gradient(90deg,${C.green},${C.gold})`, borderRadius:99, transition:"width .3s" }}/>
                 </div>
               </div>
             )}
             {/* Lignes budget */}
-            <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:14, padding:24 }}>
+            <div style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:14, padding:24 }}>
               <div style={{ display:"flex", alignItems:"center", marginBottom:16 }}>
-                <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>📋 Postes budgétaires</h4>
+                <h4 style={{ margin:0, color:"#C9973A", fontWeight:400, fontSize:16 }}>📋 Postes budgétaires</h4>
                 <div style={{ flex:1 }}/>
                 <Btn small onClick={()=>setShowAddBudget(true)}>+ Ajouter un poste</Btn>
               </div>
-              {(ev.budget||[]).length===0 && <p style={{ color:C.muted, fontSize:13, fontStyle:"italic", textAlign:"center", padding:24 }}>Aucun poste budgétaire. Ajoutez vos premières dépenses !</p>}
+              {(ev.budget||[]).length===0 && <p style={{ color:"rgba(255,255,255,0.45)", fontSize:13, fontStyle:"italic", textAlign:"center", padding:24 }}>Aucun poste budgétaire. Ajoutez vos premières dépenses !</p>}
               <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
                 {(ev.budget||[]).map((b,bi)=>{
                   const cat = BUDGET_CATEGORIES.find(c=>c.id===b.category)||BUDGET_CATEGORIES[0];
@@ -3582,22 +3626,22 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                       <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:8 }}>
                         <span style={{ fontSize:20 }}>{cat.icon}</span>
                         <div style={{ flex:1 }}>
-                          <div style={{ color:C.cream, fontSize:14, fontWeight:600 }}>{b.label||cat.label}</div>
-                          {b.notes && <div style={{ color:C.muted, fontSize:11, fontStyle:"italic" }}>{b.notes}</div>}
+                          <div style={{ color:"#ffffff", fontSize:14, fontWeight:600 }}>{b.label||cat.label}</div>
+                          {b.notes && <div style={{ color:"rgba(255,255,255,0.45)", fontSize:11, fontStyle:"italic" }}>{b.notes}</div>}
                         </div>
                         <div style={{ textAlign:"right" }}>
-                          <div style={{ color:C.muted, fontSize:11 }}>Estimé : <span style={{ color:C.gold }}>{(parseFloat(b.estimated)||0).toLocaleString("fr-FR")} €</span></div>
-                          <div style={{ color:C.muted, fontSize:11 }}>Réel : <span style={{ color:(b.actual||0)>(b.estimated||0)?C.red:C.green }}>{(parseFloat(b.actual)||0).toLocaleString("fr-FR")} €</span></div>
+                          <div style={{ color:"rgba(255,255,255,0.45)", fontSize:11 }}>Estimé : <span style={{ color:"#C9973A" }}>{(parseFloat(b.estimated)||0).toLocaleString("fr-FR")} €</span></div>
+                          <div style={{ color:"rgba(255,255,255,0.45)", fontSize:11 }}>Réel : <span style={{ color:(b.actual||0)>(b.estimated||0)?C.red:C.green }}>{(parseFloat(b.actual)||0).toLocaleString("fr-FR")} €</span></div>
                         </div>
                         <span style={{ fontSize:18, cursor:"pointer", color:b.paid?"#4CAF50":C.muted }} title={b.paid?"Payé":"Non payé"}
                           onClick={()=>updateEv(ev2=>({...ev2,budget:ev2.budget.map((x,i)=>i===bi?{...x,paid:!x.paid}:x)}))}>
                           {b.paid?"✅":"💳"}
                         </span>
                         <button onClick={()=>updateEv(ev2=>({...ev2,budget:(ev2.budget||[]).filter((_,i)=>i!==bi)}))}
-                          style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:14 }}>🗑</button>
+                          style={{ background:"none",border:"none",color:"rgba(255,255,255,0.45)",cursor:"pointer",fontSize:14 }}>🗑</button>
                       </div>
                       {b.estimated>0 && (
-                        <div style={{ height:4, background:C.mid, borderRadius:99, overflow:"hidden" }}>
+                        <div style={{ height:4, background:"#13131e", borderRadius:99, overflow:"hidden" }}>
                           <div style={{ height:"100%", width:`${pct}%`, background:pct>=100?C.red:`linear-gradient(90deg,${C.green},${C.gold})`, borderRadius:99 }}/>
                         </div>
                       )}
@@ -3607,17 +3651,17 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               </div>
               {/* Répartition par catégorie */}
               {(ev.budget||[]).length>0 && (
-                <div style={{ marginTop:20, borderTop:`1px solid ${C.border}`, paddingTop:16 }}>
-                  <h5 style={{ color:C.muted, fontSize:12, letterSpacing:1, marginBottom:12 }}>RÉPARTITION PAR CATÉGORIE</h5>
+                <div style={{ marginTop:20, borderTop:"1px solid rgba(201,151,58,0.12)", paddingTop:16 }}>
+                  <h5 style={{ color:"rgba(255,255,255,0.45)", fontSize:12, letterSpacing:1, marginBottom:12 }}>RÉPARTITION PAR CATÉGORIE</h5>
                   <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
                     {BUDGET_CATEGORIES.map(cat=>{
                       const total = (ev.budget||[]).filter(b=>b.category===cat.id).reduce((s,b)=>s+(parseFloat(b.estimated)||0),0);
                       if (!total) return null;
                       return (
-                        <div key={cat.id} style={{ background:C.mid, borderRadius:8, padding:"6px 12px", display:"flex", alignItems:"center", gap:6 }}>
+                        <div key={cat.id} style={{ background:"#13131e", borderRadius:8, padding:"6px 12px", display:"flex", alignItems:"center", gap:6 }}>
                           <span>{cat.icon}</span>
-                          <span style={{ color:C.cream, fontSize:12 }}>{cat.label}</span>
-                          <span style={{ color:C.gold, fontSize:12, fontWeight:700 }}>{total.toLocaleString("fr-FR")} €</span>
+                          <span style={{ color:"#ffffff", fontSize:12 }}>{cat.label}</span>
+                          <span style={{ color:"#C9973A", fontSize:12, fontWeight:700 }}>{total.toLocaleString("fr-FR")} €</span>
                         </div>
                       );
                     })}
@@ -3633,19 +3677,19 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
           <div style={{ maxWidth:900, display:"flex", flexDirection:"column", gap:20 }}>
             {/* Progress */}
             {planningTotal>0 && (
-              <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:14, padding:"16px 22px" }}>
+              <div style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:14, padding:"16px 22px" }}>
                 <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8 }}>
-                  <span style={{ color:C.muted, fontSize:12 }}>Tâches complétées</span>
-                  <span style={{ color:C.gold, fontSize:12, fontWeight:700 }}>{planningDone}/{planningTotal}</span>
+                  <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>Tâches complétées</span>
+                  <span style={{ color:"#C9973A", fontSize:12, fontWeight:700 }}>{planningDone}/{planningTotal}</span>
                 </div>
-                <div style={{ height:8, background:C.mid, borderRadius:99, overflow:"hidden" }}>
+                <div style={{ height:8, background:"#13131e", borderRadius:99, overflow:"hidden" }}>
                   <div style={{ height:"100%", width:`${planningTotal>0?planningDone/planningTotal*100:0}%`, background:`linear-gradient(90deg,${C.green},${C.gold})`, borderRadius:99, transition:"width .3s" }}/>
                 </div>
               </div>
             )}
-            <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:14, padding:24 }}>
+            <div style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:14, padding:24 }}>
               <div style={{ display:"flex", alignItems:"center", marginBottom:16 }}>
-                <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>🗓 Rétroplanning</h4>
+                <h4 style={{ margin:0, color:"#C9973A", fontWeight:400, fontSize:16 }}>🗓 Rétroplanning</h4>
                 <div style={{ flex:1 }}/>
                 <Btn small variant="muted" onClick={()=>{
                   // Générer un rétroplanning IA
@@ -3655,12 +3699,12 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 <div style={{ width:8 }}/>
                 <Btn small onClick={()=>setShowAddTask(true)}>+ Tâche</Btn>
               </div>
-              {(ev.planning||[]).length===0 && <p style={{ color:C.muted, fontSize:13, fontStyle:"italic", textAlign:"center", padding:24 }}>Aucune tâche. Ajoutez vos premières étapes ou demandez à l'IA de générer un rétroplanning !</p>}
+              {(ev.planning||[]).length===0 && <p style={{ color:"rgba(255,255,255,0.45)", fontSize:13, fontStyle:"italic", textAlign:"center", padding:24 }}>Aucune tâche. Ajoutez vos premières étapes ou demandez à l'IA de générer un rétroplanning !</p>}
               {/* Groupé par priorité / date */}
               {["high","medium","low"].map(prio=>{
                 const tasks = (ev.planning||[]).filter(t=>t.priority===prio);
                 if (!tasks.length) return null;
-                const prioConfig = {high:{label:"🔴 Urgent",color:C.red},medium:{label:"🟡 Normal",color:C.gold},low:{label:"🟢 Faible priorité",color:C.green}};
+                const prioConfig = {high:{label:"🔴 Urgent",color:C.red},medium:{label:"🟡 Normal",color:"#C9973A"},low:{label:"🟢 Faible priorité",color:C.green}};
                 const pc = prioConfig[prio];
                 return (
                   <div key={prio} style={{ marginBottom:16 }}>
@@ -3678,12 +3722,12 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                               <div style={{ color:task.done?C.muted:C.cream, fontSize:14, textDecoration:task.done?"line-through":"none" }}>{task.title}</div>
                               <div style={{ display:"flex", gap:12, marginTop:2 }}>
                                 {task.dueDate && <span style={{ color:overdue?C.red:C.muted, fontSize:11 }}>📅 {task.dueDate}{overdue?" ⚠️ En retard":""}</span>}
-                                {task.responsible && <span style={{ color:C.muted, fontSize:11 }}>👤 {task.responsible}</span>}
-                                {task.notes && <span style={{ color:C.muted, fontSize:11, fontStyle:"italic" }}>{task.notes}</span>}
+                                {task.responsible && <span style={{ color:"rgba(255,255,255,0.45)", fontSize:11 }}>👤 {task.responsible}</span>}
+                                {task.notes && <span style={{ color:"rgba(255,255,255,0.45)", fontSize:11, fontStyle:"italic" }}>{task.notes}</span>}
                               </div>
                             </div>
                             <button onClick={()=>updateEv(ev2=>({...ev2,planning:(ev2.planning||[]).filter((_,i)=>i!==tIdx)}))}
-                              style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:14 }}>🗑</button>
+                              style={{ background:"none",border:"none",color:"rgba(255,255,255,0.45)",cursor:"pointer",fontSize:14 }}>🗑</button>
                           </div>
                         );
                       })}
@@ -3700,13 +3744,13 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
           <div style={{ maxWidth:900, display:"flex", gap:24, flexWrap:"wrap", alignItems:"start" }}>
             {/* Programme / Timeline jour J */}
             <div style={{ flex:"1 1 400px", display:"flex", flexDirection:"column", gap:20 }}>
-              <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:14, padding:24 }}>
+              <div style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:14, padding:24 }}>
                 <div style={{ display:"flex", alignItems:"center", marginBottom:16 }}>
-                  <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>🎵 Programme du jour J</h4>
+                  <h4 style={{ margin:0, color:"#C9973A", fontWeight:400, fontSize:16 }}>🎵 Programme du jour J</h4>
                   <div style={{ flex:1 }}/>
                   <Btn small onClick={()=>setShowAddProgramItem(true)}>+ Étape</Btn>
                 </div>
-                {(ev.programme||[]).length===0 && <p style={{ color:C.muted, fontSize:13, fontStyle:"italic", textAlign:"center", padding:24 }}>Aucune étape. Construisez le déroulé de votre journée !</p>}
+                {(ev.programme||[]).length===0 && <p style={{ color:"rgba(255,255,255,0.45)", fontSize:13, fontStyle:"italic", textAlign:"center", padding:24 }}>Aucune étape. Construisez le déroulé de votre journée !</p>}
                 <div style={{ display:"flex", flexDirection:"column", position:"relative" }}>
                   {(ev.programme||[]).sort((a,b)=>a.time.localeCompare(b.time)).map((item,ii)=>(
                     <div key={ii} style={{ display:"flex", gap:14, position:"relative", paddingBottom:16 }}>
@@ -3716,13 +3760,13 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                       </div>
                       <div style={{ flex:1, paddingTop:6 }}>
                         <div style={{ display:"flex", alignItems:"baseline", gap:10 }}>
-                          <span style={{ color:C.gold, fontSize:14, fontWeight:700, minWidth:50 }}>{item.time}</span>
-                          <span style={{ color:C.cream, fontSize:14 }}>{item.label}</span>
+                          <span style={{ color:"#C9973A", fontSize:14, fontWeight:700, minWidth:50 }}>{item.time}</span>
+                          <span style={{ color:"#ffffff", fontSize:14 }}>{item.label}</span>
                         </div>
-                        {item.notes && <div style={{ color:C.muted, fontSize:12, fontStyle:"italic", marginTop:2 }}>{item.notes}</div>}
+                        {item.notes && <div style={{ color:"rgba(255,255,255,0.45)", fontSize:12, fontStyle:"italic", marginTop:2 }}>{item.notes}</div>}
                       </div>
                       <button onClick={()=>updateEv(ev2=>({...ev2,programme:(ev2.programme||[]).filter((_,i)=>i!==ii)}))}
-                        style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:13,alignSelf:"start",marginTop:6 }}>🗑</button>
+                        style={{ background:"none",border:"none",color:"rgba(255,255,255,0.45)",cursor:"pointer",fontSize:13,alignSelf:"start",marginTop:6 }}>🗑</button>
                     </div>
                   ))}
                 </div>
@@ -3730,29 +3774,29 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             </div>
             {/* Prestataires */}
             <div style={{ flex:"1 1 340px", display:"flex", flexDirection:"column", gap:16 }}>
-              <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:14, padding:24 }}>
+              <div style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:14, padding:24 }}>
                 <div style={{ display:"flex", alignItems:"center", marginBottom:16 }}>
-                  <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>🤝 Prestataires</h4>
+                  <h4 style={{ margin:0, color:"#C9973A", fontWeight:400, fontSize:16 }}>🤝 Prestataires</h4>
                   <div style={{ flex:1 }}/>
                   <Btn small onClick={()=>setShowAddSupplier(true)}>+ Prestataire</Btn>
                 </div>
-                {(ev.suppliers||[]).length===0 && <p style={{ color:C.muted, fontSize:13, fontStyle:"italic", textAlign:"center", padding:24 }}>Aucun prestataire. Ajoutez vos contacts clés !</p>}
+                {(ev.suppliers||[]).length===0 && <p style={{ color:"rgba(255,255,255,0.45)", fontSize:13, fontStyle:"italic", textAlign:"center", padding:24 }}>Aucun prestataire. Ajoutez vos contacts clés !</p>}
                 <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
                   {(ev.suppliers||[]).map((s,si)=>(
                     <div key={si} style={{ background:C.mid+"55", borderRadius:12, padding:"14px 16px" }}>
                       <div style={{ display:"flex", alignItems:"start", gap:10 }}>
-                        <div style={{ width:38,height:38,borderRadius:"50%",background:C.gold+"22",border:`1px solid ${C.gold}44`,display:"flex",alignItems:"center",justifyContent:"center",color:C.gold,fontSize:16,fontWeight:700,flexShrink:0 }}>
+                        <div style={{ width:38,height:38,borderRadius:"50%",background:C.gold+"22",border:`1px solid ${C.gold}44`,display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:16,fontWeight:700,flexShrink:0 }}>
                           {s.name[0]}
                         </div>
                         <div style={{ flex:1 }}>
-                          <div style={{ color:C.cream, fontSize:14, fontWeight:600 }}>{s.name}</div>
-                          {s.role && <div style={{ color:C.gold, fontSize:11 }}>{s.role}</div>}
-                          {s.phone && <a href={"tel:"+s.phone} style={{ color:C.muted, fontSize:12, display:"block", textDecoration:"none" }}>📞 {s.phone}</a>}
-                          {s.email && <a href={"mailto:"+s.email} style={{ color:C.muted, fontSize:12, display:"block", textDecoration:"none" }}>✉️ {s.email}</a>}
-                          {s.notes && <div style={{ color:C.muted, fontSize:11, fontStyle:"italic", marginTop:4 }}>{s.notes}</div>}
+                          <div style={{ color:"#ffffff", fontSize:14, fontWeight:600 }}>{s.name}</div>
+                          {s.role && <div style={{ color:"#C9973A", fontSize:11 }}>{s.role}</div>}
+                          {s.phone && <a href={"tel:"+s.phone} style={{ color:"rgba(255,255,255,0.45)", fontSize:12, display:"block", textDecoration:"none" }}>📞 {s.phone}</a>}
+                          {s.email && <a href={"mailto:"+s.email} style={{ color:"rgba(255,255,255,0.45)", fontSize:12, display:"block", textDecoration:"none" }}>✉️ {s.email}</a>}
+                          {s.notes && <div style={{ color:"rgba(255,255,255,0.45)", fontSize:11, fontStyle:"italic", marginTop:4 }}>{s.notes}</div>}
                         </div>
                         <button onClick={()=>updateEv(ev2=>({...ev2,suppliers:(ev2.suppliers||[]).filter((_,i)=>i!==si)}))}
-                          style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:14 }}>🗑</button>
+                          style={{ background:"none",border:"none",color:"rgba(255,255,255,0.45)",cursor:"pointer",fontSize:14 }}>🗑</button>
                       </div>
                     </div>
                   ))}
@@ -3767,8 +3811,8 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
           <div style={{ maxWidth:900, display:"flex", flexDirection:"column", gap:24 }}>
 
             {/* ── LIEUX & ADRESSES ── */}
-            <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
-              <h4 style={{ margin:"0 0 16px", color:C.gold, fontWeight:400, fontSize:16 }}>📍 Lieux & Rendez-vous</h4>
+            <div style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
+              <h4 style={{ margin:"0 0 16px", color:"#C9973A", fontWeight:400, fontSize:16 }}>📍 Lieux & Rendez-vous</h4>
               <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
                 {(ev.venues||[]).map(function(venue, vi){ return (
                   <div key={vi} style={{ background:C.mid+"44", border:"1px solid "+C.border, borderRadius:12, padding:16, display:"flex", flexDirection:"column", gap:8 }}>
@@ -3778,34 +3822,34 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                         value={venue.name||""}
                         onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var vens=[...(evUp.venues||[])]; vens[vi]={...vens[vi],name:v}; return {...evUp,venues:vens}; }); }}
                         placeholder="Nom du lieu (ex: Mairie, Église, Salle des fêtes...)"
-                        style={{ flex:1, padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:14, fontFamily:"inherit" }}
+                        style={{ flex:1, padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:14, fontFamily:"inherit" }}
                       />
                       <button onClick={function(){ updateEv(function(evUp){ return {...evUp, venues:(evUp.venues||[]).filter(function(_,i){ return i!==vi; })}; }); }}
-                        style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:16 }}>🗑</button>
+                        style={{ background:"none", border:"none", color:"rgba(255,255,255,0.45)", cursor:"pointer", fontSize:16 }}>🗑</button>
                     </div>
                     <input
                       value={venue.address||""}
                       onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var vens=[...(evUp.venues||[])]; vens[vi]={...vens[vi],address:v}; return {...evUp,venues:vens}; }); }}
                       placeholder="Adresse complète"
-                      style={{ padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:13, fontFamily:"inherit" }}
+                      style={{ padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:13, fontFamily:"inherit" }}
                     />
                     <div style={{ display:"flex", gap:8, alignItems:"center", flexWrap:"wrap" }}>
                       <input
                         value={venue.time||""}
                         onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var vens=[...(evUp.venues||[])]; vens[vi]={...vens[vi],time:v}; return {...evUp,venues:vens}; }); }}
                         placeholder="Heure (ex: 14h00)"
-                        style={{ width:120, padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:12, fontFamily:"inherit" }}
+                        style={{ width:120, padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit" }}
                       />
                       <input
                         value={venue.notes||""}
                         onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var vens=[...(evUp.venues||[])]; vens[vi]={...vens[vi],notes:v}; return {...evUp,venues:vens}; }); }}
                         placeholder="Notes (parking, code entrée...)"
-                        style={{ flex:1, padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:12, fontFamily:"inherit" }}
+                        style={{ flex:1, padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit" }}
                       />
                       {venue.address && (
                         <a href={"https://maps.google.com/?q="+encodeURIComponent(venue.address)}
                           target="_blank" rel="noopener noreferrer"
-                          style={{ background:C.gold+"22", border:"1px solid "+C.gold+"44", borderRadius:6, padding:"6px 12px", color:C.gold, fontSize:12, textDecoration:"none" }}>
+                          style={{ background:C.gold+"22", border:"1px solid "+C.gold+"44", borderRadius:6, padding:"6px 12px", color:"#C9973A", fontSize:12, textDecoration:"none" }}>
                           🗺 Voir sur Maps
                         </a>
                       )}
@@ -3815,45 +3859,45 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 <button onClick={function(){
                   var icons = ["⛪","🏛","🏩","🌿","🏠","🍽","🎉","🏟","🌊","🌄"];
                   updateEv(function(evUp){ return {...evUp, venues:[...(evUp.venues||[]), {name:"",address:"",time:"",notes:"",icon:icons[Math.floor(Math.random()*icons.length)]}]}; });
-                }} style={{ background:C.card, border:"1px dashed "+C.border, borderRadius:10, padding:"12px", cursor:"pointer", color:C.muted, fontFamily:"inherit", fontSize:13 }}>
+                }} style={{ background:"#18182a", border:"1px dashed "+C.border, borderRadius:10, padding:"12px", cursor:"pointer", color:"rgba(255,255,255,0.45)", fontFamily:"inherit", fontSize:13 }}>
                   + Ajouter un lieu
                 </button>
               </div>
             </div>
 
             {/* ── LISTE DE CADEAUX ── */}
-            <div style={{ background:C.card, border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
+            <div style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:16, padding:24 }}>
               <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:16 }}>
-                <h4 style={{ margin:0, color:C.gold, fontWeight:400, fontSize:16 }}>🎁 Liste de cadeaux</h4>
+                <h4 style={{ margin:0, color:"#C9973A", fontWeight:400, fontSize:16 }}>🎁 Liste de cadeaux</h4>
                 <div style={{ flex:1 }}/>
                 <button onClick={function(){
                   var url = ev.giftList && ev.giftList.url;
                   if (url) { window.open(url, "_blank"); }
-                }} style={{ background:C.gold+"22", border:"1px solid "+C.gold+"44", borderRadius:8, padding:"6px 14px", cursor:"pointer", color:C.gold, fontFamily:"inherit", fontSize:12, display:ev.giftList&&ev.giftList.url?"flex":"none", alignItems:"center", gap:6 }}>
+                }} style={{ background:C.gold+"22", border:"1px solid "+C.gold+"44", borderRadius:8, padding:"6px 14px", cursor:"pointer", color:"#C9973A", fontFamily:"inherit", fontSize:12, display:ev.giftList&&ev.giftList.url?"flex":"none", alignItems:"center", gap:6 }}>
                   🔗 Voir la liste en ligne
                 </button>
               </div>
               <div style={{ display:"flex", flexDirection:"column", gap:10 }}>
                 <div>
-                  <label style={{ color:C.muted, fontSize:11, letterSpacing:1, display:"block", marginBottom:4 }}>LIEN LISTE DE MARIAGE (Amazon, Marche de Mariage...)</label>
+                  <label style={{ color:"rgba(255,255,255,0.45)", fontSize:11, letterSpacing:1, display:"block", marginBottom:4 }}>LIEN LISTE DE MARIAGE (Amazon, Marche de Mariage...)</label>
                   <input
                     value={(ev.giftList&&ev.giftList.url)||""}
                     onChange={function(e){ var v=e.target.value; updateEv(function(ev2){ return {...ev2, giftList:{...(ev2.giftList||{}), url:v}}; }); }}
                     placeholder="https://www.wishlist.fr/..."
-                    style={{ width:"100%", padding:"8px 12px", background:"#fff1", border:"1px solid "+C.border, borderRadius:8, color:C.cream, fontSize:13, fontFamily:"inherit", boxSizing:"border-box" }}
+                    style={{ width:"100%", padding:"8px 12px", background:"#fff1", border:"1px solid "+C.border, borderRadius:8, color:"#ffffff", fontSize:13, fontFamily:"inherit", boxSizing:"border-box" }}
                   />
                 </div>
                 <div>
-                  <label style={{ color:C.muted, fontSize:11, letterSpacing:1, display:"block", marginBottom:4 }}>MESSAGE POUR LES INVITÉS</label>
+                  <label style={{ color:"rgba(255,255,255,0.45)", fontSize:11, letterSpacing:1, display:"block", marginBottom:4 }}>MESSAGE POUR LES INVITÉS</label>
                   <input
                     value={(ev.giftList&&ev.giftList.message)||""}
                     onChange={function(e){ var v=e.target.value; updateEv(function(ev2){ return {...ev2, giftList:{...(ev2.giftList||{}), message:v}}; }); }}
                     placeholder="Ex: Votre présence est le plus beau cadeau. Si vous souhaitez néanmoins nous gâter..."
-                    style={{ width:"100%", padding:"8px 12px", background:"#fff1", border:"1px solid "+C.border, borderRadius:8, color:C.cream, fontSize:13, fontFamily:"inherit", boxSizing:"border-box" }}
+                    style={{ width:"100%", padding:"8px 12px", background:"#fff1", border:"1px solid "+C.border, borderRadius:8, color:"#ffffff", fontSize:13, fontFamily:"inherit", boxSizing:"border-box" }}
                   />
                 </div>
                 <div>
-                  <label style={{ color:C.muted, fontSize:11, letterSpacing:1, display:"block", marginBottom:8 }}>CADEAUX REÇUS</label>
+                  <label style={{ color:"rgba(255,255,255,0.45)", fontSize:11, letterSpacing:1, display:"block", marginBottom:8 }}>CADEAUX REÇUS</label>
                   {(ev.gifts||[]).map(function(gift, gi){ return (
                     <div key={gi} style={{ display:"flex", gap:8, marginBottom:6, alignItems:"center" }}>
                       <span style={{ color:gift.received?"#4CAF50":C.muted, fontSize:18, cursor:"pointer" }}
@@ -3864,21 +3908,21 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                         value={gift.name||""}
                         onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var gifts=[...(evUp.gifts||[])]; gifts[gi]={...gifts[gi],name:v}; return {...evUp,gifts}; }); }}
                         placeholder="Nom du cadeau ou de l'expéditeur"
-                        style={{ flex:1, padding:"6px 10px", background:gift.received?"#0a2a0a":"#fff1", border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:13, fontFamily:"inherit", textDecoration:gift.received?"line-through":"none" }}
+                        style={{ flex:1, padding:"6px 10px", background:gift.received?"#0a2a0a":"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:13, fontFamily:"inherit", textDecoration:gift.received?"line-through":"none" }}
                       />
                       <input
                         value={gift.from||""}
                         onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var gifts=[...(evUp.gifts||[])]; gifts[gi]={...gifts[gi],from:v}; return {...evUp,gifts}; }); }}
                         placeholder="De la part de..."
-                        style={{ width:150, padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:C.cream, fontSize:12, fontFamily:"inherit" }}
+                        style={{ width:150, padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit" }}
                       />
                       <button onClick={function(){ updateEv(function(evUp){ return {...evUp,gifts:(evUp.gifts||[]).filter(function(_,i){ return i!==gi; })}; }); }}
-                        style={{ background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:14 }}>🗑</button>
+                        style={{ background:"none", border:"none", color:"rgba(255,255,255,0.45)", cursor:"pointer", fontSize:14 }}>🗑</button>
                     </div>
                   ); })}
                   <button onClick={function(){
                     updateEv(function(evUp){ return {...evUp, gifts:[...(evUp.gifts||[]), {name:"",from:"",received:false}]}; });
-                  }} style={{ background:C.card, border:"1px dashed "+C.border, borderRadius:6, padding:"6px 12px", cursor:"pointer", color:C.muted, fontFamily:"inherit", fontSize:12 }}>
+                  }} style={{ background:"#18182a", border:"1px dashed "+C.border, borderRadius:6, padding:"6px 12px", cursor:"pointer", color:"rgba(255,255,255,0.45)", fontFamily:"inherit", fontSize:12 }}>
                     + Ajouter un cadeau
                   </button>
                 </div>
@@ -3893,9 +3937,9 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
       {/* ── MODALS ── */}
       <Modal open={showImportCSV} onClose={()=>setShowImportCSV(false)} title="Importer des invités (CSV)" width={500}>
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <div style={{ background:C.mid, borderRadius:10, padding:"12px 16px", fontSize:12, color:C.muted, lineHeight:1.8 }}>
-            <strong style={{color:C.gold}}>Format attendu (1 invité par ligne) :</strong><br/>
-            <code style={{color:C.cream}}>Prénom Nom, email@example.fr, standard</code><br/>
+          <div style={{ background:"#13131e", borderRadius:10, padding:"12px 16px", fontSize:12, color:"rgba(255,255,255,0.45)", lineHeight:1.8 }}>
+            <strong style={{color:"#C9973A"}}>Format attendu (1 invité par ligne) :</strong><br/>
+            <code style={{color:"#ffffff"}}>Prénom Nom, email@example.fr, standard</code><br/>
             Régimes : standard, vegetarien, vegan, sans-gluten, halal, casher, sans-lactose, sans-noix, diabetique
           </div>
           <textarea
@@ -3938,7 +3982,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 <button key={ditem.id} onClick={()=>setNewGuest({...newGuest,diet:ditem.id})} style={{
                   padding:"7px 10px", borderRadius:8, border:`2px solid ${newGuest.diet===ditem.id?ditem.color:C.border}`,
                   background:newGuest.diet===ditem.id?ditem.color+"22":C.mid, cursor:"pointer", fontSize:12,
-                  fontWeight:700, fontFamily:"inherit", color:newGuest.diet===ditem.id?ditem.color:C.muted,
+                  fontWeight:700, fontFamily:"inherit", color:newGuest.diet===ditem.id?ditem.color:"rgba(255,255,255,0.45)",
                   display:"flex", alignItems:"center", gap:6,
                 }}>{ditem.icon} {ditem.label}</button>
               );})}
@@ -3946,7 +3990,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
           </Field>
           <Field label="RÔLE / FONCTION">
             <select value={newGuest.role||""} onChange={e=>setNewGuest({...newGuest,role:e.target.value})}
-              style={{ width:"100%", padding:"8px 12px", background:C.mid, border:"1px solid "+C.border, borderRadius:8, color:C.cream, fontSize:13, fontFamily:"inherit" }}>
+              style={{ width:"100%", padding:"8px 12px", background:"#13131e", border:"1px solid "+C.border, borderRadius:8, color:"#ffffff", fontSize:13, fontFamily:"inherit" }}>
               <option value="">— Aucun rôle spécial —</option>
               <option value="marie1">💍 Marié(e) 1</option>
               <option value="marie2">💍 Marié(e) 2</option>
@@ -3987,7 +4031,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                   cursor:"pointer", padding:0
                 }}/>
               ))}
-              <button onClick={()=>setNewTable({...newTable,color:undefined})} style={{width:28,height:28,borderRadius:"50%",background:"none",border:`2px solid ${C.border}`,cursor:"pointer",color:C.muted,fontSize:10}}>✕</button>
+              <button onClick={()=>setNewTable({...newTable,color:undefined})} style={{width:28,height:28,borderRadius:"50%",background:"none",border:`2px solid ${C.border}`,cursor:"pointer",color:"rgba(255,255,255,0.45)",fontSize:10}}>✕</button>
             </div>
           </Field>
           <Btn onClick={addTable} style={{marginTop:4}}>Créer la table</Btn>
@@ -4095,7 +4139,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
           <Field label="NOTES">
             <Input value={newBudgetLine.notes} onChange={e=>setNewBudgetLine({...newBudgetLine,notes:e.target.value})} placeholder="Acompte versé, devis reçu…"/>
           </Field>
-          <label style={{ display:"flex", gap:10, alignItems:"center", fontSize:13, color:C.muted, cursor:"pointer" }}>
+          <label style={{ display:"flex", gap:10, alignItems:"center", fontSize:13, color:"rgba(255,255,255,0.45)", cursor:"pointer" }}>
             <input type="checkbox" checked={newBudgetLine.paid} onChange={e=>setNewBudgetLine({...newBudgetLine,paid:e.target.checked})} style={{ width:16,height:16 }}/>
             Déjà payé ✅
           </label>
@@ -4234,13 +4278,13 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
 
       <Modal open={showQR} onClose={()=>setShowQR(false)} title={`QR Code — ${ev.name}`} width={400}>
         <div style={{ textAlign:"center" }} id="qr-modal">
-          <p style={{ color:C.muted, fontSize:13, marginBottom:20 }}>Partagez ce QR code avec vos invités pour qu'ils renseignent leurs préférences.</p>
+          <p style={{ color:"rgba(255,255,255,0.45)", fontSize:13, marginBottom:20 }}>Partagez ce QR code avec vos invités pour qu'ils renseignent leurs préférences.</p>
           <div style={{ display:"flex", justifyContent:"center", marginBottom:20 }}>
             <div style={{ padding:16,background:C.cream,borderRadius:16,border:`2px solid ${C.border}`,display:"inline-block" }}>
               <QRCodeWidget value={`https://tableplan-seven.vercel.app/?join=${(window.firebase?.auth?.().currentUser?.uid||"")}___${ev.id}`} size={180}/>
             </div>
           </div>
-          <div style={{ background:C.mid,borderRadius:8,padding:"8px 16px",fontSize:12,color:C.muted,marginBottom:20,fontFamily:"monospace",cursor:"pointer",display:"flex",alignItems:"center",gap:8 }}
+          <div style={{ background:"#13131e",borderRadius:8,padding:"8px 16px",fontSize:12,color:"rgba(255,255,255,0.45)",marginBottom:20,fontFamily:"monospace",cursor:"pointer",display:"flex",alignItems:"center",gap:8 }}
             onClick={()=>{navigator.clipboard.writeText(`https://tableplan-seven.vercel.app/?join=${(window.firebase?.auth?.().currentUser?.uid||"")}___${ev.id}`);}} title="Cliquer pour copier">
             tableplan-seven.vercel.app/?join={ev.id} (🔗 via Partager) <span style={{fontSize:10}}>📋</span>
           </div>
@@ -4267,7 +4311,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 <button key={k} onClick={()=>updateEv(evUp=>({...evUp,type:k}))} style={{
                   padding:"8px 6px", borderRadius:10, border:`2px solid ${ev.type===k?v.color:C.border}`,
                   background:ev.type===k?v.color+"22":C.mid, cursor:"pointer",
-                  color:ev.type===k?v.color:C.muted, fontFamily:"inherit", fontSize:11, fontWeight:700,
+                  color:ev.type===k?v.color:"rgba(255,255,255,0.45)", fontFamily:"inherit", fontSize:11, fontWeight:700,
                 }}>{v.icon} {v.label}</button>
               ))}
             </div>
@@ -4301,10 +4345,10 @@ function VoucherModal({ onClose, onApply }) {
 
   return (
     <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.75)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:2000 }}>
-      <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:20, padding:40, width:380, textAlign:"center", boxShadow:"0 20px 60px rgba(0,0,0,0.5)" }}>
+      <div style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:20, padding:40, width:380, textAlign:"center", boxShadow:"0 20px 60px rgba(0,0,0,0.5)" }}>
         <div style={{ fontSize:48, marginBottom:12 }}>🎟️</div>
-        <h2 style={{ color:C.gold, margin:"0 0 8px", fontSize:22, fontWeight:400, letterSpacing:1 }}>Code promotionnel</h2>
-        <p style={{ color:C.muted, fontSize:13, margin:"0 0 24px", lineHeight:1.6 }}>
+        <h2 style={{ color:"#C9973A", margin:"0 0 8px", fontSize:22, fontWeight:400, letterSpacing:1 }}>Code promotionnel</h2>
+        <p style={{ color:"rgba(255,255,255,0.45)", fontSize:13, margin:"0 0 24px", lineHeight:1.6 }}>
           Entrez votre bon de réduction pour activer votre offre
         </p>
         <input
@@ -4314,9 +4358,9 @@ function VoucherModal({ onClose, onApply }) {
           placeholder="EX: MARIAGE2026"
           autoFocus
           style={{
-            width:"100%", padding:"14px 16px", background:C.mid,
+            width:"100%", padding:"14px 16px", background:"#13131e",
             border:`1px solid ${success ? C.green : msg?.type==="error" ? C.red : C.border}`,
-            borderRadius:10, color:C.cream, fontSize:18, letterSpacing:4,
+            borderRadius:10, color:"#ffffff", fontSize:18, letterSpacing:4,
             textAlign:"center", outline:"none", boxSizing:"border-box",
             fontFamily:"monospace", transition:"border-color 0.2s"
           }}
@@ -4334,7 +4378,7 @@ function VoucherModal({ onClose, onApply }) {
         <div style={{ display:"flex", gap:12, marginTop:24 }}>
           <button
             onClick={onClose}
-            style={{ flex:1, padding:"12px", background:"none", border:`1px solid ${C.border}`, borderRadius:10, color:C.muted, cursor:"pointer", fontSize:14, fontFamily:"Georgia,serif" }}
+            style={{ flex:1, padding:"12px", background:"none", border:"1px solid rgba(201,151,58,0.15)", borderRadius:10, color:"rgba(255,255,255,0.45)", cursor:"pointer", fontSize:14, fontFamily:"Georgia,serif" }}
           >
             Annuler
           </button>
@@ -4351,8 +4395,8 @@ function VoucherModal({ onClose, onApply }) {
             {success ? "✓ Appliqué !" : "Appliquer le code"}
           </button>
         </div>
-        <div style={{ marginTop:20, fontSize:11, color:C.muted, lineHeight:1.8 }}>
-          Codes actifs : <span style={{color:C.gold}}>BIENVENUE</span> · <span style={{color:C.gold}}>MARIAGE2026</span> · <span style={{color:C.gold}}>PARTENAIRE</span> · <span style={{color:C.gold}}>VIP100</span>
+        <div style={{ marginTop:20, fontSize:11, color:"rgba(255,255,255,0.45)", lineHeight:1.8 }}>
+          Codes actifs : <span style={{color:"#C9973A"}}>BIENVENUE</span> · <span style={{color:"#C9973A"}}>MARIAGE2026</span> · <span style={{color:"#C9973A"}}>PARTENAIRE</span> · <span style={{color:"#C9973A"}}>VIP100</span>
         </div>
       </div>
     </div>
@@ -4406,27 +4450,27 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
 
 
   return (
-    <div style={{ minHeight:"100vh", background:`radial-gradient(ellipse at 20% 30%,#2a1a0e,${C.dark})`, fontFamily:"Georgia,serif", color:C.cream }}>
+    <div style={{ minHeight:"100vh", background:`radial-gradient(ellipse at 20% 30%,#2a1a0e,${C.dark})`, fontFamily:"Georgia,serif", color:"#ffffff" }}>
       {/* Nav */}
-      <div style={{ background:C.card, borderBottom:`1px solid ${C.border}`, padding:"0 32px", display:"flex", alignItems:"center", height:60, position:"sticky", top:0, zIndex:100 }}>
-        <span style={{ fontSize:20, color:C.gold, letterSpacing:1 }}>🪑 TableMaître</span>
+      <div style={{ background:"#18182a", borderBottom:"1px solid rgba(201,151,58,0.12)", padding:"0 32px", display:"flex", alignItems:"center", height:60, position:"sticky", top:0, zIndex:100 }}>
+        <span style={{ fontSize:20, color:"#C9973A", letterSpacing:1 }}>🪑 TableMaître</span>
         <div style={{flex:1}}/>
         <div style={{ display:"flex", alignItems:"center", gap:12 }}>
           {user.photoURL ? (
             <img src={user.photoURL} alt={user.name} style={{ width:32,height:32,borderRadius:"50%",objectFit:"cover",border:`2px solid ${C.gold}44` }}/>
           ) : (
-            <div style={{ width:32,height:32,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:C.gold,fontSize:13,fontWeight:700 }}>
+            <div style={{ width:32,height:32,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:13,fontWeight:700 }}>
               {user.avatar}
             </div>
           )}
-          <span style={{ color:C.muted, fontSize:13 }}>{user.name.split(" ")[0]}</span>
+          <span style={{ color:"rgba(255,255,255,0.45)", fontSize:13 }}>{user.name.split(" ")[0]}</span>
           {/* Sélecteur de langue */}
           <div style={{ position:"relative" }}>
             <select
               value={lang}
               onChange={e => setLang(e.target.value)}
               aria-label="Language / Langue"
-              style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:8, color:C.muted, cursor:"pointer", fontSize:13, padding:"6px 8px", fontFamily:"inherit", outline:"none" }}
+              style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:8, color:"rgba(255,255,255,0.45)", cursor:"pointer", fontSize:13, padding:"6px 8px", fontFamily:"inherit", outline:"none" }}
             >
               {Object.entries(LANG_FLAGS).map(([code, flag]) => (
                 <option key={code} value={code}>{flag} {LANG_NAMES[code]}</option>
@@ -4436,14 +4480,14 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
           <button onClick={onToggleTheme}
             title={lightMode?t.darkMode:t.lightMode}
             aria-label={lightMode?t.darkMode:t.lightMode}
-            style={{ padding:"6px 10px", background:"none", border:`1px solid ${C.border}`, borderRadius:8, color:C.muted, cursor:"pointer", fontSize:16 }}>
+            style={{ padding:"6px 10px", background:"none", border:"1px solid rgba(201,151,58,0.15)", borderRadius:8, color:"rgba(255,255,255,0.45)", cursor:"pointer", fontSize:16 }}>
             <span aria-hidden="true">{lightMode ? "🌙" : "☀️"}</span>
           </button>
           <button
             onClick={() => setShowVoucher(true)}
-            style={{ padding:"6px 14px", background:"none", border:`1px solid ${C.gold}`, borderRadius:8, color:C.gold, cursor:"pointer", fontSize:12, fontFamily:"Georgia,serif", display:"flex", alignItems:"center", gap:6 }}
+            style={{ padding:"6px 14px", background:"none", border:"1px solid rgba(201,151,58,0.4)", borderRadius:8, color:"#C9973A", cursor:"pointer", fontSize:12, fontFamily:"Georgia,serif", display:"flex", alignItems:"center", gap:6 }}
           >
-            🎟️ Code promo{appliedVoucher && <span style={{background:C.gold,color:C.dark,borderRadius:4,padding:"1px 6px",fontSize:11,fontWeight:700}}>✓</span>}
+            🎟️ Code promo{appliedVoucher && <span style={{background:"linear-gradient(135deg,#C9973A,#F0C97A)",color:C.dark,borderRadius:4,padding:"1px 6px",fontSize:11,fontWeight:700}}>✓</span>}
           </button>
           <Btn variant="muted" small onClick={onLogout}>Déconnexion</Btn>
         </div>
@@ -4453,7 +4497,7 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
         {/* Hero */}
         <div style={{ marginBottom:48, textAlign:"center" }}>
           <h1 style={{ fontSize:36, fontWeight:400, margin:"0 0 8px", letterSpacing:1 }}>{t.myEvents}</h1>
-          <p style={{ color:C.muted, margin:0, fontSize:14 }}>{t.welcome}, {user.name}</p>
+          <p style={{ color:"rgba(255,255,255,0.45)", margin:0, fontSize:14 }}>{t.welcome}, {user.name}</p>
         </div>
 
         <div style={{ display:"flex", gap:12, marginBottom:24, alignItems:"center" }}>
@@ -4463,13 +4507,13 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
             placeholder={t.searchPlaceholder}
             aria-label={t.searchPlaceholder}
             role="searchbox"
-            style={{ flex:1, padding:"10px 16px", background:C.card, border:`1px solid ${C.border}`, borderRadius:12, color:C.cream, fontSize:14, fontFamily:"Georgia,serif", outline:"none" }}
+            style={{ flex:1, padding:"10px 16px", background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:12, color:"#ffffff", fontSize:14, fontFamily:"Georgia,serif", outline:"none" }}
           />
           <Btn onClick={()=>setShowNew(true)}>{t.newEvent}</Btn>
         </div>
 
         {myEvents.length===0 && (
-          <div style={{ textAlign:"center", padding:"80px 20px", color:C.muted }}>
+          <div style={{ textAlign:"center", padding:"80px 20px", color:"rgba(255,255,255,0.45)" }}>
             <div style={{ fontSize:56, marginBottom:16 }}>🪑</div>
             <p style={{ fontSize:18 }}>Aucun événement pour le moment</p>
             <Btn onClick={()=>setShowNew(true)} style={{ marginTop:20 }}>Créer mon premier événement</Btn>
@@ -4482,7 +4526,7 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
             const unseated=ev.guests.filter(g=>!g.tableId).length;
             return (
               <div key={ev.id} onClick={()=>onOpenEvent(ev.id)} style={{
-                background:C.card, border:`1px solid ${C.border}`, borderRadius:18, padding:24,
+                background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:18, padding:24,
                 cursor:"pointer", transition:"all .2s",
                 boxShadow:`0 4px 20px ${theme.color}11`,
               }}
@@ -4495,31 +4539,31 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
                   <Badge color={theme.color}>{theme.label}</Badge>
                 </div>
                 <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:4 }}>
-                  <h3 style={{ color:C.cream, margin:0, fontSize:18, fontWeight:400 }}>{ev.name}</h3>
+                  <h3 style={{ color:"#ffffff", margin:0, fontSize:18, fontWeight:400 }}>{ev.name}</h3>
                   <button onClick={e=>{e.stopPropagation();const copy={...ev,id:Date.now(),name:ev.name+" (copie)",ownerId:user.id};setEvents(prev=>[...prev,copy]);}}
                     title="Dupliquer cet événement"
                     aria-label={`Dupliquer l'événement ${ev.name}`}
-                    style={{background:"none",border:`1px solid ${C.border}`,borderRadius:8,color:C.muted,cursor:"pointer",fontSize:12,padding:"3px 8px",fontFamily:"inherit"}}>
+                    style={{background:"none",border:"1px solid rgba(201,151,58,0.15)",borderRadius:8,color:"rgba(255,255,255,0.45)",cursor:"pointer",fontSize:12,padding:"3px 8px",fontFamily:"inherit"}}>
                     <span aria-hidden="true">⧉</span>
                   </button>
                 </div>
-                <p style={{ color:C.muted, margin:"0 0 16px", fontSize:12 }}>
+                <p style={{ color:"rgba(255,255,255,0.45)", margin:"0 0 16px", fontSize:12 }}>
                   {ev.date}
                   {(() => {
                     const days = Math.ceil((new Date(ev.date) - new Date()) / 86400000);
-                    if (days < 0) return <span style={{color:C.muted,marginLeft:8}}>— passé</span>;
+                    if (days < 0) return <span style={{color:"rgba(255,255,255,0.45)",marginLeft:8}}>— passé</span>;
                     if (days === 0) return <span style={{color:C.green,marginLeft:8,fontWeight:700}}>• Aujourd'hui !</span>;
                     if (days <= 7) return <span style={{color:C.red,marginLeft:8,fontWeight:700}}>• {t ? t.inDays : "In"} {days}{t ? t.days : "d"}</span>;
                     if (days <= 30) return <span style={{color:"#E8845A",marginLeft:8}}>• {t ? t.inDays : "In"} {days}{t ? t.days : "d"}</span>;
-                    return <span style={{color:C.muted,marginLeft:8}}>• {t ? t.inDays : "In"} {days}{t ? t.days : "d"}</span>;
+                    return <span style={{color:"rgba(255,255,255,0.45)",marginLeft:8}}>• {t ? t.inDays : "In"} {days}{t ? t.days : "d"}</span>;
                   })()}
                 </p>
-                <div style={{ display:"flex", gap:16, fontSize:12, color:C.muted }}>
+                <div style={{ display:"flex", gap:16, fontSize:12, color:"rgba(255,255,255,0.45)" }}>
                   <span>🪑 {ev.tables.length} {t.tables}</span>
                   <span>👤 {ev.guests.length} {t.guests}</span>
                   {unseated>0 && <span style={{ color:C.red }}>⚠ {unseated} {t.unseated}</span>}
                   {globalSearch && ev.guests.some(g3=>g3.name.toLowerCase().includes(globalSearch.toLowerCase())) && (
-                    <span style={{color:C.gold}}>✦ {ev.guests.filter(g3=>g3.name.toLowerCase().includes(globalSearch.toLowerCase())).length} invité(s) trouvé(s)</span>
+                    <span style={{color:"#C9973A"}}>✦ {ev.guests.filter(g3=>g3.name.toLowerCase().includes(globalSearch.toLowerCase())).length} invité(s) trouvé(s)</span>
                   )}
                 </div>
                 {ev.guests.length > 0 && (() => {
@@ -4528,11 +4572,11 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
                   const barCol = pct === 100 ? C.green : pct > 50 ? C.gold : C.red;
                   return (
                     <div style={{ marginTop:12 }}>
-                      <div style={{ display:"flex", justifyContent:"space-between", fontSize:10, color:C.muted, marginBottom:4 }}>
+                      <div style={{ display:"flex", justifyContent:"space-between", fontSize:10, color:"rgba(255,255,255,0.45)", marginBottom:4 }}>
                         <span>{t.placement}</span>
                         <span style={{color:barCol, fontWeight:700}}>{pct}%</span>
                       </div>
-                      <div style={{ height:4, background:C.mid, borderRadius:99 }}>
+                      <div style={{ height:4, background:"#13131e", borderRadius:99 }}>
                         <div style={{ height:"100%", width:`${pct}%`, background:barCol, borderRadius:99, transition:"width .4s" }}/>
                       </div>
                     </div>
@@ -4554,22 +4598,22 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
       </div>
       {showUpgrade && (
         <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.8)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:2000 }}>
-          <div style={{ background:C.card, border:`1px solid ${C.gold}`, borderRadius:20, padding:40, width:400, textAlign:"center", boxShadow:"0 20px 60px rgba(0,0,0,0.5)" }}>
+          <div style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.4)", borderRadius:20, padding:40, width:400, textAlign:"center", boxShadow:"0 20px 60px rgba(0,0,0,0.5)" }}>
             <div style={{ fontSize:48, marginBottom:12 }}>⭐</div>
-            <h2 style={{ color:C.gold, margin:"0 0 8px", fontSize:22, fontWeight:400 }}>Passez au plan Pro</h2>
-            <p style={{ color:C.muted, fontSize:13, margin:"0 0 20px", lineHeight:1.7 }}>
-              Le plan gratuit est limité à <strong style={{color:C.cream}}>1 événement</strong>.<br/>
+            <h2 style={{ color:"#C9973A", margin:"0 0 8px", fontSize:22, fontWeight:400 }}>Passez au plan Pro</h2>
+            <p style={{ color:"rgba(255,255,255,0.45)", fontSize:13, margin:"0 0 20px", lineHeight:1.7 }}>
+              Le plan gratuit est limité à <strong style={{color:"#ffffff"}}>1 événement</strong>.<br/>
               Activez un code promo ou passez Pro pour des événements illimités.
             </p>
-            <div style={{ background:C.mid, borderRadius:12, padding:"16px 20px", marginBottom:20, textAlign:"left" }}>
+            <div style={{ background:"#13131e", borderRadius:12, padding:"16px 20px", marginBottom:20, textAlign:"left" }}>
               {["Événements illimités","Invités illimités","Export CSV","QR codes","Chevalets imprimables"].map(f => (
-                <div key={f} style={{ display:"flex", alignItems:"center", gap:8, color:C.cream, fontSize:13, marginBottom:6 }}>
+                <div key={f} style={{ display:"flex", alignItems:"center", gap:8, color:"#ffffff", fontSize:13, marginBottom:6 }}>
                   <span style={{color:C.green}}>✓</span> {f}
                 </div>
               ))}
             </div>
             <div style={{ display:"flex", gap:10 }}>
-              <button onClick={() => setShowUpgrade(false)} style={{ flex:1, padding:"12px", background:"none", border:`1px solid ${C.border}`, borderRadius:10, color:C.muted, cursor:"pointer", fontSize:13, fontFamily:"Georgia,serif" }}>
+              <button onClick={() => setShowUpgrade(false)} style={{ flex:1, padding:"12px", background:"none", border:"1px solid rgba(201,151,58,0.15)", borderRadius:10, color:"rgba(255,255,255,0.45)", cursor:"pointer", fontSize:13, fontFamily:"Georgia,serif" }}>
                 Rester gratuit
               </button>
               <button onClick={() => { setShowUpgrade(false); setShowVoucher(true); }} style={{ flex:2, padding:"12px", background:`linear-gradient(135deg,${C.gold},${C.gold2})`, border:"none", borderRadius:10, color:C.dark, cursor:"pointer", fontWeight:700, fontSize:14, fontFamily:"Georgia,serif" }}>
@@ -4580,13 +4624,13 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
         </div>
       )}
       {appliedVoucher && (
-        <div style={{ position:"fixed", bottom:24, right:24, background:C.card, border:`1px solid ${C.green}`, borderRadius:12, padding:"12px 20px", zIndex:500, display:"flex", alignItems:"center", gap:10, boxShadow:"0 4px 20px rgba(0,0,0,0.4)" }}>
+        <div style={{ position:"fixed", bottom:24, right:24, background:"#18182a", border:`1px solid ${C.green}`, borderRadius:12, padding:"12px 20px", zIndex:500, display:"flex", alignItems:"center", gap:10, boxShadow:"0 4px 20px rgba(0,0,0,0.4)" }}>
           <span style={{fontSize:18}}>🎟️</span>
           <div>
             <div style={{color:C.green, fontSize:12, fontWeight:700}}>Code appliqué : {appliedVoucher.code}</div>
-            <div style={{color:C.muted, fontSize:11}}>{appliedVoucher.description}</div>
+            <div style={{color:"rgba(255,255,255,0.45)", fontSize:11}}>{appliedVoucher.description}</div>
           </div>
-          <button onClick={() => setAppliedVoucher(null)} style={{background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:16,padding:0}}>×</button>
+          <button onClick={() => setAppliedVoucher(null)} style={{background:"none",border:"none",color:"rgba(255,255,255,0.45)",cursor:"pointer",fontSize:16,padding:0}}>×</button>
         </div>
       )}
       <Modal open={showNew} onClose={()=>setShowNew(false)} title="Nouvel événement">
@@ -4599,7 +4643,7 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
                 <button key={k} onClick={()=>setNewEv({...newEv,type:k})} style={{
                   padding:"10px 8px", borderRadius:10, border:`2px solid ${newEv.type===k?v.color:C.border}`,
                   background:newEv.type===k?v.color+"22":C.mid, cursor:"pointer",
-                  color:newEv.type===k?v.color:C.muted, fontFamily:"inherit", fontSize:12, fontWeight:700,
+                  color:newEv.type===k?v.color:"rgba(255,255,255,0.45)", fontFamily:"inherit", fontSize:12, fontWeight:700,
                   display:"flex", alignItems:"center", gap:6,
                 }}><span style={{fontSize:16}}>{v.icon}</span> {v.label}</button>
               ))}
