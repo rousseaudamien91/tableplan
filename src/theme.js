@@ -53,4 +53,4 @@ const LANG_NAMES = { fr: 'Français', en: 'English', es: 'Español', de: 'Deutsc
 
 
 
-export { C, detectLang, useI18n, LANG_FLAGS, LANG_NAMES };
+export { C, detectLang, useI18n };

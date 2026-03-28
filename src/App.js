@@ -74,10 +74,10 @@ async function loadEventsFromFirestore(userId) {
 
 function LoadingScreen() {
   return (
-    <div style={{ minHeight:"100vh", background:`radial-gradient(ellipse at 30% 40%, #2a1a0e, #120C08)`, display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column", gap:16 }}>
+    <div style={{ minHeight:"100vh", background:"#0d0d14", display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column", gap:16 }}>
       <div style={{ fontSize:48 }}>🪑</div>
       <div style={{ color:"#C9973A", fontSize:18, letterSpacing:2, fontFamily:"Georgia,serif" }}>TableMaître</div>
-      <div style={{ color:"#8A7355", fontSize:13 }}>Loading…</div>
+      <div style={{ color:"rgba(255,255,255,0.4)", fontSize:13 }}>Loading…</div>
     </div>
   );
 }
@@ -101,8 +101,6 @@ export default function App() {
   const [selectedEventId, setSelectedEventId] = useState(null);
   const [view, setView] = useState("dashboard");
   const [lightMode, setLightMode] = useState(false);
-  const [editorSaveToast, setEditorSaveToast] = useState(false);
-  const { t, lang, setLang } = useI18n();
 
   // PWA Service Worker
   useEffect(() => {
@@ -110,6 +108,7 @@ export default function App() {
       navigator.serviceWorker.register("/sw.js").catch(() => {});
     }
   }, []);
+  const { t, lang, setLang } = useI18n();
 
   // Thème
   // Rappel J-7 — notifications browser
@@ -136,8 +135,8 @@ export default function App() {
   }, [events]);
 
   useEffect(() => {
-    document.body.style.background = lightMode ? "#F5F0E8" : "#120C08";
-    document.body.style.color = lightMode ? "#2A1A0E" : "#F5EAD4";
+    document.body.style.background = lightMode ? "#F5F0E8" : "#0d0d14";
+    document.body.style.color = lightMode ? "#2A1A0E" : "#ffffff";
     // Accessibilité : focus visible pour navigation clavier
     const styleId = 'a11y-focus-style';
     if (!document.getElementById(styleId)) {
@@ -209,6 +208,7 @@ export default function App() {
   const handleOpenEvent = (id) => { setSelectedEventId(id); setView("event"); };
 
   // Mise à jour + sauvegarde auto Firestore
+  const [editorSaveToast, setEditorSaveToast] = useState(false);
   const handleUpdateEvent = (updatedEv) => {
     setEvents(prev => prev.map(e => e.id === updatedEv.id ? updatedEv : e));
     if (fbUser) {
