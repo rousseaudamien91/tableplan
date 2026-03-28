@@ -1,4 +1,5 @@
 /* eslint-disable */
+import PricingPage from "./PricingPage";
 import { getFirebase } from "../firebase";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { C, useI18n } from "../theme";
@@ -33,6 +34,7 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
   const [tab, setTab] = useState("plan");
   const [selectedTable, setSelectedTable] = useState(null);
   const [showAddGuest, setShowAddGuest] = useState(false);
+  const [showPricingPalier, setShowPricingPalier] = useState(false);
   const [showAddTable, setShowAddTable] = useState(false);
   const [showAddZone, setShowAddZone] = useState(false);
   const [showAddFurniture, setShowAddFurniture] = useState(false);
@@ -103,9 +105,19 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
   function updateEv(fn) { onUpdate(fn(ev)); }
   function addGuest() {
     if (!newGuest.name.trim()) return;
+    // Mode guest : limite stricte 5 invités
+    if (ev.plan === "guest" && (ev.guests||[]).length >= 5) {
+      alert("Mode démo : maximum 5 invités. Créez un compte pour en ajouter plus.");
+      return;
+    }
+    const newCount = (ev.guests||[]).length + 1;
     updateEv(e=>({ ...e, guests:[...e.guests,{id:Date.now(),...newGuest,tableId:selectedTable||null}] }));
     setNewGuest({name:"",email:"",diet:"standard",notes:"",allergies:[]});
     setShowAddGuest(false);
+    // Paliers de paiement : proposer au 11e et 51e invité
+    if (newCount === 11 || newCount === 51) {
+      setShowPricingPalier(true);
+    }
   }
   function addTable() {
     const n = newTable.number ? parseInt(newTable.number) : nextTableNumber;
@@ -659,11 +671,11 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         {tab==="guests" && (
           <div style={{ maxWidth:860 }}>
             <div style={{ display:"flex", gap:12, marginBottom:20 }}>
-              <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Rechercher un invité…"
+              <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t.search||"Search guest..."}
                 style={{ ...inputStyle, flex:1 }}/>
               <Btn variant="ghost" onClick={()=>exportGuestsCSV(ev)}>⬇ Export CSV</Btn>
               <Btn variant="ghost" onClick={()=>setShowImportCSV(true)}>⬆ Import CSV</Btn>
-              <Btn onClick={()=>{ if(ev.plan==="guest"&&(ev.guests||[]).length>=5){ alert("Mode démo : maximum 5 invités. Créez un compte pour en ajouter plus."); return; } setShowAddGuest(true); }}>+ Invité</Btn>
+              <Btn onClick={()=>setShowAddGuest(true)}>+ {t.addGuestBtn||"Invité"}</Btn>
             </div>
 
             {/* Diet filter legend */}
@@ -2280,6 +2292,19 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
           </Field>
         </div>
       </Modal>
+    {showPricingPalier && (
+      <PricingPage
+        eventName={ev.name}
+        guestCount={(ev.guests||[]).length}
+        onClose={()=>setShowPricingPalier(false)}
+        onPlanSelected={(planId, voucherCode, finalPrice) => {
+          if (finalPrice === 0 && planId === "full") {
+            updateEv(e => ({ ...e, plan:"full", unlockedByVoucher: voucherCode }));
+          }
+          setShowPricingPalier(false);
+        }}
+      />
+    )}
     </div>
   );
 }

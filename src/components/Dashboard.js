@@ -26,18 +26,12 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
       (ev2.guests||[]).some(function(g2){ return g2.name.toLowerCase().includes(q) || (g2.email||"").toLowerCase().includes(q); });
   });
 
-  const [showUpgrade, setShowUpgrade] = useState(false);
   const [showPricing, setShowPricing] = useState(false);
   const [saveToast, setSaveToast] = useState(false);
 
   function createEvent() {
     if (!newEv.name) return;
-    // Limite freemium : 1 événement sans voucher
-    if (!appliedVoucher && myEvents.length >= 1) {
-      setShowNew(false);
-      setShowUpgrade(true);
-      return;
-    }
+    // Pas de limite sur le nombre d'événements — accès libre
     const ev = {
       id: Date.now(), ownerId: user.id,
       name: newEv.name, date: newEv.date || new Date().toISOString().slice(0,10),
@@ -246,33 +240,7 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
           </div>
         )}
       </div>
-      {showUpgrade && (
-        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.8)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:2000 }}>
-          <div style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.4)", borderRadius:20, padding:40, width:400, textAlign:"center", boxShadow:"0 20px 60px rgba(0,0,0,0.5)" }}>
-            <div style={{ fontSize:48, marginBottom:12 }}>⭐</div>
-            <h2 style={{ color:"#C9973A", margin:"0 0 8px", fontSize:22, fontWeight:400 }}>Passez au plan Pro</h2>
-            <p style={{ color:"rgba(255,255,255,0.45)", fontSize:13, margin:"0 0 20px", lineHeight:1.7 }}>
-              Le plan gratuit est limité à <strong style={{color:"#ffffff"}}>1 événement</strong>.<br/>
-              Activez un code promo ou passez Pro pour des événements illimités.
-            </p>
-            <div style={{ background:"#13131e", borderRadius:12, padding:"16px 20px", marginBottom:20, textAlign:"left" }}>
-              {["Événements illimités","Invités illimités","Export CSV","QR codes","Chevalets imprimables"].map(f => (
-                <div key={f} style={{ display:"flex", alignItems:"center", gap:8, color:"#ffffff", fontSize:13, marginBottom:6 }}>
-                  <span style={{color:C.green}}>✓</span> {f}
-                </div>
-              ))}
-            </div>
-            <div style={{ display:"flex", gap:10 }}>
-              <button onClick={() => setShowUpgrade(false)} style={{ flex:1, padding:"12px", background:"none", border:"1px solid rgba(201,151,58,0.15)", borderRadius:10, color:"rgba(255,255,255,0.45)", cursor:"pointer", fontSize:13, fontFamily:"Georgia,serif" }}>
-                Rester gratuit
-              </button>
-              <button onClick={() => { setShowUpgrade(false); setShowVoucher(true); }} style={{ flex:2, padding:"12px", background:`linear-gradient(135deg,${C.gold},${C.gold2})`, border:"none", borderRadius:10, color:C.dark, cursor:"pointer", fontWeight:700, fontSize:14, fontFamily:"Georgia,serif" }}>
-                🎟️ Entrer un code promo
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+
       {appliedVoucher && (
         <div style={{ position:"fixed", bottom:24, right:24, background:"#18182a", border:`1px solid ${C.green}`, borderRadius:12, padding:"12px 20px", zIndex:500, display:"flex", alignItems:"center", gap:10, boxShadow:"0 4px 20px rgba(0,0,0,0.4)" }}>
           <span style={{fontSize:18}}>🎟️</span>
@@ -339,31 +307,6 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
       )}
 
       {/* Bandeau souscription */}}
-      {user && user.role !== "superadmin" && (user.subscriptionStatus === "trial" || user.subscriptionStatus === "expired") && (
-        <div style={{
-          margin:"0 0 20px",padding:"14px 20px",borderRadius:14,
-          background:user.subscriptionStatus==="expired"?"rgba(224,82,82,0.1)":"rgba(240,201,122,0.08)",
-          border:"1px solid "+(user.subscriptionStatus==="expired"?"#e0525244":"#F0C97A44"),
-          display:"flex",alignItems:"center",gap:16,flexWrap:"wrap",
-        }}>
-          <span style={{fontSize:20}}>{user.subscriptionStatus==="expired"?"❌":"⏳"}</span>
-          <div style={{flex:1}}>
-            <div style={{fontWeight:700,fontSize:14,color:user.subscriptionStatus==="expired"?"#e05252":"#F0C97A"}}>
-              {user.subscriptionStatus==="expired"?"Abonnement expiré":"Période d'essai"}
-            </div>
-            <div style={{fontSize:12,color:"rgba(255,255,255,0.45)",marginTop:2}}>
-              {user.subscriptionStatus==="expired"
-                ?"Renouvelez votre abonnement pour continuer à utiliser TableMaître"
-                :"Activez un événement pour débloquer toutes les fonctionnalités"}
-            </div>
-          </div>
-          <button onClick={()=>setShowPricing(true)} style={{
-            padding:"9px 22px",background:"linear-gradient(135deg,#C9973A,#F0C97A)",
-            border:"none",borderRadius:99,cursor:"pointer",color:"#0d0d14",
-            fontWeight:800,fontSize:13,fontFamily:"inherit",whiteSpace:"nowrap",
-          }}>{user.subscriptionStatus==="expired"?"Renouveler":"Voir les formules →"}</button>
-        </div>
-      )}
 
             <span style={{ fontSize:22 }}>{status==="expired" ? "❌" : "⏳"}</span>
             <div style={{ flex:1 }}>

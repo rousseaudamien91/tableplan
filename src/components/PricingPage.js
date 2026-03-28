@@ -85,6 +85,7 @@ function PricingPage({ user, eventName, guestCount, onClose, onPlanSelected }) {
   };
 
   const handlePay = (tier) => {
+    // Gratuit ou code promo 100% → accès direct sans paiement
     if (tier.price === 0) {
       if (onPlanSelected) onPlanSelected("free", null, 0);
       return;
@@ -92,6 +93,12 @@ function PricingPage({ user, eventName, guestCount, onClose, onPlanSelected }) {
     const finalPrice = appliedVoucher
       ? Math.round(tier.price * (1 - appliedVoucher.discount / 100))
       : tier.price;
+
+    // Code promo 100% → accès immédiat au palier max
+    if (finalPrice === 0) {
+      if (onPlanSelected) onPlanSelected("full", appliedVoucher?.code || null, 0);
+      return;
+    }
 
     if (paypalEmail && paypalName) {
       const link = `https://www.paypal.com/paypalme/${paypalName}/${finalPrice}EUR`;
@@ -223,7 +230,7 @@ function PricingPage({ user, eventName, guestCount, onClose, onPlanSelected }) {
                   onMouseEnter={e => { e.currentTarget.style.opacity="0.85"; }}
                   onMouseLeave={e => { e.currentTarget.style.opacity="1"; }}
                 >
-                  {tier.price === 0 ? "Commencer gratuitement" : paypalEmail ? "🅿️ Payer via PayPal" : "Choisir cette formule"}
+                  {tier.price === 0 || (appliedVoucher && Math.round(tier.price*(1-appliedVoucher.discount/100))===0) ? (tier.price===0?"Commencer gratuitement":"✅ Accès gratuit avec "+appliedVoucher.code) : paypalEmail ? "🅿️ Payer via PayPal" : "Choisir cette formule"}
                 </button>
               </div>
             );
