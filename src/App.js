@@ -1496,52 +1496,110 @@ function printDietSummary(ev) {
 function LoginScreen({ onLogin, t: tProp }) {
   const { t: tHook } = useI18n();
   const t = tProp || tHook;
+  const [hovered, setHovered] = useState(null);
+
+  const FEATURES = [
+    { icon:"🗺", title:"Plan de salle interactif", desc:"Glissez-déposez vos tables, zones et mobilier sur un canvas intuitif." },
+    { icon:"💌", title:"RSVP & invitations", desc:"Suivez les confirmations en temps réel. Lien de confirmation automatique." },
+    { icon:"💰", title:"Suivi de budget", desc:"Estimez, comparez et maîtrisez chaque poste de dépense." },
+    { icon:"🤖", title:"IA proactive", desc:"Un assistant contextuel qui analyse votre événement et vous guide." },
+    { icon:"🗓", title:"Rétroplanning", desc:"Tâches, priorités, responsables — organisez chaque étape du J-90 au Jour J." },
+    { icon:"🖨", title:"Exports premium", desc:"Chevalets imprimables, PDF plan de table, QR code invités." },
+  ];
 
   return (
-    <div style={{
-      minHeight:"100vh",
-      background:`radial-gradient(ellipse at 30% 40%, #2a1a0e 0%, ${C.dark} 70%)`,
-      fontFamily:"Georgia, 'Palatino Linotype', serif",
-      display:"flex", flexDirection:"column", alignItems:"center", justifyContent:"center", padding:20,
-      position:"relative", overflow:"hidden",
-    }}>
-      {[...Array(5)].map((_,i) => (
-        <div key={i} style={{
-          position:"absolute", borderRadius:"50%",
-          border:`1px solid ${C.gold}${["18","12","0e","08","05"][i]}`,
-          width:200+i*180, height:200+i*180,
-          top:"50%", left:"50%", transform:"translate(-50%,-50%)",
-          pointerEvents:"none",
-        }}/>
+    <div style={{ minHeight:"100vh", background:`radial-gradient(ellipse at 20% 10%, #2a1a0e 0%, ${C.dark} 60%)`, fontFamily:"Georgia,'Palatino Linotype',serif", color:C.cream, overflowX:"hidden" }}>
+      {/* Orbes déco */}
+      {[...Array(4)].map((_,i)=>(
+        <div key={i} style={{ position:"fixed", borderRadius:"50%", border:`1px solid ${C.gold}${["12","0c","08","05"][i]}`, width:300+i*220, height:300+i*220, top:"30%", left:"50%", transform:"translate(-50%,-50%)", pointerEvents:"none", zIndex:0 }}/>
       ))}
-      <div style={{ position:"relative", zIndex:1, width:"100%", maxWidth:420 }}>
-        <div style={{ textAlign:"center", marginBottom:40 }}>
-          <div style={{ fontSize:48, marginBottom:12 }}>🪑</div>
-          <h1 style={{ fontSize:36, fontWeight:400, letterSpacing:4, color:C.gold, margin:"0 0 8px" }}>TableMaître</h1>
-          <p style={{ color:C.muted, fontSize:12, letterSpacing:3 }}>{t.loginSubtitle}</p>
+
+      {/* NAV */}
+      <nav style={{ position:"sticky", top:0, zIndex:50, background:C.card+"ee", backdropFilter:"blur(12px)", borderBottom:`1px solid ${C.border}`, padding:"0 40px", height:60, display:"flex", alignItems:"center" }}>
+        <span style={{ fontSize:18, color:C.gold, letterSpacing:2, fontWeight:400 }}>🪑 TableMaître</span>
+        <div style={{ flex:1 }}/>
+        <button onClick={onLogin} style={{ padding:"8px 22px", background:C.gold, border:"none", borderRadius:99, cursor:"pointer", color:C.dark, fontWeight:700, fontSize:13, fontFamily:"inherit", letterSpacing:.5 }}>
+          Se connecter →
+        </button>
+      </nav>
+
+      {/* HERO */}
+      <div style={{ position:"relative", zIndex:1, maxWidth:800, margin:"0 auto", textAlign:"center", padding:"100px 24px 80px" }}>
+        <div style={{ display:"inline-block", background:C.gold+"22", border:`1px solid ${C.gold}44`, borderRadius:99, padding:"6px 18px", fontSize:11, color:C.gold, letterSpacing:2, marginBottom:28 }}>
+          ✦ ORGANISEZ. PLACEZ. IMPRESSIONNEZ. ✦
         </div>
-        <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:20, padding:40, boxShadow:"0 20px 60px rgba(0,0,0,0.4)" }}>
-          <button onClick={onLogin} style={{
-            width:"100%", padding:"14px", background:"#fff", border:"none",
-            borderRadius:12, cursor:"pointer",
-            display:"flex", alignItems:"center", justifyContent:"center", gap:12,
-            fontFamily:"Georgia,serif", fontWeight:700, color:"#2A1A0E",
-            fontSize:15, letterSpacing:1, boxShadow:"0 2px 8px rgba(0,0,0,0.3)",
-          }}>
-            <svg width="20" height="20" viewBox="0 0 48 48">
-              <path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34.5 6.5 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/>
-              <path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 16.1 19 13 24 13c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34.5 6.5 29.5 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>
-              <path fill="#4CAF50" d="M24 44c5.2 0 9.9-1.9 13.5-5l-6.2-5.2C29.4 35.5 26.8 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.7 39.6 16.3 44 24 44z"/>
-              <path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.3-2.4 4.3-4.5 5.7l6.2 5.2C41.1 36.2 44 30.6 44 24c0-1.3-.1-2.6-.4-3.9z"/>
-            </svg>
-            {t.loginGoogle}
-          </button>
+        <h1 style={{ fontSize:"clamp(36px,6vw,72px)", fontWeight:400, margin:"0 0 24px", lineHeight:1.1, letterSpacing:1 }}>
+          Le plan de table<br/>
+          <span style={{ color:C.gold, fontStyle:"italic" }}>qui fait tout</span>
+        </h1>
+        <p style={{ fontSize:18, color:C.muted, maxWidth:520, margin:"0 auto 48px", lineHeight:1.7 }}>
+          De l'invitation à la salle, gérez chaque détail de votre événement depuis une seule application élégante.
+        </p>
+        <button onClick={onLogin} style={{
+          display:"inline-flex", alignItems:"center", gap:14, padding:"18px 40px",
+          background:`linear-gradient(135deg, ${C.gold}, #E8C46A)`, border:"none", borderRadius:99,
+          cursor:"pointer", fontFamily:"Georgia,serif", fontWeight:700, color:C.dark, fontSize:16, letterSpacing:.5,
+          boxShadow:`0 8px 32px ${C.gold}44`, transition:"transform .15s, box-shadow .15s",
+        }}
+          onMouseEnter={e=>{ e.currentTarget.style.transform="translateY(-2px)"; e.currentTarget.style.boxShadow=`0 12px 40px ${C.gold}66`; }}
+          onMouseLeave={e=>{ e.currentTarget.style.transform=""; e.currentTarget.style.boxShadow=`0 8px 32px ${C.gold}44`; }}>
+          <svg width="20" height="20" viewBox="0 0 48 48">
+            <path fill="#1a0e08" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34.5 6.5 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z" opacity=".4"/>
+            <path fill="#1a0e08" d="M6.3 14.7l6.6 4.8C14.7 16.1 19 13 24 13c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34.5 6.5 29.5 4 24 4 16.3 4 9.7 8.3 6.3 14.7z" opacity=".4"/>
+            <path fill="#1a0e08" d="M24 44c5.2 0 9.9-1.9 13.5-5l-6.2-5.2C29.4 35.5 26.8 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.7 39.6 16.3 44 24 44z" opacity=".4"/>
+            <path fill="#1a0e08" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.3-2.4 4.3-4.5 5.7l6.2 5.2C41.1 36.2 44 30.6 44 24c0-1.3-.1-2.6-.4-3.9z" opacity=".4"/>
+          </svg>
+          Commencer gratuitement avec Google
+        </button>
+        <p style={{ color:C.muted, fontSize:12, marginTop:16 }}>Gratuit · Sans carte bancaire · Synchronisé cloud</p>
+      </div>
+
+      {/* FEATURES GRID */}
+      <div style={{ maxWidth:960, margin:"0 auto", padding:"0 24px 100px" }}>
+        <div style={{ textAlign:"center", marginBottom:56 }}>
+          <h2 style={{ fontSize:28, fontWeight:400, letterSpacing:1, margin:"0 0 12px" }}>Tout ce dont vous avez besoin</h2>
+          <p style={{ color:C.muted, fontSize:14 }}>De la liste d'invités au plan de salle, en passant par le budget et les prestataires.</p>
         </div>
-        <div style={{ display:"flex", flexWrap:"wrap", gap:8, justifyContent:"center", marginTop:28 }}>
-          {["💍 Mariage","🥂 Gala","🎂 Anniversaire","🎤 Conférence","📋 Plan de salle","🖨 Chevalets","⊘ Régimes alimentaires"].map(f=>(
-            <span key={f} style={{ background:C.card+"99", border:`1px solid ${C.border}`, borderRadius:99, padding:"4px 14px", fontSize:11, color:C.muted }}>{f}</span>
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))", gap:20 }}>
+          {FEATURES.map((f,i)=>(
+            <div key={i}
+              onMouseEnter={()=>setHovered(i)} onMouseLeave={()=>setHovered(null)}
+              style={{ background:hovered===i?C.mid:C.card, border:`1px solid ${hovered===i?C.gold+"44":C.border}`, borderRadius:16, padding:"28px 24px", transition:"all .2s", cursor:"default" }}>
+              <div style={{ fontSize:32, marginBottom:16 }}>{f.icon}</div>
+              <h3 style={{ color:hovered===i?C.gold:C.cream, fontSize:16, fontWeight:400, margin:"0 0 8px", transition:"color .2s" }}>{f.title}</h3>
+              <p style={{ color:C.muted, fontSize:13, margin:0, lineHeight:1.6 }}>{f.desc}</p>
+            </div>
           ))}
         </div>
+
+        {/* Testimonials / stats */}
+        <div style={{ marginTop:80, display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:24, textAlign:"center" }}>
+          {[["∞","Événements supportés"],["5","Langues disponibles"],["🤖","IA intégrée"]].map(([v,l])=>(
+            <div key={l} style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:16, padding:"32px 20px" }}>
+              <div style={{ fontSize:36, color:C.gold, fontWeight:700, marginBottom:8 }}>{v}</div>
+              <div style={{ color:C.muted, fontSize:13 }}>{l}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* CTA final */}
+        <div style={{ marginTop:80, textAlign:"center", background:C.card, border:`1px solid ${C.border}`, borderRadius:24, padding:"60px 40px" }}>
+          <h2 style={{ fontSize:28, fontWeight:400, margin:"0 0 16px" }}>Prêt à organiser votre événement ?</h2>
+          <p style={{ color:C.muted, fontSize:14, marginBottom:36 }}>Rejoignez les organisateurs qui font confiance à TableMaître.</p>
+          <button onClick={onLogin} style={{
+            display:"inline-flex", alignItems:"center", gap:12, padding:"16px 36px",
+            background:`linear-gradient(135deg,${C.gold},#E8C46A)`, border:"none", borderRadius:99,
+            cursor:"pointer", fontFamily:"Georgia,serif", fontWeight:700, color:C.dark, fontSize:15,
+            boxShadow:`0 8px 24px ${C.gold}44`,
+          }}>
+            <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#1a0e08" opacity=".5" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.3 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.1 7.9 3l5.7-5.7C34.5 6.5 29.5 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.6-.4-3.9z"/></svg>
+            Se connecter avec Google — c'est gratuit
+          </button>
+        </div>
+
+        <p style={{ textAlign:"center", color:C.muted+"66", fontSize:11, marginTop:40 }}>
+          © {new Date().getFullYear()} TableMaître · Propulsé par Anthropic Claude IA
+        </p>
       </div>
     </div>
   );
@@ -2094,57 +2152,77 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
 
   return (
     <div style={{ minHeight:"100vh", background:`linear-gradient(160deg,${C.dark},#1a0e08)`, fontFamily:"Georgia,serif", color:C.cream }}>
-      {/* Header */}
-      <div style={{ background:C.card, borderBottom:`1px solid ${C.border}`, padding:"0 24px", display:"flex", alignItems:"center", height:56, position:"sticky", top:0, zIndex:100, gap:12, flexWrap:"wrap" }}>
-        <button onClick={onBack} style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:13,fontFamily:"inherit" }}>{t.back}</button>
-        <span style={{ color:C.border }}>|</span>
-        <span style={{ fontSize:20 }}>{theme.icon}</span>
-        <span style={{ color:C.cream, fontSize:16, fontWeight:400 }}>{ev.name}</span>
-        <Badge color={theme.color}>{theme.label}</Badge>
-        <div style={{flex:1}}/>
-        <Btn small variant="ghost" onClick={()=>setShowQR(true)}>📱 QR Code</Btn>
-        <Btn small variant="ghost" onClick={() => {
-          // Inclure userId dans l'URL pour permettre la lecture sans auth
-          var fb = getFirebase();
-          var uid = fb && fb.auth && fb.auth.currentUser ? fb.auth.currentUser.uid : "";
-          var joinParam = uid ? uid + "___" + ev.id : ev.id;
-          var url = window.location.origin + "/?join=" + joinParam;
-          if (navigator.share) {
-            navigator.share({ title: ev.name, url: url }).catch(function() {
-              // User cancelled or share failed - fallback to clipboard
-              navigator.clipboard.writeText(url).then(function(){ setEditorSaveToast(true); });
-            });
-          } else { 
-            navigator.clipboard.writeText(url).then(function(){ setEditorSaveToast(true); }); 
-          }
-        }}>🔗 Partager</Btn>
-        <Btn small variant="success" onClick={()=>printPlaceCards(ev)}>{t.placeCards}</Btn>
-        <Btn small variant="ghost" onClick={()=>printFloorPlan(ev)}>{t.floorPlan}</Btn>
-        <Btn small onClick={autoPlace} style={{opacity:aiPlacing?0.7:1}}>{aiPlacing?"🤖 IA en cours...":t.autoPlace}</Btn>
-        <Btn small variant="ghost" onClick={()=>{setAiAssistOpen(o=>!o);}} style={{background:aiAssistOpen?C.gold+"33":"none",border:`1px solid ${aiAssistOpen?C.gold:C.border}`}}>🤖 Assistant IA</Btn>
-        <button onClick={()=>setShowSettings(true)} style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:18 }}>⚙</button>
+      {/* Header épuré */}
+      <div style={{ background:C.card+"f8", backdropFilter:"blur(10px)", borderBottom:`1px solid ${C.border}`, padding:"0 20px", display:"flex", alignItems:"center", height:54, position:"sticky", top:0, zIndex:100, gap:10 }}>
+        {/* Retour + titre */}
+        <button onClick={onBack} style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:13,fontFamily:"inherit",display:"flex",alignItems:"center",gap:4,padding:"6px 0",whiteSpace:"nowrap" }}>
+          ← <span style={{display:"none"}}>{t.back}</span>
+        </button>
+        <div style={{ width:1, height:24, background:C.border }}/>
+        <div style={{ display:"flex", alignItems:"center", gap:8, flex:1, minWidth:0 }}>
+          <div style={{ width:30,height:30,borderRadius:8,background:theme.color+"22",border:`1px solid ${theme.color}44`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:16,flexShrink:0 }}>{theme.icon}</div>
+          <div style={{ minWidth:0 }}>
+            <div style={{ color:C.cream, fontSize:14, fontWeight:600, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{ev.name}</div>
+            <div style={{ color:theme.color, fontSize:10, letterSpacing:.5 }}>
+              {theme.label}
+              {ev.date && (() => {
+                const d = Math.ceil((new Date(ev.date)-new Date())/86400000);
+                return d>=0 ? <span style={{color:d<=7?C.red:d<=30?"#E8845A":C.muted, marginLeft:8}}>· J−{d}</span> : <span style={{color:C.muted,marginLeft:8}}>· passé</span>;
+              })()}
+            </div>
+          </div>
+        </div>
+        {/* Groupe Partage */}
+        <div style={{ display:"flex", gap:6, alignItems:"center" }}>
+          <button onClick={()=>setShowQR(true)} style={{ background:"none",border:`1px solid ${C.border}`,borderRadius:8,color:C.muted,cursor:"pointer",fontSize:12,padding:"6px 10px",fontFamily:"inherit" }}>📱 QR</button>
+          <button onClick={()=>{ var fb=getFirebase(); var uid=fb&&fb.auth&&fb.auth.currentUser?fb.auth.currentUser.uid:""; var joinParam=uid?uid+"___"+ev.id:ev.id; var url=window.location.origin+"/?join="+joinParam; if(navigator.share){navigator.share({title:ev.name,url}).catch(()=>navigator.clipboard.writeText(url));}else{navigator.clipboard.writeText(url);} }}
+            style={{ background:"none",border:`1px solid ${C.border}`,borderRadius:8,color:C.muted,cursor:"pointer",fontSize:12,padding:"6px 10px",fontFamily:"inherit" }}>🔗</button>
+        </div>
+        <div style={{ width:1, height:24, background:C.border }}/>
+        {/* Groupe Actions */}
+        <div style={{ display:"flex", gap:6, alignItems:"center" }}>
+          <button onClick={()=>printPlaceCards(ev)} style={{ background:C.green+"22",border:`1px solid ${C.green}44`,borderRadius:8,color:C.green,cursor:"pointer",fontSize:12,padding:"6px 12px",fontFamily:"inherit",fontWeight:600 }}>🖨 Chevalets</button>
+          <button onClick={()=>printFloorPlan(ev)} style={{ background:"none",border:`1px solid ${C.border}`,borderRadius:8,color:C.muted,cursor:"pointer",fontSize:12,padding:"6px 10px",fontFamily:"inherit" }}>📄 PDF</button>
+          <button onClick={autoPlace} disabled={aiPlacing} style={{ background:aiPlacing?"none":C.gold,border:`1px solid ${aiPlacing?C.border:C.gold}`,borderRadius:8,color:aiPlacing?C.muted:C.dark,cursor:"pointer",fontSize:12,padding:"6px 12px",fontFamily:"inherit",fontWeight:700,opacity:aiPlacing?.7:1 }}>
+            {aiPlacing?"⏳ IA…":"✨ Auto-placer"}
+          </button>
+          <button onClick={()=>setAiAssistOpen(o=>!o)} style={{ background:aiAssistOpen?C.gold+"33":"none",border:`1px solid ${aiAssistOpen?C.gold:C.border}`,borderRadius:8,color:aiAssistOpen?C.gold:C.muted,cursor:"pointer",fontSize:12,padding:"6px 10px",fontFamily:"inherit" }}>🤖</button>
+          <button onClick={()=>setShowSettings(true)} style={{ background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:16,padding:"6px" }}>⚙</button>
+        </div>
       </div>
 
       {/* Notes bar */}
       {ev.notes && (
-        <div style={{ background:C.gold+"11", borderBottom:`1px solid ${C.gold}22`, padding:"8px 24px", fontSize:12, color:C.muted, fontStyle:"italic" }}>
-          {t.note} {ev.notes}
+        <div style={{ background:C.gold+"11", borderBottom:`1px solid ${C.gold}22`, padding:"6px 24px", fontSize:12, color:C.muted, fontStyle:"italic" }}>
+          📝 {ev.notes}
         </div>
       )}
-      {/* Stats bar */}
-      <div style={{ background:C.mid+"55", borderBottom:`1px solid ${C.border}`, padding:"10px 24px", display:"flex", gap:24, overflowX:"auto" }}>
+      {/* Stats bar — KPIs */}
+      <div style={{ background:C.mid+"44", borderBottom:`1px solid ${C.border}`, padding:"0 24px", display:"flex", gap:0, overflowX:"auto" }}>
         {[
-          {label:t.statTables,    val:ev.tables.length,  color:C.gold},
-          {label:t.statGuests,   val:ev.guests.length,  color:C.gold},
-          {label:t.statSeated,    val:seated.length,     color:C.green},
-          {label:t.statWaiting,val:unseated.length,   color:unseated.length>0?C.red:C.green},
-          {label:t.statDiets, val:dietStats.reduce((s,d)=>s+d.count,0), color:C.blue},
+          {label:t.statTables, val:ev.tables.length, color:C.gold, icon:"🪑"},
+          {label:t.statGuests, val:ev.guests.length, color:C.gold, icon:"👥"},
+          {label:t.statSeated, val:seated.length, color:C.green, icon:"✅"},
+          {label:t.statWaiting, val:unseated.length, color:unseated.length>0?C.red:C.green, icon:unseated.length>0?"⚠":"✓"},
+          {label:"RSVP ✓", val:ev.guests.filter(g=>g.rsvp==="confirmed").length, color:C.green, icon:"💌"},
+          {label:t.statDiets, val:dietStats.reduce((s,d)=>s+d.count,0), color:C.blue, icon:"🍽"},
         ].map(s=>(
-          <div key={s.label} style={{ textAlign:"center", minWidth:80 }}>
-            <div style={{ fontSize:20, fontWeight:700, color:s.color }}>{s.val}</div>
-            <div style={{ fontSize:10, color:C.muted, letterSpacing:.5 }}>{s.label}</div>
+          <div key={s.label} style={{ textAlign:"center", padding:"10px 20px", borderRight:`1px solid ${C.border}`, minWidth:80 }}>
+            <div style={{ fontSize:17, fontWeight:700, color:s.color }}>{s.val}</div>
+            <div style={{ fontSize:9, color:C.muted, letterSpacing:.5, marginTop:2 }}>{s.label}</div>
           </div>
         ))}
+        {ev.date && (() => {
+          const d = Math.ceil((new Date(ev.date)-new Date())/86400000);
+          return (
+            <div style={{ textAlign:"center", padding:"10px 20px", marginLeft:"auto" }}>
+              <div style={{ fontSize:17, fontWeight:700, color:d<=0?C.muted:d<=7?C.red:d<=30?"#E8845A":C.gold }}>
+                {d<=0?"Passé":d===0?"Auj.":"J−"+d}
+              </div>
+              <div style={{ fontSize:9, color:C.muted, letterSpacing:.5, marginTop:2 }}>COMPTE À REBOURS</div>
+            </div>
+          );
+        })()}
       </div>
 
       {/* Tab bar */}
@@ -4219,8 +4297,16 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
   const [showVoucher, setShowVoucher] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [newEv, setNewEv] = useState({ name:"", date:"", type:"mariage" });
-
   const [globalSearch, setGlobalSearch] = useState("");
+  const [showUpgrade, setShowUpgrade] = useState(false);
+  const [toast, setToast] = useState(null); // {msg, type}
+  const [deleteConfirm, setDeleteConfirm] = useState(null);
+
+  const showToast = (msg, type="success") => {
+    setToast({msg, type});
+    setTimeout(()=>setToast(null), 3000);
+  };
+
   var myEventsRaw = events.filter(function(ev2){ return ev2.ownerId === user.id; });
   var myEvents = !globalSearch ? myEventsRaw : myEventsRaw.filter(function(ev2){
     var q = globalSearch.toLowerCase();
@@ -4229,12 +4315,8 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
       (ev2.guests||[]).some(function(g2){ return g2.name.toLowerCase().includes(q) || (g2.email||"").toLowerCase().includes(q); });
   });
 
-  const [showUpgrade, setShowUpgrade] = useState(false);
-  const [saveToast, setSaveToast] = useState(false);
-
   function createEvent() {
     if (!newEv.name) return;
-    // Limite freemium : 1 événement sans voucher
     if (!appliedVoucher && myEvents.length >= 1) {
       setShowNew(false);
       setShowUpgrade(true);
@@ -4248,200 +4330,270 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
       tables:[], guests:[], constraints:[], menu:null,
     };
     setEvents(prev=>[...prev,ev]);
+    showToast(`✅ "${ev.name}" créé !`);
     onOpenEvent(ev.id);
     setShowNew(false);
   }
 
   const handleApplyVoucher = (code, voucher) => {
     setAppliedVoucher({ code, ...voucher });
+    showToast(`🎟️ Code "${code}" appliqué !`);
   };
 
+  // Calculs stats globales
+  const totalGuests = myEventsRaw.reduce((s,e)=>s+(e.guests||[]).length,0);
+  const totalTables = myEventsRaw.reduce((s,e)=>s+(e.tables||[]).length,0);
+  const nextEvent = myEventsRaw.filter(e=>e.date && new Date(e.date)>=new Date()).sort((a,b)=>new Date(a.date)-new Date(b.date))[0];
 
   return (
-    <div style={{ minHeight:"100vh", background:`radial-gradient(ellipse at 20% 30%,#2a1a0e,${C.dark})`, fontFamily:"Georgia,serif", color:C.cream }}>
-      {/* Nav */}
-      <div style={{ background:C.card, borderBottom:`1px solid ${C.border}`, padding:"0 32px", display:"flex", alignItems:"center", height:60, position:"sticky", top:0, zIndex:100 }}>
-        <span style={{ fontSize:20, color:C.gold, letterSpacing:1 }}>🪑 TableMaître</span>
+    <div style={{ minHeight:"100vh", background:`radial-gradient(ellipse at 20% 0%, #2a1a0e 0%, ${C.dark} 55%)`, fontFamily:"Georgia,serif", color:C.cream }}>
+
+      {/* Toast global */}
+      {toast && (
+        <div style={{
+          position:"fixed", top:20, left:"50%", transform:"translateX(-50%)",
+          zIndex:999, background:toast.type==="error"?C.red:C.card,
+          border:`1px solid ${toast.type==="error"?C.red:C.gold}66`,
+          borderRadius:12, padding:"12px 24px", fontSize:13, color:C.cream,
+          boxShadow:"0 8px 32px #00000066",
+          animation:"fadeInDown .25s ease",
+        }}>
+          {toast.msg}
+        </div>
+      )}
+
+      {/* NAV */}
+      <div style={{ background:C.card+"ee", backdropFilter:"blur(8px)", borderBottom:`1px solid ${C.border}`, padding:"0 32px", display:"flex", alignItems:"center", height:60, position:"sticky", top:0, zIndex:100 }}>
+        <span style={{ fontSize:18, color:C.gold, letterSpacing:2, fontWeight:400 }}>🪑 TableMaître</span>
         <div style={{flex:1}}/>
-        <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-          {user.photoURL ? (
-            <img src={user.photoURL} alt={user.name} style={{ width:32,height:32,borderRadius:"50%",objectFit:"cover",border:`2px solid ${C.gold}44` }}/>
-          ) : (
-            <div style={{ width:32,height:32,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:C.gold,fontSize:13,fontWeight:700 }}>
-              {user.avatar}
-            </div>
-          )}
-          <span style={{ color:C.muted, fontSize:13 }}>{user.name.split(" ")[0]}</span>
-          {/* Sélecteur de langue */}
-          <div style={{ position:"relative" }}>
-            <select
-              value={lang}
-              onChange={e => setLang(e.target.value)}
-              aria-label="Language / Langue"
-              style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:8, color:C.muted, cursor:"pointer", fontSize:13, padding:"6px 8px", fontFamily:"inherit", outline:"none" }}
-            >
-              {Object.entries(LANG_FLAGS).map(([code, flag]) => (
-                <option key={code} value={code}>{flag} {LANG_NAMES[code]}</option>
-              ))}
-            </select>
+        <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+          <select value={lang} onChange={e=>setLang(e.target.value)} style={{ background:"none", border:`1px solid ${C.border}`, borderRadius:8, color:C.muted, cursor:"pointer", fontSize:12, padding:"5px 8px", fontFamily:"inherit", outline:"none" }}>
+            {Object.entries(LANG_FLAGS).map(([code, flag]) => (<option key={code} value={code}>{flag} {LANG_NAMES[code]}</option>))}
+          </select>
+          <button onClick={onToggleTheme} style={{ padding:"6px 10px", background:"none", border:`1px solid ${C.border}`, borderRadius:8, color:C.muted, cursor:"pointer", fontSize:15 }}>
+            {lightMode ? "🌙" : "☀️"}
+          </button>
+          <button onClick={()=>setShowVoucher(true)} style={{ padding:"6px 14px", background:"none", border:`1px solid ${C.gold}`, borderRadius:8, color:C.gold, cursor:"pointer", fontSize:12, fontFamily:"inherit", display:"flex", alignItems:"center", gap:6 }}>
+            🎟️ Code promo{appliedVoucher && <span style={{background:C.gold,color:C.dark,borderRadius:4,padding:"1px 5px",fontSize:10,fontWeight:700}}>✓</span>}
+          </button>
+          <div style={{ display:"flex", alignItems:"center", gap:8, padding:"4px 10px", background:C.mid, borderRadius:99 }}>
+            {user.photoURL
+              ? <img src={user.photoURL} alt="" style={{ width:26,height:26,borderRadius:"50%",objectFit:"cover" }}/>
+              : <div style={{ width:26,height:26,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:C.gold,fontSize:11,fontWeight:700 }}>{user.avatar}</div>
+            }
+            <span style={{ color:C.muted, fontSize:12 }}>{user.name.split(" ")[0]}</span>
           </div>
-          <button onClick={onToggleTheme}
-            title={lightMode?t.darkMode:t.lightMode}
-            aria-label={lightMode?t.darkMode:t.lightMode}
-            style={{ padding:"6px 10px", background:"none", border:`1px solid ${C.border}`, borderRadius:8, color:C.muted, cursor:"pointer", fontSize:16 }}>
-            <span aria-hidden="true">{lightMode ? "🌙" : "☀️"}</span>
-          </button>
-          <button
-            onClick={() => setShowVoucher(true)}
-            style={{ padding:"6px 14px", background:"none", border:`1px solid ${C.gold}`, borderRadius:8, color:C.gold, cursor:"pointer", fontSize:12, fontFamily:"Georgia,serif", display:"flex", alignItems:"center", gap:6 }}
-          >
-            🎟️ Code promo{appliedVoucher && <span style={{background:C.gold,color:C.dark,borderRadius:4,padding:"1px 6px",fontSize:11,fontWeight:700}}>✓</span>}
-          </button>
-          <Btn variant="muted" small onClick={onLogout}>Déconnexion</Btn>
+          <button onClick={onLogout} style={{ background:"none", border:`1px solid ${C.border}`, borderRadius:8, color:C.muted, cursor:"pointer", fontSize:12, padding:"6px 12px", fontFamily:"inherit" }}>Déconnexion</button>
         </div>
       </div>
 
-      <div style={{ maxWidth:1000, margin:"0 auto", padding:"48px 20px" }}>
-        {/* Hero */}
-        <div style={{ marginBottom:48, textAlign:"center" }}>
-          <h1 style={{ fontSize:36, fontWeight:400, margin:"0 0 8px", letterSpacing:1 }}>{t.myEvents}</h1>
-          <p style={{ color:C.muted, margin:0, fontSize:14 }}>{t.welcome}, {user.name}</p>
+      <div style={{ maxWidth:1100, margin:"0 auto", padding:"48px 24px" }}>
+
+        {/* HERO row */}
+        <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:40, flexWrap:"wrap", gap:20 }}>
+          <div>
+            <h1 style={{ fontSize:32, fontWeight:400, margin:"0 0 6px", letterSpacing:.5 }}>
+              Bonjour, <span style={{ color:C.gold }}>{user.name.split(" ")[0]}</span> 👋
+            </h1>
+            <p style={{ color:C.muted, margin:0, fontSize:14 }}>
+              {myEventsRaw.length === 0 ? "Prêt à créer votre premier événement ?" : `${myEventsRaw.length} événement${myEventsRaw.length>1?"s":""} · ${totalGuests} invités · ${totalTables} tables`}
+            </p>
+          </div>
+          <Btn onClick={()=>setShowNew(true)} style={{ fontSize:14, padding:"12px 28px" }}>+ Nouvel événement</Btn>
         </div>
 
-        <div style={{ display:"flex", gap:12, marginBottom:24, alignItems:"center" }}>
-          <input
-            value={globalSearch}
-            onChange={e=>setGlobalSearch(e.target.value)}
-            placeholder={t.searchPlaceholder}
-            aria-label={t.searchPlaceholder}
-            role="searchbox"
-            style={{ flex:1, padding:"10px 16px", background:C.card, border:`1px solid ${C.border}`, borderRadius:12, color:C.cream, fontSize:14, fontFamily:"Georgia,serif", outline:"none" }}
-          />
-          <Btn onClick={()=>setShowNew(true)}>{t.newEvent}</Btn>
-        </div>
-
-        {myEvents.length===0 && (
-          <div style={{ textAlign:"center", padding:"80px 20px", color:C.muted }}>
-            <div style={{ fontSize:56, marginBottom:16 }}>🪑</div>
-            <p style={{ fontSize:18 }}>Aucun événement pour le moment</p>
-            <Btn onClick={()=>setShowNew(true)} style={{ marginTop:20 }}>Créer mon premier événement</Btn>
+        {/* KPI bar si on a des events */}
+        {myEventsRaw.length > 0 && nextEvent && (
+          <div style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:16, padding:"16px 24px", marginBottom:32, display:"flex", gap:32, alignItems:"center", flexWrap:"wrap" }}>
+            <div>
+              <div style={{ color:C.muted, fontSize:11, letterSpacing:1, marginBottom:4 }}>PROCHAIN ÉVÉNEMENT</div>
+              <div style={{ color:C.cream, fontSize:15, fontWeight:600 }}>{nextEvent.name}</div>
+            </div>
+            <div style={{ width:1, height:36, background:C.border }}/>
+            {(() => {
+              const days = Math.ceil((new Date(nextEvent.date)-new Date())/86400000);
+              return (
+                <div>
+                  <div style={{ color:C.muted, fontSize:11, letterSpacing:1, marginBottom:4 }}>COMPTE À REBOURS</div>
+                  <div style={{ color:days<=7?C.red:days<=30?"#E8845A":C.gold, fontSize:22, fontWeight:700 }}>
+                    {days===0?"Aujourd'hui !":days<0?"Passé":`J−${days}`}
+                  </div>
+                </div>
+              );
+            })()}
+            <div style={{ width:1, height:36, background:C.border }}/>
+            <div>
+              <div style={{ color:C.muted, fontSize:11, letterSpacing:1, marginBottom:4 }}>RSVP</div>
+              <div style={{ display:"flex", gap:10, alignItems:"center" }}>
+                <span style={{ color:C.green, fontSize:14, fontWeight:700 }}>✅ {(nextEvent.guests||[]).filter(g=>g.rsvp==="confirmed").length}</span>
+                <span style={{ color:C.gold, fontSize:14 }}>⏳ {(nextEvent.guests||[]).filter(g=>!g.rsvp||g.rsvp==="pending").length}</span>
+                <span style={{ color:C.red, fontSize:14 }}>❌ {(nextEvent.guests||[]).filter(g=>g.rsvp==="declined").length}</span>
+              </div>
+            </div>
+            <div style={{ flex:1 }}/>
+            <Btn small onClick={()=>onOpenEvent(nextEvent.id)}>Ouvrir →</Btn>
           </div>
         )}
 
-        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))", gap:20 }}>
+        {/* Search */}
+        <div style={{ position:"relative", marginBottom:28 }}>
+          <span style={{ position:"absolute", left:16, top:"50%", transform:"translateY(-50%)", color:C.muted, fontSize:16, pointerEvents:"none" }}>🔍</span>
+          <input value={globalSearch} onChange={e=>setGlobalSearch(e.target.value)} placeholder="Rechercher un événement ou un invité…"
+            style={{ width:"100%", padding:"12px 16px 12px 44px", background:C.card, border:`1px solid ${C.border}`, borderRadius:12, color:C.cream, fontSize:14, fontFamily:"Georgia,serif", outline:"none", boxSizing:"border-box" }}/>
+          {globalSearch && <button onClick={()=>setGlobalSearch("")} style={{ position:"absolute", right:14, top:"50%", transform:"translateY(-50%)", background:"none", border:"none", color:C.muted, cursor:"pointer", fontSize:16 }}>✕</button>}
+        </div>
+
+        {/* ONBOARDING vide */}
+        {myEvents.length === 0 && !globalSearch && (
+          <div style={{ textAlign:"center", padding:"80px 20px" }}>
+            <div style={{ fontSize:64, marginBottom:20 }}>🎊</div>
+            <h2 style={{ fontSize:24, fontWeight:400, color:C.gold, marginBottom:12 }}>Créez votre premier événement</h2>
+            <p style={{ color:C.muted, fontSize:14, maxWidth:400, margin:"0 auto 32px", lineHeight:1.7 }}>
+              Plan de table, invités, budget, programme… tout est ici. Commencez en 30 secondes.
+            </p>
+            <div style={{ display:"flex", justifyContent:"center", gap:16, flexWrap:"wrap", marginBottom:40 }}>
+              {["1. Créez votre événement","2. Ajoutez vos invités","3. Placez-les sur le plan"].map((step,i)=>(
+                <div key={i} style={{ background:C.card, border:`1px solid ${C.border}`, borderRadius:12, padding:"14px 20px", fontSize:13, color:C.muted, display:"flex", alignItems:"center", gap:8 }}>
+                  <span style={{ width:24, height:24, borderRadius:"50%", background:C.gold+"22", color:C.gold, display:"flex", alignItems:"center", justifyContent:"center", fontSize:12, fontWeight:700, flexShrink:0 }}>{i+1}</span>
+                  {step.replace(/^\d\. /,"")}
+                </div>
+              ))}
+            </div>
+            <Btn onClick={()=>setShowNew(true)} style={{ fontSize:15, padding:"14px 36px" }}>✨ Créer mon premier événement</Btn>
+          </div>
+        )}
+
+        {myEvents.length === 0 && globalSearch && (
+          <div style={{ textAlign:"center", padding:"60px 20px", color:C.muted }}>
+            <div style={{ fontSize:48, marginBottom:16 }}>🔍</div>
+            <p>Aucun résultat pour «&nbsp;{globalSearch}&nbsp;»</p>
+          </div>
+        )}
+
+        {/* GRILLE ÉVÉNEMENTS */}
+        <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(300px,1fr))", gap:20 }}>
           {myEvents.map(ev=>{
-            const theme=THEMES_CONFIG[ev.type]||THEMES_CONFIG.autre;
-            const unseated=ev.guests.filter(g=>!g.tableId).length;
+            const theme = THEMES_CONFIG[ev.type]||THEMES_CONFIG.autre;
+            const unseated = (ev.guests||[]).filter(g=>!g.tableId).length;
+            const rsvpConf = (ev.guests||[]).filter(g=>g.rsvp==="confirmed").length;
+            const rsvpPend = (ev.guests||[]).filter(g=>!g.rsvp||g.rsvp==="pending").length;
+            const days = ev.date ? Math.ceil((new Date(ev.date)-new Date())/86400000) : null;
+            const placementPct = ev.guests.length > 0 ? Math.round((ev.guests.filter(g=>g.tableId).length/ev.guests.length)*100) : 0;
+            const budgetTotal = (ev.budget||[]).reduce((s,b)=>s+(parseFloat(b.estimated)||0),0);
+            const budgetSpent = (ev.budget||[]).reduce((s,b)=>s+(parseFloat(b.actual)||0),0);
+
             return (
-              <div key={ev.id} onClick={()=>onOpenEvent(ev.id)} style={{
-                background:C.card, border:`1px solid ${C.border}`, borderRadius:18, padding:24,
-                cursor:"pointer", transition:"all .2s",
-                boxShadow:`0 4px 20px ${theme.color}11`,
-              }}
-              onMouseEnter={e=>{e.currentTarget.style.borderColor=theme.color+"66";e.currentTarget.style.transform="translateY(-2px)";}}
-              onMouseLeave={e=>{e.currentTarget.style.borderColor=C.border;e.currentTarget.style.transform="translateY(0)";}}>
-                {/* Theme color bar */}
-                <div style={{ height:3, background:`linear-gradient(90deg,${theme.color},${theme.color}44)`, borderRadius:99, marginBottom:20 }}/>
-                <div style={{ display:"flex", alignItems:"start", justifyContent:"space-between", marginBottom:12 }}>
-                  <span style={{ fontSize:32 }}>{theme.icon}</span>
-                  <Badge color={theme.color}>{theme.label}</Badge>
-                </div>
-                <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:4 }}>
-                  <h3 style={{ color:C.cream, margin:0, fontSize:18, fontWeight:400 }}>{ev.name}</h3>
-                  <button onClick={e=>{e.stopPropagation();const copy={...ev,id:Date.now(),name:ev.name+" (copie)",ownerId:user.id};setEvents(prev=>[...prev,copy]);}}
-                    title="Dupliquer cet événement"
-                    aria-label={`Dupliquer l'événement ${ev.name}`}
-                    style={{background:"none",border:`1px solid ${C.border}`,borderRadius:8,color:C.muted,cursor:"pointer",fontSize:12,padding:"3px 8px",fontFamily:"inherit"}}>
-                    <span aria-hidden="true">⧉</span>
-                  </button>
-                </div>
-                <p style={{ color:C.muted, margin:"0 0 16px", fontSize:12 }}>
-                  {ev.date}
-                  {(() => {
-                    const days = Math.ceil((new Date(ev.date) - new Date()) / 86400000);
-                    if (days < 0) return <span style={{color:C.muted,marginLeft:8}}>— passé</span>;
-                    if (days === 0) return <span style={{color:C.green,marginLeft:8,fontWeight:700}}>• Aujourd'hui !</span>;
-                    if (days <= 7) return <span style={{color:C.red,marginLeft:8,fontWeight:700}}>• {t ? t.inDays : "In"} {days}{t ? t.days : "d"}</span>;
-                    if (days <= 30) return <span style={{color:"#E8845A",marginLeft:8}}>• {t ? t.inDays : "In"} {days}{t ? t.days : "d"}</span>;
-                    return <span style={{color:C.muted,marginLeft:8}}>• {t ? t.inDays : "In"} {days}{t ? t.days : "d"}</span>;
-                  })()}
-                </p>
-                <div style={{ display:"flex", gap:16, fontSize:12, color:C.muted }}>
-                  <span>🪑 {ev.tables.length} {t.tables}</span>
-                  <span>👤 {ev.guests.length} {t.guests}</span>
-                  {unseated>0 && <span style={{ color:C.red }}>⚠ {unseated} {t.unseated}</span>}
-                  {globalSearch && ev.guests.some(g3=>g3.name.toLowerCase().includes(globalSearch.toLowerCase())) && (
-                    <span style={{color:C.gold}}>✦ {ev.guests.filter(g3=>g3.name.toLowerCase().includes(globalSearch.toLowerCase())).length} invité(s) trouvé(s)</span>
-                  )}
-                </div>
-                {ev.guests.length > 0 && (() => {
-                  const placed = ev.guests.filter(g => g.tableId).length;
-                  const pct = Math.round(placed / ev.guests.length * 100);
-                  const barCol = pct === 100 ? C.green : pct > 50 ? C.gold : C.red;
-                  return (
-                    <div style={{ marginTop:12 }}>
-                      <div style={{ display:"flex", justifyContent:"space-between", fontSize:10, color:C.muted, marginBottom:4 }}>
-                        <span>{t.placement}</span>
-                        <span style={{color:barCol, fontWeight:700}}>{pct}%</span>
+              <div key={ev.id} onClick={()=>onOpenEvent(ev.id)}
+                onMouseEnter={e=>{e.currentTarget.style.transform="translateY(-4px)";e.currentTarget.style.boxShadow=`0 16px 40px ${theme.color}22`;}}
+                onMouseLeave={e=>{e.currentTarget.style.transform="";e.currentTarget.style.boxShadow=`0 4px 20px ${theme.color}0d`;}}
+                style={{
+                  background:C.card, borderRadius:20, overflow:"hidden", cursor:"pointer",
+                  border:`1px solid ${C.border}`, transition:"all .2s",
+                  boxShadow:`0 4px 20px ${theme.color}0d`,
+                }}>
+                {/* Cover band */}
+                <div style={{ height:6, background:`linear-gradient(90deg,${theme.color},${theme.color}88,transparent)` }}/>
+
+                <div style={{ padding:"20px 22px" }}>
+                  {/* Top row */}
+                  <div style={{ display:"flex", alignItems:"start", justifyContent:"space-between", marginBottom:14 }}>
+                    <div style={{ display:"flex", alignItems:"center", gap:10 }}>
+                      <div style={{ width:44, height:44, borderRadius:12, background:theme.color+"22", border:`1px solid ${theme.color}44`, display:"flex", alignItems:"center", justifyContent:"center", fontSize:22 }}>
+                        {theme.icon}
                       </div>
-                      <div style={{ height:4, background:C.mid, borderRadius:99 }}>
-                        <div style={{ height:"100%", width:`${pct}%`, background:barCol, borderRadius:99, transition:"width .4s" }}/>
+                      <div>
+                        <div style={{ color:C.cream, fontSize:16, fontWeight:600, marginBottom:1 }}>{ev.name}</div>
+                        <div style={{ color:theme.color, fontSize:11, letterSpacing:.5 }}>{theme.label}</div>
                       </div>
                     </div>
-                  );
-                })()}
+                    <div style={{ display:"flex", gap:6, alignItems:"center" }}>
+                      {days !== null && (
+                        <div style={{ background:days<=0?C.red+"22":days<=7?C.red+"22":days<=30?"#E8845A22":C.gold+"22", border:`1px solid ${days<=7?C.red:days<=30?"#E8845A":C.gold}44`, borderRadius:8, padding:"4px 10px", fontSize:11, fontWeight:700, color:days<=7?C.red:days<=30?"#E8845A":C.gold }}>
+                          {days<=0?"Passé":days===0?"Auj.":"J−"+days}
+                        </div>
+                      )}
+                      <button onClick={e=>{e.stopPropagation();const copy={...ev,id:Date.now(),name:ev.name+" (copie)",ownerId:user.id};setEvents(prev=>[...prev,copy]);showToast("Événement dupliqué !");}}
+                        style={{background:"none",border:`1px solid ${C.border}`,borderRadius:8,color:C.muted,cursor:"pointer",fontSize:13,padding:"4px 8px"}}>⧉</button>
+                      <button onClick={e=>{e.stopPropagation();setDeleteConfirm(ev.id);}}
+                        style={{background:"none",border:`1px solid ${C.border}`,borderRadius:8,color:C.muted,cursor:"pointer",fontSize:13,padding:"4px 8px"}}>🗑</button>
+                    </div>
+                  </div>
+
+                  {/* Date */}
+                  <div style={{ color:C.muted, fontSize:12, marginBottom:16 }}>
+                    📅 {ev.date || "Date non définie"}
+                  </div>
+
+                  {/* Stats row */}
+                  <div style={{ display:"flex", gap:16, marginBottom:14, flexWrap:"wrap" }}>
+                    <span style={{ color:C.muted, fontSize:12 }}>🪑 {ev.tables.length} tables</span>
+                    <span style={{ color:C.muted, fontSize:12 }}>👤 {ev.guests.length} invités</span>
+                    {unseated>0 && <span style={{ color:C.red, fontSize:12 }}>⚠ {unseated} non placés</span>}
+                  </div>
+
+                  {/* Placement bar */}
+                  {ev.guests.length > 0 && (
+                    <div style={{ marginBottom:12 }}>
+                      <div style={{ display:"flex", justifyContent:"space-between", marginBottom:4 }}>
+                        <span style={{ color:C.muted, fontSize:10, letterSpacing:.5 }}>PLACEMENT</span>
+                        <span style={{ color:placementPct===100?C.green:C.gold, fontSize:10, fontWeight:700 }}>{placementPct}%</span>
+                      </div>
+                      <div style={{ height:4, background:C.mid, borderRadius:99, overflow:"hidden" }}>
+                        <div style={{ height:"100%", width:placementPct+"%", background:placementPct===100?C.green:`linear-gradient(90deg,${theme.color},${theme.color}88)`, borderRadius:99, transition:"width .4s" }}/>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* RSVP mini chips */}
+                  {ev.guests.length > 0 && (
+                    <div style={{ display:"flex", gap:8, marginBottom:12 }}>
+                      <span style={{ background:C.green+"22", border:`1px solid ${C.green}33`, borderRadius:6, padding:"3px 8px", fontSize:11, color:C.green }}>✅ {rsvpConf}</span>
+                      <span style={{ background:C.gold+"22", border:`1px solid ${C.gold}33`, borderRadius:6, padding:"3px 8px", fontSize:11, color:C.gold }}>⏳ {rsvpPend}</span>
+                      {budgetTotal>0 && <span style={{ background:C.blue+"22", border:`1px solid ${C.blue}33`, borderRadius:6, padding:"3px 8px", fontSize:11, color:C.blue, marginLeft:"auto" }}>💰 {budgetTotal.toLocaleString("fr-FR")} €</span>}
+                    </div>
+                  )}
+
+                  {/* Résultats de recherche */}
+                  {globalSearch && ev.guests.some(g=>g.name.toLowerCase().includes(globalSearch.toLowerCase())) && (
+                    <div style={{ background:C.gold+"11", border:`1px solid ${C.gold}22`, borderRadius:8, padding:"6px 10px", fontSize:11, color:C.gold }}>
+                      🔍 {ev.guests.filter(g=>g.name.toLowerCase().includes(globalSearch.toLowerCase())).map(g=>g.name).join(", ")}
+                    </div>
+                  )}
+                </div>
               </div>
             );
           })}
         </div>
       </div>
 
-      {showVoucher && <VoucherModal onClose={() => setShowVoucher(false)} onApply={handleApplyVoucher} />}
-      <div aria-live="polite" aria-atomic="true" style={{ position:"fixed", bottom:24, left:"50%", transform:"translateX(-50%)", zIndex:9999, pointerEvents:"none" }}>
-        {saveToast && (
-          <div style={{ background:"#1E1208", border:`1px solid ${C.green}`, borderRadius:10, padding:"10px 20px", display:"flex", alignItems:"center", gap:8, boxShadow:"0 4px 20px rgba(0,0,0,0.4)", fontSize:13, color:C.green }}>
-            {t.savedCloud}
+      {/* Modal suppression */}
+      {deleteConfirm && (
+        <div style={{ position:"fixed", inset:0, background:"#00000088", zIndex:200, display:"flex", alignItems:"center", justifyContent:"center" }} onClick={()=>setDeleteConfirm(null)}>
+          <div style={{ background:C.card, border:`1px solid ${C.red}44`, borderRadius:20, padding:32, maxWidth:360, width:"90%", textAlign:"center" }} onClick={e=>e.stopPropagation()}>
+            <div style={{ fontSize:40, marginBottom:12 }}>🗑</div>
+            <h3 style={{ color:C.cream, fontWeight:400, marginBottom:8 }}>Supprimer cet événement ?</h3>
+            <p style={{ color:C.muted, fontSize:13, marginBottom:24 }}>Cette action est irréversible. Toutes les données seront perdues.</p>
+            <div style={{ display:"flex", gap:12 }}>
+              <button onClick={()=>setDeleteConfirm(null)} style={{ flex:1, padding:"10px", background:"none", border:`1px solid ${C.border}`, borderRadius:10, color:C.muted, cursor:"pointer", fontFamily:"inherit", fontSize:13 }}>Annuler</button>
+              <button onClick={()=>{setEvents(prev=>prev.filter(e=>e.id!==deleteConfirm));showToast("Événement supprimé","error");setDeleteConfirm(null);}}
+                style={{ flex:1, padding:"10px", background:C.red, border:"none", borderRadius:10, color:"#fff", cursor:"pointer", fontFamily:"inherit", fontSize:13, fontWeight:700 }}>Supprimer</button>
+            </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
+
+      {/* Modals */}
+      {showVoucher && <VoucherModal onClose={()=>setShowVoucher(false)} onApply={handleApplyVoucher} t={t}/>}
       {showUpgrade && (
-        <div style={{ position:"fixed", inset:0, background:"rgba(0,0,0,0.8)", display:"flex", alignItems:"center", justifyContent:"center", zIndex:2000 }}>
-          <div style={{ background:C.card, border:`1px solid ${C.gold}`, borderRadius:20, padding:40, width:400, textAlign:"center", boxShadow:"0 20px 60px rgba(0,0,0,0.5)" }}>
-            <div style={{ fontSize:48, marginBottom:12 }}>⭐</div>
-            <h2 style={{ color:C.gold, margin:"0 0 8px", fontSize:22, fontWeight:400 }}>Passez au plan Pro</h2>
-            <p style={{ color:C.muted, fontSize:13, margin:"0 0 20px", lineHeight:1.7 }}>
-              Le plan gratuit est limité à <strong style={{color:C.cream}}>1 événement</strong>.<br/>
-              Activez un code promo ou passez Pro pour des événements illimités.
-            </p>
-            <div style={{ background:C.mid, borderRadius:12, padding:"16px 20px", marginBottom:20, textAlign:"left" }}>
-              {["Événements illimités","Invités illimités","Export CSV","QR codes","Chevalets imprimables"].map(f => (
-                <div key={f} style={{ display:"flex", alignItems:"center", gap:8, color:C.cream, fontSize:13, marginBottom:6 }}>
-                  <span style={{color:C.green}}>✓</span> {f}
-                </div>
-              ))}
-            </div>
-            <div style={{ display:"flex", gap:10 }}>
-              <button onClick={() => setShowUpgrade(false)} style={{ flex:1, padding:"12px", background:"none", border:`1px solid ${C.border}`, borderRadius:10, color:C.muted, cursor:"pointer", fontSize:13, fontFamily:"Georgia,serif" }}>
-                Rester gratuit
-              </button>
-              <button onClick={() => { setShowUpgrade(false); setShowVoucher(true); }} style={{ flex:2, padding:"12px", background:`linear-gradient(135deg,${C.gold},${C.gold2})`, border:"none", borderRadius:10, color:C.dark, cursor:"pointer", fontWeight:700, fontSize:14, fontFamily:"Georgia,serif" }}>
-                🎟️ Entrer un code promo
-              </button>
-            </div>
+        <Modal open={showUpgrade} onClose={()=>setShowUpgrade(false)} title="Passez Pro 🌟">
+          <p style={{color:C.muted,fontSize:14,lineHeight:1.7}}>Le plan gratuit est limité à 1 événement. Entrez un code promo ou passez Pro pour accès illimité.</p>
+          <div style={{display:"flex",gap:10,marginTop:20}}>
+            <Btn onClick={()=>{setShowUpgrade(false);setShowVoucher(true);}}>🎟️ J'ai un code promo</Btn>
+            <Btn variant="muted" onClick={()=>setShowUpgrade(false)}>Plus tard</Btn>
           </div>
-        </div>
+        </Modal>
       )}
-      {appliedVoucher && (
-        <div style={{ position:"fixed", bottom:24, right:24, background:C.card, border:`1px solid ${C.green}`, borderRadius:12, padding:"12px 20px", zIndex:500, display:"flex", alignItems:"center", gap:10, boxShadow:"0 4px 20px rgba(0,0,0,0.4)" }}>
-          <span style={{fontSize:18}}>🎟️</span>
-          <div>
-            <div style={{color:C.green, fontSize:12, fontWeight:700}}>Code appliqué : {appliedVoucher.code}</div>
-            <div style={{color:C.muted, fontSize:11}}>{appliedVoucher.description}</div>
-          </div>
-          <button onClick={() => setAppliedVoucher(null)} style={{background:"none",border:"none",color:C.muted,cursor:"pointer",fontSize:16,padding:0}}>×</button>
-        </div>
-      )}
-      <Modal open={showNew} onClose={()=>setShowNew(false)} title="Nouvel événement">
+      <Modal open={showNew} onClose={()=>setShowNew(false)} title="Nouvel événement ✨">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <Field label="NOM DE L'ÉVÉNEMENT *"><Input value={newEv.name} onChange={e=>setNewEv({...newEv,name:e.target.value})} placeholder="Mariage Dupont × Martin"/></Field>
           <Field label={t.settingDate}><Input type="date" value={newEv.date} onChange={e=>setNewEv({...newEv,date:e.target.value})}/></Field>
@@ -4457,13 +4609,12 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
               ))}
             </div>
           </Field>
-          <Btn onClick={createEvent} style={{marginTop:4}}>Créer l'événement</Btn>
+          <Btn onClick={createEvent} style={{marginTop:4}}>Créer l'événement →</Btn>
         </div>
       </Modal>
     </div>
   );
 }
-
 // ═══════════════════════════════════════════════════════════════
 // ROOT APP
 // ═══════════════════════════════════════════════════════════════
@@ -4523,10 +4674,23 @@ async function loadEventsFromFirestore(userId) {
 
 function LoadingScreen() {
   return (
-    <div style={{ minHeight:"100vh", background:`radial-gradient(ellipse at 30% 40%, #2a1a0e, #120C08)`, display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column", gap:16 }}>
-      <div style={{ fontSize:48 }}>🪑</div>
-      <div style={{ color:"#C9973A", fontSize:18, letterSpacing:2, fontFamily:"Georgia,serif" }}>TableMaître</div>
-      <div style={{ color:"#8A7355", fontSize:13 }}>Loading…</div>
+    <div style={{ minHeight:"100vh", background:`radial-gradient(ellipse at 30% 40%, #2a1a0e, #120C08)`, display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column", gap:20 }}>
+      <div style={{ position:"relative" }}>
+        <div style={{ width:80, height:80, borderRadius:"50%", border:`2px solid ${C.gold}22`, position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", animation:"pulse 2s ease-in-out infinite" }}/>
+        <div style={{ width:60, height:60, borderRadius:"50%", border:`2px solid ${C.gold}44`, position:"absolute", top:"50%", left:"50%", transform:"translate(-50%,-50%)", animation:"pulse 2s ease-in-out infinite .3s" }}/>
+        <div style={{ fontSize:40, position:"relative", zIndex:1 }}>🪑</div>
+      </div>
+      <div style={{ color:C.gold, fontSize:20, letterSpacing:3, fontFamily:"Georgia,serif" }}>TableMaître</div>
+      <div style={{ display:"flex", gap:6 }}>
+        {[0,1,2].map(i=>(
+          <div key={i} style={{ width:6, height:6, borderRadius:"50%", background:C.gold, opacity:.4, animation:`bounce 1s ease-in-out ${i*.15}s infinite` }}/>
+        ))}
+      </div>
+      <style>{`
+        @keyframes pulse { 0%,100%{transform:translate(-50%,-50%) scale(1);opacity:.3} 50%{transform:translate(-50%,-50%) scale(1.15);opacity:.7} }
+        @keyframes bounce { 0%,100%{transform:translateY(0);opacity:.4} 50%{transform:translateY(-6px);opacity:1} }
+        @keyframes fadeInDown { from{opacity:0;transform:translateX(-50%) translateY(-10px)} to{opacity:1;transform:translateX(-50%) translateY(0)} }
+      `}</style>
     </div>
   );
 }
