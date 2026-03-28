@@ -47,26 +47,26 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
   const [aiAssistLoading, setAiAssistLoading] = useState(false);
   // Budget
   const BUDGET_CATEGORIES = [
-    {id:"salle",label:"Salle / Lieu",icon:"🏛",
-    {id:"traiteur",label:"Traiteur",icon:"🍽",
-    {id:"boissons",label:"Boissons",icon:"🍷",
-    {id:"musique",label:"Musique / DJ",icon:"🎵",
-    {id:"fleurs",label:"Fleurs / Déco",icon:"💐",
-    {id:"photo",label:"Photo / Vidéo",icon:"📸",
-    {id:"transport",label:"Transport",icon:"🚌",
-    {id:"tenues",label:"Tenues",icon:"👗",
-    {id:"invitations",label:"Invitations",icon:"💌",
-    {id:"divers",label:"Divers",icon:"📦",
+    {id:"salle",label:"Salle / Lieu",icon:"🏛"},
+    {id:"traiteur",label:"Traiteur",icon:"🍽"},
+    {id:"boissons",label:"Boissons",icon:"🍷"},
+    {id:"musique",label:"Musique / DJ",icon:"🎵"},
+    {id:"fleurs",label:"Fleurs / Déco",icon:"💐"},
+    {id:"photo",label:"Photo / Vidéo",icon:"📸"},
+    {id:"transport",label:"Transport",icon:"🚌"},
+    {id:"tenues",label:"Tenues",icon:"👗"},
+    {id:"invitations",label:"Invitations",icon:"💌"},
+    {id:"divers",label:"Divers",icon:"📦"},
   ];
-  const [newBudgetLine, setNewBudgetLine] = useState({category:"salle",label:"",estimated:0,actual:0,paid:false,notes:"");
+  const [newBudgetLine, setNewBudgetLine] = useState({category:"salle",label:"",estimated:0,actual:0,paid:false,notes:""});
   const [showAddBudget, setShowAddBudget] = useState(false);
   // Planning
-  const [newTask, setNewTask] = useState({title:"",dueDate:"",responsible:"",priority:"medium",done:false,notes:"");
+  const [newTask, setNewTask] = useState({title:"",dueDate:"",responsible:"",priority:"medium",done:false,notes:""});
   const [showAddTask, setShowAddTask] = useState(false);
   // Programme
-  const [newProgramItem, setNewProgramItem] = useState({time:"",label:"",icon:"🎤",notes:"");
+  const [newProgramItem, setNewProgramItem] = useState({time:"",label:"",icon:"🎤",notes:""});
   const [showAddProgramItem, setShowAddProgramItem] = useState(false);
-  const [newSupplier, setNewSupplier] = useState({name:"",role:"",phone:"",email:"",notes:"");
+  const [newSupplier, setNewSupplier] = useState({name:"",role:"",phone:"",email:"",notes:""});
   const [showAddSupplier, setShowAddSupplier] = useState(false);
   const [showQR, setShowQR] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
@@ -85,7 +85,7 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
     if (tablesHistory.length === 0) return;
     const prev = tablesHistory[tablesHistory.length - 1];
     setTablesHistory(h => h.slice(0, -1));
-    updateEv(e => ({ ...e, tables: prev }));
+    updateEv(e => ({ ...e, tables: prev });
   };
 
   var theme = THEMES_CONFIG[ev.type]||THEMES_CONFIG.autre;
@@ -103,7 +103,7 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
   function updateEv(fn) { onUpdate(fn(ev)); }
   function addGuest() {
     if (!newGuest.name.trim()) return;
-    updateEv(e=>({ ...e, guests:[...e.guests,{id:Date.now(),...newGuest,tableId:selectedTable||null}] }));
+    updateEv(e=>({ ...e, guests:[...e.guests,{id:Date.now(),...newGuest,tableId:selectedTable||null}] });
     setNewGuest({name:"",email:"",diet:"standard",notes:"",allergies:[]});
     setShowAddGuest(false);
   }
@@ -111,13 +111,13 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
     const n = newTable.number ? parseInt(newTable.number) : nextTableNumber;
     const x = 150 + (ev.tables.length % 5)*130;
     const y = 160 + Math.floor(ev.tables.length/5)*140;
-    updateEv(e=>({ ...e, tables:[...e.tables,{id:Date.now(),number:n,capacity:parseInt(newTable.capacity),shape:newTable.shape,label:newTable.label,color:newTable.color,x,y}] }));
+    updateEv(e=>({ ...e, tables:[...e.tables,{id:Date.now(),number:n,capacity:parseInt(newTable.capacity),shape:newTable.shape,label:newTable.label,color:newTable.color,x,y}] });
     setNewTable({number:"",capacity:8,shape:"round",label:"",color:undefined});
     setShowAddTable(false);
   }
   function addConstraint() {
     if (!constraint.a||!constraint.b||constraint.a===constraint.b) return;
-    updateEv(e=>({ ...e, constraints:[...e.constraints,{id:Date.now(),...constraint}] }));
+    updateEv(e=>({ ...e, constraints:[...e.constraints,{id:Date.now(),...constraint}] });
     setConstraint({a:"",b:"",type:"together");
     setShowConstraint(false);
   }
@@ -410,13 +410,13 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               </div>
               <FloorPlan
                 ev={ev}
-                onUpdateTables={tables=>{pushHistory(ev.tables); updateEv(e=>({...e,tables}));}}
+                onUpdateTables={tables=>{pushHistory(ev.tables); updateEv(e=>({...e,tables});}}
                 onSelectTable={(tableId) => {
                   if (selectedUnseatedGuest && tableId) {
                     const t = ev.tables.find(x => x.id === tableId);
                     const seated = ev.guests.filter(g => g.tableId === tableId).length;
                     if (t && seated < t.capacity) {
-                      updateEv(e => ({ ...e, guests: e.guests.map(g => g.id === selectedUnseatedGuest.id ? { ...g, tableId } : g) }));
+                      updateEv(e => ({ ...e, guests: e.guests.map(g => g.id === selectedUnseatedGuest.id ? { ...g, tableId } : g) });
                       setSelectedUnseatedGuest(null);
                       return;
                     }
@@ -506,7 +506,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                   </div>
                 )}
 
-                <Btn small variant="danger" onClick={()=>{updateEv(e=>({...e,tables:e.tables.filter(t=>t.id!==selectedTable),guests:e.guests.map(g=>g.tableId===selectedTable?{...g,tableId:null}:g)}));setSelectedTable(null);}} style={{width:"100%",marginTop:12}}>
+                <Btn small variant="danger" onClick={()=>{updateEv(e=>({...e,tables:e.tables.filter(t=>t.id!==selectedTable),guests:e.guests.map(g=>g.tableId===selectedTable?{...g,tableId:null}:g)});setSelectedTable(null);}} style={{width:"100%",marginTop:12}}>
                   Supprimer la table
                 </Btn>
               </div>
@@ -1508,7 +1508,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 <h4 style={{ margin:0, color:"#C9973A", fontWeight:400, fontSize:16 }}>💌 {t.rsvpTracking||"Guest tracking"</h4>
                 <div style={{ flex:1 }}/>
                 <Btn small variant="muted" onClick={()=>{
-                  updateEv(e=>({...e, guests:e.guests.map(g=>g.rsvp?g:{...g,rsvp:"pending")}));
+                  updateEv(e=>({...e, guests:e.guests.map(g=>g.rsvp?g:{...g,rsvp:"pending")});
                 }}>{t.rsvpMarkPending||"Mark all pending"</Btn>
               </div>
               <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
@@ -1531,7 +1531,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                     </div>
                     {g.rsvpNote && <span style={{ color:"rgba(255,255,255,0.45)", fontSize:11, fontStyle:"italic", maxWidth:120, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{g.rsvpNote}</span>}
                     <input
-                      value={g.rsvpNote||""} onChange={e=>{const v=e.target.value; updateEv(ev2=>({...ev2,guests:ev2.guests.map(x=>x.id===g.id?{...x,rsvpNote:v}:x)}));}}
+                      value={g.rsvpNote||""} onChange={e=>{const v=e.target.value; updateEv(ev2=>({...ev2,guests:ev2.guests.map(x=>x.id===g.id?{...x,rsvpNote:v}:x)});}}
                       placeholder="Note…"
                       style={{ width:120, padding:"4px 8px", background:"#fff1", border:"1px solid rgba(201,151,58,0.15)", borderRadius:6, color:"#ffffff", fontSize:11, fontFamily:"inherit" }}
                     />
@@ -1926,7 +1926,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 tableId: null
               };
             }).filter(g => g.name);
-            updateEv(e => ({ ...e, guests: [...e.guests, ...newGuests] }));
+            updateEv(e => ({ ...e, guests: [...e.guests, ...newGuests] });
             setShowImportCSV(false);
           }} style={{marginTop:4}}>
             ⬆ Importer {"" invités
@@ -2106,7 +2106,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             Déjà payé ✅
           </label>
           <Btn onClick={()=>{
-            updateEv(ev2=>({...ev2, budget:[...(ev2.budget||[]), {...newBudgetLine}]}));
+            updateEv(ev2=>({...ev2, budget:[...(ev2.budget||[]), {...newBudgetLine}]});
             setNewBudgetLine({category:"salle",label:"",estimated:0,actual:0,paid:false,notes:"");
             setShowAddBudget(false);
           }} style={{marginTop:4}}>Ajouter ce poste</Btn>
@@ -2142,7 +2142,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             <Input value={newTask.notes} onChange={e=>setNewTask({...newTask,notes:e.target.value})} placeholder={t.details||"Details..."/>
           </Field>
           <Btn disabled={!newTask.title.trim()} onClick={()=>{
-            updateEv(ev2=>({...ev2, planning:[...(ev2.planning||[]), {...newTask}]}));
+            updateEv(ev2=>({...ev2, planning:[...(ev2.planning||[]), {...newTask}]});
             setNewTask({title:"",dueDate:"",responsible:"",priority:"medium",done:false,notes:"");
             setShowAddTask(false);
           }} style={{marginTop:4}}>Ajouter la tâche</Btn>
@@ -2174,7 +2174,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             <Input value={newProgramItem.notes} onChange={e=>setNewProgramItem({...newProgramItem,notes:e.target.value})} placeholder="Durée, lieu, responsable…"/>
           </Field>
           <Btn disabled={!newProgramItem.label.trim()||!newProgramItem.time} onClick={()=>{
-            updateEv(ev2=>({...ev2, programme:[...(ev2.programme||[]), {...newProgramItem}]}));
+            updateEv(ev2=>({...ev2, programme:[...(ev2.programme||[]), {...newProgramItem}]});
             setNewProgramItem({time:"",label:"",icon:"🎤",notes:"");
             setShowAddProgramItem(false);
           }} style={{marginTop:4}}>Ajouter l'étape</Btn>
@@ -2202,7 +2202,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             <Input value={newSupplier.notes} onChange={e=>setNewSupplier({...newSupplier,notes:e.target.value})} placeholder="Contrat signé, acompte versé, arrivée 14h…"/>
           </Field>
           <Btn disabled={!newSupplier.name.trim()} onClick={()=>{
-            updateEv(ev2=>({...ev2, suppliers:[...(ev2.suppliers||[]), {...newSupplier,id:Date.now()}]}));
+            updateEv(ev2=>({...ev2, suppliers:[...(ev2.suppliers||[]), {...newSupplier,id:Date.now()}]});
             setNewSupplier({name:"",role:"",phone:"",email:"",notes:"");
             setShowAddSupplier(false);
           }} style={{marginTop:4}}>Ajouter le prestataire</Btn>
