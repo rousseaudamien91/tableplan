@@ -1,22 +1,4 @@
 /* eslint-disable */
-/* === TABLEMAÎTRE PRO GLOBAL STYLES === */
-if (typeof document !== 'undefined') {
-  const _tmStyle = document.getElementById('tm-pro-styles') || document.createElement('style');
-  _tmStyle.id = 'tm-pro-styles';
-  _tmStyle.textContent = `
-    * { box-sizing: border-box; }
-    body { margin: 0; background: #0d0d14; color: #fff; font-family: 'Inter', 'Segoe UI', system-ui, sans-serif; }
-    ::-webkit-scrollbar { width: 6px; height: 6px; }
-    ::-webkit-scrollbar-track { background: #0d0d14; }
-    ::-webkit-scrollbar-thumb { background: rgba(201,151,58,0.35); border-radius: 3px; }
-    ::-webkit-scrollbar-thumb:hover { background: rgba(201,151,58,0.6); }
-    input, select, textarea { font-family: inherit; }
-    ::placeholder { color: rgba(255,255,255,0.3) !important; }
-    * { -webkit-font-smoothing: antialiased; }
-  `;
-  if (!document.getElementById('tm-pro-styles')) document.head.appendChild(_tmStyle);
-}
-
 import { useState, useEffect, useRef, useCallback } from "react";
 
 // ═══════════════════════════════════════════════════════════════
@@ -951,7 +933,7 @@ function exportGuestsCSV(ev) {
 // ═══════════════════════════════════════════════════════════════
 
 function Btn({ children, onClick, variant="primary", small, style={}, disabled }) {
-  const [hov, setHov] = React.useState(false);
+  const [hov, setHov] = useState(false);
   const base = {
     display:"inline-flex", alignItems:"center", gap:6,
     padding: small ? "5px 12px" : "9px 18px",
@@ -1041,7 +1023,7 @@ function Field({ label, children, style={} }) {
 }
 
 function Input({ value, onChange, placeholder, type="text", style={} }) {
-  const [foc, setFoc] = React.useState(false);
+  const [foc, setFoc] = useState(false);
   return (
     <input value={value} onChange={onChange} placeholder={placeholder} type={type}
       onFocus={()=>setFoc(true)} onBlur={()=>setFoc(false)}
