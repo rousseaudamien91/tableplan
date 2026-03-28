@@ -266,6 +266,27 @@ function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
                 </div>
               ))}
             </div>
+
+            {/* Tunnel de conversion */}
+            <div style={{...card,marginTop:20}}>
+              <h3 style={{color:C.gold,margin:"0 0 16px",fontWeight:600,fontSize:15}}>📈 Tunnel de conversion</h3>
+              {(()=>{
+                const total=enrichedUsers.filter(u=>u.role!=="superadmin").length;
+                const trial=enrichedUsers.filter(u=>u.subscriptionStatus==="trial").length;
+                const paid=enrichedUsers.filter(u=>u.subscriptionStatus==="active"&&u.plan!=="free").length;
+                const free=enrichedUsers.filter(u=>u.plan==="free").length;
+                return [{label:"Inscrits",val:total,color:"#3b82f6"},{label:"En essai",val:trial,color:"#F0C97A"},{label:"Plan gratuit",val:free,color:"rgba(255,255,255,0.3)"},{label:"Payants",val:paid,color:"#27AE60"}].map(r=>(
+                  <div key={r.label} style={{display:"flex",alignItems:"center",gap:12,marginBottom:10}}>
+                    <span style={{width:120,fontSize:13,color:"rgba(255,255,255,0.6)"}}>{r.label}</span>
+                    <div style={{flex:1,height:8,background:"rgba(255,255,255,0.06)",borderRadius:99,overflow:"hidden"}}>
+                      <div style={{width:(total>0?Math.round(r.val/total*100):0)+"%",height:"100%",background:r.color,borderRadius:99}}/>
+                    </div>
+                    <span style={{fontSize:13,color:r.color,fontWeight:700,minWidth:24,textAlign:"right"}}>{r.val}</span>
+                    <span style={{fontSize:11,color:"rgba(255,255,255,0.3)",minWidth:35}}>{total>0?Math.round(r.val/total*100):0}%</span>
+                  </div>
+                ));
+              })()}
+            </div>
           </div>
         )}
 

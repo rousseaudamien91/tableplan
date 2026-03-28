@@ -1,5 +1,6 @@
 /* eslint-disable */
 import PricingPage from "./PricingPage";
+import ImportModal from "./ImportExcel";
 import { getFirebase } from "../firebase";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { C, useI18n } from "../theme";
@@ -34,6 +35,7 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
   const [tab, setTab] = useState("plan");
   const [selectedTable, setSelectedTable] = useState(null);
   const [showAddGuest, setShowAddGuest] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
   const [guestSubTab, setGuestSubTab] = useState("list"); // list | rsvp
   const [showPricingPalier, setShowPricingPalier] = useState(false);
   const [showAddTable, setShowAddTable] = useState(false);
@@ -711,7 +713,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t.search||"Search guest..."}
                 style={{ ...inputStyle, flex:1 }}/>
               <Btn variant="ghost" onClick={()=>exportGuestsCSV(ev)}>⬇ Export CSV</Btn>
-              <Btn variant="ghost" onClick={()=>setShowImportCSV(true)}>⬆ Import CSV</Btn>
+              <Btn variant="ghost" onClick={()=>setShowImportModal(true)}>📥 Import Excel/CSV</Btn>
               <Btn onClick={()=>setShowAddGuest(true)}>+ {t.addGuestBtn||"Invité"}</Btn>
             </div>
 
@@ -2263,6 +2265,15 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
           </Field>
         </div>
       </Modal>
+    <ImportModal
+      open={showImportModal}
+      onClose={()=>setShowImportModal(false)}
+      existingGuests={ev.guests||[]}
+      onImport={(newGuests)=>{
+        updateEv(e=>({...e, guests:[...e.guests, ...newGuests]}));
+      }}
+    />
+
     {showPricingPalier && (
       <PricingPage
         eventName={ev.name}

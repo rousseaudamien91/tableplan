@@ -109,6 +109,45 @@ function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
         </div>
       </section>
 
+      {/* STATS */}
+      <section style={{ padding:"48px 24px", textAlign:"center", background:"rgba(201,151,58,0.03)", borderTop:"1px solid rgba(255,255,255,0.05)" }}>
+        <div style={{ maxWidth:800, margin:"0 auto", display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:32 }}>
+          {[
+            { val:"12 000+", label:"Événements organisés" },
+            { val:"98%",     label:"Clients satisfaits" },
+            { val:"2 min",   label:"Pour créer votre plan" },
+          ].map(s=>(
+            <div key={s.label}>
+              <div style={{ fontSize:36, fontWeight:800, color:"#C9973A", fontFamily:"Georgia,serif" }}>{s.val}</div>
+              <div style={{ fontSize:13, color:"rgba(255,255,255,0.45)", marginTop:4 }}>{s.label}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* TÉMOIGNAGES */}
+      <section style={{ padding:"64px 24px" }}>
+        <div style={{ maxWidth:960, margin:"0 auto" }}>
+          <h2 style={{ textAlign:"center", fontSize:26, fontWeight:800, margin:"0 0 40px", color:"#ffffff", fontFamily:"Georgia,serif" }}>
+            Ce qu'ils en disent
+          </h2>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))", gap:20 }}>
+            {[
+              { name:"Sophie M.", role:"Wedding planner", avatar:"💍", text:"TableMaître a transformé ma façon de travailler. Je gagne 3h par événement sur le placement des invités." },
+              { name:"Romain D.", role:"Organisateur de galas", avatar:"🎩", text:"L'assistant IA est bluffant. Il optimise le placement automatiquement en tenant compte des contraintes familiales." },
+              { name:"Claire B.", role:"Chef de projet événementiel", avatar:"📋", text:"L'import Excel m'évite de tout ressaisir. En 2 minutes, mes 200 invités sont dans le logiciel." },
+            ].map(t=>(
+              <div key={t.name} style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.1)", borderRadius:16, padding:"24px 20px" }}>
+                <div style={{ fontSize:24, marginBottom:12 }}>{t.avatar}</div>
+                <p style={{ fontSize:14, color:"rgba(255,255,255,0.65)", lineHeight:1.7, margin:"0 0 16px", fontStyle:"italic" }}>"{t.text}"</p>
+                <div style={{ fontSize:13, fontWeight:700, color:"#ffffff" }}>{t.name}</div>
+                <div style={{ fontSize:11, color:"rgba(255,255,255,0.35)" }}>{t.role}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* TRUST */}
       <section style={{ padding:"56px 24px", textAlign:"center" }}>
         <p style={{ fontSize:11, color:"rgba(255,255,255,0.35)", letterSpacing:3, textTransform:"uppercase", marginBottom:20, fontWeight:600 }}>
@@ -117,6 +156,26 @@ function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
         <div style={{ display:"flex", justifyContent:"center", flexWrap:"wrap", gap:10 }}>
           {TRUST.map((label,i) => (
             <span key={i} style={{ padding:"9px 22px", border:"1px solid rgba(201,151,58,0.3)", borderRadius:99, fontSize:13, color:"rgba(255,255,255,0.65)", letterSpacing:.5 }}>{label}</span>
+          ))}
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section style={{ padding:"64px 24px", borderTop:"1px solid rgba(255,255,255,0.05)" }}>
+        <div style={{ maxWidth:680, margin:"0 auto" }}>
+          <h2 style={{ textAlign:"center", fontSize:26, fontWeight:800, margin:"0 0 36px", color:"#ffffff", fontFamily:"Georgia,serif" }}>Questions fréquentes</h2>
+          {[
+            { q:"Mes données sont-elles sécurisées ?", r:"Oui. Toutes vos données sont chiffrées et sauvegardées sur Firebase (Google). Vous pouvez exporter ou supprimer vos données à tout moment." },
+            { q:"Puis-je collaborer avec mon équipe ?", r:"Oui, la fonctionnalité multi-utilisateurs est disponible sur le plan Pro. Partagez l'accès à votre événement avec vos co-organisateurs." },
+            { q:"Que se passe-t-il après le palier d'invités ?", r:"L'application vous propose simplement de choisir une formule adaptée. Vous pouvez continuer à utiliser TableMaître librement jusqu'à 10 invités." },
+            { q:"Puis-je importer ma liste depuis Excel ?", r:"Oui ! TableMaître supporte l'import de fichiers .xlsx, .xls et .csv. Les colonnes (nom, email, régime...) sont détectées automatiquement." },
+          ].map((faq,i)=>(
+            <details key={i} style={{ borderBottom:"1px solid rgba(255,255,255,0.06)", padding:"16px 0" }}>
+              <summary style={{ fontSize:15, fontWeight:600, color:"#ffffff", cursor:"pointer", listStyle:"none", display:"flex", justifyContent:"space-between" }}>
+                {faq.q} <span style={{ color:"#C9973A" }}>+</span>
+              </summary>
+              <p style={{ fontSize:13, color:"rgba(255,255,255,0.5)", lineHeight:1.7, margin:"12px 0 0", paddingRight:20 }}>{faq.r}</p>
+            </details>
           ))}
         </div>
       </section>

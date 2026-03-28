@@ -6,6 +6,7 @@ import { Btn, Badge, Modal, Field, Input, Select } from "./UI";
 import { uid } from "../utils";
 import VoucherModal from "./VoucherModal";
 import PricingPage from "./PricingPage";
+import OnboardingWizard from "./OnboardingWizard";
 
 // ═══════════════════════════════════════════════════════════════
 // DASHBOARD — Liste des événements
@@ -15,6 +16,7 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
   const [appliedVoucher, setAppliedVoucher] = useState(null);
   const [showVoucher, setShowVoucher] = useState(false);
   const [showNew, setShowNew] = useState(false);
+  const [showOnboarding, setShowOnboarding] = useState(false);
   const [newEv, setNewEv] = useState({ name:"", date:"", type:"mariage" });
 
   const [globalSearch, setGlobalSearch] = useState("");
@@ -218,11 +220,45 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
         </div>
       </div>
 
+      {showOnboarding && (
+        <OnboardingWizard
+          onSkip={() => { setShowOnboarding(false); setShowNew(true); }}
+          onComplete={(wizardData) => {
+            setShowOnboarding(false);
+            const ev = {
+              id: Date.now(), ownerId: user.id,
+              name: wizardData.name, date: wizardData.date,
+              type: wizardData.type, plan: 'free',
+              roomShape: wizardData.roomShape,
+              tables: [], guests: [], constraints: [], menu: null,
+            };
+            setEvents(prev => [...prev, ev]);
+            onOpenEvent(ev.id);
+          }}
+        />
+      )}
       {showPricing && (
         <PricingPage
           user={user}
           onClose={() => setShowPricing(false)}
           onPlanSelected={(planId) => { setShowPricing(false); }}
+        />
+      )}
+      {showOnboarding && (
+        <OnboardingWizard
+          onSkip={() => { setShowOnboarding(false); setShowNew(true); }}
+          onComplete={(wizardData) => {
+            setShowOnboarding(false);
+            const ev = {
+              id: Date.now(), ownerId: user.id,
+              name: wizardData.name, date: wizardData.date,
+              type: wizardData.type, plan: 'free',
+              roomShape: wizardData.roomShape,
+              tables: [], guests: [], constraints: [], menu: null,
+            };
+            setEvents(prev => [...prev, ev]);
+            onOpenEvent(ev.id);
+          }}
         />
       )}
       {showPricing && (
