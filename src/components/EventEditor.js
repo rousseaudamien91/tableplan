@@ -1426,7 +1426,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                       </div>
                       <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
                         <input value={sup.phone||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],phone:v}; return {...evUp,suppliers:s}; }); }}
-                          placeholder="📞 "+(t.phone||"Phone") style={{ flex:1, padding:"5px 10px", background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit", minWidth:120 }}/>
+                          placeholder={"📞 "+(t.phone||"Phone")} style={{ flex:1, padding:"5px 10px", background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit", minWidth:120 }}/>
                         <input value={sup.email||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],email:v}; return {...evUp,suppliers:s}; }); }}
                           placeholder="✉️ Email" style={{ flex:1, padding:"5px 10px", background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit", minWidth:120 }}/>
                         <input value={sup.notes||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],notes:v}; return {...evUp,suppliers:s}; }); }}
