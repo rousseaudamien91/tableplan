@@ -3,6 +3,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { C } from "../theme";
 import { DIET_OPTIONS, THEMES_CONFIG } from "../constants";
 import { dietInfo } from "../utils";
+import { Btn } from "./UI";
 
 // ═══════════════════════════════════════════════════════════════
 // FLOOR PLAN — Éditeur de salle et plan de table
