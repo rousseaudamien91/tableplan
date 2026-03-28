@@ -155,7 +155,7 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
         return assignment ? { ...g, tableId: assignment.tableId } : g;
       });
       updateEv(function(evUp){ return { ...evUp, guests: newGuests }; });
-      setAiExplanation(result.explanation || "Placement optimisé !");
+      setAiExplanation(result.explanation || t.placementDone||"Placement optimized!");
     } catch (e) {
       // Fallback simple
       updateEv(function(evState){
@@ -198,7 +198,7 @@ Réponds UNIQUEMENT en JSON valide avec ce format exact:
     const planDone = (ev.planning||[]).filter(p=>p.done).length;
     const planTot = (ev.planning||[]).length;
     const context = `Tu es un assistant expert en organisation d'événements intégré à l'app TableMaître.
-Événement : "${ev.name}" (${ev.type}, le ${ev.date||"date non définie"})${daysLeft!==null?`, dans ${daysLeft} jours`:""}
+Événement : "${ev.name}" (${ev.type}, le ${ev.date||t.dateUndefined||"date not set"})${daysLeft!==null?`, dans ${daysLeft} jours`:""}
 Invités : ${ev.guests.length} total — ${rsvpC} confirmés, ${rsvpP} en attente
 Tables : ${ev.tables.length}, places assises : ${ev.guests.filter(g=>g.tableId).length}/${ev.guests.length}
 Budget : estimé ${budgTot}€, réel ${budgReal}€ (${(ev.budget||[]).length} postes)
@@ -431,7 +431,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                   <div style={{ display:"flex", alignItems:"center", marginBottom:8 }}>
                     <div style={{ color:C.red, fontSize:12, letterSpacing:.5, flex:1 }}>{t.unseatedList} ({unseated.length})</div>
                     <button onClick={()=>setHighlightTables(h=>!h)} style={{ background:highlightTables?C.gold:"none", border:`1px solid ${highlightTables?C.gold:C.border}`, borderRadius:6, color:highlightTables?C.dark:C.muted, fontSize:11, padding:"3px 10px", cursor:"pointer", fontFamily:"inherit" }}>
-                      {highlightTables ? "✓ Tables visibles" : "👁 Voir places libres"}
+                      {highlightTables ? "✓ "+(t.tablesVisible||"Tables visible") : "👁 "+(t.seeAvailable||"See free seats")}
                     </button>
                   </div>
                   <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
@@ -628,7 +628,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                                 <td style={{ padding:"10px 20px", color:"#ffffff", fontSize:14 }}>
                                   {g.name}
                                   {g.role && <span style={{ marginLeft:6, background:C.gold+"22", border:"1px solid "+C.gold+"44", borderRadius:99, padding:"1px 8px", fontSize:10, color:"#C9973A" }}>
-                                    {{"marie1":"💍","marie2":"💍","temoin":"🎖","famille_proche":"👨‍👩‍👧","ami_proche":"⭐","enfant":"🧒","vip":"🌟","prestataire":"🔧"}[g.role]||""} {{"marie1":"Marié(e)","marie2":"Marié(e)","temoin":"Témoin","famille_proche":"Famille","ami_proche":"Ami proche","enfant":"Enfant","vip":"VIP","prestataire":t.supplier||"Supplier"}[g.role]||g.role}
+                                    {{"marie1":"💍","marie2":"💍","temoin":"🎖","famille_proche":"👨‍👩‍👧","ami_proche":"⭐","enfant":"🧒","vip":"🌟","prestataire":"🔧"}[g.role]||""} {{"marie1":t.roleMarried||"Married","marie2":t.roleMarried||"Married","temoin":t.roleWitness||"Witness","famille_proche":"Famille","ami_proche":"Ami proche","enfant":"Enfant","vip":"VIP","prestataire":t.supplier||"Supplier"}[g.role]||g.role}
                                   </span>}
                                 </td>
                                 <td style={{ padding:"10px 20px", fontSize:13, color:dinfo.color }}>{dinfo.icon} {dinfo.label}</td>
@@ -659,7 +659,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         {tab==="guests" && (
           <div style={{ maxWidth:860 }}>
             <div style={{ display:"flex", gap:12, marginBottom:20 }}>
-              <input value={search} onChange={e=>setSearch(e.target.value)} placeholder="Rechercher un invité…"
+              <input value={search} onChange={e=>setSearch(e.target.value)} placeholder=t.search||"Search a guest..."
                 style={{ ...inputStyle, flex:1 }}/>
               <Btn variant="ghost" onClick={()=>exportGuestsCSV(ev)}>⬇ Export CSV</Btn>
               <Btn variant="ghost" onClick={()=>setShowImportCSV(true)}>⬆ Import CSV</Btn>
@@ -1068,10 +1068,10 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             {/* ── KPIs budget ── */}
             <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(180px,1fr))", gap:14, marginBottom:28 }}>
               {[
-                {label:"Budget estimé",  val:budgetTotal.toFixed(0)+"€",  color:"#C9973A",  icon:"📋"},
-                {label:"Dépensé",        val:budgetSpent.toFixed(0)+"€",  color:budgetSpent>budgetTotal?C.red:C.green, icon:"💳"},
-                {label:"Restant",        val:(budgetTotal-budgetSpent).toFixed(0)+"€", color:budgetTotal-budgetSpent<0?C.red:C.green, icon:"🏦"},
-                {label:"Coût / invité",  val:ev.guests.length>0?(budgetSpent/ev.guests.length).toFixed(0)+"€":"—", color:C.blue, icon:"👤"},
+                {label:t.budgetEstimated||"Estimated budget",  val:budgetTotal.toFixed(0)+"€",  color:"#C9973A",  icon:"📋"},
+                {label:t.budgetSpent||"Spent",        val:budgetSpent.toFixed(0)+"€",  color:budgetSpent>budgetTotal?C.red:C.green, icon:"💳"},
+                {label:t.budgetRemaining||"Remaining",        val:(budgetTotal-budgetSpent).toFixed(0)+"€", color:budgetTotal-budgetSpent<0?C.red:C.green, icon:"🏦"},
+                {label:t.budgetPerGuest||"Cost / guest",  val:ev.guests.length>0?(budgetSpent/ev.guests.length).toFixed(0)+"€":"—", color:C.blue, icon:"👤"},
               ].map(s=>(
                 <div key={s.label} style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:14, padding:"18px 20px" }}>
                   <div style={{ fontSize:24, marginBottom:6 }}>{s.icon}</div>
@@ -1128,7 +1128,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               </div>
 
               {(ev.budget||[]).length === 0 && (
-                <p style={{ color:"rgba(255,255,255,0.45)", fontStyle:"italic", textAlign:"center", padding:20 }}>Aucun poste. Cliquez sur "Remplir avec modèle" pour démarrer.</p>
+                <p style={{ color:"rgba(255,255,255,0.45)", fontStyle:"italic", textAlign:"center", padding:20 }}>Aucun poste. Cliquez sur t.fillTemplate||"Fill with template" pour démarrer.</p>
               )}
 
               <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
@@ -1192,9 +1192,9 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             {/* ── KPIs planning ── */}
             <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(160px,1fr))", gap:14, marginBottom:28 }}>
               {[
-                {label:"Tâches totales", val:planningTotal, color:"#C9973A",  icon:"📋"},
-                {label:"Terminées",      val:planningDone,  color:C.green, icon:"✅"},
-                {label:"Restantes",      val:planningTotal-planningDone, color:planningTotal-planningDone>0?"#FF9800":C.green, icon:"⏳"},
+                {label:t.tasksTotal||"Total tasks", val:planningTotal, color:"#C9973A",  icon:"📋"},
+                {label:t.tasksDone||"Done",      val:planningDone,  color:C.green, icon:"✅"},
+                {label:t.tasksRemaining||"Remaining",      val:planningTotal-planningDone, color:planningTotal-planningDone>0?"#FF9800":C.green, icon:"⏳"},
                 {label:"Avancement",     val:planningTotal>0?Math.round(planningDone/planningTotal*100)+"%":"—", color:C.blue, icon:"📈"},
               ].map(s=>(
                 <div key={s.label} style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:14, padding:"18px 20px" }}>
@@ -1247,20 +1247,20 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 }}>✨ Modèle type</Btn>
                 <Btn small variant="ghost" onClick={function(){
                   updateEv(function(evUp){
-                    return {...evUp, planning:[...(evUp.planning||[]), {id:Date.now(), label:"Nouvelle tâche", icon:"📌", deadline:"", priority:"medium", done:false, notes:""}]};
+                    return {...evUp, planning:[...(evUp.planning||[]), {id:Date.now(), label:t.newTask||"New task", icon:"📌", deadline:"", priority:"medium", done:false, notes:""}]};
                   });
                 }}>+ Tâche</Btn>
               </div>
 
               {(ev.planning||[]).length === 0 && (
-                <p style={{ color:"rgba(255,255,255,0.45)", fontStyle:"italic", textAlign:"center", padding:20 }}>Aucune tâche. Cliquez "Modèle type" pour démarrer.</p>
+                <p style={{ color:"rgba(255,255,255,0.45)", fontStyle:"italic", textAlign:"center", padding:20 }}>Aucune tâche. Cliquez t.templateModel||"Template" pour démarrer.</p>
               )}
 
               {/* Grouper par priorité */}
               {["high","medium","low"].map(function(prio){
                 var tasks = (ev.planning||[]).filter(function(t){ return (t.priority||"medium") === prio; });
                 if (!tasks.length) return null;
-                var prioLabel = {high:"🔴 Priorité haute", medium:"🟡 Priorité moyenne", low:"🟢 Priorité faible"}[prio];
+                var prioLabel = {high:"🔴 "+(t.high||"High"), medium:"🟡 "+(t.medium||"Medium"), low:"🟢 "+(t.low||"Low")}[prio];
                 var prioColor = {high:C.red, medium:"#FF9800", low:C.green}[prio];
                 return (
                   <div key={prio} style={{ marginBottom:20 }}>
@@ -1404,16 +1404,16 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                           <option value="DJ">🎵 DJ</option>
                           <option value="Musicien">🎹 Musicien</option>
                           <option value="Photographe">📷 Photographe</option>
-                          <option value="Vidéaste">🎬 Vidéaste</option>
+                          <option value=t.videographer||"Videographer">🎬 Vidéaste</option>
                           <option value="Fleuriste">🌸 Fleuriste</option>
-                          <option value="Décorateur">🎨 Décorateur</option>
+                          <option value=t.decorator||"Decorator">🎨 Décorateur</option>
                           <option value="Salle">🏛 Salle</option>
                           <option value="Transport">🚗 Transport</option>
                           <option value="Animation">🎭 Animation</option>
                           <option value="Autre">📦 Autre</option>
                         </select>
                         <input value={sup.name||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],name:v}; return {...evUp,suppliers:s}; }); }}
-                          placeholder="Nom / société" style={{ flex:1, background:"none", border:"none", color:"#ffffff", fontSize:14, fontFamily:"inherit", outline:"none" }}/>
+                          placeholder=t.supplierName||"Name / Company" style={{ flex:1, background:"none", border:"none", color:"#ffffff", fontSize:14, fontFamily:"inherit", outline:"none" }}/>
                         <span style={{ fontSize:16 }}>{statusIcon}</span>
                         <select value={sup.status||"pending"} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],status:v}; return {...evUp,suppliers:s}; }); }}
                           style={{ background:statusColor+"22", border:"1px solid "+statusColor+"66", borderRadius:6, color:statusColor, fontSize:11, padding:"4px 8px", fontFamily:"inherit" }}>
@@ -1426,7 +1426,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                       </div>
                       <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
                         <input value={sup.phone||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],phone:v}; return {...evUp,suppliers:s}; }); }}
-                          placeholder="📞 Téléphone" style={{ flex:1, padding:"5px 10px", background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit", minWidth:120 }}/>
+                          placeholder="📞 "+(t.phone||"Phone") style={{ flex:1, padding:"5px 10px", background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit", minWidth:120 }}/>
                         <input value={sup.email||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],email:v}; return {...evUp,suppliers:s}; }); }}
                           placeholder="✉️ Email" style={{ flex:1, padding:"5px 10px", background:"#18182a", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit", minWidth:120 }}/>
                         <input value={sup.notes||""} onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var s=[...(evUp.suppliers||[])]; s[si]={...s[si],notes:v}; return {...evUp,suppliers:s}; }); }}
@@ -1548,9 +1548,9 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             {/* Résumé */}
             <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:14 }}>
               {[
-                {label:"Budget estimé",val:budgetTotal.toLocaleString("fr-FR",{minimumFractionDigits:0})+" €",color:"#C9973A",icon:"📊"},
-                {label:"Dépenses réelles",val:budgetSpent.toLocaleString("fr-FR",{minimumFractionDigits:0})+" €",color:budgetSpent>budgetTotal?C.red:C.green,icon:"💳"},
-                {label:"Écart",val:(budgetTotal-budgetSpent>=0?"+":"")+((budgetTotal-budgetSpent).toLocaleString("fr-FR",{minimumFractionDigits:0}))+" €",color:budgetTotal-budgetSpent>=0?C.green:C.red,icon:budgetTotal-budgetSpent>=0?"✅":"⚠️"},
+                {label:t.budgetEstimated||"Estimated budget",val:budgetTotal.toLocaleString("fr-FR",{minimumFractionDigits:0})+" €",color:"#C9973A",icon:"📊"},
+                {label:t.budgetActual||"Actual expenses",val:budgetSpent.toLocaleString("fr-FR",{minimumFractionDigits:0})+" €",color:budgetSpent>budgetTotal?C.red:C.green,icon:"💳"},
+                {label:t.budgetGap||"Gap",val:(budgetTotal-budgetSpent>=0?"+":"")+((budgetTotal-budgetSpent).toLocaleString("fr-FR",{minimumFractionDigits:0}))+" €",color:budgetTotal-budgetSpent>=0?C.green:C.red,icon:budgetTotal-budgetSpent>=0?"✅":"⚠️"},
               ].map(s=>(
                 <div key={s.label} style={{ background:"#18182a", border:`1px solid ${s.color}44`, borderRadius:14, padding:"18px 22px" }}>
                   <div style={{ fontSize:24, marginBottom:4 }}>{s.icon}</div>
@@ -1595,7 +1595,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                           <div style={{ color:"rgba(255,255,255,0.45)", fontSize:11 }}>Estimé : <span style={{ color:"#C9973A" }}>{(parseFloat(b.estimated)||0).toLocaleString("fr-FR")} €</span></div>
                           <div style={{ color:"rgba(255,255,255,0.45)", fontSize:11 }}>Réel : <span style={{ color:(b.actual||0)>(b.estimated||0)?C.red:C.green }}>{(parseFloat(b.actual)||0).toLocaleString("fr-FR")} €</span></div>
                         </div>
-                        <span style={{ fontSize:18, cursor:"pointer", color:b.paid?"#4CAF50":C.muted }} title={b.paid?t.paid||"Paid":"Non payé"}
+                        <span style={{ fontSize:18, cursor:"pointer", color:b.paid?"#4CAF50":C.muted }} title={b.paid?t.paid||"Paid":t.notPaid||"Unpaid"}
                           onClick={()=>updateEv(ev2=>({...ev2,budget:ev2.budget.map((x,i)=>i===bi?{...x,paid:!x.paid}:x)}))}>
                           {b.paid?"✅":"💳"}
                         </span>
@@ -1666,7 +1666,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               {["high","medium","low"].map(prio=>{
                 const tasks = (ev.planning||[]).filter(t=>t.priority===prio);
                 if (!tasks.length) return null;
-                const prioConfig = {high:{label:"🔴 Urgent",color:C.red},medium:{label:"🟡 Normal",color:"#C9973A"},low:{label:"🟢 Faible priorité",color:C.green}};
+                const prioConfig = {high:{label:"🔴 Urgent",color:C.red},medium:{label:"🟡 Normal",color:"#C9973A"},low:{label:"🟢 "+(t.low||"Low"),color:C.green}};
                 const pc = prioConfig[prio];
                 return (
                   <div key={prio} style={{ marginBottom:16 }}>
@@ -1783,7 +1783,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                       <input
                         value={venue.name||""}
                         onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var vens=[...(evUp.venues||[])]; vens[vi]={...vens[vi],name:v}; return {...evUp,venues:vens}; }); }}
-                        placeholder="Nom du lieu (ex: Mairie, Église, Salle des fêtes...)"
+                        placeholder=t.venueName||"Venue name"
                         style={{ flex:1, padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:14, fontFamily:"inherit" }}
                       />
                       <button onClick={function(){ updateEv(function(evUp){ return {...evUp, venues:(evUp.venues||[]).filter(function(_,i){ return i!==vi; })}; }); }}
@@ -1792,7 +1792,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                     <input
                       value={venue.address||""}
                       onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var vens=[...(evUp.venues||[])]; vens[vi]={...vens[vi],address:v}; return {...evUp,venues:vens}; }); }}
-                      placeholder="Adresse complète"
+                      placeholder=t.fullAddress||"Full address"
                       style={{ padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:13, fontFamily:"inherit" }}
                     />
                     <div style={{ display:"flex", gap:8, alignItems:"center", flexWrap:"wrap" }}>
@@ -1805,7 +1805,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                       <input
                         value={venue.notes||""}
                         onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var vens=[...(evUp.venues||[])]; vens[vi]={...vens[vi],notes:v}; return {...evUp,venues:vens}; }); }}
-                        placeholder="Notes (parking, code entrée...)"
+                        placeholder=t.venueNotes||"Notes (parking, access code...)"
                         style={{ flex:1, padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:12, fontFamily:"inherit" }}
                       />
                       {venue.address && (
@@ -1897,7 +1897,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
       </div>
 
       {/* ── MODALS ── */}
-      <Modal open={showImportCSV} onClose={()=>setShowImportCSV(false)} title="Importer des invités (CSV)" width={500}>
+      <Modal open={showImportCSV} onClose={()=>setShowImportCSV(false)} title=t.importCSV||"Import guests (CSV)" width={500}>
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <div style={{ background:"#13131e", borderRadius:10, padding:"12px 16px", fontSize:12, color:"rgba(255,255,255,0.45)", lineHeight:1.8 }}>
             <strong style={{color:"#C9973A"}}>Format attendu (1 invité par ligne) :</strong><br/>
@@ -1918,7 +1918,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               const validDiets = ["standard","vegetarien","vegan","sans-gluten","halal","casher","sans-lactose","sans-noix","diabetique"];
               return {
                 id: Date.now() + Math.random(),
-                name: parts[0] || "Invité",
+                name: parts[0] || t.addGuest||"Guest",
                 email: parts[1] || "",
                 diet: validDiets.includes(parts[2]) ? parts[2] : "standard",
                 notes: parts[3] || "",
@@ -1934,11 +1934,11 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         </div>
       </Modal>
 
-      <Modal open={showAddGuest} onClose={()=>setShowAddGuest(false)} title="Ajouter un invité">
+      <Modal open={showAddGuest} onClose={()=>setShowAddGuest(false)} title=t.addGuestBtn||"Add guest">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label={t.fieldName}><Input value={newGuest.name} onChange={e=>setNewGuest({...newGuest,name:e.target.value})} placeholder="Prénom Nom"/></Field>
+          <Field label={t.fieldName}><Input value={newGuest.name} onChange={e=>setNewGuest({...newGuest,name:e.target.value})} placeholder=t.guestName||"First Last"/></Field>
           <Field label={t.fieldEmail}><Input type="email" value={newGuest.email} onChange={e=>setNewGuest({...newGuest,email:e.target.value})} placeholder="email@example.fr"/></Field>
-          <Field label="RÉGIME ALIMENTAIRE">
+          <Field label=t.guestDiet?.toUpperCase()||"DIET">
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:6 }}>
               {DIET_OPTIONS.map(function(ditem){ return (
                 <button key={ditem.id} onClick={()=>setNewGuest({...newGuest,diet:ditem.id})} style={{
@@ -1950,7 +1950,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               );})}
             </div>
           </Field>
-          <Field label="RÔLE / FONCTION">
+          <Field label=t.guestRole?.toUpperCase()||"ROLE">
             <select value={newGuest.role||""} onChange={e=>setNewGuest({...newGuest,role:e.target.value})}
               style={{ width:"100%", padding:"8px 12px", background:"#13131e", border:"1px solid "+C.border, borderRadius:8, color:"#ffffff", fontSize:13, fontFamily:"inherit" }}>
               <option value="">— Aucun rôle spécial —</option>
@@ -1969,7 +1969,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         </div>
       </Modal>
 
-      <Modal open={showAddTable} onClose={()=>setShowAddTable(false)} title="Ajouter une table">
+      <Modal open={showAddTable} onClose={()=>setShowAddTable(false)} title=t.addTable||"Add a table">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <Field label={`${t.fieldNumber} (auto: ${nextTableNumber})`}><Input type="number" value={newTable.number} onChange={e=>setNewTable({...newTable,number:e.target.value})} placeholder={String(nextTableNumber)}/></Field>
           <Field label={t.fieldCapacity}><Input type="number" value={newTable.capacity} onChange={e=>setNewTable({...newTable,capacity:e.target.value})}/></Field>
@@ -2000,12 +2000,12 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         </div>
       </Modal>
 
-      <Modal open={showAddZone} onClose={()=>{setShowAddZone(false);setNewZone({label:"",icon:"📍",color:"#C9973A"});}} title="Ajouter une zone">
+      <Modal open={showAddZone} onClose={()=>{setShowAddZone(false);setNewZone({label:"",icon:"📍",color:"#C9973A"});}} title=t.addZone||"Add a zone">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <Field label="NOM DE LA ZONE *">
             <Input value={newZone.label} onChange={e=>setNewZone({...newZone,label:e.target.value})} placeholder="ex: Piste de danse, Bar, Scène, Photo Booth…"/>
           </Field>
-          <Field label="ICÔNE">
+          <Field label="ICON">
             <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
               {["💃","🎭","🍹","📸","🧒","🌿","🍽","🥂","🎤","🎰","⛲","🪑","🎊","📍"].map(ic=>(
                 <button key={ic} onClick={()=>setNewZone({...newZone,icon:ic})} style={{
@@ -2037,7 +2037,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
           <Field label="NOM *">
             <Input value={newFurniture.label} onChange={e=>setNewFurniture({...newFurniture,label:e.target.value})} placeholder="ex: Buffet, Piano, Podium, Bar, Scène…"/>
           </Field>
-          <Field label="ICÔNE">
+          <Field label="ICON">
             <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
               {["🪑","🛋","🎹","🎤","🍽","🍹","🎰","📺","🖼","🌿","🕯","🎊","🎭","🔲"].map(ic=>(
                 <button key={ic} onClick={()=>setNewFurniture({...newFurniture,icon:ic})} style={{
@@ -2075,7 +2075,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
       {/* ── MODAL BUDGET ── */}
       <Modal open={showAddBudget} onClose={()=>{setShowAddBudget(false);setNewBudgetLine({category:"salle",label:"",estimated:0,actual:0,paid:false,notes:""}); }} title="Ajouter un poste budgétaire">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label="CATÉGORIE">
+          <Field label=t.category?.toUpperCase()||"CATEGORY">
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:6 }}>
               {BUDGET_CATEGORIES.map(cat=>(
                 <button key={cat.id} onClick={()=>setNewBudgetLine({...newBudgetLine,category:cat.id})} style={{
@@ -2087,14 +2087,14 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               ))}
             </div>
           </Field>
-          <Field label="LIBELLÉ (optionnel)">
+          <Field label=t.labelOptional||"Label (optional)">
             <Input value={newBudgetLine.label} onChange={e=>setNewBudgetLine({...newBudgetLine,label:e.target.value})} placeholder="ex: Château de Vincennes, DJ Martin…"/>
           </Field>
           <div style={{ display:"flex", gap:12 }}>
-            <Field label="MONTANT ESTIMÉ (€)">
+            <Field label=t.amountEstimated||"Estimated amount (€)">
               <Input type="number" value={newBudgetLine.estimated} onChange={e=>setNewBudgetLine({...newBudgetLine,estimated:parseFloat(e.target.value)||0})} placeholder="0"/>
             </Field>
-            <Field label="MONTANT RÉEL (€)">
+            <Field label=t.amountActual||"Actual amount (€)">
               <Input type="number" value={newBudgetLine.actual} onChange={e=>setNewBudgetLine({...newBudgetLine,actual:parseFloat(e.target.value)||0})} placeholder="0"/>
             </Field>
           </div>
@@ -2116,7 +2116,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
       {/* ── MODAL TÂCHE PLANNING ── */}
       <Modal open={showAddTask} onClose={()=>{setShowAddTask(false);setNewTask({title:"",dueDate:"",responsible:"",priority:"medium",done:false,notes:""});}} title="Ajouter une tâche">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label="TÂCHE *">
+          <Field label=t.taskLabel||"TASK *">
             <Input value={newTask.title} onChange={e=>setNewTask({...newTask,title:e.target.value})} placeholder="ex: Confirmer le traiteur, Envoyer les invitations…"/>
           </Field>
           <div style={{ display:"flex", gap:12 }}>
@@ -2127,7 +2127,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               <Input value={newTask.responsible} onChange={e=>setNewTask({...newTask,responsible:e.target.value})} placeholder="ex: Marie, Traiteur…"/>
             </Field>
           </div>
-          <Field label="PRIORITÉ">
+          <Field label=t.priority?.toUpperCase()||"PRIORITY">
             <div style={{ display:"flex", gap:8 }}>
               {[["high","🔴 Urgent",C.red],["medium","🟡 Normal",C.gold],["low","🟢 Faible",C.green]].map(([v,l,col])=>(
                 <button key={v} onClick={()=>setNewTask({...newTask,priority:v})} style={{
@@ -2139,7 +2139,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             </div>
           </Field>
           <Field label="NOTES (optionnel)">
-            <Input value={newTask.notes} onChange={e=>setNewTask({...newTask,notes:e.target.value})} placeholder="Précisions…"/>
+            <Input value={newTask.notes} onChange={e=>setNewTask({...newTask,notes:e.target.value})} placeholder=t.details||"Details..."/>
           </Field>
           <Btn disabled={!newTask.title.trim()} onClick={()=>{
             updateEv(ev2=>({...ev2, planning:[...(ev2.planning||[]), {...newTask}]}));
@@ -2156,11 +2156,11 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             <Field label="HEURE">
               <Input type="time" value={newProgramItem.time} onChange={e=>setNewProgramItem({...newProgramItem,time:e.target.value})}/>
             </Field>
-            <Field label="ÉTAPE *">
+            <Field label=t.stepLabel||"STEP *">
               <Input value={newProgramItem.label} onChange={e=>setNewProgramItem({...newProgramItem,label:e.target.value})} placeholder="ex: Vin d'honneur, Dîner, Ouverture de bal…"/>
             </Field>
           </div>
-          <Field label="ICÔNE">
+          <Field label="ICON">
             <div style={{ display:"flex", flexWrap:"wrap", gap:8 }}>
               {["🥂","🍽","💃","🎤","📸","🎂","💍","🎭","🎻","🎵","🎊","🌅","🚗","🏛"].map(ic=>(
                 <button key={ic} onClick={()=>setNewProgramItem({...newProgramItem,icon:ic})} style={{
@@ -2184,14 +2184,14 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
       {/* ── MODAL PRESTATAIRE ── */}
       <Modal open={showAddSupplier} onClose={()=>{setShowAddSupplier(false);setNewSupplier({name:"",role:"",phone:"",email:"",notes:""}); }} title="Ajouter un prestataire">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label="NOM / SOCIÉTÉ *">
+          <Field label=t.supplierName||"Name / Company *">
             <Input value={newSupplier.name} onChange={e=>setNewSupplier({...newSupplier,name:e.target.value})} placeholder="ex: DJ Martin, Fleurs du Soleil, Photos by Julie…"/>
           </Field>
-          <Field label="RÔLE / PRESTATION">
+          <Field label=t.supplierRole||"Role / Service">
             <Input value={newSupplier.role} onChange={e=>setNewSupplier({...newSupplier,role:e.target.value})} placeholder="ex: DJ, Fleuriste, Photographe, Traiteur…"/>
           </Field>
           <div style={{ display:"flex", gap:12 }}>
-            <Field label="TÉLÉPHONE">
+            <Field label="PHONE">
               <Input type="tel" value={newSupplier.phone} onChange={e=>setNewSupplier({...newSupplier,phone:e.target.value})} placeholder="06 00 00 00 00"/>
             </Field>
             <Field label="EMAIL">
@@ -2209,9 +2209,9 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         </div>
       </Modal>
 
-      <Modal open={showConstraint} onClose={()=>setShowConstraint(false)} title="Nouvelle contrainte">
+      <Modal open={showConstraint} onClose={()=>setShowConstraint(false)} title=t.newConstraint||"New constraint">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label="PREMIER INVITÉ">
+          <Field label=t.firstGuest||"FIRST GUEST">
             <Select value={constraint.a} onChange={e=>setConstraint({...constraint,a:parseInt(e.target.value)||e.target.value})}>
               <option value="">— Choisir —</option>
               {ev.guests.map(g=><option key={g.id} value={g.id}>{g.name}</option>)}
@@ -2219,7 +2219,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
           </Field>
           <Field label={t.settingType}>
             <div style={{ display:"flex", gap:8 }}>
-              {[["together","🤝 Ensemble",C.green],["apart","⚡ Séparés",C.red]].map(([v,l,col])=>(
+              {[["together","🤝 Ensemble",C.green],["apart","⚡ "+(t.separated||"Separated"),C.red]].map(([v,l,col])=>(
                 <button key={v} onClick={()=>setConstraint({...constraint,type:v})} style={{
                   flex:1, padding:"10px", borderRadius:10, border:`2px solid ${constraint.type===v?col:C.border}`,
                   background:constraint.type===v?col+"22":C.mid, cursor:"pointer", color:constraint.type===v?col:C.muted,
@@ -2228,7 +2228,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               ))}
             </div>
           </Field>
-          <Field label="DEUXIÈME INVITÉ">
+          <Field label=t.secondGuest||"SECOND GUEST">
             <Select value={constraint.b} onChange={e=>setConstraint({...constraint,b:parseInt(e.target.value)||e.target.value})}>
               <option value="">— Choisir —</option>
               {ev.guests.filter(g=>g.id!==constraint.a).map(g=><option key={g.id} value={g.id}>{g.name}</option>)}
@@ -2258,7 +2258,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         </div>
       </Modal>
 
-      <Modal open={showSettings} onClose={()=>setShowSettings(false)} title="Paramètres de l'événement">
+      <Modal open={showSettings} onClose={()=>setShowSettings(false)} title=t.eventSettings||"Event settings">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <Field label={t.settingName}><Input value={ev.name} onChange={e=>updateEv(evUp=>({...evUp,name:e.target.value}))}/></Field>
           <Field label={t.settingDate}><Input type="date" value={ev.date} onChange={e=>updateEv(evUp=>({...evUp,date:e.target.value}))}/></Field>
