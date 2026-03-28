@@ -23,7 +23,9 @@ function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
   const [showNewUser, setShowNewUser]       = useState(false);
   const [showSubscription, setShowSubscription] = useState(null);
   const [showStripeSetup, setShowStripeSetup]   = useState(false);
-  const [stripeKey,    setStripeKey]    = useState(localStorage.getItem("tm_stripe_pk")||"");
+  const [stripeKey,    setStripeKey]    = useState(localStorage.getItem("tm_stripe_pk")||"")
+  const [paypalEmail,  setPaypalEmail]  = useState(localStorage.getItem("tm_paypal_email")||"")
+  const [paypalClientId, setPaypalClientId] = useState(localStorage.getItem("tm_paypal_client_id")||"");
   const [stripeSecret, setStripeSecret] = useState(localStorage.getItem("tm_stripe_sk")||"");
   const [search,       setSearch]       = useState("");
   const [filterPlan,   setFilterPlan]   = useState("all");
@@ -267,30 +269,75 @@ function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
           </div>
         )}
 
-        {/* ── STRIPE ── */}
+        {/* ── PAIEMENT ── */}
         {tab==="stripe" && (
           <div>
             <h2 style={{margin:"0 0 8px",fontSize:24,fontWeight:700}}>Intégration paiement</h2>
-            <p style={{color:"rgba(255,255,255,0.4)",margin:"0 0 32px",fontSize:14}}>Configurez Stripe pour activer les abonnements.</p>
-            <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:20,marginBottom:28}}>
-              <div style={card}>
-                <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:16}}>
-                  <span style={{fontSize:28}}>💳</span>
-                  <div>
-                    <div style={{fontWeight:700,fontSize:15}}>Stripe</div>
-                    <div style={{fontSize:12,color:stripeKey?STATUS_COLORS.active:STATUS_COLORS.expired}}>{stripeKey?"✅ Clés configurées":"❌ Non configuré"}</div>
-                  </div>
+            <p style={{color:"rgba(255,255,255,0.4)",margin:"0 0 32px",fontSize:14}}>Configurez votre moyen de paiement pour encaisser vos clients.</p>
+
+            {/* PayPal — recommandé pour démarrer */}
+            <div style={{...card,marginBottom:20,border:"1px solid rgba(0,113,206,0.4)"}}>
+              <div style={{display:"flex",alignItems:"center",gap:16,marginBottom:20}}>
+                <div style={{width:48,height:48,borderRadius:12,background:"#003087",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24}}>🅿️</div>
+                <div style={{flex:1}}>
+                  <div style={{fontWeight:700,fontSize:16}}>PayPal <span style={{fontSize:11,padding:"2px 8px",background:"rgba(0,113,206,0.2)",color:"#60a5fa",borderRadius:99,marginLeft:6}}>Recommandé</span></div>
+                  <div style={{fontSize:12,color:paypalEmail?STATUS_COLORS.active:"rgba(255,255,255,0.4)",marginTop:2}}>{paypalEmail?"✅ Compte configuré : "+paypalEmail:"❌ Non configuré"}</div>
                 </div>
-                <Btn onClick={()=>setShowStripeSetup(true)}>{stripeKey?"Modifier les clés":"Configurer Stripe"}</Btn>
+                <div style={{fontSize:12,color:"rgba(255,255,255,0.4)",textAlign:"right"}}>3,4% + 0,35€<br/>par transaction</div>
               </div>
-              <div style={card}>
-                <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:16}}>
-                  <span style={{fontSize:28}}>🔗</span>
-                  <div><div style={{fontWeight:700,fontSize:15}}>Liens de paiement</div><div style={{fontSize:12,color:"rgba(255,255,255,0.4)"}}>Créez des liens pour chaque plan</div></div>
+
+              <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:12,marginBottom:16}}>
+                <Field label="EMAIL PAYPAL *">
+                  <Input value={paypalEmail} onChange={e=>setPaypalEmail(e.target.value)} placeholder="votre@email.com"/>
+                </Field>
+                <Field label="CLIENT ID PAYPAL (optionnel)">
+                  <Input value={paypalClientId} onChange={e=>setPaypalClientId(e.target.value)} placeholder="AaBbCc..."/>
+                </Field>
+              </div>
+
+              <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+                <Btn onClick={()=>{ localStorage.setItem("tm_paypal_email",paypalEmail); localStorage.setItem("tm_paypal_client_id",paypalClientId); alert("PayPal sauvegardé ✅"); }}>💾 Sauvegarder</Btn>
+                <a href="https://www.paypal.com/signin" target="_blank" rel="noreferrer" style={{textDecoration:"none"}}><Btn variant="ghost">Ouvrir PayPal →</Btn></a>
+                <a href="https://www.paypal.com/buttons/smart" target="_blank" rel="noreferrer" style={{textDecoration:"none"}}><Btn variant="ghost">Créer un bouton →</Btn></a>
+              </div>
+
+              {paypalEmail && (
+                <div style={{marginTop:16,padding:"14px 16px",background:"rgba(0,113,206,0.06)",border:"1px solid rgba(0,113,206,0.2)",borderRadius:10}}>
+                  <div style={{fontSize:12,fontWeight:700,color:"#60a5fa",marginBottom:10}}>🔗 Liens de paiement rapide (à partager avec vos clients)</div>
+                  <div style={{display:"flex",flexDirection:"column",gap:8}}>
+                    {Object.entries(SUBSCRIPTION_PLANS).filter(([k])=>k!=="free").map(([key,plan])=>{
+                      const link = "https://www.paypal.com/paypalme/"+paypalEmail.split("@")[0]+"/"+plan.price+"EUR";
+                      return (
+                        <div key={key} style={{display:"flex",alignItems:"center",gap:10}}>
+                          <span style={{color:plan.color,fontWeight:700,minWidth:80,fontSize:13}}>{plan.label}</span>
+                          <span style={{fontSize:11,color:"rgba(255,255,255,0.4)",minWidth:50}}>{plan.price}€/mois</span>
+                          <code style={{flex:1,fontSize:11,color:"rgba(255,255,255,0.6)",background:"#13131e",padding:"4px 8px",borderRadius:6,overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{link}</code>
+                          <Btn small variant="ghost" onClick={()=>navigator.clipboard.writeText(link)}>📋</Btn>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  <div style={{fontSize:11,color:"rgba(255,255,255,0.3)",marginTop:10}}>⚠️ Ces liens utilisent PayPal.me — activez votre compte PayPal.me sur paypal.com/paypalme</div>
                 </div>
-                <a href="https://dashboard.stripe.com/payment-links" target="_blank" rel="noreferrer"><Btn variant="ghost">Ouvrir Stripe Dashboard →</Btn></a>
+              )}
+            </div>
+
+            {/* Stripe */}
+            <div style={{...card,marginBottom:20}}>
+              <div style={{display:"flex",alignItems:"center",gap:16,marginBottom:16}}>
+                <div style={{width:48,height:48,borderRadius:12,background:"#635bff",display:"flex",alignItems:"center",justifyContent:"center",fontSize:24}}>💳</div>
+                <div style={{flex:1}}>
+                  <div style={{fontWeight:700,fontSize:16}}>Stripe</div>
+                  <div style={{fontSize:12,color:stripeKey?STATUS_COLORS.active:"rgba(255,255,255,0.4)",marginTop:2}}>{stripeKey?"✅ Clés configurées":"Non configuré"}</div>
+                </div>
+                <div style={{fontSize:12,color:"rgba(255,255,255,0.4)",textAlign:"right"}}>1,5% + 0,25€<br/>par transaction</div>
+              </div>
+              <div style={{display:"flex",gap:10}}>
+                <Btn onClick={()=>setShowStripeSetup(true)} variant="ghost">{stripeKey?"Modifier les clés":"Configurer Stripe"}</Btn>
+                <a href="https://dashboard.stripe.com/payment-links" target="_blank" rel="noreferrer" style={{textDecoration:"none"}}><Btn variant="ghost">Stripe Dashboard →</Btn></a>
               </div>
             </div>
+
             <div style={{...card,marginBottom:20}}>
               <h3 style={{color:C.gold,margin:"0 0 20px",fontWeight:600,fontSize:15}}>Plans & tarifs</h3>
               <div style={{display:"grid",gridTemplateColumns:"repeat(auto-fill,minmax(220px,1fr))",gap:16}}>
