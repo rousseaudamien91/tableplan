@@ -7,6 +7,7 @@ import Dashboard from "./components/Dashboard";
 import EventEditor from "./components/EventEditor";
 import SuperAdminPanel from "./components/SuperAdmin";
 import GuestJoinPage from "./components/GuestJoinPage";
+import GuestForm from "./components/GuestForm";
 
 // ═══════════════════════════════════════════════════════════════
 // FIREBASE CONFIG
@@ -67,28 +68,15 @@ async function loadEventsFromFirestore(userId) {
 // LOADING SCREEN
 // ═══════════════════════════════════════════════════════════════
 
-
-// ═══════════════════════════════════════════════════════════════
-// LOADING SCREEN
-// ═══════════════════════════════════════════════════════════════
-
 function LoadingScreen() {
   return (
-    <div style={{ minHeight:"100vh", background:`radial-gradient(ellipse at 30% 40%, #2a1a0e, #120C08)`, display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column", gap:16 }}>
+    <div style={{ minHeight:"100vh", background:"#0d0d14", display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column", gap:16 }}>
       <div style={{ fontSize:48 }}>🪑</div>
       <div style={{ color:"#C9973A", fontSize:18, letterSpacing:2, fontFamily:"Georgia,serif" }}>TableMaître</div>
-      <div style={{ color:"#8A7355", fontSize:13 }}>Loading…</div>
+      <div style={{ color:"rgba(255,255,255,0.4)", fontSize:13 }}>Loading…</div>
     </div>
   );
 }
-
-// ═══════════════════════════════════════════════════════════════
-// ROOT APP
-// ═══════════════════════════════════════════════════════════════
-
-// ═══════════════════════════════════════════════════════════════
-// PAGE PUBLIQUE INVITÉ (?join=eventId)
-// ═══════════════════════════════════════════════════════════════
 
 // ═══════════════════════════════════════════════════════════════
 // APP — Composant racine
