@@ -108,7 +108,7 @@ export default function App() {
       navigator.serviceWorker.register("/sw.js").catch(() => {});
     }
   }, []);
-  const { t, lang, setLang } = useI18n();
+  const { t, lang, setLang } = useI18n(fbUser?.uid);
 
   // Thème
   // Rappel J-7 — notifications browser
@@ -289,7 +289,7 @@ export default function App() {
     name: fbUser.displayName || fbUser.email,
     avatar: (fbUser.displayName || fbUser.email || "?").slice(0,2).toUpperCase(),
     photoURL: fbUser.photoURL,
-    role: fbUser.email === "admin@tablema.fr" ? "superadmin" : "admin",
+    role: fbUser.email === "rousseau.damien.91@gmail.com" ? "superadmin" : "admin",
     projectIds: events.map(e => e.id),
   } : null;
 
