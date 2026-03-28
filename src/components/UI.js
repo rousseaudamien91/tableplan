@@ -68,7 +68,8 @@ function Badge({ children, color, style={} }) {
   );
 }
 
-function Modal({ title, onClose, children, width=520 }) {
+function Modal({ title, onClose, children, width=520, open }) {
+  if (open === false) return null;
   return (
     <div style={{ position:"fixed", inset:0, zIndex:1000, display:"flex", alignItems:"center", justifyContent:"center", background:"rgba(0,0,0,0.7)", backdropFilter:"blur(6px)" }}
       onClick={e=>{ if(e.target===e.currentTarget) onClose(); }}>
