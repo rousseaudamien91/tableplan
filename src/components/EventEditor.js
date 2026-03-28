@@ -431,7 +431,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                   <div style={{ display:"flex", alignItems:"center", marginBottom:8 }}>
                     <div style={{ color:C.red, fontSize:12, letterSpacing:.5, flex:1 }}>{t.unseatedList} ({unseated.length})</div>
                     <button onClick={()=>setHighlightTables(h=>!h)} style={{ background:highlightTables?C.gold:"none", border:`1px solid ${highlightTables?C.gold:C.border}`, borderRadius:6, color:highlightTables?C.dark:C.muted, fontSize:11, padding:"3px 10px", cursor:"pointer", fontFamily:"inherit" }}>
-                      {highlightTables ? "✓ "+(t.tablesVisible||"Tables visible") : "👁 "+(t.seeAvailable||"See free seats")}
+                      {highlightTables ? "✓ Tables visibles" : "👁 Voir places libres"}
                     </button>
                   </div>
                   <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
@@ -659,7 +659,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         {tab==="guests" && (
           <div style={{ maxWidth:860 }}>
             <div style={{ display:"flex", gap:12, marginBottom:20 }}>
-              <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t.search||"Search..."}
+              <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t.search||"Search guest..."}
                 style={{ ...inputStyle, flex:1 }}/>
               <Btn variant="ghost" onClick={()=>exportGuestsCSV(ev)}>⬇ Export CSV</Btn>
               <Btn variant="ghost" onClick={()=>setShowImportCSV(true)}>⬆ Import CSV</Btn>
@@ -1247,7 +1247,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 }}>✨ Modèle type</Btn>
                 <Btn small variant="ghost" onClick={function(){
                   updateEv(function(evUp){
-                    return {...evUp, planning:[...(evUp.planning||[]), {id:Date.now(), label:t.newTask||"New task", icon:"📌", deadline:"", priority:"medium", done:false, notes:""}]};
+                    return {...evUp, planning:[...(evUp.planning||[]), {id:Date.now(), label:"Nouvelle tâche", icon:"📌", deadline:"", priority:"medium", done:false, notes:""}]};
                   });
                 }}>+ Tâche</Btn>
               </div>
@@ -1260,7 +1260,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               {["high","medium","low"].map(function(prio){
                 var tasks = (ev.planning||[]).filter(function(t){ return (t.priority||"medium") === prio; });
                 if (!tasks.length) return null;
-                var prioLabel = {high:"🔴 "+(t.high||"High"), medium:"🟡 "+(t.medium||"Medium"), low:"🟢 "+(t.low||"Low")}[prio];
+                var prioLabel = {high:"🔴 Priorité haute", medium:"🟡 Priorité moyenne", low:"🟢 Priorité faible"}[prio];
                 var prioColor = {high:C.red, medium:"#FF9800", low:C.green}[prio];
                 return (
                   <div key={prio} style={{ marginBottom:20 }}>
@@ -1313,15 +1313,15 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 <div style={{ flex:1 }}/>
                 <Btn small onClick={function(){
                   var tpl = [
-                    {time:"10:00", label:"Guest welcome",      icon:"🎉", duration:30,  notes:""},
-                    {time:"10:30", label:"Ceremony",                icon:"💍", duration:45,  notes:""},
+                    {time:"10:00", label:"Accueil des invités",      icon:"🎉", duration:30,  notes:""},
+                    {time:"10:30", label:"Cérémonie",                icon:"💍", duration:45,  notes:""},
                     {time:"11:30", label:"Vin d'honneur / Cocktail", icon:"🥂", duration:90,  notes:""},
-                    {time:"13:00", label:"Lunch",                  icon:"🍽", duration:120, notes:""},
+                    {time:"13:00", label:"Déjeuner",                  icon:"🍽", duration:120, notes:""},
                     {time:"15:00", label:"Discours & animations",     icon:"🎤", duration:60,  notes:""},
-                    {time:"16:00", label:"Wedding cake",              icon:"🎂", duration:30,  notes:""},
+                    {time:"16:00", label:"Pièce montée",              icon:"🎂", duration:30,  notes:""},
                     {time:"17:00", label:"Ouverture de bal",          icon:"💃", duration:30,  notes:""},
-                    {time:"20:00", label:"Dinner",                     icon:"🍷", duration:120, notes:""},
-                    {time:"22:00", label:"Dance party",           icon:"🎶", duration:180, notes:""},
+                    {time:"20:00", label:"Dîner",                     icon:"🍷", duration:120, notes:""},
+                    {time:"22:00", label:"Soirée dansante",           icon:"🎶", duration:180, notes:""},
                   ];
                   updateEv(function(evUp){
                     var existing = (evUp.programme||[]).map(function(p){ return p.label; });
@@ -1666,7 +1666,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               {["high","medium","low"].map(prio=>{
                 const tasks = (ev.planning||[]).filter(t=>t.priority===prio);
                 if (!tasks.length) return null;
-                const prioConfig = {high:{label:"🔴 Urgent",color:C.red},medium:{label:"🟡 Normal",color:"#C9973A"},low:{label:"🟢 "+(t.low||"Low"),color:C.green}};
+                const prioConfig = {high:{label:"🔴 Urgent",color:C.red},medium:{label:"🟡 Normal",color:"#C9973A"},low:{label:"🟢 Faible priorité",color:C.green}};
                 const pc = prioConfig[prio];
                 return (
                   <div key={prio} style={{ marginBottom:16 }}>
@@ -1792,7 +1792,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                     <input
                       value={venue.address||""}
                       onChange={function(e){ var v=e.target.value; updateEv(function(evUp){ var vens=[...(evUp.venues||[])]; vens[vi]={...vens[vi],address:v}; return {...evUp,venues:vens}; }); }}
-                      placeholder={t.fullAddress||"Full} address"
+                      placeholder="Adresse complète"
                       style={{ padding:"6px 10px", background:"#fff1", border:"1px solid "+C.border, borderRadius:6, color:"#ffffff", fontSize:13, fontFamily:"inherit" }}
                     />
                     <div style={{ display:"flex", gap:8, alignItems:"center", flexWrap:"wrap" }}>
@@ -2000,7 +2000,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         </div>
       </Modal>
 
-      <Modal open={showAddZone} onClose={()=>{setShowAddZone(false);setNewZone({label:"",icon:"📍",color:"#C9973A"});}} title={t.addZone||"Add} a zone">
+      <Modal open={showAddZone} onClose={()=>{setShowAddZone(false);setNewZone({label:"",icon:"📍",color:"#C9973A"});}} title="Ajouter une zone">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <Field label="NOM DE LA ZONE *">
             <Input value={newZone.label} onChange={e=>setNewZone({...newZone,label:e.target.value})} placeholder="ex: Piste de danse, Bar, Scène, Photo Booth…"/>
@@ -2209,7 +2209,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         </div>
       </Modal>
 
-      <Modal open={showConstraint} onClose={()=>setShowConstraint(false)} title={t.newConstraint||"New} constraint">
+      <Modal open={showConstraint} onClose={()=>setShowConstraint(false)} title="Nouvelle contrainte">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <Field label="PREMIER INVITÉ">
             <Select value={constraint.a} onChange={e=>setConstraint({...constraint,a:parseInt(e.target.value)||e.target.value})}>
@@ -2219,7 +2219,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
           </Field>
           <Field label={t.settingType}>
             <div style={{ display:"flex", gap:8 }}>
-              {[["together","🤝 Ensemble",C.green],["apart","⚡ "+(t.separated||"Separated"),C.red]].map(([v,l,col])=>(
+              {[["together","🤝 Ensemble",C.green],["apart","⚡ Séparés",C.red]].map(([v,l,col])=>(
                 <button key={v} onClick={()=>setConstraint({...constraint,type:v})} style={{
                   flex:1, padding:"10px", borderRadius:10, border:`2px solid ${constraint.type===v?col:C.border}`,
                   background:constraint.type===v?col+"22":C.mid, cursor:"pointer", color:constraint.type===v?col:C.muted,
@@ -2258,7 +2258,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         </div>
       </Modal>
 
-      <Modal open={showSettings} onClose={()=>setShowSettings(false)} title={t.eventSettings||"Event} settings">
+      <Modal open={showSettings} onClose={()=>setShowSettings(false)} title="Paramètres de l'événement">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
           <Field label={t.settingName}><Input value={ev.name} onChange={e=>updateEv(evUp=>({...evUp,name:e.target.value}))}/></Field>
           <Field label={t.settingDate}><Input type="date" value={ev.date} onChange={e=>updateEv(evUp=>({...evUp,date:e.target.value}))}/></Field>
