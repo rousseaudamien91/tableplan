@@ -81,8 +81,7 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
   const nextTableNumber = ev.tables.reduce((mx, tbl) => Math.max(mx, tbl.number), 0) + 1;
   const [constraint, setConstraint] = useState({ a:"", b:"", type:"together" });
   const [search, setSearch] = useState("");
-  const [showImportCSV, setShowImportCSV] = useState(false);
-  const [highlightTables, setHighlightTables] = useState(false);
+    const [highlightTables, setHighlightTables] = useState(false);
   const [selectedUnseatedGuest, setSelectedUnseatedGuest] = useState(null);
   const [tablesHistory, setTablesHistory] = useState([]);
   const pushHistory = (tables) => setTablesHistory(h => [...h.slice(-9), tables]);
@@ -1886,42 +1885,6 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
       </div>
 
       {/* ── MODALS ── */}
-      <Modal open={showImportCSV} onClose={()=>setShowImportCSV(false)} title="Importer des invités (CSV)" width={500}>
-        <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <div style={{ background:"#13131e", borderRadius:10, padding:"12px 16px", fontSize:12, color:"rgba(255,255,255,0.45)", lineHeight:1.8 }}>
-            <strong style={{color:"#C9973A"}}>Format attendu (1 invité par ligne) :</strong><br/>
-            <code style={{color:"#ffffff"}}>Prénom Nom, email@example.fr, standard</code><br/>
-            Régimes : standard, vegetarien, vegan, sans-gluten, halal, casher, sans-lactose, sans-noix, diabetique
-          </div>
-          <textarea
-            rows={10}
-            placeholder={"Marie Martin, marie@test.com, vegetarien\nJean Dupont, jean@test.com, standard\nSophie Laurent, , vegan"}
-            id="csv-import-area"
-            style={{ ...inputStyle, resize:"vertical", fontFamily:"monospace", fontSize:12, lineHeight:1.6 }}
-          />
-          <Btn onClick={() => {
-            const raw = document.getElementById("csv-import-area").value;
-            const lines = raw.split("\n").filter(l => l.trim());
-            const newGuests = lines.map(line => {
-              const parts = line.split(",").map(p => p.trim());
-              const validDiets = ["standard","vegetarien","vegan","sans-gluten","halal","casher","sans-lactose","sans-noix","diabetique"];
-              return {
-                id: Date.now() + Math.random(),
-                name: parts[0] || "Invité",
-                email: parts[1] || "",
-                diet: validDiets.includes(parts[2]) ? parts[2] : "standard",
-                notes: parts[3] || "",
-                allergies: [],
-                tableId: null
-              };
-            }).filter(g => g.name);
-            updateEv(e => ({ ...e, guests: [...e.guests, ...newGuests] }));
-            setShowImportCSV(false);
-          }} style={{marginTop:4}}>
-            ⬆ Importer {""} invités
-          </Btn>
-        </div>
-      </Modal>
 
       <Modal open={showAddGuest} onClose={()=>setShowAddGuest(false)} title="Ajouter un invité">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
