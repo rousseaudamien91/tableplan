@@ -103,6 +103,7 @@ function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
           {t.loginSub}
         </p>
 
+        {/* CTA Google */}
         <button onClick={onLogin} style={{
           padding:"18px 44px", borderRadius:99, border:"none",
           background:"linear-gradient(135deg,#C9973A,#F0C97A)",
@@ -113,12 +114,28 @@ function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
           {t.loginCta}
         </button>
 
-        <button onClick={onGuestLogin} style={{
-          padding:"14px 36px", borderRadius:99,
-          background:"transparent",
-          border:"1px solid rgba(255,255,255,0.2)",
-          color:"rgba(255,255,255,0.7)", fontWeight:600
-        }}>
+        {/* DEMO BUTTON — OPTION 1 */}
+        <button
+          onClick={onGuestLogin}
+          style={{
+            padding:"14px 36px",
+            borderRadius:99,
+            background:"rgba(201,151,58,0.08)",
+            border:"1px solid rgba(201,151,58,0.4)",
+            color:"#F0C97A",
+            fontWeight:600,
+            backdropFilter:"blur(4px)",
+            transition:"all .25s",
+          }}
+          onMouseEnter={e=>{
+            e.currentTarget.style.background="rgba(201,151,58,0.18)";
+            e.currentTarget.style.borderColor="rgba(201,151,58,0.7)";
+          }}
+          onMouseLeave={e=>{
+            e.currentTarget.style.background="rgba(201,151,58,0.08)";
+            e.currentTarget.style.borderColor="rgba(201,151,58,0.4)";
+          }}
+        >
           {t.loginDemo}
         </button>
 
