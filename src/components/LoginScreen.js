@@ -9,13 +9,18 @@ function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
   const [hovered, setHovered] = useState(null);
 
   const FEATURES = [
-    { icon:"🗺️", title:"Plan de salle interactif", desc:"Glissez-déposez vos tables sur un canvas intuitif." },
-    { icon:"💌", title:"RSVP & invitations", desc:"Suivez les confirmations en temps réel." },
-    { icon:"🖨️", title:"Exports premium", desc:"PDF, chevalets imprimables, QR codes invités." },
-    { icon:"🤖", title:"IA proactive", desc:"Un assistant qui analyse et optimise votre événement." },
+    { icon:"🗺️", title:t.loginF1,  desc:t.loginF1d },
+    { icon:"💌", title:t.loginF2,  desc:t.loginF2d },
+    { icon:"🖨️", title:t.loginF3,  desc:t.loginF3d },
+    { icon:"🤖", title:t.loginF4,  desc:t.loginF4d },
   ];
 
-  const TRUST = ["Mariages", "Galas", "Conférences", "Corporate"];
+  const TRUST = [
+    t.loginTrust1,
+    t.loginTrust2,
+    t.loginTrust3,
+    t.loginTrust4,
+  ];
 
   return (
     <div style={{ minHeight:"100vh", background:"#0d0d14", color:"#fff", fontFamily:"Inter, sans-serif" }}>
@@ -27,7 +32,10 @@ function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
         background:"rgba(13,13,20,0.9)", backdropFilter:"blur(20px)",
         borderBottom:"1px solid rgba(201,151,58,0.2)", zIndex:100
       }}>
-        <span style={{ fontSize:20, fontWeight:800, color:"#F0C97A" }}>TableMaître</span>
+        <span style={{ fontSize:20, fontWeight:800, color:"#F0C97A" }}>
+          {t.appName}
+        </span>
+
         <div style={{ flex:1 }}/>
 
         {/* Lang selector */}
@@ -56,7 +64,7 @@ function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
           background:"linear-gradient(135deg,#C9973A,#F0C97A)",
           color:"#0d0d14", fontWeight:800, fontSize:13
         }}>
-          Se connecter avec Google
+          {t.loginGoogle}
         </button>
       </nav>
 
@@ -74,18 +82,25 @@ function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
           pointerEvents:"none"
         }}/>
 
+        <p style={{
+          fontSize:14, letterSpacing:4, textTransform:"uppercase",
+          color:"rgba(255,255,255,0.45)", marginBottom:12
+        }}>
+          {t.loginSubtitle}
+        </p>
+
         <h1 style={{
           fontSize:"clamp(42px,6vw,78px)", fontWeight:800,
           fontFamily:"Georgia, serif", marginBottom:20
         }}>
-          Organisez. Placez. Impressionnez.
+          {t.loginHero}
         </h1>
 
         <p style={{
           maxWidth:520, fontSize:18, lineHeight:1.7,
           color:"rgba(255,255,255,0.65)", marginBottom:40
         }}>
-          La plateforme professionnelle pour gérer vos invités, votre plan de salle et vos exports en quelques minutes.
+          {t.loginSub}
         </p>
 
         <button onClick={onLogin} style={{
@@ -95,7 +110,7 @@ function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
           boxShadow:"0 8px 40px rgba(201,151,58,0.4)",
           marginBottom:20
         }}>
-          Se connecter avec Google
+          {t.loginCta}
         </button>
 
         <button onClick={onGuestLogin} style={{
@@ -104,11 +119,15 @@ function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
           border:"1px solid rgba(255,255,255,0.2)",
           color:"rgba(255,255,255,0.7)", fontWeight:600
         }}>
-          Essayer en mode démo
+          {t.loginDemo}
         </button>
 
         <p style={{ marginTop:10, fontSize:12, color:"rgba(255,255,255,0.35)" }}>
-          Mode démo — 5 invités max · Aucune donnée sauvegardée
+          {t.loginDemoWarning}
+        </p>
+
+        <p style={{ marginTop:20, fontSize:13, color:"rgba(255,255,255,0.45)" }}>
+          {t.loginFree}
         </p>
       </section>
 
@@ -118,7 +137,7 @@ function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
           fontSize:12, letterSpacing:3, textTransform:"uppercase",
           color:"rgba(255,255,255,0.35)", marginBottom:20
         }}>
-          Utilisé pour
+          {t.trustedFor}
         </p>
 
         <div style={{ display:"flex", justifyContent:"center", gap:12, flexWrap:"wrap" }}>
@@ -164,7 +183,7 @@ function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
         </div>
       </section>
 
-      {/* PLACEHOLDER REVIEWS */}
+      {/* REVIEWS PLACEHOLDER */}
       <section style={{
         padding:"80px 24px", textAlign:"center",
         background:"rgba(255,255,255,0.02)",
@@ -174,10 +193,10 @@ function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
           fontSize:26, fontWeight:800,
           fontFamily:"Georgia, serif", marginBottom:12
         }}>
-          Avis clients
+          {t.loginFooterTitle}
         </h2>
         <p style={{ color:"rgba(255,255,255,0.5)", fontSize:15 }}>
-          Les témoignages arrivent bientôt…
+          {t.loginReviewsSoon}
         </p>
       </section>
 
@@ -188,14 +207,13 @@ function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
             textAlign:"center", fontSize:28, fontWeight:800,
             marginBottom:40, fontFamily:"Georgia, serif"
           }}>
-            Questions fréquentes
+            FAQ
           </h2>
 
           {[
-            { q:"Mes données sont-elles sécurisées ?", r:"Oui. Toutes vos données sont chiffrées et stockées sur Firebase (Google)." },
-            { q:"Puis-je collaborer avec mon équipe ?", r:"Oui, la collaboration multi-utilisateurs est disponible sur le plan Pro." },
-            { q:"Que se passe-t-il après le palier d'invités ?", r:"Vous pouvez continuer gratuitement jusqu'à 10 invités." },
-            { q:"Puis-je importer ma liste depuis Excel ?", r:"Oui, les fichiers .xlsx, .xls et .csv sont supportés." },
+            { q:t.savedCloud, r:t.savedAuto },
+            { q:t.voucherTitle, r:t.voucherApplied },
+            { q:t.loading, r:t.skipToMain },
           ].map((faq,i)=>(
             <details key={i} style={{
               borderBottom:"1px solid rgba(255,255,255,0.08)",
