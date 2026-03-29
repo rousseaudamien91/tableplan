@@ -2231,7 +2231,6 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
           </Field>
         </div>
       </Modal>
-          </div>
 
       <ImportModal
         open={showImportModal}
