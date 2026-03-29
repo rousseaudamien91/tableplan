@@ -139,28 +139,6 @@ function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
         </div>
       </section>
 
-      <ReviewsSection />
-
-      {/* FAQ */}
-      <section style={{ padding:"64px 24px", borderTop:"1px solid rgba(255,255,255,0.05)" }}>
-        <div style={{ maxWidth:680, margin:"0 auto" }}>
-          <h2 style={{ textAlign:"center", fontSize:26, fontWeight:800, margin:"0 0 36px", color:"#ffffff", fontFamily:"Georgia,serif" }}>Questions fréquentes</h2>
-          {[
-            { q:"Mes données sont-elles sécurisées ?", r:"Oui. Toutes vos données sont chiffrées et sauvegardées sur Firebase (Google). Vous pouvez exporter ou supprimer vos données à tout moment." },
-            { q:"Puis-je collaborer avec mon équipe ?", r:"Oui, la fonctionnalité multi-utilisateurs est disponible sur le plan Pro. Partagez l'accès à votre événement avec vos co-organisateurs." },
-            { q:"Que se passe-t-il après le palier d'invités ?", r:"L'application vous propose simplement de choisir une formule adaptée. Vous pouvez continuer à utiliser TableMaître librement jusqu'à 10 invités." },
-            { q:"Puis-je importer ma liste depuis Excel ?", r:"Oui ! TableMaître supporte l'import de fichiers .xlsx, .xls et .csv. Les colonnes (nom, email, régime...) sont détectées automatiquement." },
-          ].map((faq,i)=>(
-            <details key={i} style={{ borderBottom:"1px solid rgba(255,255,255,0.06)", padding:"16px 0" }}>
-              <summary style={{ fontSize:15, fontWeight:600, color:"#ffffff", cursor:"pointer", listStyle:"none", display:"flex", justifyContent:"space-between" }}>
-                {faq.q} <span style={{ color:"#C9973A" }}>+</span>
-              </summary>
-              <p style={{ fontSize:13, color:"rgba(255,255,255,0.5)", lineHeight:1.7, margin:"12px 0 0", paddingRight:20 }}>{faq.r}</p>
-            </details>
-          ))}
-        </div>
-      </section>
-
     </div>
   );
 }
