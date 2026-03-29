@@ -1009,6 +1009,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
 
             {/* ── SOUS-ONGLET : RSVP ── */}
             {guestSubTab==="rsvp" && (
+            <div>
             <div style={{ maxWidth:900 }}>
 
             {/* ── Synthèse RSVP ── */}
@@ -1106,6 +1107,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 })}
               </div>
             </div>
+            </div> {/* fin wrapper rsvp */}
             )} {/* fin guestSubTab rsvp */}
           </div> {/* fin maxWidth:860 tab guests */}
         )}
