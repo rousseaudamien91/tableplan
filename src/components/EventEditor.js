@@ -1004,8 +1004,8 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               </div>
             )}
 
-            </div> {/* fin wrapper list */}
-            )} {/* fin guestSubTab list */}
+            </div>
+            )}
 
             {/* ── SOUS-ONGLET : RSVP ── */}
             {guestSubTab==="rsvp" && (
@@ -1107,9 +1107,9 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 })}
               </div>
             </div>
-            </div> {/* fin wrapper rsvp */}
-            )} {/* fin guestSubTab rsvp */}
-          </div> {/* fin maxWidth:860 tab guests */}
+            </div>
+            )}
+          </div>
         )}
 
         {/* ══════════════════════════════════════════
