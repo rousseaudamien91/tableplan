@@ -114,26 +114,26 @@ function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
           {t.loginCta}
         </button>
 
-        {/* DEMO BUTTON — OPTION 1 */}
+        {/* DEMO BUTTON — corrected contrast */}
         <button
           onClick={onGuestLogin}
           style={{
             padding:"14px 36px",
             borderRadius:99,
-            background:"rgba(201,151,58,0.08)",
-            border:"1px solid rgba(201,151,58,0.4)",
-            color:"#F0C97A",
+            background:"rgba(201,151,58,0.12)",
+            border:"1px solid rgba(201,151,58,0.55)",
+            color:"#ffffff",                 // ← TEXTE BLANC = LISIBILITÉ PARFAITE
             fontWeight:600,
             backdropFilter:"blur(4px)",
             transition:"all .25s",
           }}
           onMouseEnter={e=>{
-            e.currentTarget.style.background="rgba(201,151,58,0.18)";
-            e.currentTarget.style.borderColor="rgba(201,151,58,0.7)";
+            e.currentTarget.style.background="rgba(201,151,58,0.22)";
+            e.currentTarget.style.borderColor="rgba(201,151,58,0.85)";
           }}
           onMouseLeave={e=>{
-            e.currentTarget.style.background="rgba(201,151,58,0.08)";
-            e.currentTarget.style.borderColor="rgba(201,151,58,0.4)";
+            e.currentTarget.style.background="rgba(201,151,58,0.12)";
+            e.currentTarget.style.borderColor="rgba(201,151,58,0.55)";
           }}
         >
           {t.loginDemo}
