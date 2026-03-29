@@ -1918,7 +1918,6 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               </div>
             </div>
 
-          </div>
         )}
 
 
