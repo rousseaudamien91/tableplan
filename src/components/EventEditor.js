@@ -676,7 +676,6 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
                 }}>{sub.label}</button>
               ))}
             </div>
-            {guestSubTab==="list" && (
             <div>
             <div style={{ display:"flex", gap:12, marginBottom:20 }}>
               <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t.search||"Search..."}
@@ -978,9 +977,8 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         {/* ══════════════════════════════════════════
             ── RSVP TAB ──
         ══════════════════════════════════════════ */}
-            </div>
-            )}
-            {guestSubTab==="rsvp" && (
+            </div>)}
+            <div>{guestSubTab==="rsvp" && (
           <div style={{ maxWidth:900 }}>
 
             {/* ── Synthèse RSVP ── */}
@@ -1084,8 +1082,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         {/* ══════════════════════════════════════════
             ── BUDGET TAB ──
         ══════════════════════════════════════════ */}
-            </div>
-            )}
+            </div>)}
           </div>
         )}
 
@@ -1918,8 +1915,10 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               </div>
             </div>
 
+          </div>
         )}
 
+      </div>
 
       {/* ── MODALS ── */}
 
