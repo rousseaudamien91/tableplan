@@ -677,6 +677,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               ))}
             </div>
             {guestSubTab==="list" && (
+            <div>
             <div style={{ display:"flex", gap:12, marginBottom:20 }}>
               <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t.search||"Search..."}
                 style={{ ...inputStyle, flex:1 }}/>
@@ -977,6 +978,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         {/* ══════════════════════════════════════════
             ── RSVP TAB ──
         ══════════════════════════════════════════ */}
+            </div>
             )}
             {guestSubTab==="rsvp" && (
           <div style={{ maxWidth:900 }}>
@@ -1082,6 +1084,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         {/* ══════════════════════════════════════════
             ── BUDGET TAB ──
         ══════════════════════════════════════════ */}
+            </div>
             )}
           </div>
         )}
