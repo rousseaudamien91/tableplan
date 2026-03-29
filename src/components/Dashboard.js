@@ -104,34 +104,6 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
 
         <div style={{ display:"flex", gap:12, marginBottom:24, alignItems:"center" }}>
       {/* ── BANDEAU SOUSCRIPTION ── */}
-      {user && user.role !== "superadmin" && (()=>{
-        const status = user.subscriptionStatus || "trial";
-        const endDate = user.subscriptionEnd;
-        const daysLeft = endDate ? Math.ceil((new Date(endDate)-new Date())/86400000) : null;
-        if (status === "active") return null;
-        return (
-          <div style={{ margin:"0 0 20px", padding:"14px 20px", borderRadius:14,
-            background:status==="expired"?"rgba(224,82,82,0.12)":"rgba(240,201,122,0.1)",
-            border:`1px solid ${status==="expired"?"#e05252":"#F0C97A"}44`,
-            display:"flex", alignItems:"center", gap:16, flexWrap:"wrap" }}>
-            <span style={{fontSize:22}}>{status==="expired"?"❌":"⏳"}</span>
-            <div style={{flex:1}}>
-              <div style={{fontWeight:700,fontSize:14,color:status==="expired"?"#e05252":"#F0C97A"}}>
-                {status==="expired" ? "Abonnement expiré" : `Période d'essai${daysLeft!==null?" — "+daysLeft+" jour"+(daysLeft>1?"s":"")+" restant"+(daysLeft>1?"s":""):""}`}
-              </div>
-              <div style={{fontSize:12,color:"rgba(255,255,255,0.5)",marginTop:2}}>
-                {status==="expired" ? "Renouvelez votre abonnement pour continuer" : "Passez à un plan payant pour débloquer toutes les fonctionnalités"}
-              </div>
-            </div>
-            <button onClick={()=>setShowPricing(true)} style={{
-              padding:"10px 24px",background:"linear-gradient(135deg,#C9973A,#F0C97A)",
-              border:"none",borderRadius:99,cursor:"pointer",color:"#0d0d14",
-              fontWeight:800,fontSize:13,fontFamily:"inherit",whiteSpace:"nowrap"}}>
-              {status==="expired" ? "Renouveler" : "Voir les plans →"}
-            </button>
-          </div>
-        );
-      })()}
 
           <input
             value={globalSearch}
@@ -306,63 +278,6 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
           <Btn onClick={createEvent} style={{marginTop:4}}>Créer l'événement</Btn>
         </div>
       {/* ── BANDEAU SOUSCRIPTION ── */}
-      {user && user.role !== "superadmin" && (() => {
-        const status = user.subscriptionStatus || "trial";
-        const endDate = user.subscriptionEnd;
-        const daysLeft = endDate ? Math.ceil((new Date(endDate) - new Date()) / 86400000) : null;
-        if (status === "active") return null; // Actif → pas de bandeau
-        return (
-          <div style={{
-            margin:"0 auto 24px", maxWidth:900, width:"100%",
-            padding:"14px 20px", borderRadius:14,
-            background: status==="expired" ? "rgba(224,82,82,0.12)" : "rgba(240,201,122,0.1)",
-            border: `1px solid ${status==="expired" ? "#e05252" : "#F0C97A"}44`,
-            display:"flex", alignItems:"center", gap:16, flexWrap:"wrap",
-          }}>
-
-      {/* Bandeau mode démo */}
-      {guestMode && (
-        <div style={{
-          margin:"0 0 16px", padding:"12px 20px", borderRadius:12,
-          background:"rgba(59,130,246,0.1)", border:"1px solid rgba(59,130,246,0.3)",
-          display:"flex", alignItems:"center", gap:12, flexWrap:"wrap",
-        }}>
-          <span style={{fontSize:18}}>👤</span>
-          <div style={{flex:1}}>
-            <div style={{fontWeight:700,fontSize:13,color:"#60a5fa"}}>Mode démo</div>
-            <div style={{fontSize:12,color:"rgba(255,255,255,0.4)",marginTop:1}}>
-              ⚠️ Limité à 5 invités par événement · Aucune donnée sauvegardée · Session temporaire
-            </div>
-          </div>
-          <button onClick={onLogout} style={{
-            padding:"7px 16px",background:"rgba(59,130,246,0.2)",
-            border:"1px solid rgba(59,130,246,0.4)",borderRadius:8,
-            color:"#60a5fa",cursor:"pointer",fontSize:12,fontWeight:700,fontFamily:"inherit",
-          }}>Créer un compte →</button>
-        </div>
-      )}
-
-      {/* Bandeau souscription */}}
-
-            <span style={{ fontSize:22 }}>{status==="expired" ? "❌" : "⏳"}</span>
-            <div style={{ flex:1 }}>
-              <div style={{ fontWeight:700, fontSize:14, color: status==="expired" ? "#e05252" : "#F0C97A" }}>
-                {status==="expired" ? "Abonnement expiré" : `Période d'essai${daysLeft !== null ? ` — ${daysLeft} jour${daysLeft>1?"s":""} restant${daysLeft>1?"s":""}` : ""}`}
-              </div>
-              <div style={{ fontSize:12, color:"rgba(255,255,255,0.5)", marginTop:2 }}>
-                {status==="expired" ? "Renouvelez votre abonnement pour continuer à utiliser TableMaître" : "Passez à un plan payant pour débloquer toutes les fonctionnalités"}
-              </div>
-            </div>
-            <button onClick={() => setShowPricing(true)} style={{
-              padding:"10px 24px", background:"linear-gradient(135deg,#C9973A,#F0C97A)",
-              border:"none", borderRadius:99, cursor:"pointer", color:"#0d0d14",
-              fontWeight:800, fontSize:13, fontFamily:"inherit", whiteSpace:"nowrap",
-            }}>
-              {status==="expired" ? "Renouveler" : "Voir les plans →"}
-            </button>
-          </div>
-        );
-      })()}
 
 
       </Modal>
