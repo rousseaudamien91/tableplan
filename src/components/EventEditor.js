@@ -709,6 +709,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
 
             {/* ── SOUS-ONGLET : LISTE INVITÉS ── */}
             {guestSubTab==="list" && (
+            <div>
             <div style={{ display:"flex", gap:12, marginBottom:20 }}>
               <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t.search||"Search guest..."}
                 style={{ ...inputStyle, flex:1 }}/>
@@ -1003,6 +1004,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
               </div>
             )}
 
+            </div> {/* fin wrapper list */}
             )} {/* fin guestSubTab list */}
 
             {/* ── SOUS-ONGLET : RSVP ── */}
