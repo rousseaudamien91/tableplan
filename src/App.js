@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { NPSWidget } from "./components/ReviewsSection";
 import { useState, useEffect } from "react";
 import { C, useI18n } from "./theme";
 import { INITIAL_EVENTS } from "./constants";
@@ -98,6 +99,8 @@ export default function App() {
   const fbUser = useFirebaseAuth();
   const [events, setEvents] = useState([]);
   const [eventsLoaded, setEventsLoaded] = useState(false);
+  const [guestMode, setGuestMode] = useState(false);
+  const [showNPS, setShowNPS] = useState(false);
   const [selectedEventId, setSelectedEventId] = useState(null);
   const [view, setView] = useState("dashboard");
   const [lightMode, setLightMode] = useState(false);
@@ -195,8 +198,36 @@ export default function App() {
     } catch(e) { console.error("Login error:", e); }
   };
 
+  // Mode démo (guest) — session temporaire sans Firebase
+  const handleGuestLogin = () => {
+    const guestEvent = {
+      id: "guest-demo",
+      ownerId: "guest",
+      name: "Mon événement démo",
+      date: new Date().toISOString().slice(0,10),
+      type: "mariage",
+      plan: "guest",
+      roomShape: [{x:60,y:60},{x:740,y:60},{x:740,y:520},{x:60,y:520}],
+      tables: [{id:"t1",number:1,capacity:5,shape:"round",label:"Table 1",x:300,y:280,guests:[]}],
+      guests: [],
+      constraints: [],
+      menu: null,
+    };
+    setEvents([guestEvent]);
+    setEventsLoaded(true);
+    setGuestMode(true);
+  };
+
   // Déconnexion
   const handleLogout = async () => {
+    if (guestMode) {
+      setGuestMode(false);
+      setEvents([]);
+      setEventsLoaded(false);
+      setSelectedEventId(null);
+      setView("dashboard");
+      return;
+    }
     const fb = getFirebase();
     if (fb) await fb.auth.signOut();
     setSelectedEventId(null);
@@ -242,28 +273,58 @@ export default function App() {
   };
 
   // Construire l'objet user à partir de fbUser
+  const guestUser = guestMode ? {
+    id: "guest",
+    email: "demo@tablema.fr",
+    name: "Mode démo",
+    avatar: "👤",
+    photoURL: null,
+    role: "admin",
+    projectIds: ["guest-demo"],
+    subscriptionStatus: "guest",
+    plan: "guest",
+  } : null;
+
   const user = fbUser ? {
     id: fbUser.uid,
     email: fbUser.email,
     name: fbUser.displayName || fbUser.email,
     avatar: (fbUser.displayName || fbUser.email || "?").slice(0,2).toUpperCase(),
     photoURL: fbUser.photoURL,
-    role: fbUser.email === "admin@tablema.fr" ? "superadmin" : "admin",
+    role: fbUser.email === "rousseau.damien.91@gmail.com" ? "superadmin" : "admin",
     projectIds: events.map(e => e.id),
   } : null;
+
+  // NPS : afficher 2 jours après la première connexion
+  useEffect(function() {
+    if (!fbUser || guestMode) return;
+    var key = "tm_nps_shown_" + fbUser.uid;
+    var firstLogin = localStorage.getItem("tm_first_login_" + fbUser.uid);
+    if (!firstLogin) {
+      localStorage.setItem("tm_first_login_" + fbUser.uid, Date.now().toString());
+      return;
+    }
+    var shown = localStorage.getItem(key);
+    if (shown) return;
+    var daysSince = (Date.now() - parseInt(firstLogin)) / (1000 * 60 * 60 * 24);
+    if (daysSince >= 2) {
+      setShowNPS(true);
+      localStorage.setItem(key, "1");
+    }
+  }, [fbUser]);
 
   // Page publique invité (?join=eventId) — accessible sans connexion
   var joinId = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("join") : null;
   if (joinId) return <GuestJoinPage eventId={joinId} />;
 
   // États de chargement
-  if (fbUser === undefined) return <LoadingScreen />;
+  if (fbUser === undefined && !guestMode) return <LoadingScreen />;
 
   // Non connecté → écran de connexion Google
-  if (!fbUser) return <LoginScreen onLogin={handleGoogleLogin} />;
+  if (!fbUser && !guestMode) return <LoginScreen onLogin={handleGoogleLogin} onGuestLogin={handleGuestLogin} />;
 
   // Chargement des events en cours
-  if (!eventsLoaded) return <LoadingScreen />;
+  if (!eventsLoaded && !guestMode) return <LoadingScreen />;
 
   if (view === "guestForm" && selectedEvent) return (
     <GuestForm event={selectedEvent} onBack={() => setView("event")} />
@@ -279,13 +340,16 @@ export default function App() {
     />
   );
 
+  const activeUser = guestUser || user;
+
   return (
     <Dashboard
-      user={user}
+      user={activeUser}
       events={events}
       setEvents={handleSetEvents}
       onLogout={handleLogout}
       onOpenEvent={handleOpenEvent}
+      guestMode={guestMode}
       lightMode={lightMode}
       onToggleTheme={() => setLightMode(l => !l)}
       t={t}
