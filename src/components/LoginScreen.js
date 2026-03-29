@@ -114,7 +114,7 @@ function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
           {t.loginCta}
         </button>
 
-        {/* DEMO BUTTON — corrected contrast */}
+        {/* DEMO BUTTON — forced white text */}
         <button
           onClick={onGuestLogin}
           style={{
@@ -122,7 +122,7 @@ function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
             borderRadius:99,
             background:"rgba(201,151,58,0.12)",
             border:"1px solid rgba(201,151,58,0.55)",
-            color:"#ffffff",                 // ← TEXTE BLANC = LISIBILITÉ PARFAITE
+            color:"#ffffff !important",   // ← TEXTE BLANC FORCÉ
             fontWeight:600,
             backdropFilter:"blur(4px)",
             transition:"all .25s",
