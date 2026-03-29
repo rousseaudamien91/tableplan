@@ -142,3 +142,5 @@ function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
     </div>
   );
 }
+
+export default LoginScreen;
