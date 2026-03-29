@@ -108,16 +108,14 @@ function EventEditor({ ev, onUpdate, onBack, saveToast, t: tProp }) {
   function addGuest() {
     if (!newGuest.name.trim()) return;
     if (ev.plan === "guest" && (ev.guests||[]).length >= 5) {
-      alert("Mode démo : maximum 5 invités. Créez un compte pour en ajouter plus.");
+      alert("Mode démo : maximum 5 invités.");
       return;
     }
     const newCount = (ev.guests||[]).length + 1;
     updateEv(e=>({ ...e, guests:[...e.guests,{id:Date.now(),...newGuest,tableId:selectedTable||null}] }));
     setNewGuest({name:"",email:"",diet:"standard",notes:"",allergies:[]});
     setShowAddGuest(false);
-    if (newCount === 11 || newCount === 51) {
-      setShowPricingPalier(true);
-    }
+    if (newCount === 11 || newCount === 51) setShowPricingPalier(true);
   }
   function addTable() {
     const n = newTable.number ? parseInt(newTable.number) : nextTableNumber;
@@ -669,27 +667,18 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
 
         {tab==="guests" && (
           <div style={{ maxWidth:860 }}>
-
-            {/* Sous-onglets Invités / RSVP */}
             <div style={{ display:"flex", gap:0, marginBottom:20, borderBottom:"1px solid rgba(201,151,58,0.15)" }}>
-              {[
-                {id:"list", label:`👥 ${t.tabGuests||"Invités"} (${ev.guests.length})`},
-                {id:"rsvp", label:`💌 RSVP${rsvpPending>0?" ("+rsvpPending+"⏳)":""}`},
-              ].map(sub=>(
+              {[{id:"list",label:`👥 ${t.tabGuests||"Invités"} (${ev.guests.length})`},{id:"rsvp",label:`💌 RSVP${rsvpPending>0?" ("+rsvpPending+"⏳)":""}`}].map(sub=>(
                 <button key={sub.id} onClick={()=>setGuestSubTab(sub.id)} style={{
-                  background:"none", border:"none",
-                  borderBottom:`2px solid ${guestSubTab===sub.id?C.gold:"transparent"}`,
-                  color:guestSubTab===sub.id?C.gold:"rgba(255,255,255,0.5)",
-                  padding:"10px 20px", cursor:"pointer",
-                  fontSize:13, fontWeight:guestSubTab===sub.id?700:400,
-                  fontFamily:"inherit", whiteSpace:"nowrap",
+                  background:"none",border:"none",borderBottom:`2px solid ${guestSubTab===sub.id?C.gold:"transparent"}`,
+                  color:guestSubTab===sub.id?C.gold:"rgba(255,255,255,0.5)",padding:"10px 20px",cursor:"pointer",
+                  fontSize:13,fontWeight:guestSubTab===sub.id?700:400,fontFamily:"inherit",whiteSpace:"nowrap",
                 }}>{sub.label}</button>
               ))}
             </div>
-
-            {guestSubTab==="list" && (<div>
+            {guestSubTab==="list" && (
             <div style={{ display:"flex", gap:12, marginBottom:20 }}>
-              <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t.search||"Search guest..."}
+              <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t.search||"Search..."}
                 style={{ ...inputStyle, flex:1 }}/>
               <Btn variant="ghost" onClick={()=>exportGuestsCSV(ev)}>⬇ Export CSV</Btn>
               <Btn variant="ghost" onClick={()=>setShowImportModal(true)}>📥 Import Excel/CSV</Btn>
@@ -985,9 +974,11 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
           </div>
         )}
 
-            </div>)}
-
-            {guestSubTab==="rsvp" && (<div>
+        {/* ══════════════════════════════════════════
+            ── RSVP TAB ──
+        ══════════════════════════════════════════ */}
+            )}
+            {guestSubTab==="rsvp" && (
           <div style={{ maxWidth:900 }}>
 
             {/* ── Synthèse RSVP ── */}
@@ -1091,17 +1082,20 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         {/* ══════════════════════════════════════════
             ── BUDGET TAB ──
         ══════════════════════════════════════════ */}
+            )}
+          </div>
+        )}
 
         {tab==="budget" && (
           <div style={{ maxWidth:900 }}>
 
             {/* ── KPIs budget ── */}
-            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(180px,1fr))", gap:16, marginBottom:24 }}>
+            <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(180px,1fr))", gap:14, marginBottom:28 }}>
               {[
-                {label:t.budgetEstimated||"Budget estimé",  val:budgetTotal.toFixed(0)+"€",  color:"#C9973A",  icon:"📋"},
-                {label:t.budgetSpent||"Dépensé",        val:budgetSpent.toFixed(0)+"€",  color:budgetSpent>budgetTotal?C.red:C.green, icon:"💳"},
-                {label:t.budgetRemaining||"Restant",        val:(budgetTotal-budgetSpent).toFixed(0)+"€", color:budgetTotal-budgetSpent<0?C.red:C.green, icon:"🏦"},
-                {label:t.budgetPerGuest||"Coût / invité",  val:ev.guests.length>0?(budgetSpent/ev.guests.length).toFixed(0)+"€":"—", color:C.blue, icon:"👤"},
+                {label:"Budget estimé",  val:budgetTotal.toFixed(0)+"€",  color:"#C9973A",  icon:"📋"},
+                {label:"Dépensé",        val:budgetSpent.toFixed(0)+"€",  color:budgetSpent>budgetTotal?C.red:C.green, icon:"💳"},
+                {label:"Restant",        val:(budgetTotal-budgetSpent).toFixed(0)+"€", color:budgetTotal-budgetSpent<0?C.red:C.green, icon:"🏦"},
+                {label:"Coût / invité",  val:ev.guests.length>0?(budgetSpent/ev.guests.length).toFixed(0)+"€":"—", color:C.blue, icon:"👤"},
               ].map(s=>(
                 <div key={s.label} style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:14, padding:"18px 20px" }}>
                   <div style={{ fontSize:24, marginBottom:6 }}>{s.icon}</div>
@@ -1115,7 +1109,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             {budgetTotal > 0 && (
               <div style={{ background:"#18182a", border:"1px solid "+C.border, borderRadius:14, padding:"18px 24px", marginBottom:24 }}>
                 <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8 }}>
-                  <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>{t.budgetUsage||"Consommation"} et</span>
+                  <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>Consommation du budget</span>
                   <span style={{ color:budgetSpent>budgetTotal?C.red:C.gold, fontSize:12, fontWeight:700 }}>
                     {Math.round(budgetSpent/budgetTotal*100)}%
                   </span>
@@ -1578,7 +1572,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             {/* Résumé */}
             <div style={{ display:"grid", gridTemplateColumns:"repeat(3,1fr)", gap:14 }}>
               {[
-                {label:t.budgetEstimated||"Budget estimé",val:budgetTotal.toLocaleString("fr-FR",{minimumFractionDigits:0})+" €",color:"#C9973A",icon:"📊"},
+                {label:"Budget estimé",val:budgetTotal.toLocaleString("fr-FR",{minimumFractionDigits:0})+" €",color:"#C9973A",icon:"📊"},
                 {label:"Dépenses réelles",val:budgetSpent.toLocaleString("fr-FR",{minimumFractionDigits:0})+" €",color:budgetSpent>budgetTotal?C.red:C.green,icon:"💳"},
                 {label:"Écart",val:(budgetTotal-budgetSpent>=0?"+":"")+((budgetTotal-budgetSpent).toLocaleString("fr-FR",{minimumFractionDigits:0}))+" €",color:budgetTotal-budgetSpent>=0?C.green:C.red,icon:budgetTotal-budgetSpent>=0?"✅":"⚠️"},
               ].map(s=>(
@@ -1593,7 +1587,7 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
             {budgetTotal>0 && (
               <div style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.15)", borderRadius:14, padding:"16px 22px" }}>
                 <div style={{ display:"flex", justifyContent:"space-between", marginBottom:8 }}>
-                  <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>{t.budgetUsage||"Consommation"} et</span>
+                  <span style={{ color:"rgba(255,255,255,0.45)", fontSize:12 }}>Consommation du budget</span>
                   <span style={{ color:budgetSpent>budgetTotal?C.red:C.gold, fontSize:12, fontWeight:700 }}>{Math.round(budgetSpent/budgetTotal*100)}%</span>
                 </div>
                 <div style={{ height:10, background:"#13131e", borderRadius:99, overflow:"hidden" }}>
@@ -2278,20 +2272,15 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
         open={showImportModal}
         onClose={()=>setShowImportModal(false)}
         existingGuests={ev.guests||[]}
-        onImport={(newGuests)=>{
-          updateEv(e=>({...e, guests:[...e.guests, ...newGuests]}));
-        }}
+        onImport={(newGuests)=>{ updateEv(e=>({...e,guests:[...e.guests,...newGuests]})); }}
       />
-
       {showPricingPalier && (
         <PricingPage
           eventName={ev.name}
           guestCount={(ev.guests||[]).length}
           onClose={()=>setShowPricingPalier(false)}
-          onPlanSelected={(planId, voucherCode, finalPrice) => {
-            if (finalPrice === 0 && planId === "full") {
-              updateEv(e => ({ ...e, plan:"full", unlockedByVoucher: voucherCode }));
-            }
+          onPlanSelected={(planId,voucherCode,finalPrice)=>{
+            if(finalPrice===0&&planId==="full") updateEv(e=>({...e,plan:"full",unlockedByVoucher:voucherCode}));
             setShowPricingPalier(false);
           }}
         />
