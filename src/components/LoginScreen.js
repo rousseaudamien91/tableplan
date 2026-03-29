@@ -125,28 +125,7 @@ function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
         </div>
       </section>
 
-      {/* TÉMOIGNAGES */}
-      <section style={{ padding:"64px 24px" }}>
-        <div style={{ maxWidth:960, margin:"0 auto" }}>
-          <h2 style={{ textAlign:"center", fontSize:26, fontWeight:800, margin:"0 0 40px", color:"#ffffff", fontFamily:"Georgia,serif" }}>
-            Ce qu'ils en disent
-          </h2>
-          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(280px,1fr))", gap:20 }}>
-            {[
-              { name:"Sophie M.", role:"Wedding planner", avatar:"💍", text:"TableMaître a transformé ma façon de travailler. Je gagne 3h par événement sur le placement des invités." },
-              { name:"Romain D.", role:"Organisateur de galas", avatar:"🎩", text:"L'assistant IA est bluffant. Il optimise le placement automatiquement en tenant compte des contraintes familiales." },
-              { name:"Claire B.", role:"Chef de projet événementiel", avatar:"📋", text:"L'import Excel m'évite de tout ressaisir. En 2 minutes, mes 200 invités sont dans le logiciel." },
-            ].map(t=>(
-              <div key={t.name} style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.1)", borderRadius:16, padding:"24px 20px" }}>
-                <div style={{ fontSize:24, marginBottom:12 }}>{t.avatar}</div>
-                <p style={{ fontSize:14, color:"rgba(255,255,255,0.65)", lineHeight:1.7, margin:"0 0 16px", fontStyle:"italic" }}>"{t.text}"</p>
-                <div style={{ fontSize:13, fontWeight:700, color:"#ffffff" }}>{t.name}</div>
-                <div style={{ fontSize:11, color:"rgba(255,255,255,0.35)" }}>{t.role}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+
 
       {/* TRUST */}
       <section style={{ padding:"56px 24px", textAlign:"center" }}>
@@ -159,6 +138,8 @@ function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
           ))}
         </div>
       </section>
+
+      <ReviewsSection />
 
       {/* FAQ */}
       <section style={{ padding:"64px 24px", borderTop:"1px solid rgba(255,255,255,0.05)" }}>

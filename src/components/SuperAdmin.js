@@ -478,6 +478,40 @@ function SuperAdminPanel({ events, setEvents, users, setUsers, onLogout }) {
           <Btn onClick={createUser}>Créer le compte</Btn>
         </div>
       </Modal>
+
+      {/* ── AVIS ── */}
+      {activeTab === "reviews" && (
+        <div style={{padding:"24px 0"}}>
+          <h3 style={{color:C.gold,margin:"0 0 20px",fontWeight:600,fontSize:16}}>
+            ⭐ Avis en attente
+            {pendingReviews.length > 0 && <span style={{marginLeft:8,background:"#e05252",color:"#fff",borderRadius:99,padding:"2px 8px",fontSize:12}}>{pendingReviews.length}</span>}
+          </h3>
+          {reviewsLoaded && pendingReviews.length === 0 && (
+            <div style={{color:"rgba(255,255,255,0.4)",fontStyle:"italic",padding:"32px 0",textAlign:"center"}}>✅ Aucun avis en attente</div>
+          )}
+          <div style={{display:"flex",flexDirection:"column",gap:12}}>
+            {pendingReviews.map(function(r) {
+              return (
+                <div key={r.id} style={{background:"#18182a",border:"1px solid rgba(255,255,255,0.06)",borderRadius:12,padding:"16px 20px"}}>
+                  <div style={{display:"flex",alignItems:"center",gap:12,marginBottom:r.comment?8:12}}>
+                    <div style={{width:36,height:36,borderRadius:10,background:r.score>=9?"rgba(39,174,96,0.2)":r.score>=7?"rgba(201,151,58,0.2)":"rgba(224,82,82,0.2)",display:"flex",alignItems:"center",justifyContent:"center",color:r.score>=9?"#27AE60":r.score>=7?"#C9973A":"#e05252",fontWeight:800,fontSize:18}}>{r.score}</div>
+                    <div>
+                      <div style={{fontWeight:700,fontSize:13,color:"#ffffff"}}>{r.userName||"Anonyme"}</div>
+                      <div style={{fontSize:11,color:"rgba(255,255,255,0.35)"}}>{r.createdAt?new Date(r.createdAt).toLocaleDateString("fr-FR"):""}</div>
+                    </div>
+                  </div>
+                  {r.comment && <p style={{fontSize:13,color:"rgba(255,255,255,0.6)",margin:"0 0 12px",fontStyle:"italic"}}>"{r.comment}"</p>}
+                  <div style={{display:"flex",gap:8}}>
+                    <button onClick={function() { approveReview(r.id); }} style={{padding:"6px 16px",border:"none",borderRadius:8,cursor:"pointer",background:"rgba(39,174,96,0.2)",color:"#27AE60",fontFamily:"inherit",fontSize:12,fontWeight:700}}>✅ Approuver</button>
+                    <button onClick={function() { rejectReview(r.id); }} style={{padding:"6px 16px",border:"none",borderRadius:8,cursor:"pointer",background:"rgba(224,82,82,0.15)",color:"#e05252",fontFamily:"inherit",fontSize:12,fontWeight:700}}>🗑 Rejeter</button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
