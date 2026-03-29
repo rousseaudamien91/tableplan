@@ -1882,7 +1882,6 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
           </div>
         )}
 
-      </div>
 
       {/* ── MODALS ── */}
 
@@ -2232,28 +2231,30 @@ Réponds en français, de façon concrète, bienveillante et proactive. Max 3 pa
           </Field>
         </div>
       </Modal>
-    <ImportModal
-      open={showImportModal}
-      onClose={()=>setShowImportModal(false)}
-      existingGuests={ev.guests||[]}
-      onImport={(newGuests)=>{
-        updateEv(e=>({...e, guests:[...e.guests, ...newGuests]}));
-      }}
-    />
+          </div>
 
-    {showPricingPalier && (
-      <PricingPage
-        eventName={ev.name}
-        guestCount={(ev.guests||[]).length}
-        onClose={()=>setShowPricingPalier(false)}
-        onPlanSelected={(planId, voucherCode, finalPrice) => {
-          if (finalPrice === 0 && planId === "full") {
-            updateEv(e => ({ ...e, plan:"full", unlockedByVoucher: voucherCode }));
-          }
-          setShowPricingPalier(false);
+      <ImportModal
+        open={showImportModal}
+        onClose={()=>setShowImportModal(false)}
+        existingGuests={ev.guests||[]}
+        onImport={(newGuests)=>{
+          updateEv(e=>({...e, guests:[...e.guests, ...newGuests]}));
         }}
       />
-    )}
+
+      {showPricingPalier && (
+        <PricingPage
+          eventName={ev.name}
+          guestCount={(ev.guests||[]).length}
+          onClose={()=>setShowPricingPalier(false)}
+          onPlanSelected={(planId, voucherCode, finalPrice) => {
+            if (finalPrice === 0 && planId === "full") {
+              updateEv(e => ({ ...e, plan:"full", unlockedByVoucher: voucherCode }));
+            }
+            setShowPricingPalier(false);
+          }}
+        />
+      )}
     </div>
   );
 }
