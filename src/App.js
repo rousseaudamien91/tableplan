@@ -1,12 +1,21 @@
 /* eslint-disable */
+import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import Dashboard from "./components/Dashboard";
 import EventEditor from "./components/EventEditor/EventEditor";
 import PricingPage from "./components/pricing/PricingPage";
 import ReviewsSection from "./components/reviews/ReviewsSection";
 import LoginScreen from "./components/LoginScreen";
 
-export default function App({ events, setEvents, paypalEmail }) {
+export default function App() {
+
+  // ÉTAT GLOBAL DES ÉVÉNEMENTS
+  const [events, setEvents] = useState([]);
+
+  // EMAIL PAYPAL (à personnaliser)
+  const paypalEmail = "ton-email-paypal@exemple.com";
+
   return (
     <BrowserRouter>
       <Routes>
