@@ -1,13 +1,27 @@
 /* eslint-disable */
 import { useState } from "react";
-import { Btn, Field, Input } from "../components/UI";
-import { C } from "../constants";
-import { VOUCHERS, PRICING_PLANS } from "../constants";
+import { useParams, useNavigate } from "react-router-dom";
+import { Btn, Field, Input } from "../UI";
+import { PRICING_PLANS, VOUCHERS } from "../../constants";
+import { useI18n } from "../../theme";
 
-export default function PricingPage({ event, setEvents, paypalEmail }) {
+export default function PricingPage({ events, setEvents, paypalEmail }) {
+  const { t } = useI18n();
+  const { eventId } = useParams();
+  const navigate = useNavigate();
+
+  const event = events.find(e => e.id === eventId);
   const [selectedPlan, setSelectedPlan] = useState(event.plan || "free");
   const [voucher, setVoucher] = useState("");
   const [discount, setDiscount] = useState(0);
+
+  if (!event) {
+    return (
+      <div style={{ padding: 40 }}>
+        <h2>Événement introuvable</h2>
+      </div>
+    );
+  }
 
   const plan = PRICING_PLANS[selectedPlan];
 
@@ -30,26 +44,28 @@ export default function PricingPage({ event, setEvents, paypalEmail }) {
               billing: {
                 pricePaid: price,
                 voucherCode: voucher || null,
-                paymentMethod: "paypal",
+                paymentMethod: price === 0 ? "free" : "paypal",
                 activatedAt: new Date().toISOString()
               }
             }
           : e
       )
     );
+
     alert("Événement activé !");
+    navigate(`/editor/${event.id}`);
   };
 
   const paypalLink =
-    "https://www.paypal.com/paypalme/" +
-    paypalEmail.split("@")[0] +
-    "/" +
-    price +
-    "EUR";
+    price > 0
+      ? `https://www.paypal.com/paypalme/${paypalEmail.split("@")[0]}/${price}EUR`
+      : null;
 
   return (
     <div style={{ padding: 40, maxWidth: 700, margin: "0 auto" }}>
-      <h1 style={{ marginBottom: 20 }}>Activer votre événement</h1>
+      <h1 style={{ marginBottom: 20 }}>
+        {t("pricing.title")}
+      </h1>
 
       {/* PLANS */}
       <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
@@ -62,7 +78,7 @@ export default function PricingPage({ event, setEvents, paypalEmail }) {
               borderRadius: 12,
               border:
                 selectedPlan === key
-                  ? "2px solid " + C.gold
+                  ? "2px solid #C9973A"
                   : "1px solid rgba(255,255,255,0.1)",
               background: "#18182a",
               cursor: "pointer"
@@ -73,7 +89,7 @@ export default function PricingPage({ event, setEvents, paypalEmail }) {
               {p.description}
             </div>
             <div style={{ marginTop: 10, fontSize: 22, fontWeight: 800 }}>
-              {p.price === 0 ? "Gratuit" : p.price + "€"}
+              {p.price === 0 ? t("pricing.free") : p.price + "€"}
             </div>
           </div>
         ))}
@@ -81,14 +97,14 @@ export default function PricingPage({ event, setEvents, paypalEmail }) {
 
       {/* VOUCHER */}
       <div style={{ marginTop: 30 }}>
-        <Field label="Code promo">
+        <Field label={t("pricing.voucher")}>
           <Input
             value={voucher}
             onChange={(e) => setVoucher(e.target.value)}
             placeholder="PROMO10"
           />
         </Field>
-        <Btn onClick={applyVoucher}>Appliquer</Btn>
+        <Btn onClick={applyVoucher}>{t("pricing.apply")}</Btn>
       </div>
 
       {/* TOTAL */}
@@ -101,9 +117,11 @@ export default function PricingPage({ event, setEvents, paypalEmail }) {
           border: "1px solid rgba(255,255,255,0.1)"
         }}
       >
-        <div style={{ fontSize: 16, marginBottom: 6 }}>Total :</div>
+        <div style={{ fontSize: 16, marginBottom: 6 }}>
+          {t("pricing.total")} :
+        </div>
         <div style={{ fontSize: 28, fontWeight: 800 }}>
-          {price === 0 ? "Gratuit" : price + "€"}
+          {price === 0 ? t("pricing.free") : price + "€"}
         </div>
       </div>
 
@@ -111,14 +129,14 @@ export default function PricingPage({ event, setEvents, paypalEmail }) {
       {price > 0 && (
         <div style={{ marginTop: 30 }}>
           <a href={paypalLink} target="_blank" rel="noreferrer">
-            <Btn>💳 Payer avec PayPal</Btn>
+            <Btn>💳 {t("pricing.payWithPaypal")}</Btn>
           </a>
         </div>
       )}
 
       {/* ACTIVATE */}
       <div style={{ marginTop: 20 }}>
-        <Btn onClick={activate}>Activer l’événement</Btn>
+        <Btn onClick={activate}>{t("pricing.activate")}</Btn>
       </div>
     </div>
   );
