@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Modal, Btn } from "../UI";
-import { C } from "../../constants";
+import { Modal, Btn } from "../../UI";
+import { C } from "../../../constants";
 
 export default function ImportModal({
   open,
@@ -24,7 +24,7 @@ export default function ImportModal({
 
     const text = await f.text();
     const rows = text.split("\n").map((r) => r.split(","));
-    setPreview(rows.slice(0, 5)); // aperçu des 5 premières lignes
+    setPreview(rows.slice(0, 5));
   };
 
   const handleImport = () => {
