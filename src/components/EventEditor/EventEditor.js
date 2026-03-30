@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import Modal from "../../Modal";
-import Btn from "../../Btn";
+import { Modal, Btn } from "../../UI";
 import { C } from "../../constants";
 
 export default function ImportModal({
@@ -25,7 +24,7 @@ export default function ImportModal({
 
     const text = await f.text();
     const rows = text.split("\n").map(r => r.split(","));
-    setPreview(rows.slice(0, 5)); // aperçu des 5 premières lignes
+    setPreview(rows.slice(0, 5));
   };
 
   const handleImport = () => {
@@ -48,8 +47,6 @@ export default function ImportModal({
       title={title}
     >
       <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-
-        {/* UPLOAD */}
         <label
           style={{
             padding: "14px 18px",
@@ -71,7 +68,6 @@ export default function ImportModal({
           />
         </label>
 
-        {/* APERÇU */}
         {preview && (
           <div
             style={{
@@ -110,15 +106,9 @@ export default function ImportModal({
           </div>
         )}
 
-        {/* ACTIONS */}
-        <Btn
-          disabled={!file}
-          onClick={handleImport}
-          style={{ marginTop: 4 }}
-        >
+        <Btn disabled={!file} onClick={handleImport} style={{ marginTop: 4 }}>
           Importer
         </Btn>
-
       </div>
     </Modal>
   );
