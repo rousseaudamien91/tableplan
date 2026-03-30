@@ -1,0 +1,43 @@
+export default {
+  appName: "TableMaître",
+  logout: "Sign out",
+  lightMode: "Switch to light mode",
+  darkMode: "Switch to dark mode",
+  codePromo: "Promo code",
+
+  myEvents: "My events",
+  welcome: "Welcome",
+  searchPlaceholder: "Search an event or a guest...",
+  newEvent: "+ New event",
+  noEvents: "No events yet",
+  createFirst: "Create my first event",
+
+  mariage: "Wedding",
+  gala: "Gala / Party",
+  anniversaire: "Birthday",
+  conference: "Conference",
+  autre: "Other",
+
+  back: "← Projects",
+  autoPlace: "✨ Auto-seat",
+  placeCards: "🖨 Place cards",
+  floorPlan: "📄 Floor plan PDF",
+  qrCode: "QR Code",
+  tabPlan: "Plan",
+  tabList: "List",
+  tabGuests: "Guests",
+  tabFood: "Dietary",
+  tabConstraints: "Constraints",
+  tabRoom: "Room",
+  addTable: "+ Table",
+  addGuest: "+ Guest",
+
+  search: "Search a guest…",
+  exportCSV: "⬇ Export CSV",
+  importCSV: "⬆ Import CSV",
+
+  loginGoogle: "Sign in with Google",
+  loginHero: "Organize. Seat. Impress.",
+  loginSub: "The professional event management platform.",
+  loginCta: "Get started free",
+};
