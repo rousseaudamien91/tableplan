@@ -1,115 +1,52 @@
-import React, { useState } from "react";
-import { Modal, Btn } from "../UI";
-import { C } from "../../constants";
+/* TOP BAR — remplace ton header actuel par ce bloc */
+<div
+  style={{
+    height: 60,
+    background: "#18182a",
+    borderBottom: "1px solid rgba(255,255,255,0.1)",
+    display: "flex",
+    alignItems: "center",
+    padding: "0 20px",
+    gap: 12
+  }}
+>
+  <div style={{ fontSize: 18, fontWeight: 700 }}>
+    🪑 {event.name}
+  </div>
 
-export default function ImportModal({
-  open,
-  onClose,
-  onImport,
-  title = "Importer des données"
-}) {
-  const [file, setFile] = useState(null);
-  const [preview, setPreview] = useState(null);
+  <div style={{ flex: 1 }} />
 
-  const reset = () => {
-    setFile(null);
-    setPreview(null);
-  };
-
-  const handleFile = async e => {
-    const f = e.target.files[0];
-    if (!f) return;
-
-    setFile(f);
-
-    const text = await f.text();
-    const rows = text.split("\n").map(r => r.split(","));
-    setPreview(rows.slice(0, 5));
-  };
-
-  const handleImport = () => {
-    if (!file) return;
-    file.text().then(text => {
-      const rows = text.split("\n").map(r => r.split(","));
-      onImport(rows);
-      reset();
-      onClose();
-    });
-  };
-
-  return (
-    <Modal
-      open={open}
-      onClose={() => {
-        reset();
-        onClose();
+  {/* BOUTON ACTIVER */}
+  {event.status !== "active" && (
+    <button
+      onClick={() => navigate(`/pricing/${event.id}`)}
+      style={{
+        background: "#C9973A",
+        color: "#000",
+        fontWeight: 700,
+        padding: "8px 16px",
+        borderRadius: 8,
+        border: "none",
+        cursor: "pointer"
       }}
-      title={title}
     >
-      <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-        <label
-          style={{
-            padding: "14px 18px",
-            background: C.mid,
-            border: `1px dashed ${C.border}`,
-            borderRadius: 10,
-            cursor: "pointer",
-            textAlign: "center",
-            color: "rgba(255,255,255,0.65)",
-            fontSize: 14
-          }}
-        >
-          {file ? "Fichier sélectionné ✔" : "Cliquez pour choisir un fichier CSV"}
-          <input
-            type="file"
-            accept=".csv"
-            onChange={handleFile}
-            style={{ display: "none" }}
-          />
-        </label>
+      ⚡ Activer mon événement
+    </button>
+  )}
 
-        {preview && (
-          <div
-            style={{
-              background: "#1a1a25",
-              borderRadius: 10,
-              padding: 12,
-              border: `1px solid ${C.border}`,
-              maxHeight: 200,
-              overflow: "auto"
-            }}
-          >
-            {preview.map((row, i) => (
-              <div
-                key={i}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: `repeat(${row.length}, 1fr)`,
-                  gap: 6,
-                  padding: "4px 0",
-                  borderBottom: "1px solid rgba(255,255,255,0.05)"
-                }}
-              >
-                {row.map((cell, j) => (
-                  <div
-                    key={j}
-                    style={{
-                      fontSize: 12,
-                      color: "rgba(255,255,255,0.65)"
-                    }}
-                  >
-                    {cell}
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        )}
-
-        <Btn disabled={!file} onClick={handleImport} style={{ marginTop: 4 }}>
-          Importer
-        </Btn>
-      </div>
-    </Modal>
-  );
-}
+  {/* BADGE SI ACTIF */}
+  {event.status === "active" && (
+    <div
+      style={{
+        padding: "6px 14px",
+        background: "rgba(39,174,96,0.2)",
+        color: "#27AE60",
+        borderRadius: 8,
+        fontWeight: 700,
+        fontSize: 13
+      }}
+    >
+      ✔️ Événement actif
+    </div>
+  )}
+</div>
