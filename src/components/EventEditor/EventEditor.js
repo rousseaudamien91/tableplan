@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Modal, Btn } from "../../UI";
+import { Modal, Btn } from "../UI";
 import { C } from "../../constants";
 
 export default function ImportModal({
