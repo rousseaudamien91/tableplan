@@ -48,8 +48,6 @@ export default function ImportModal({
       title={title}
     >
       <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-        
-        {/* UPLOAD */}
         <label
           style={{
             padding: "14px 18px",
@@ -71,7 +69,6 @@ export default function ImportModal({
           />
         </label>
 
-        {/* APERÇU */}
         {preview && (
           <div
             style={{
@@ -110,7 +107,6 @@ export default function ImportModal({
           </div>
         )}
 
-        {/* ACTIONS */}
         <Btn disabled={!file} onClick={handleImport} style={{ marginTop: 4 }}>
           Importer
         </Btn>
