@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { useState } from "react";
-import { useI18n } from "../theme";
-import { LANG_FLAGS, LANG_NAMES } from "../constants";
+import { useI18n } from "../i18n";
+import { LANG_FLAGS, LANG_NAMES } from "../i18n/langMeta";
 
 function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
   const { t: tHook, lang, setLang } = useI18n();
@@ -114,7 +114,7 @@ function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
           {t.loginCta}
         </button>
 
-        {/* DEMO BUTTON — forced white text */}
+        {/* DEMO BUTTON */}
         <button
           onClick={onGuestLogin}
           style={{
@@ -122,7 +122,7 @@ function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
             borderRadius:99,
             background:"rgba(201,151,58,0.12)",
             border:"1px solid rgba(201,151,58,0.55)",
-            color:"#ffffff !important",   // ← TEXTE BLANC FORCÉ
+            color:"#ffffff",
             fontWeight:600,
             backdropFilter:"blur(4px)",
             transition:"all .25s",
@@ -200,7 +200,7 @@ function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
         </div>
       </section>
 
-      {/* REVIEWS PLACEHOLDER */}
+      {/* REVIEWS */}
       <section style={{
         padding:"80px 24px", textAlign:"center",
         background:"rgba(255,255,255,0.02)",
