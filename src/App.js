@@ -5,7 +5,7 @@ import { C, useI18n } from "./theme";
 import { INITIAL_EVENTS } from "./constants";
 import LoginScreen from "./components/LoginScreen";
 import Dashboard from "./components/Dashboard";
-import EventEditor from "./components/EventEditor";
+import EventEditor from "./components/EventEditor/EventEditor";
 import SuperAdminPanel from "./components/SuperAdmin";
 import GuestJoinPage from "./components/GuestJoinPage";
 
