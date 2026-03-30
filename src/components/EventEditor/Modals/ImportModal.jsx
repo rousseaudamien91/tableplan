@@ -1,7 +1,6 @@
 import React, { useState } from "react";
-import Modal from "../../Modal";
-import Btn from "../../Btn";
-import { C } from "../../../constants";
+import { Modal, Btn } from "../UI";
+import { C } from "../../constants";
 
 export default function ImportModal({
   open,
@@ -17,21 +16,22 @@ export default function ImportModal({
     setPreview(null);
   };
 
-  const handleFile = async e => {
+  const handleFile = async (e) => {
     const f = e.target.files[0];
     if (!f) return;
 
     setFile(f);
 
     const text = await f.text();
-    const rows = text.split("\n").map(r => r.split(","));
+    const rows = text.split("\n").map((r) => r.split(","));
     setPreview(rows.slice(0, 5)); // aperçu des 5 premières lignes
   };
 
   const handleImport = () => {
     if (!file) return;
-    file.text().then(text => {
-      const rows = text.split("\n").map(r => r.split(","));
+
+    file.text().then((text) => {
+      const rows = text.split("\n").map((r) => r.split(","));
       onImport(rows);
       reset();
       onClose();
@@ -48,7 +48,7 @@ export default function ImportModal({
       title={title}
     >
       <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-
+        
         {/* UPLOAD */}
         <label
           style={{
@@ -59,7 +59,7 @@ export default function ImportModal({
             cursor: "pointer",
             textAlign: "center",
             color: "rgba(255,255,255,0.65)",
-            fontSize: 14
+            fontSize: 14,
           }}
         >
           {file ? "Fichier sélectionné ✔" : "Cliquez pour choisir un fichier CSV"}
@@ -80,7 +80,7 @@ export default function ImportModal({
               padding: 12,
               border: `1px solid ${C.border}`,
               maxHeight: 200,
-              overflow: "auto"
+              overflow: "auto",
             }}
           >
             {preview.map((row, i) => (
@@ -91,7 +91,7 @@ export default function ImportModal({
                   gridTemplateColumns: `repeat(${row.length}, 1fr)`,
                   gap: 6,
                   padding: "4px 0",
-                  borderBottom: "1px solid rgba(255,255,255,0.05)"
+                  borderBottom: "1px solid rgba(255,255,255,0.05)",
                 }}
               >
                 {row.map((cell, j) => (
@@ -99,7 +99,7 @@ export default function ImportModal({
                     key={j}
                     style={{
                       fontSize: 12,
-                      color: "rgba(255,255,255,0.65)"
+                      color: "rgba(255,255,255,0.65)",
                     }}
                   >
                     {cell}
@@ -111,14 +111,9 @@ export default function ImportModal({
         )}
 
         {/* ACTIONS */}
-        <Btn
-          disabled={!file}
-          onClick={handleImport}
-          style={{ marginTop: 4 }}
-        >
+        <Btn disabled={!file} onClick={handleImport} style={{ marginTop: 4 }}>
           Importer
         </Btn>
-
       </div>
     </Modal>
   );
