@@ -1,0 +1,109 @@
+{
+  "badge": "Super Admin",
+  "logout": "Disconnettersi",
+
+  "tabs": {
+    "accounts": "Account",
+    "projects": "Progetti",
+    "stats": "Statistiche",
+    "payments": "Pagamenti",
+    "reviews": "Recensioni"
+  },
+
+  "accounts": {
+    "title": "Account e Abbonamenti",
+    "subtitle": "{{count}} account · MRR: {{mrr}}€/mese",
+    "newUser": "+ Nuovo account",
+    "searchPlaceholder": "Cerca...",
+    "filter": {
+      "allPlans": "Tutti i piani",
+      "allStatuses": "Tutti gli stati"
+    },
+    "table": {
+      "account": "Account",
+      "plan": "Piano",
+      "status": "Stato",
+      "end": "Fine",
+      "projects": "Progetti",
+      "guests": "Ospiti",
+      "actions": "Azioni"
+    },
+    "empty": "Nessun account trovato",
+    "stats": {
+      "active": "Attivi",
+      "trial": "Prova",
+      "paid": "Piani a pagamento",
+      "mrr": "MRR"
+    }
+  },
+
+  "status": {
+    "active": "Attivo",
+    "trial": "Prova",
+    "expired": "Scaduto",
+    "cancelled": "Annullato",
+    "activeWithIcon": "✅ Attivo",
+    "trialWithIcon": "⏳ Prova",
+    "expiredWithIcon": "❌ Scaduto",
+    "cancelledWithIcon": "⛔ Annullato"
+  },
+
+  "projects": {
+    "title": "Tutti i progetti",
+    "count": "{{count}} progetto/i",
+    "tables": "tavoli",
+    "guests": "ospiti",
+    "noOwner": "Senza proprietario",
+    "open": "Apri",
+    "delete": "Elimina",
+
+    "status": {
+      "draft": "Bozza",
+      "active": "Attivo",
+      "archived": "Archiviato"
+    },
+
+    "plan": {
+      "free": "Piano Gratuito",
+      "medium": "Piano Essenziale",
+      "full": "Piano Completo"
+    }
+  },
+
+  "stats": {
+    "title": "Dashboard",
+    "users": "Utenti",
+    "mrr": "MRR",
+    "projects": "Progetti",
+    "guests": "Ospiti",
+    "paidPlans": "Piani a pagamento",
+    "trialUsers": "Utenti in prova",
+    "planDistribution": "Distribuzione piani",
+    "accounts": "account",
+    "vouchers": "Codici promozionali",
+    "max": "max"
+  },
+
+  "payments": {
+    "title": "Pagamenti e Integrazioni",
+    "subtitle": "Configura PayPal e Stripe per abilitare i pagamenti.",
+    "recommended": "Raccomandato",
+    "notConfigured": "Non configurato",
+    "paypalConfigured": "PayPal configurato ({{email}})",
+    "perTransaction": "per transazione",
+    "quickLinks": "Link rapidi",
+    "paypalMeWarning": "I link PayPal.me non consentono il tracciamento automatico.",
+    "stripeConfigured": "Stripe configurato",
+    "configureStripe": "Configura Stripe",
+    "editKeys": "Modifica chiavi",
+    "localWarning": "Chiavi salvate localmente. Usa variabili d'ambiente in produzione."
+  },
+
+  "reviews": {
+    "title": "Recensioni in sospeso",
+    "none": "Nessuna recensione in sospeso",
+    "anonymous": "Anonimo",
+    "approve": "Approva",
+    "reject": "Rifiuta"
+  }
+}
