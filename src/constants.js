@@ -412,3 +412,26 @@ export {
   C,
   useI18n,
 };
+
+export const PRICING_PLANS = {
+  free: {
+    label: "Plan Gratuit",
+    price: 0,
+    description: "Fonctionnalités de base"
+  },
+  medium: {
+    label: "Plan Essentiel",
+    price: 19,
+    description: "Plus de tables, plus d'invités"
+  },
+  full: {
+    label: "Plan Complet",
+    price: 39,
+    description: "Toutes les fonctionnalités"
+  }
+};
+
+export const VOUCHERS = {
+  PROMO10: { discount: 10, description: "Réduction de 10%", maxUses: 999 },
+  PROMO20: { discount: 20, description: "Réduction de 20%", maxUses: 999 }
+};
