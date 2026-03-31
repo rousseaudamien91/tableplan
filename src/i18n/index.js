@@ -1,12 +1,14 @@
 /* eslint-disable */
 import { useState } from "react";
+
 import fr from "./fr";
 import en from "./en";
 import es from "./es";
 import de from "./de";
 import it from "./it";
 
-const TRANSLATIONS = { fr, en, es, de, it };
+// Toutes les langues disponibles
+export const TRANSLATIONS = { fr, en, es, de, it };
 
 function detectLang() {
   const saved = localStorage.getItem("tableMaitreLang");
