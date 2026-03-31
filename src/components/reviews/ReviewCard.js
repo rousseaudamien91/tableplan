@@ -1,4 +1,3 @@
-// src/components/reviews/ReviewCard.js
 import React from "react";
 
 const ReviewCard = ({ review }) => {
