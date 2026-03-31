@@ -1,1 +1,109 @@
+{
+  "badge": "Super Admin",
+  "logout": "Abmelden",
 
+  "tabs": {
+    "accounts": "Konten",
+    "projects": "Projekte",
+    "stats": "Statistiken",
+    "payments": "Zahlungen",
+    "reviews": "Bewertungen"
+  },
+
+  "accounts": {
+    "title": "Konten & Abonnements",
+    "subtitle": "{{count}} Konto(s) · MRR: {{mrr}}€/Monat",
+    "newUser": "+ Neues Konto",
+    "searchPlaceholder": "Suchen...",
+    "filter": {
+      "allPlans": "Alle Pläne",
+      "allStatuses": "Alle Status"
+    },
+    "table": {
+      "account": "Konto",
+      "plan": "Plan",
+      "status": "Status",
+      "end": "Ende",
+      "projects": "Projekte",
+      "guests": "Gäste",
+      "actions": "Aktionen"
+    },
+    "empty": "Keine Konten gefunden",
+    "stats": {
+      "active": "Aktiv",
+      "trial": "Testphase",
+      "paid": "Bezahlte Pläne",
+      "mrr": "MRR"
+    }
+  },
+
+  "status": {
+    "active": "Aktiv",
+    "trial": "Testphase",
+    "expired": "Abgelaufen",
+    "cancelled": "Storniert",
+    "activeWithIcon": "✅ Aktiv",
+    "trialWithIcon": "⏳ Testphase",
+    "expiredWithIcon": "❌ Abgelaufen",
+    "cancelledWithIcon": "⛔ Storniert"
+  },
+
+  "projects": {
+    "title": "Alle Projekte",
+    "count": "{{count}} Projekt(e)",
+    "tables": "Tische",
+    "guests": "Gäste",
+    "noOwner": "Kein Besitzer",
+    "open": "Öffnen",
+    "delete": "Löschen",
+
+    "status": {
+      "draft": "Entwurf",
+      "active": "Aktiv",
+      "archived": "Archiviert"
+    },
+
+    "plan": {
+      "free": "Gratisplan",
+      "medium": "Essentials-Plan",
+      "full": "Vollständiger Plan"
+    }
+  },
+
+  "stats": {
+    "title": "Dashboard",
+    "users": "Benutzer",
+    "mrr": "MRR",
+    "projects": "Projekte",
+    "guests": "Gäste",
+    "paidPlans": "Bezahlte Pläne",
+    "trialUsers": "Testnutzer",
+    "planDistribution": "Planverteilung",
+    "accounts": "Konten",
+    "vouchers": "Gutscheincodes",
+    "max": "max"
+  },
+
+  "payments": {
+    "title": "Zahlungen & Integrationen",
+    "subtitle": "Konfigurieren Sie PayPal und Stripe, um Zahlungen zu aktivieren.",
+    "recommended": "Empfohlen",
+    "notConfigured": "Nicht konfiguriert",
+    "paypalConfigured": "PayPal konfiguriert ({{email}})",
+    "perTransaction": "pro Transaktion",
+    "quickLinks": "Schnelllinks",
+    "paypalMeWarning": "PayPal.me erlaubt keine automatische Nachverfolgung.",
+    "stripeConfigured": "Stripe konfiguriert",
+    "configureStripe": "Stripe konfigurieren",
+    "editKeys": "Schlüssel bearbeiten",
+    "localWarning": "Schlüssel lokal gespeichert. Verwenden Sie Umgebungsvariablen in der Produktion."
+  },
+
+  "reviews": {
+    "title": "Ausstehende Bewertungen",
+    "none": "Keine ausstehenden Bewertungen",
+    "anonymous": "Anonym",
+    "approve": "Genehmigen",
+    "reject": "Ablehnen"
+  }
+}
