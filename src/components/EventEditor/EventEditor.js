@@ -1,8 +1,8 @@
 /* eslint-disable */
 import { useState } from "react";
-import { useI18n } from "../i18n/index.js";
+import { useI18n } from "../../i18n";
 import { Btn } from "../UI";
-import { FloorPlan, RoomShapeEditor } from "../components/FloorPlan";
+import { FloorPlan, RoomShapeEditor } from "../FloorPlan";
 import { C } from "../../constants";
 
 export default function EventEditor({ ev, onUpdate }) {
@@ -30,7 +30,6 @@ export default function EventEditor({ ev, onUpdate }) {
     <div style={{ padding: 20, color: "white" }}>
       <h2 style={{ marginBottom: 20 }}>{t.eventSettings}</h2>
 
-      {/* Room Shape Editor */}
       <div
         style={{
           background: C.mid,
@@ -44,7 +43,6 @@ export default function EventEditor({ ev, onUpdate }) {
         <RoomShapeEditor shape={ev.roomShape || []} onChange={updateRoomShape} />
       </div>
 
-      {/* Floor Plan */}
       <div
         style={{
           background: C.mid,
