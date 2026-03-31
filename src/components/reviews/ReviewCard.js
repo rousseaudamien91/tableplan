@@ -1,8 +1,12 @@
 /* eslint-disable */
 import React, { useState } from "react";
 import { db } from "../../firebase";
-import firebase from "firebase/app";
-import "firebase/firestore";
+
+import {
+  collection,
+  addDoc,
+  serverTimestamp
+} from "firebase/firestore";
 
 const NPSWidget = () => {
   const [score, setScore] = useState(null);
@@ -11,9 +15,9 @@ const NPSWidget = () => {
   const submitNPS = async () => {
     if (score === null) return;
 
-    await db.collection("nps").add({
+    await addDoc(collection(db, "nps"), {
       score,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      createdAt: serverTimestamp()
     });
 
     setSubmitted(true);
