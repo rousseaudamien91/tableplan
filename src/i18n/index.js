@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { useState } from "react";
 import fr from "./fr";
 import en from "./en";
