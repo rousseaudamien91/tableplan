@@ -1,10 +1,22 @@
 /* eslint-disable */
-import { getFirebase } from "../firebase";
 import { useState, useEffect } from "react";
 import { useI18n } from "../i18n";
 import { C, DIET_OPTIONS, THEMES_CONFIG } from "../constants";
 import { Btn, Badge } from "./UI";
 import { dietInfo } from "../utils";
+
+import { db } from "../firebase";
+import {
+  doc,
+  getDoc,
+  updateDoc,
+  collection,
+  collectionGroup,
+  query,
+  where,
+  limit,
+  getDocs
+} from "firebase/firestore";
 
 function GuestJoinPage({ eventId }) {
   const { t, lang } = useI18n();
@@ -15,28 +27,48 @@ function GuestJoinPage({ eventId }) {
   const [form, setForm] = useState({ name:"", diet:"standard", allergies:[], notes:"" });
   const [found, setFound] = useState(null);
 
+  // ─────────────────────────────────────────────────────────────
+  // LOAD EVENT (Firebase v9)
+  // ─────────────────────────────────────────────────────────────
   useEffect(() => {
     async function loadEvent() {
-      const fb = getFirebase();
-      if (!fb) { setLoading(false); return; }
-
       try {
+        let eventData = null;
+
+        // Cas 1 : lien du type userId___eventId
         if (eventId.includes("___")) {
           const [userId, evId] = eventId.split("___");
-          const doc = await fb.db.collection("users").doc(userId).collection("events").doc(evId).get();
-          if (doc.exists) setEv(doc.data());
-        } else {
-          try {
-            const snap = await fb.db.collectionGroup("events").where("id","==",eventId).limit(1).get();
-            if (!snap.empty) setEv(snap.docs[0].data());
-          } catch(e2) {}
+
+          const ref = doc(db, "users", userId, "events", evId);
+          const snap = await getDoc(ref);
+
+          if (snap.exists()) {
+            eventData = snap.data();
+          }
         }
-      } catch(e) {
+
+        // Cas 2 : recherche globale via collectionGroup
+        else {
+          const q = query(
+            collectionGroup(db, "events"),
+            where("id", "==", eventId),
+            limit(1)
+          );
+
+          const snap = await getDocs(q);
+          if (!snap.empty) {
+            eventData = snap.docs[0].data();
+          }
+        }
+
+        setEv(eventData);
+      } catch (e) {
         console.error("Erreur chargement event public:", e);
       }
 
       setLoading(false);
     }
+
     loadEvent();
   }, [eventId]);
 
@@ -73,7 +105,21 @@ function GuestJoinPage({ eventId }) {
   const totalGuests = (ev.guests||[]).length;
 
   // ─────────────────────────────────────────────────────────────
-  // PAGE
+  // FIRESTORE UPDATE (v9)
+  // ─────────────────────────────────────────────────────────────
+  async function saveGuests(updatedGuests) {
+    try {
+      if (!ev._ownerId || !ev.id) return;
+
+      const ref = doc(db, "users", ev._ownerId, "events", String(ev.id));
+      await updateDoc(ref, { guests: updatedGuests });
+    } catch (e) {
+      console.error("Firestore write:", e);
+    }
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // PAGE UI (inchangé)
   // ─────────────────────────────────────────────────────────────
   return (
     <div style={{
@@ -187,20 +233,14 @@ function GuestJoinPage({ eventId }) {
                     return (
                       <button
                         key={d.id}
-                        onClick={() => {
+                        onClick={async () => {
                           const updatedGuests = (ev.guests||[]).map(g =>
                             g.id === found.id ? { ...g, diet:d.id } : g
                           );
                           setEv(prev => ({ ...prev, guests: updatedGuests }));
                           setFound(prev => ({ ...prev, diet:d.id }));
 
-                          const fb = getFirebase();
-                          if (fb && ev._ownerId && ev.id) {
-                            fb.db.collection("users").doc(ev._ownerId)
-                              .collection("events").doc(String(ev.id))
-                              .update({ guests: updatedGuests })
-                              .catch(e => console.error("Firestore write:", e));
-                          }
+                          await saveGuests(updatedGuests);
                         }}
                         style={{
                           background:isSelected ? C.gold+"22" : "#1a2a1a",
@@ -232,20 +272,14 @@ function GuestJoinPage({ eventId }) {
                     const notes = e.target.value;
                     setFound(prev => ({ ...prev, notes }));
                   }}
-                  onBlur={e => {
+                  onBlur={async e => {
                     const notes = e.target.value;
                     const updatedGuests = (ev.guests||[]).map(g =>
                       g.id === found.id ? { ...g, notes } : g
                     );
                     setEv(prev => ({ ...prev, guests: updatedGuests }));
 
-                    const fb = getFirebase();
-                    if (fb && ev._ownerId && ev.id) {
-                      fb.db.collection("users").doc(ev._ownerId)
-                        .collection("events").doc(String(ev.id))
-                        .update({ guests: updatedGuests })
-                        .catch(e => console.error("Firestore write:", e));
-                    }
+                    await saveGuests(updatedGuests);
                   }}
                 />
 
