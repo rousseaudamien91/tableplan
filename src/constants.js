@@ -383,16 +383,6 @@ const PLANS = {
   pro: { label: "Pro", price: 9.9, maxEvents: 999, maxGuests: 999 },
 };
 
-const VOUCHERS = {
-  BIENVENUE: {
-    discount: 100,
-    type: "percent",
-    plan: "pro",
-    description: "1 mois Pro offert 🎁",
-    maxUses: 999,
-  },
-};
-
 const INITIAL_EVENTS = [];
 
 // ═══════════════════════════════════════════════════════════════
@@ -407,36 +397,39 @@ export {
   DIET_OPTIONS,
   INITIAL_USERS,
   PLANS,
-  VOUCHERS,
   INITIAL_EVENTS,
   C,
   useI18n,
 };
 
+// ═══════════════════════════════════════════════════════════════
+// PRICING + VOUCHERS (version corrigée)
+// ═══════════════════════════════════════════════════════════════
+
 export const PRICING_PLANS = {
   free: {
     label: "Plan Gratuit",
     price: 0,
-    description: "Fonctionnalités de base"
+    description: "Fonctionnalités de base",
   },
   medium: {
     label: "Plan Essentiel",
     price: 19,
-    description: "Plus de tables, plus d'invités"
+    description: "Plus de tables, plus d'invités",
   },
   full: {
     label: "Plan Complet",
     price: 39,
-    description: "Toutes les fonctionnalités"
-  }
+    description: "Toutes les fonctionnalités",
+  },
 };
 
 export const VOUCHERS = {
   PROMO10: { discount: 10, description: "Réduction de 10%", maxUses: 999 },
-  PROMO20: { discount: 20, description: "Réduction de 20%", maxUses: 999 }
+  PROMO20: { discount: 20, description: "Réduction de 20%", maxUses: 999 },
 };
 
-export const LANG_FLAGS = {
+export const LANG_FLAGS_EXTENDED = {
   fr: "🇫🇷",
   en: "🇬🇧",
   es: "🇪🇸",
@@ -444,11 +437,10 @@ export const LANG_FLAGS = {
   it: "🇮🇹",
 };
 
-export const LANG_NAMES = {
+export const LANG_NAMES_EXTENDED = {
   fr: "Français",
   en: "English",
   es: "Español",
   de: "Deutsch",
   it: "Italiano",
 };
-
