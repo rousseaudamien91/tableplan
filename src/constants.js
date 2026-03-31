@@ -2,308 +2,16 @@
 import { useState } from "react";
 
 // ═══════════════════════════════════════════════════════════════
-// TRANSLATIONS (FR + EN)
+// TRANSLATIONS (FR + EN + ES + DE + IT)
 // ═══════════════════════════════════════════════════════════════
 
-const TRANSLATIONS = {
-  fr: {
-    appName: "TableMaître",
-    logout: "Déconnexion",
-    lightMode: "Passer en mode clair",
-    darkMode: "Passer en mode sombre",
-    codePromo: "🎟️ Code promo",
-    myEvents: "Mes événements",
-    welcome: "Bienvenue",
-    searchPlaceholder: "Rechercher un événement ou un invité...",
-    newEvent: "+ Nouvel événement",
-    noEvents: "Aucun événement pour le moment",
-    createFirst: "Créer mon premier événement",
-    tables: "tables",
-    guests: "invités",
-    unseated: "non placés",
-    placement: "Placement",
-    guestsFound: "invité(s) trouvé(s)",
-    duplicate: "Dupliquer cet événement",
-    daysAgo: "passé",
-    today: "Aujourd'hui !",
-    inDays: "Dans",
-    days: "j",
-    mariage: "Mariage",
-    gala: "Gala / Soirée",
-    anniversaire: "Anniversaire",
-    conference: "Conférence",
-    autre: "Autre",
-    back: "← Projets",
-    autoPlace: "✨ Auto-placer",
-    placeCards: "🖨 Chevalets",
-    floorPlan: "📄 Plan PDF",
-    qrCode: "QR Code",
-    tabPlan: "Plan",
-    tabList: "Liste",
-    tabGuests: "Invités",
-    tabFood: "Alimentation",
-    tabConstraints: "Contraintes",
-    tabRoom: "Salle",
-    addTable: "+ Table",
-    addGuest: "+ Invité",
-    dietSummary: "📋 Récap alimentaire",
-    unseatedList: "⚠ NON PLACÉS",
-    seeAvailable: "👁 Voir places libres",
-    tablesVisible: "✓ Tables visibles",
-    clickToPlace: "👆 Cliquez sur une table pour y placer",
-    undo: "↩ Annuler",
-    search: "Rechercher un invité…",
-    exportCSV: "⬇ Export CSV",
-    importCSV: "⬆ Import CSV",
-    tableNumber: "NUMÉRO",
-    tableCapacity: "CAPACITÉ",
-    tableShape: "FORME",
-    tableLabel: "ÉTIQUETTE",
-    tableColor: "COULEUR",
-    createTable: "Créer la table",
-    deleteTable: "Supprimer la table",
-    round: "Ronde",
-    rectangular: "Rectangulaire",
-    guestName: "NOM *",
-    guestEmail: "EMAIL",
-    guestDiet: "RÉGIME",
-    guestAllergies: "ALLERGIES",
-    guestTable: "TABLE",
-    guestNotes: "NOTES",
-    addGuestBtn: "Ajouter l'invité",
-    noTable: "-- Non placé --",
-    loginGoogle: "Se connecter avec Google",
-    importGuests: "Importer des invités",
-    importExcel: "Import Excel / CSV",
-    importDrop: "Glissez votre fichier ici",
-    importPreview: "Aperçu de l'import",
-    importDuplicates: "doublons détectés",
-    importBtn: "Importer",
-    onboardingType: "Quel type d'événement ?",
-    onboardingName: "Nommez votre événement",
-    onboardingGuests: "Combien d'invités ?",
-    onboardingTemplate: "Plan de salle",
-    searchGlobal: "Rechercher dans tous les événements...",
-    notifRsvp: "Nouvelle réponse RSVP",
-    notifTitle: "Notifications",
-    budgetEstimated: "Budget estimé",
-    budgetSpent: "Dépensé",
-    budgetRemaining: "Restant",
-    budgetPerGuest: "Coût / invité",
-    budgetActual: "Dépenses réelles",
-    budgetGap: "Écart",
-    notPaid: "Non payé",
-    budgetItems: "Postes de dépenses",
-    budgetLines: "Postes budgétaires",
-    fillTemplate: "Remplir avec modèle",
-    addBudgetLine: "Ajouter un poste",
-    budgetItem: "Poste",
-    amountEstimated: "Montant estimé (€)",
-    amountActual: "Montant réel (€)",
-    labelOptional: "Libellé (optionnel)",
-    tasksTotal: "Tâches totales",
-    tasksDone: "Terminées",
-    tasksRemaining: "Restantes",
-    newTask: "Nouvelle tâche",
-    templateModel: "Modèle type",
-    taskLabel: "Tâche",
-    priority: "Priorité",
-    details: "Précisions",
-    stepLabel: "Étape",
-    supplierName: "Nom / Société",
-    supplierRole: "Rôle / Prestation",
-    videographer: "Vidéaste",
-    decorator: "Décorateur",
-    roleMarried: "Marié(e)",
-    roleWitness: "Témoin",
-    newConstraint: "Nouvelle contrainte",
-    firstGuest: "Premier invité",
-    secondGuest: "Deuxième invité",
-    separated: "Séparés",
-    eventSettings: "Paramètres de l'événement",
-    placementDone: "Placement optimisé !",
-    dateUndefined: "date non définie",
-    addZone: "Ajouter une zone",
-    fullAddress: "Adresse complète",
-    venueName: "Nom du lieu",
-    venueNotes: "Notes (parking, code)",
-    tabPlanDetail: "Tables & Plan",
-    rsvpConfirmed: "Confirmés",
-    rsvpDeclined: "Déclinés",
-    rsvpPending: "En attente",
-    rsvpRate: "Taux de réponse",
-    rsvpLink: "Lien de confirmation invités",
-    rsvpStatus: "Statut par invité",
-    rsvpTracking: "Suivi par invité",
-    rsvpMarkPending: "Marquer tous en attente",
-    rsvpConfirmedSingle: "Confirmé",
-    rsvpDeclinedSingle: "Décliné",
-    yes: "Oui",
-    no: "Non",
-    paid: "Payé",
-    supplier: "Prestataire",
-    category: "Catégorie",
-    estimated: "Estimé",
-    actual: "Réel",
-    totalEstimated: "Total estimé",
-    totalActual: "Total réel",
-    high: "Haute",
-    medium: "Moyenne",
-    low: "Basse",
-    phone: "Téléphone",
-    copy: "Copier",
-    loading: "Chargement…",
-  },
+import fr from "./fr";
+import en from "./en";
+import es from "./es";
+import de from "./de";
+import it from "./it";
 
-  en: {
-    appName: "TableMaître",
-    logout: "Sign out",
-    lightMode: "Switch to light mode",
-    darkMode: "Switch to dark mode",
-    codePromo: "Promo code",
-    myEvents: "My events",
-    welcome: "Welcome",
-    searchPlaceholder: "Search an event or a guest...",
-    newEvent: "+ New event",
-    noEvents: "No events yet",
-    createFirst: "Create my first event",
-    tables: "tables",
-    guests: "guests",
-    unseated: "unseated",
-    placement: "Seating",
-    guestsFound: "guest(s) found",
-    duplicate: "Duplicate this event",
-    daysAgo: "past",
-    today: "Today!",
-    inDays: "In",
-    days: "d",
-    mariage: "Wedding",
-    gala: "Gala / Party",
-    anniversaire: "Birthday",
-    conference: "Conference",
-    autre: "Other",
-    back: "← Projects",
-    autoPlace: "✨ Auto-seat",
-    placeCards: "🖨 Place cards",
-    floorPlan: "📄 Floor plan PDF",
-    qrCode: "QR Code",
-    tabPlan: "Plan",
-    tabList: "List",
-    tabGuests: "Guests",
-    tabFood: "Dietary",
-    tabConstraints: "Constraints",
-    tabRoom: "Room",
-    addTable: "+ Table",
-    addGuest: "+ Guest",
-    dietSummary: "📋 Dietary summary",
-    unseatedList: "⚠ UNSEATED",
-    seeAvailable: "👁 Show available seats",
-    tablesVisible: "✓ Tables highlighted",
-    clickToPlace: "👆 Click a table to seat",
-    undo: "↩ Undo",
-    search: "Search a guest…",
-    exportCSV: "⬇ Export CSV",
-    importCSV: "⬆ Import CSV",
-    tableNumber: "NUMBER",
-    tableCapacity: "CAPACITY",
-    tableShape: "SHAPE",
-    tableLabel: "LABEL",
-    tableColor: "COLOR",
-    createTable: "Create table",
-    deleteTable: "Delete table",
-    round: "Round",
-    rectangular: "Rectangular",
-    guestName: "NAME *",
-    guestEmail: "EMAIL",
-    guestDiet: "DIET",
-    guestAllergies: "ALLERGIES",
-    guestTable: "TABLE",
-    guestNotes: "NOTES",
-    addGuestBtn: "Add guest",
-    noTable: "-- Not seated --",
-    loginGoogle: "Sign in with Google",
-    importGuests: "Import guests",
-    importExcel: "Import Excel / CSV",
-    importDrop: "Drop your file here",
-    importPreview: "Import preview",
-    importDuplicates: "duplicates found",
-    importBtn: "Import",
-    onboardingType: "What type of event?",
-    onboardingName: "Name your event",
-    onboardingGuests: "How many guests?",
-    onboardingTemplate: "Room layout",
-    searchGlobal: "Search across all events...",
-    notifRsvp: "New RSVP response",
-    notifTitle: "Notifications",
-    budgetEstimated: "Estimated budget",
-    budgetSpent: "Spent",
-    budgetRemaining: "Remaining",
-    budgetPerGuest: "Cost / guest",
-    budgetActual: "Actual expenses",
-    budgetGap: "Gap",
-    notPaid: "Unpaid",
-    budgetItems: "Expense items",
-    budgetLines: "Budget lines",
-    fillTemplate: "Fill with template",
-    addBudgetLine: "Add item",
-    budgetItem: "Item",
-    amountEstimated: "Estimated amount (€)",
-    amountActual: "Actual amount (€)",
-    labelOptional: "Label (optional)",
-    tasksTotal: "Total tasks",
-    tasksDone: "Done",
-    tasksRemaining: "Remaining",
-    newTask: "New task",
-    templateModel: "Template",
-    taskLabel: "Task",
-    priority: "Priority",
-    details: "Details",
-    stepLabel: "Step",
-    supplierName: "Name / Company",
-    supplierRole: "Role / Service",
-    videographer: "Videographer",
-    decorator: "Decorator",
-    roleMarried: "Married",
-    roleWitness: "Witness",
-    newConstraint: "New constraint",
-    firstGuest: "First guest",
-    secondGuest: "Second guest",
-    separated: "Separated",
-    eventSettings: "Event settings",
-    placementDone: "Placement optimized!",
-    dateUndefined: "date not set",
-    addZone: "Add a zone",
-    fullAddress: "Full address",
-    venueName: "Venue name",
-    venueNotes: "Notes (parking, access)",
-    tabPlanDetail: "Tables & Plan",
-    rsvpConfirmed: "Confirmed",
-    rsvpDeclined: "Declined",
-    rsvpPending: "Pending",
-    rsvpRate: "Response rate",
-    rsvpLink: "Guest confirmation link",
-    rsvpStatus: "Guest status",
-    rsvpTracking: "Guest tracking",
-    rsvpMarkPending: "Mark all pending",
-    rsvpConfirmedSingle: "Confirmed",
-    rsvpDeclinedSingle: "Declined",
-    yes: "Yes",
-    no: "No",
-    paid: "Paid",
-    supplier: "Supplier",
-    category: "Category",
-    estimated: "Estimated",
-    actual: "Actual",
-    totalEstimated: "Estimated total",
-    totalActual: "Actual total",
-    high: "High",
-    medium: "Medium",
-    low: "Low",
-    phone: "Phone",
-    copy: "Copy",
-    loading: "Loading…",
-  },
-};
+export const TRANSLATIONS = { fr, en, es, de, it };
 
 // ═══════════════════════════════════════════════════════════════
 // LANG DETECTION + HOOK
@@ -319,7 +27,7 @@ function detectLang() {
   return TRANSLATIONS[code] ? code : "en";
 }
 
-function useI18n() {
+export function useI18n() {
   const [lang, setLangState] = useState(detectLang);
 
   const setLang = (l) => {
@@ -336,17 +44,23 @@ function useI18n() {
 // CONSTANTS
 // ═══════════════════════════════════════════════════════════════
 
-const LANG_FLAGS = {
+export const LANG_FLAGS = {
   fr: "🇫🇷",
   en: "🇬🇧",
+  es: "🇪🇸",
+  de: "🇩🇪",
+  it: "🇮🇹",
 };
 
-const LANG_NAMES = {
+export const LANG_NAMES = {
   fr: "Français",
   en: "English",
+  es: "Español",
+  de: "Deutsch",
+  it: "Italiano",
 };
 
-const C = {
+export const C = {
   dark: "#120C08",
   mid: "#2A1A0E",
   card: "#1E1208",
@@ -361,7 +75,7 @@ const C = {
   border: "rgba(201,151,58,0.2)",
 };
 
-const THEMES_CONFIG = {
+export const THEMES_CONFIG = {
   mariage: { label: "Mariage", icon: "💍", color: "#C9973A" },
   gala: { label: "Gala / Soirée", icon: "🥂", color: "#8B7EC8" },
   anniversaire: { label: "Anniversaire", icon: "🎂", color: "#E8845A" },
@@ -369,41 +83,24 @@ const THEMES_CONFIG = {
   autre: { label: "Autre", icon: "🎊", color: "#C9973A" },
 };
 
-const DIET_OPTIONS = [
+export const DIET_OPTIONS = [
   { id: "standard", label: "Standard", icon: "🍽️", color: C.muted },
   { id: "vegetarien", label: "Végétarien", icon: "🥗", color: "#4CAF50" },
   { id: "vegan", label: "Vegan", icon: "🌱", color: "#8BC34A" },
   { id: "sans-gluten", label: "Sans gluten", icon: "🌾", color: "#FF9800" },
 ];
 
-const INITIAL_USERS = [];
+export const INITIAL_USERS = [];
 
-const PLANS = {
+export const PLANS = {
   free: { label: "Gratuit", price: 0, maxEvents: 1, maxGuests: 30 },
   pro: { label: "Pro", price: 9.9, maxEvents: 999, maxGuests: 999 },
 };
 
-const INITIAL_EVENTS = [];
+export const INITIAL_EVENTS = [];
 
 // ═══════════════════════════════════════════════════════════════
-// EXPORTS
-// ═══════════════════════════════════════════════════════════════
-
-export {
-  TRANSLATIONS,
-  LANG_FLAGS,
-  LANG_NAMES,
-  THEMES_CONFIG,
-  DIET_OPTIONS,
-  INITIAL_USERS,
-  PLANS,
-  INITIAL_EVENTS,
-  C,
-  useI18n,
-};
-
-// ═══════════════════════════════════════════════════════════════
-// PRICING + VOUCHERS (version corrigée)
+// PRICING + VOUCHERS
 // ═══════════════════════════════════════════════════════════════
 
 export const PRICING_PLANS = {
@@ -427,20 +124,4 @@ export const PRICING_PLANS = {
 export const VOUCHERS = {
   PROMO10: { discount: 10, description: "Réduction de 10%", maxUses: 999 },
   PROMO20: { discount: 20, description: "Réduction de 20%", maxUses: 999 },
-};
-
-export const LANG_FLAGS_EXTENDED = {
-  fr: "🇫🇷",
-  en: "🇬🇧",
-  es: "🇪🇸",
-  de: "🇩🇪",
-  it: "🇮🇹",
-};
-
-export const LANG_NAMES_EXTENDED = {
-  fr: "Français",
-  en: "English",
-  es: "Español",
-  de: "Deutsch",
-  it: "Italiano",
 };
