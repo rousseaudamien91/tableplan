@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { useState } from "react";
 import { useI18n } from "../i18n";
-import { LANG_FLAGS, LANG_NAMES } from "../i18n/langMeta";
+import { LANG_FLAGS, LANG_NAMES } from "../constants";
 
 function LoginScreen({ onLogin, onGuestLogin, t: tProp }) {
   const { t: tHook, lang, setLang } = useI18n();
