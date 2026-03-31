@@ -1,4 +1,4 @@
-export default {
+const es = {
   appName: "TableMaître",
   logout: "Cerrar sesión",
   lightMode: "Modo claro",
@@ -41,3 +41,4 @@ export default {
   loginSub: "La plataforma profesional de gestión de eventos.",
   loginCta: "Comenzar gratis",
 };
+export default es;
