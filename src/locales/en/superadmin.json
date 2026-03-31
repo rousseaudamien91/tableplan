@@ -1,1 +1,109 @@
+{
+  "badge": "Super Admin",
+  "logout": "Logout",
 
+  "tabs": {
+    "accounts": "Accounts",
+    "projects": "Projects",
+    "stats": "Statistics",
+    "payments": "Payments",
+    "reviews": "Reviews"
+  },
+
+  "accounts": {
+    "title": "Accounts & Subscriptions",
+    "subtitle": "{{count}} account(s) · MRR: {{mrr}}€/month",
+    "newUser": "+ New account",
+    "searchPlaceholder": "Search...",
+    "filter": {
+      "allPlans": "All plans",
+      "allStatuses": "All statuses"
+    },
+    "table": {
+      "account": "Account",
+      "plan": "Plan",
+      "status": "Status",
+      "end": "End",
+      "projects": "Projects",
+      "guests": "Guests",
+      "actions": "Actions"
+    },
+    "empty": "No accounts found",
+    "stats": {
+      "active": "Active",
+      "trial": "Trial",
+      "paid": "Paid plans",
+      "mrr": "MRR"
+    }
+  },
+
+  "status": {
+    "active": "Active",
+    "trial": "Trial",
+    "expired": "Expired",
+    "cancelled": "Cancelled",
+    "activeWithIcon": "✅ Active",
+    "trialWithIcon": "⏳ Trial",
+    "expiredWithIcon": "❌ Expired",
+    "cancelledWithIcon": "⛔ Cancelled"
+  },
+
+  "projects": {
+    "title": "All projects",
+    "count": "{{count}} project(s)",
+    "tables": "tables",
+    "guests": "guests",
+    "noOwner": "No owner",
+    "open": "Open",
+    "delete": "Delete",
+
+    "status": {
+      "draft": "Draft",
+      "active": "Active",
+      "archived": "Archived"
+    },
+
+    "plan": {
+      "free": "Free plan",
+      "medium": "Essential plan",
+      "full": "Full plan"
+    }
+  },
+
+  "stats": {
+    "title": "Dashboard",
+    "users": "Users",
+    "mrr": "MRR",
+    "projects": "Projects",
+    "guests": "Guests",
+    "paidPlans": "Paid plans",
+    "trialUsers": "Trial users",
+    "planDistribution": "Plan distribution",
+    "accounts": "accounts",
+    "vouchers": "Promo codes",
+    "max": "max"
+  },
+
+  "payments": {
+    "title": "Payments & Integrations",
+    "subtitle": "Configure PayPal and Stripe to enable payments.",
+    "recommended": "Recommended",
+    "notConfigured": "Not configured",
+    "paypalConfigured": "PayPal configured ({{email}})",
+    "perTransaction": "per transaction",
+    "quickLinks": "Quick links",
+    "paypalMeWarning": "PayPal.me links do not allow automatic tracking.",
+    "stripeConfigured": "Stripe configured",
+    "configureStripe": "Configure Stripe",
+    "editKeys": "Edit keys",
+    "localWarning": "Keys stored locally. Use environment variables in production."
+  },
+
+  "reviews": {
+    "title": "Pending reviews",
+    "none": "No pending reviews",
+    "anonymous": "Anonymous",
+    "approve": "Approve",
+    "reject": "Reject"
+  }
+}
