@@ -435,3 +435,20 @@ export const VOUCHERS = {
   PROMO10: { discount: 10, description: "Réduction de 10%", maxUses: 999 },
   PROMO20: { discount: 20, description: "Réduction de 20%", maxUses: 999 }
 };
+
+export const LANG_FLAGS = {
+  fr: "🇫🇷",
+  en: "🇬🇧",
+  es: "🇪🇸",
+  de: "🇩🇪",
+  it: "🇮🇹",
+};
+
+export const LANG_NAMES = {
+  fr: "Français",
+  en: "English",
+  es: "Español",
+  de: "Deutsch",
+  it: "Italiano",
+};
+
