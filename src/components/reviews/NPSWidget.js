@@ -1,75 +1,87 @@
-/* eslint-disable */
-import { useState } from "react";
-import { Btn, Field, Input } from "../components/UI";
-import { getFirebase } from "../firebase";
+import React, { useState } from "react";
+import { db } from "../../firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
-export default function NPSWidget({ user }) {
-  const [open, setOpen] = useState(true);
+const NPSWidget = () => {
   const [score, setScore] = useState(null);
-  const [comment, setComment] = useState("");
+  const [submitted, setSubmitted] = useState(false);
 
-  if (!open) return null;
+  const submitNPS = async () => {
+    if (score === null) return;
 
-  const submit = async () => {
-    if (score === null) return alert("Choisissez une note");
-
-    const { db } = getFirebase();
-    await db.collection("reviews").add({
+    await addDoc(collection(db, "nps"), {
       score,
-      comment,
-      userName: user?.name || "Anonyme",
-      createdAt: Date.now(),
-      approved: false
+      createdAt: serverTimestamp()
     });
 
-    setOpen(false);
+    setSubmitted(true);
   };
 
-  return (
-    <div style={{
-      position:"fixed",
-      bottom:20,
-      right:20,
-      width:300,
-      background:"#18182a",
-      border:"1px solid rgba(255,255,255,0.1)",
-      borderRadius:12,
-      padding:20,
-      zIndex:9999
-    }}>
-      <h3 style={{margin:"0 0 12px",fontSize:16,fontWeight:700}}>
-        Votre avis compte ❤️
-      </h3>
+  if (submitted) {
+    return <p style={styles.thanks}>Merci pour votre retour !</p>;
+  }
 
-      <div style={{display:"flex",gap:6,flexWrap:"wrap",marginBottom:12}}>
-        {Array.from({length:11}).map((_,i)=>(
+  return (
+    <div style={styles.container}>
+      <h3 style={styles.title}>Votre avis compte</h3>
+      <p style={styles.subtitle}>Sur une échelle de 0 à 10</p>
+
+      <div style={styles.scores}>
+        {[...Array(11).keys()].map((n) => (
           <button
-            key={i}
-            onClick={()=>setScore(i)}
+            key={n}
             style={{
-              width:28,height:28,
-              borderRadius:6,
-              border:"none",
-              cursor:"pointer",
-              background: score===i ? "#C9973A" : "#2a2a3d",
-              color:"#fff",
-              fontWeight:700
+              ...styles.scoreButton,
+              background: score === n ? "#222" : "#eee",
+              color: score === n ? "#fff" : "#000"
             }}
+            onClick={() => setScore(n)}
           >
-            {i}
+            {n}
           </button>
         ))}
       </div>
 
-      <Field label="Commentaire (optionnel)">
-        <Input
-          value={comment}
-          onChange={e=>setComment(e.target.value)}
-          placeholder="Dites-nous tout…"
-        />
-      </Field>
-
-      <Btn onClick={submit} style={{marginTop:10}}>Envoyer</Btn>
+      <button style={styles.submit} onClick={submitNPS}>
+        Envoyer
+      </button>
     </div>
   );
-}
+};
+
+const styles = {
+  container: {
+    padding: "20px",
+    borderRadius: "12px",
+    background: "#fafafa",
+    boxShadow: "0 2px 6px rgba(0,0,0,0.05)",
+    marginBottom: "40px"
+  },
+  title: { fontSize: "1.4rem", marginBottom: "10px" },
+  subtitle: { opacity: 0.7, marginBottom: "20px" },
+  scores: { display: "flex", gap: "8px", flexWrap: "wrap" },
+  scoreButton: {
+    padding: "10px 14px",
+    borderRadius: "8px",
+    border: "none",
+    cursor: "pointer",
+    fontSize: "1rem"
+  },
+  submit: {
+    marginTop: "20px",
+    padding: "12px 20px",
+    borderRadius: "8px",
+    border: "none",
+    background: "#222",
+    color: "#fff",
+    cursor: "pointer"
+  },
+  thanks: {
+    padding: "20px",
+    background: "#e8ffe8",
+    borderRadius: "10px",
+    textAlign: "center"
+  }
+};
+
+export default NPSWidget;
