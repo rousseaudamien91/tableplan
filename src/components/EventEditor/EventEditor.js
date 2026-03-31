@@ -1,109 +1,84 @@
 /* eslint-disable */
-import { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import FloorPlan from "../FloorPlan";
-import GuestForm from "../GuestForm";
-import { Btn } from "../UI";
-import { C } from "../../constants";
+import { useState } from "react";
+import { useI18n } from "../i18n";
+import { Btn } from "../components/UI";
+import { FloorPlan, RoomShapeEditor } from "../components/FloorPlan";
+import { C } from "../constants";
 
-export default function EventEditor({ events, setEvents }) {
-  const { eventId } = useParams();
-  const navigate = useNavigate();
-
-  const event = events.find(e => e.id === eventId);
+export default function EventEditor({ ev, onUpdate }) {
+  const { t } = useI18n();
 
   const [selectedTable, setSelectedTable] = useState(null);
-  const [selectedGuest, setSelectedGuest] = useState(null);
+  const [highlightAvailable, setHighlightAvailable] = useState(false);
 
-  if (!event) {
-    return (
-      <div style={{ padding: 40 }}>
-        <h2>Événement introuvable</h2>
-      </div>
+  const updateTables = (tables) => {
+    onUpdate({ ...ev, tables });
+  };
+
+  const updateRoomShape = (shape) => {
+    onUpdate({ ...ev, roomShape: shape });
+  };
+
+  const handleDropGuestToTable = (guestId, tableId) => {
+    const updatedGuests = ev.guests.map((g) =>
+      g.id === guestId ? { ...g, tableId } : g
     );
-  }
+    onUpdate({ ...ev, guests: updatedGuests });
+  };
 
   return (
-    <div style={{ height: "100vh", display: "flex", flexDirection: "column" }}>
+    <div style={{ padding: 20, color: "white" }}>
+      <h2 style={{ marginBottom: 20 }}>{t.eventSettings}</h2>
 
-      {/* ░░░ TOP BAR ░░░ */}
+      {/* Room Shape Editor */}
       <div
         style={{
-          height: 60,
-          background: "#18182a",
-          borderBottom: "1px solid rgba(255,255,255,0.1)",
-          display: "flex",
-          alignItems: "center",
-          padding: "0 20px",
-          gap: 12
+          background: C.mid,
+          padding: 20,
+          borderRadius: 12,
+          marginBottom: 30,
+          border: "1px solid rgba(255,255,255,0.1)",
         }}
       >
-        <div style={{ fontSize: 18, fontWeight: 700 }}>
-          🪑 {event.name}
-        </div>
-
-        <div style={{ flex: 1 }} />
-
-        {/* BOUTON ACTIVER */}
-        {event.status !== "active" && (
-          <button
-            onClick={() => navigate(`/pricing/${event.id}`)}
-            style={{
-              background: C.gold,
-              color: "#000",
-              fontWeight: 700,
-              padding: "8px 16px",
-              borderRadius: 8,
-              border: "none",
-              cursor: "pointer"
-            }}
-          >
-            ⚡ Activer mon événement
-          </button>
-        )}
-
-        {/* BADGE SI ACTIF */}
-        {event.status === "active" && (
-          <div
-            style={{
-              padding: "6px 14px",
-              background: "rgba(39,174,96,0.2)",
-              color: "#27AE60",
-              borderRadius: 8,
-              fontWeight: 700,
-              fontSize: 13
-            }}
-          >
-            ✔️ Événement actif
-          </div>
-        )}
+        <h3 style={{ marginBottom: 12 }}>{t.tabRoom}</h3>
+        <RoomShapeEditor shape={ev.roomShape || []} onChange={updateRoomShape} />
       </div>
 
-      {/* ░░░ CONTENU PRINCIPAL ░░░ */}
-      <div style={{ flex: 1, display: "flex" }}>
-        {/* PLAN DE SALLE */}
-        <div style={{ flex: 3, borderRight: "1px solid rgba(255,255,255,0.1)" }}>
-          <FloorPlan
-            event={event}
-            events={events}
-            setEvents={setEvents}
-            selectedTable={selectedTable}
-            setSelectedTable={setSelectedTable}
-            selectedGuest={selectedGuest}
-            setSelectedGuest={setSelectedGuest}
-          />
+      {/* Floor Plan */}
+      <div
+        style={{
+          background: C.mid,
+          padding: 20,
+          borderRadius: 12,
+          border: "1px solid rgba(255,255,255,0.1)",
+        }}
+      >
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            marginBottom: 12,
+          }}
+        >
+          <h3>{t.tabPlanDetail}</h3>
+
+          <Btn
+            small
+            variant={highlightAvailable ? "primary" : "ghost"}
+            onClick={() => setHighlightAvailable((v) => !v)}
+          >
+            {t.seeAvailable}
+          </Btn>
         </div>
 
-        {/* FORMULAIRE INVITÉ */}
-        <div style={{ flex: 1 }}>
-          <GuestForm
-            event={event}
-            events={events}
-            setEvents={setEvents}
-            selectedGuest={selectedGuest}
-            setSelectedGuest={setSelectedGuest}
-          />
-        </div>
+        <FloorPlan
+          ev={ev}
+          selectedTable={selectedTable}
+          onSelectTable={setSelectedTable}
+          onUpdateTables={updateTables}
+          highlightAvailable={highlightAvailable}
+          onDropGuestToTable={handleDropGuestToTable}
+        />
       </div>
     </div>
   );
