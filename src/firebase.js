@@ -1,26 +1,17 @@
-/* eslint-disable */
 import { initializeApp } from "firebase/app";
-import {
-  getFirestore,
-} from "firebase/firestore";
-import {
-  getAuth,
-} from "firebase/auth";
-import {
-  getStorage,
-} from "firebase/storage";
+import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "TON_API_KEY",
-  authDomain: "TON_AUTH_DOMAIN",
-  projectId: "TON_PROJECT_ID",
-  storageBucket: "TON_STORAGE_BUCKET",
-  messagingSenderId: "TON_SENDER_ID",
-  appId: "TON_APP_ID",
+  apiKey: "TA_VRAIE_API_KEY",
+  authDomain: "ton-projet.firebaseapp.com",
+  projectId: "ton-projet",
+  storageBucket: "ton-projet.appspot.com",
+  messagingSenderId: "xxxxxxx",
+  appId: "1:xxxxxxx:web:xxxxxxx"
 };
 
 const app = initializeApp(firebaseConfig);
 
 export const db = getFirestore(app);
 export const auth = getAuth(app);
-export const storage = getStorage(app);
