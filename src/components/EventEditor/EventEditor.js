@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { useState } from "react";
-import { useI18n } from "../i18n";
+import { useI18n } from "../i18n/index.js";
 import { Btn } from "../components/UI";
 import { FloorPlan, RoomShapeEditor } from "../components/FloorPlan";
 import { C } from "../constants";
