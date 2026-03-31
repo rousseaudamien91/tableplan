@@ -1,8 +1,14 @@
 /* eslint-disable */
 import React, { useEffect, useState } from "react";
 import { db } from "../../firebase";
-import firebase from "firebase/app";
-import "firebase/firestore";
+
+import {
+  collection,
+  query,
+  orderBy,
+  getDocs
+} from "firebase/firestore";
+
 import ReviewCard from "./ReviewCard";
 import NPSWidget from "./NPSWidget";
 
@@ -13,10 +19,10 @@ const ReviewsSection = () => {
   useEffect(() => {
     const loadReviews = async () => {
       try {
-        const snapshot = await db
-          .collection("reviews")
-          .orderBy("createdAt", "desc")
-          .get();
+        const ref = collection(db, "reviews");
+        const q = query(ref, orderBy("createdAt", "desc"));
+
+        const snapshot = await getDocs(q);
 
         const data = snapshot.docs.map((doc) => ({
           id: doc.id,
