@@ -1,14 +1,41 @@
-// src/components/reviews/ReviewsSection.js
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { db } from "../../firebase";
+import { collection, getDocs, orderBy, query } from "firebase/firestore";
 import ReviewCard from "./ReviewCard";
+import NPSWidget from "./NPSWidget";
 
 const ReviewsSection = () => {
-  const placeholderReviews = [
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const loadReviews = async () => {
+      try {
+        const q = query(collection(db, "reviews"), orderBy("createdAt", "desc"));
+        const snapshot = await getDocs(q);
+
+        const data = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        }));
+
+        setReviews(data);
+      } catch (err) {
+        console.error("Erreur Firestore:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadReviews();
+  }, []);
+
+  const noReviewsFallback = [
     {
-      id: 1,
+      id: "placeholder",
       author: "Coming soon",
       rating: 5,
-      comment: "Les premiers avis arrivent très bientôt."
+      comment: "Les premiers retours arrivent très bientôt."
     }
   ];
 
@@ -16,11 +43,17 @@ const ReviewsSection = () => {
     <section style={styles.section}>
       <h2 style={styles.title}>Avis & Retours</h2>
 
-      <div style={styles.list}>
-        {placeholderReviews.map((review) => (
-          <ReviewCard key={review.id} review={review} />
-        ))}
-      </div>
+      <NPSWidget />
+
+      {loading ? (
+        <p>Chargement...</p>
+      ) : (
+        <div style={styles.list}>
+          {(reviews.length > 0 ? reviews : noReviewsFallback).map((review) => (
+            <ReviewCard key={review.id} review={review} />
+          ))}
+        </div>
+      )}
     </section>
   );
 };
