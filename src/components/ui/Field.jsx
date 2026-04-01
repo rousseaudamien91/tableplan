@@ -1,12 +1,25 @@
-import React from "react";
+/* eslint-disable */
+import { useTheme } from "../../theme";
 
-export default function Field({ label, children }) {
+export default function Field({ label, children, style = {} }) {
+  const { theme } = useTheme();
+
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+    <div style={{ marginBottom: 18, ...style }}>
       {label && (
-        <div style={{ fontSize: 12, fontWeight: 700, color: "rgba(255,255,255,0.7)" }}>
+        <label
+          style={{
+            display: "block",
+            marginBottom: 6,
+            fontSize: 12,
+            fontWeight: 600,
+            color: theme.textMuted,
+            letterSpacing: 0.8,
+            textTransform: "uppercase",
+          }}
+        >
           {label}
-        </div>
+        </label>
       )}
       {children}
     </div>
