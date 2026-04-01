@@ -8,8 +8,10 @@ import es from "./es.js";
 import de from "./de.js";
 import it from "./it.js";
 
+// Toutes les traductions disponibles
 export const TRANSLATIONS = { fr, en, es, de, it };
 
+// Détection automatique de la langue
 function detectLang() {
   const saved = localStorage.getItem("tableMaitreLang");
   if (saved && TRANSLATIONS[saved]) return saved;
@@ -18,6 +20,7 @@ function detectLang() {
   return TRANSLATIONS[nav] ? nav : "en";
 }
 
+// Hook principal i18n
 export function useI18n() {
   const [lang, setLangState] = useState(detectLang);
 
@@ -34,6 +37,7 @@ export function useI18n() {
   };
 }
 
+// Drapeaux et noms
 export const LANG_FLAGS = {
   fr: "🇫🇷",
   en: "🇬🇧",
