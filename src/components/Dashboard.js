@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import PricingPage from "./pricing/PricingPage";
 import OnboardingWizard from "./OnboardingWizard";
 import VoucherModal from "./VoucherModal";
-import { THEMES_CONFIG } from "../config/themes";
+import { THEMES_CONFIG } from "../theme";
 import { C } from "../theme";
 import Modal from "./ui/Modal";
 import Field from "./ui/Field";
