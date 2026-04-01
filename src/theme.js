@@ -1,6 +1,15 @@
 /* eslint-disable */
 import { useState, useEffect } from "react";
-import { TRANSLATIONS } from "./constants";
+
+// i18n (nouveau système)
+import { useI18n, LANG_FLAGS, LANG_NAMES } from "./i18n";
+
+// constantes (couleurs, plans, vouchers, etc.)
+import { C, PRICING_PLANS, VOUCHERS, PLANS, THEMES_CONFIG } from "./constants";
+
+// UI
+import { Btn, Field, Input } from "./UI";
+
 
 // ═══════════════════════════════════════════════════════════════
 // THEME — Palette couleurs pro dark
