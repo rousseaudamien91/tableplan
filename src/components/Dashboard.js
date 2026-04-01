@@ -1,26 +1,26 @@
 /* eslint-disable */
 import { useState } from "react";
+import { useTheme, EVENT_THEMES, C } from "../theme";
+
 import PricingPage from "./pricing/PricingPage";
 import OnboardingWizard from "./OnboardingWizard";
 import VoucherModal from "./VoucherModal";
-import { useTheme, THEMES_CONFIG, C } from "../theme";
-import Modal from "./ui/Modal.jsx";
+
+import Btn from "./ui/Btn";
+import Modal from "./ui/Modal";
 import Field from "./ui/Field";
 import Input from "./ui/Input";
-import Btn from "./ui/Btn";
+import Badge from "./ui/Badge";
 
-function Dashboard({
+export default function Dashboard({
   user,
   events,
   setEvents,
   onLogout,
   onOpenEvent,
   t,
-  lang,
-  setLang,
-  guestMode
 }) {
-  const { theme } = useTheme("light");
+  const { theme } = useTheme();
 
   const [showNew, setShowNew] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -49,7 +49,7 @@ function Dashboard({
       constraints: [],
       menu: null,
     };
-    setEvents(prev => [...prev, ev]);
+    setEvents((prev) => [...prev, ev]);
     setShowNew(false);
     onOpenEvent(ev.id);
   }
@@ -60,88 +60,97 @@ function Dashboard({
   }
 
   return (
-    <div style={{ padding: 24, color: theme.text }}>
+    <div style={{ padding: 28, color: theme.text, transition: theme.transition }}>
 
       {/* HEADER */}
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 20 }}>
-        <h1 style={{ fontSize: 26, fontWeight: 800 }}>{t.myEvents}</h1>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          marginBottom: 30,
+          alignItems: "center",
+        }}
+      >
+        <h1 style={{ fontSize: 28, fontWeight: 800, margin: 0 }}>
+          {t.myEvents}
+        </h1>
 
         <div style={{ display: "flex", gap: 10 }}>
-          <button
-            onClick={() => setShowVoucher(true)}
-            style={{
-              padding: "8px 14px",
-              borderRadius: 8,
-              border: `1px solid ${C.border}`,
-              background: C.mid,
-              color: theme.text,
-              cursor: "pointer",
-            }}
-          >
+          <Btn variant="ghost" onClick={() => setShowVoucher(true)}>
             {t.codePromo}
-          </button>
+          </Btn>
 
-          <button
-            onClick={onLogout}
-            style={{
-              padding: "8px 14px",
-              borderRadius: 8,
-              border: `1px solid ${C.border}`,
-              background: C.mid,
-              color: theme.text,
-              cursor: "pointer",
-            }}
-          >
+          <Btn variant="secondary" onClick={onLogout}>
             {t.logout}
-          </button>
+          </Btn>
         </div>
       </div>
 
       {/* LISTE DES ÉVÉNEMENTS */}
-      <div style={{ marginBottom: 30 }}>
+      <div style={{ marginBottom: 40 }}>
         {events.length === 0 ? (
           <div style={{ opacity: 0.6 }}>{t.noEvents}</div>
         ) : (
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {events.map(ev => (
-              <div
-                key={ev.id}
-                onClick={() => onOpenEvent(ev.id)}
-                style={{
-                  padding: 16,
-                  borderRadius: 10,
-                  background: C.mid,
-                  border: `1px solid ${C.border}`,
-                  cursor: "pointer",
-                }}
-              >
-                <div style={{ fontSize: 16, fontWeight: 700 }}>{ev.name}</div>
-                <div style={{ opacity: 0.6, fontSize: 13 }}>{ev.date}</div>
-              </div>
-            ))}
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))",
+              gap: 16,
+            }}
+          >
+            {events.map((ev) => {
+              const evTheme = EVENT_THEMES[ev.type] || EVENT_THEMES.autre;
+
+              return (
+                <div
+                  key={ev.id}
+                  onClick={() => onOpenEvent(ev.id)}
+                  style={{
+                    padding: 18,
+                    borderRadius: 14,
+                    background: theme.card,
+                    border: `1px solid ${theme.border}`,
+                    cursor: "pointer",
+                    transition: "all .22s ease",
+                    boxShadow: theme.shadow,
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = "translateY(-3px)";
+                    e.currentTarget.style.boxShadow = "0 8px 24px rgba(0,0,0,0.35)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = "translateY(0px)";
+                    e.currentTarget.style.boxShadow = theme.shadow;
+                  }}
+                >
+                  <div style={{ display: "flex", justifyContent: "space-between" }}>
+                    <div style={{ fontSize: 16, fontWeight: 700 }}>{ev.name}</div>
+                    <Badge soft color={evTheme.color}>
+                      {evTheme.icon}
+                    </Badge>
+                  </div>
+
+                  <div style={{ opacity: 0.6, fontSize: 13, marginTop: 6 }}>
+                    {ev.date}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
 
-      <button
-        onClick={() => setShowNew(true)}
-        style={{
-          padding: "12px 20px",
-          borderRadius: 10,
-          background: theme.primary,
-          border: "none",
-          color: theme.background,
-          fontWeight: 700,
-          cursor: "pointer",
-        }}
-      >
+      <Btn size="lg" onClick={() => setShowNew(true)}>
         {t.newEvent}
-      </button>
+      </Btn>
 
       {/* MODALS */}
       {showOnboarding && (
         <OnboardingWizard
-          onSkip={() => { setShowOnboarding(false); setShowNew(true); }}
+          onSkip={() => {
+            setShowOnboarding(false);
+            setShowNew(true);
+          }}
           onComplete={(wizardData) => {
             setShowOnboarding(false);
             const ev = {
@@ -157,7 +166,7 @@ function Dashboard({
               constraints: [],
               menu: null,
             };
-            setEvents(prev => [...prev, ev]);
+            setEvents((prev) => [...prev, ev]);
             onOpenEvent(ev.id);
           }}
         />
@@ -194,14 +203,14 @@ function Dashboard({
         {saveToast && (
           <div
             style={{
-              background: C.dark,
+              background: theme.card,
               border: `1px solid ${C.green}`,
               borderRadius: 10,
               padding: "10px 20px",
               display: "flex",
               alignItems: "center",
               gap: 8,
-              boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
+              boxShadow: theme.shadow,
               fontSize: 13,
               color: C.green,
             }}
@@ -218,7 +227,7 @@ function Dashboard({
             position: "fixed",
             bottom: 24,
             right: 24,
-            background: C.dark,
+            background: theme.card,
             border: `1px solid ${C.green}`,
             borderRadius: 12,
             padding: "12px 20px",
@@ -226,7 +235,7 @@ function Dashboard({
             display: "flex",
             alignItems: "center",
             gap: 10,
-            boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
+            boxShadow: theme.shadow,
           }}
         >
           <span style={{ fontSize: 18 }}>🎟️</span>
@@ -234,7 +243,7 @@ function Dashboard({
             <div style={{ color: C.green, fontSize: 12, fontWeight: 700 }}>
               Code appliqué : {appliedVoucher.code}
             </div>
-            <div style={{ color: "rgba(255,255,255,0.45)", fontSize: 11 }}>
+            <div style={{ color: theme.textMuted, fontSize: 11 }}>
               {appliedVoucher.description}
             </div>
           </div>
@@ -243,7 +252,7 @@ function Dashboard({
             style={{
               background: "none",
               border: "none",
-              color: "rgba(255,255,255,0.45)",
+              color: theme.textMuted,
               cursor: "pointer",
               fontSize: 16,
               padding: 0,
@@ -257,10 +266,10 @@ function Dashboard({
       {/* MODAL NOUVEL ÉVÉNEMENT */}
       <Modal open={showNew} onClose={() => setShowNew(false)} title="Nouvel événement">
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          <Field label="NOM DE L'ÉVÉNEMENT *">
+          <Field label="Nom de l'événement *">
             <Input
               value={newEv.name}
-              onChange={e => setNewEv({ ...newEv, name: e.target.value })}
+              onChange={(e) => setNewEv({ ...newEv, name: e.target.value })}
               placeholder="Mariage Dupont × Martin"
             />
           </Field>
@@ -269,29 +278,41 @@ function Dashboard({
             <Input
               type="date"
               value={newEv.date}
-              onChange={e => setNewEv({ ...newEv, date: e.target.value })}
+              onChange={(e) => setNewEv({ ...newEv, date: e.target.value })}
             />
           </Field>
 
-          <Field label="TYPE D'ÉVÉNEMENT">
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
-              {Object.entries(THEMES_CONFIG).map(([k, v]) => (
+          <Field label="Type d'événement">
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 10,
+              }}
+            >
+              {Object.entries(EVENT_THEMES).map(([k, v]) => (
                 <button
                   key={k}
                   onClick={() => setNewEv({ ...newEv, type: k })}
                   style={{
                     padding: "10px 8px",
                     borderRadius: 10,
-                    border: `2px solid ${newEv.type === k ? v.primary : C.border}`,
-                    background: newEv.type === k ? v.primary + "22" : C.mid,
+                    border:
+                      newEv.type === k
+                        ? `2px solid ${v.color}`
+                        : `1px solid ${theme.border}`,
+                    background:
+                      newEv.type === k ? v.color + "22" : theme.card,
                     cursor: "pointer",
-                    color: newEv.type === k ? v.primary : "rgba(255,255,255,0.45)",
+                    color:
+                      newEv.type === k ? v.color : theme.textMuted,
                     fontFamily: "inherit",
                     fontSize: 12,
                     fontWeight: 700,
                     display: "flex",
                     alignItems: "center",
                     gap: 6,
+                    transition: "all .22s ease",
                   }}
                 >
                   <span style={{ fontSize: 16 }}>{v.icon}</span> {v.label}
@@ -300,7 +321,7 @@ function Dashboard({
             </div>
           </Field>
 
-          <Btn onClick={createEvent} style={{ marginTop: 4 }}>
+          <Btn onClick={createEvent} size="md" style={{ marginTop: 6 }}>
             Créer l'événement
           </Btn>
         </div>
@@ -308,5 +329,3 @@ function Dashboard({
     </div>
   );
 }
-
-export default Dashboard;
