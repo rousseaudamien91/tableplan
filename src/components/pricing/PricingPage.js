@@ -2,23 +2,30 @@
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-// i18n (nouveau système)
-import { useI18n, LANG_FLAGS, LANG_NAMES } from "../../i18n";
+// i18n
+import { useI18n } from "../../i18n";
 
-// constantes (plans, vouchers)
+// constantes
 import { PRICING_PLANS, VOUCHERS } from "../../constants";
 
-// UI
-import { Btn, Field, Input } from "../UI";
+// UI premium
+import Btn from "../ui/Btn";
+import Field from "../ui/Field";
+import Input from "../ui/Input";
+import Modal from "../ui/Modal";
 
+// thème
+import { useTheme } from "../../theme";
 
 export default function PricingPage({ events, setEvents, paypalEmail }) {
+  const { theme } = useTheme();
   const { t } = useI18n();
   const { eventId } = useParams();
   const navigate = useNavigate();
 
-  const event = events.find(e => e.id === eventId);
-  const [selectedPlan, setSelectedPlan] = useState(event.plan || "free");
+  const event = events.find((e) => e.id === eventId);
+
+  const [selectedPlan, setSelectedPlan] = useState(event?.plan || "free");
   const [voucher, setVoucher] = useState("");
   const [discount, setDiscount] = useState(0);
 
@@ -31,6 +38,7 @@ export default function PricingPage({ events, setEvents, paypalEmail }) {
   }
 
   const plan = PRICING_PLANS[selectedPlan];
+  const price = Math.max(plan.price - (plan.price * discount) / 100, 0);
 
   const applyVoucher = () => {
     const v = VOUCHERS[voucher.toUpperCase()];
@@ -38,11 +46,9 @@ export default function PricingPage({ events, setEvents, paypalEmail }) {
     setDiscount(v.discount);
   };
 
-  const price = Math.max(plan.price - (plan.price * discount) / 100, 0);
-
   const activate = () => {
-    setEvents(prev =>
-      prev.map(e =>
+    setEvents((prev) =>
+      prev.map((e) =>
         e.id === event.id
           ? {
               ...e,
@@ -52,8 +58,8 @@ export default function PricingPage({ events, setEvents, paypalEmail }) {
                 pricePaid: price,
                 voucherCode: voucher || null,
                 paymentMethod: price === 0 ? "free" : "paypal",
-                activatedAt: new Date().toISOString()
-              }
+                activatedAt: new Date().toISOString(),
+              },
             }
           : e
       )
@@ -69,41 +75,53 @@ export default function PricingPage({ events, setEvents, paypalEmail }) {
       : null;
 
   return (
-    <div style={{ padding: 40, maxWidth: 700, margin: "0 auto" }}>
-      <h1 style={{ marginBottom: 20 }}>
-        {t("pricing.title")}
-      </h1>
-
-      {/* PLANS */}
-      <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-        {Object.entries(PRICING_PLANS).map(([key, p]) => (
-          <div
-            key={key}
-            onClick={() => setSelectedPlan(key)}
-            style={{
-              padding: 20,
-              borderRadius: 12,
-              border:
-                selectedPlan === key
-                  ? "2px solid #C9973A"
-                  : "1px solid rgba(255,255,255,0.1)",
-              background: "#18182a",
-              cursor: "pointer"
-            }}
-          >
-            <div style={{ fontSize: 18, fontWeight: 700 }}>{p.label}</div>
-            <div style={{ color: "rgba(255,255,255,0.5)", marginTop: 4 }}>
-              {p.description}
+    <Modal open={true} onClose={() => navigate(-1)} title={t("pricing.title")}>
+      <div style={{ padding: "4px 2px" }}>
+        {/* PLANS */}
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 16,
+            marginBottom: 30,
+          }}
+        >
+          {Object.entries(PRICING_PLANS).map(([key, p]) => (
+            <div
+              key={key}
+              onClick={() => setSelectedPlan(key)}
+              style={{
+                padding: 20,
+                borderRadius: 14,
+                background: theme.card,
+                border:
+                  selectedPlan === key
+                    ? `2px solid ${theme.primary}`
+                    : `1px solid ${theme.border}`,
+                cursor: "pointer",
+                transition: "all .22s ease",
+                boxShadow: theme.shadow,
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.transform = "translateY(-3px)";
+                e.currentTarget.style.boxShadow =
+                  "0 10px 28px rgba(0,0,0,0.35)";
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.transform = "translateY(0px)";
+                e.currentTarget.style.boxShadow = theme.shadow;
+              }}
+            >
+              <div style={{ fontSize: 18, fontWeight: 700 }}>{p.label}</div>
+              <div style={{ opacity: 0.6, marginTop: 4 }}>{p.description}</div>
+              <div style={{ marginTop: 10, fontSize: 22, fontWeight: 800 }}>
+                {p.price === 0 ? t("pricing.free") : p.price + "€"}
+              </div>
             </div>
-            <div style={{ marginTop: 10, fontSize: 22, fontWeight: 800 }}>
-              {p.price === 0 ? t("pricing.free") : p.price + "€"}
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
 
-      {/* VOUCHER */}
-      <div style={{ marginTop: 30 }}>
+        {/* VOUCHER */}
         <Field label={t("pricing.voucher")}>
           <Input
             value={voucher}
@@ -112,39 +130,42 @@ export default function PricingPage({ events, setEvents, paypalEmail }) {
           />
         </Field>
         <Btn onClick={applyVoucher}>{t("pricing.apply")}</Btn>
-      </div>
 
-      {/* TOTAL */}
-      <div
-        style={{
-          marginTop: 30,
-          padding: 20,
-          background: "#13131e",
-          borderRadius: 12,
-          border: "1px solid rgba(255,255,255,0.1)"
-        }}
-      >
-        <div style={{ fontSize: 16, marginBottom: 6 }}>
-          {t("pricing.total")} :
+        {/* TOTAL */}
+        <div
+          style={{
+            marginTop: 30,
+            padding: 20,
+            background: theme.card,
+            borderRadius: 12,
+            border: `1px solid ${theme.border}`,
+            boxShadow: theme.shadow,
+          }}
+        >
+          <div style={{ fontSize: 16, marginBottom: 6 }}>
+            {t("pricing.total")} :
+          </div>
+          <div style={{ fontSize: 28, fontWeight: 800 }}>
+            {price === 0 ? t("pricing.free") : price + "€"}
+          </div>
         </div>
-        <div style={{ fontSize: 28, fontWeight: 800 }}>
-          {price === 0 ? t("pricing.free") : price + "€"}
+
+        {/* PAYPAL */}
+        {price > 0 && (
+          <div style={{ marginTop: 30 }}>
+            <a href={paypalLink} target="_blank" rel="noreferrer">
+              <Btn size="md">💳 {t("pricing.payWithPaypal")}</Btn>
+            </a>
+          </div>
+        )}
+
+        {/* ACTIVATE */}
+        <div style={{ marginTop: 20 }}>
+          <Btn size="lg" onClick={activate}>
+            {t("pricing.activate")}
+          </Btn>
         </div>
       </div>
-
-      {/* PAYPAL */}
-      {price > 0 && (
-        <div style={{ marginTop: 30 }}>
-          <a href={paypalLink} target="_blank" rel="noreferrer">
-            <Btn>💳 {t("pricing.payWithPaypal")}</Btn>
-          </a>
-        </div>
-      )}
-
-      {/* ACTIVATE */}
-      <div style={{ marginTop: 20 }}>
-        <Btn onClick={activate}>{t("pricing.activate")}</Btn>
-      </div>
-    </div>
+    </Modal>
   );
 }
