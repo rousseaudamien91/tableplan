@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { Field, Input, Select, Btn } from "../../components/UI";
-import { useI18n } from "../../theme";
+import { useI18n } from "../../i18n";
 
 export default function SubscriptionModal({
   open,
