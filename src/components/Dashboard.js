@@ -22,6 +22,18 @@ export default function Dashboard({
 }) {
   const { theme } = useTheme();
 
+  // 🔥 Protection user (évite le crash "reading myEvents")
+  if (!user) {
+    return (
+      <div style={{ padding: 40, textAlign: "center", color: "#fff" }}>
+        Chargement…
+      </div>
+    );
+  }
+
+  // 🔥 Protection events
+  const safeEvents = Array.isArray(events) ? events : [];
+
   const [showNew, setShowNew] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
   const [showPricing, setShowPricing] = useState(false);
@@ -88,7 +100,7 @@ export default function Dashboard({
 
       {/* LISTE DES ÉVÉNEMENTS */}
       <div style={{ marginBottom: 40 }}>
-        {events.length === 0 ? (
+        {safeEvents.length === 0 ? (
           <div style={{ opacity: 0.6 }}>{t.noEvents}</div>
         ) : (
           <div
@@ -98,7 +110,7 @@ export default function Dashboard({
               gap: 16,
             }}
           >
-            {events.map((ev) => {
+            {safeEvents.map((ev) => {
               const evTheme = EVENT_THEMES[ev.type] || EVENT_THEMES.autre;
 
               return (
@@ -287,45 +299,3 @@ export default function Dashboard({
               style={{
                 display: "grid",
                 gridTemplateColumns: "1fr 1fr",
-                gap: 10,
-              }}
-            >
-              {Object.entries(EVENT_THEMES).map(([k, v]) => (
-                <button
-                  key={k}
-                  onClick={() => setNewEv({ ...newEv, type: k })}
-                  style={{
-                    padding: "10px 8px",
-                    borderRadius: 10,
-                    border:
-                      newEv.type === k
-                        ? `2px solid ${v.color}`
-                        : `1px solid ${theme.border}`,
-                    background:
-                      newEv.type === k ? v.color + "22" : theme.card,
-                    cursor: "pointer",
-                    color:
-                      newEv.type === k ? v.color : theme.textMuted,
-                    fontFamily: "inherit",
-                    fontSize: 12,
-                    fontWeight: 700,
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 6,
-                    transition: "all .22s ease",
-                  }}
-                >
-                  <span style={{ fontSize: 16 }}>{v.icon}</span> {v.label}
-                </button>
-              ))}
-            </div>
-          </Field>
-
-          <Btn onClick={createEvent} size="md" style={{ marginTop: 6 }}>
-            Créer l'événement
-          </Btn>
-        </div>
-      </Modal>
-    </div>
-  );
-}
