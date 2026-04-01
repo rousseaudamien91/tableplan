@@ -1,7 +1,7 @@
 /* eslint-disable */
 import "./firebase";
 import { useState } from "react";
-import { BrowserRouter, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Dashboard from "./components/Dashboard";
 import EventEditor from "./components/EventEditor/EventEditor";
@@ -37,8 +37,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-
-        {/* LOGIN */}
+        {/* LOGIN / LANDING */}
         <Route
           path="/"
           element={
@@ -52,13 +51,23 @@ export default function App() {
         {/* DASHBOARD */}
         <Route
           path="/dashboard"
-          element={<Dashboard events={events} setEvents={setEvents} />}
+          element={
+            <Dashboard
+              events={events}
+              setEvents={setEvents}
+            />
+          }
         />
 
         {/* ÉDITEUR */}
         <Route
           path="/editor/:eventId"
-          element={<EventEditor events={events} setEvents={setEvents} />}
+          element={
+            <EventEditor
+              events={events}
+              setEvents={setEvents}
+            />
+          }
         />
 
         {/* PRICING PAGE */}
@@ -74,8 +83,10 @@ export default function App() {
         />
 
         {/* AVIS PUBLICS */}
-        <Route path="/reviews" element={<ReviewsSection />} />
-
+        <Route
+          path="/reviews"
+          element={<ReviewsSection />}
+        />
       </Routes>
     </BrowserRouter>
   );
