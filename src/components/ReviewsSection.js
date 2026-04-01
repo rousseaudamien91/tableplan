@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { C } from "../constants";
 import { useI18n } from "../i18n";
+import { useTheme } from "../theme";
 
 import { db } from "../firebase";
 import {
@@ -14,7 +15,7 @@ import {
 } from "firebase/firestore";
 
 // ─────────────────────────────────────────────
-// NPS WIDGET (vide pour l’instant)
+// NPS WIDGET (placeholder pour l’instant)
 // ─────────────────────────────────────────────
 export function NPSWidget({ user, onClose }) {
   return null;
@@ -25,6 +26,7 @@ export function NPSWidget({ user, onClose }) {
 // ─────────────────────────────────────────────
 export function ReviewsSection() {
   const { t } = useI18n();
+  const { theme } = useTheme();
 
   const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -64,21 +66,27 @@ export function ReviewsSection() {
   // Aucun avis
   if (reviews.length === 0) {
     return (
-      <section style={{ padding: "48px 24px", textAlign: "center" }}>
+      <section
+        style={{
+          padding: "48px 24px",
+          textAlign: "center",
+          background: theme.background
+        }}
+      >
         <div style={{ maxWidth: 600, margin: "0 auto" }}>
           <div style={{ fontSize: 32, marginBottom: 12 }}>💬</div>
           <h2
             style={{
               fontSize: 22,
               fontWeight: 800,
-              color: "#ffffff",
+              color: theme.text,
               margin: "0 0 8px",
               fontFamily: "Georgia,serif"
             }}
           >
             {t.reviewsEmptyTitle}
           </h2>
-          <p style={{ fontSize: 14, color: "rgba(255,255,255,0.4)" }}>
+          <p style={{ fontSize: 14, color: theme.textMuted }}>
             {t.reviewsEmptySubtitle}
           </p>
         </div>
@@ -110,7 +118,8 @@ export function ReviewsSection() {
     <section
       style={{
         padding: "64px 24px",
-        borderTop: "1px solid rgba(255,255,255,0.05)"
+        borderTop: `1px solid ${theme.border}`,
+        background: theme.background
       }}
     >
       <div style={{ maxWidth: 1000, margin: "0 auto" }}>
@@ -121,7 +130,7 @@ export function ReviewsSection() {
               fontSize: 26,
               fontWeight: 800,
               margin: "0 0 8px",
-              color: "#ffffff",
+              color: theme.text,
               fontFamily: "Georgia,serif"
             }}
           >
@@ -130,7 +139,7 @@ export function ReviewsSection() {
           <p
             style={{
               fontSize: 13,
-              color: "rgba(255,255,255,0.35)",
+              color: theme.textMuted,
               margin: "0 0 24px"
             }}
           >
@@ -143,8 +152,8 @@ export function ReviewsSection() {
               display: "inline-flex",
               gap: 32,
               padding: "16px 32px",
-              background: "#18182a",
-              border: "1px solid rgba(201,151,58,0.15)",
+              background: theme.card,
+              border: `1px solid ${theme.border}`,
               borderRadius: 14
             }}
           >
@@ -160,7 +169,7 @@ export function ReviewsSection() {
                 <span style={{ fontSize: 14 }}>/10</span>
               </div>
               <div
-                style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}
+                style={{ fontSize: 11, color: theme.textMuted }}
               >
                 {t.reviewsAvg}
               </div>
@@ -183,7 +192,7 @@ export function ReviewsSection() {
                 {nps}
               </div>
               <div
-                style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}
+                style={{ fontSize: 11, color: theme.textMuted }}
               >
                 {t.reviewsNps}
               </div>
@@ -200,7 +209,7 @@ export function ReviewsSection() {
                 {Math.round((promoters / reviews.length) * 100)}%
               </div>
               <div
-                style={{ fontSize: 11, color: "rgba(255,255,255,0.4)" }}
+                style={{ fontSize: 11, color: theme.textMuted }}
               >
                 {t.reviewsRecommend}
               </div>
@@ -220,8 +229,8 @@ export function ReviewsSection() {
             <div
               key={r.id}
               style={{
-                background: "#18182a",
-                border: "1px solid rgba(255,255,255,0.06)",
+                background: theme.card,
+                border: `1px solid ${theme.border}`,
                 borderRadius: 14,
                 padding: "20px"
               }}
@@ -256,7 +265,7 @@ export function ReviewsSection() {
                     style={{
                       fontSize: 13,
                       fontWeight: 700,
-                      color: "#ffffff"
+                      color: theme.text
                     }}
                   >
                     {r.userName || t.npsAnonymousUser}
@@ -275,7 +284,7 @@ export function ReviewsSection() {
                 <div
                   style={{
                     fontSize: 10,
-                    color: "rgba(255,255,255,0.25)"
+                    color: theme.textMuted
                   }}
                 >
                   {r.createdAt
@@ -300,7 +309,7 @@ export function ReviewsSection() {
                 <p
                   style={{
                     fontSize: 12,
-                    color: "rgba(255,255,255,0.25)",
+                    color: theme.textMuted,
                     margin: 0,
                     fontStyle: "italic"
                   }}
