@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { useState } from "react";
-import { C, useI18n } from "../theme";
-import { LANG_FLAGS, LANG_NAMES, THEMES_CONFIG, PLANS } from "../constants";
+import { C, useI18n, LANG_FLAGS, LANG_NAMES } from "../theme";
+import { THEMES_CONFIG, PLANS } from "../constants";
 import { Btn, Badge, Modal, Field, Input, Select } from "./UI";
 import { uid } from "../utils";
 import VoucherModal from "./VoucherModal";
@@ -216,30 +216,8 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
           onPlanSelected={(planId) => { setShowPricing(false); }}
         />
       )}
-      {showOnboarding && (
-        <OnboardingWizard
-          onSkip={() => { setShowOnboarding(false); setShowNew(true); }}
-          onComplete={(wizardData) => {
-            setShowOnboarding(false);
-            const ev = {
-              id: Date.now(), ownerId: user.id,
-              name: wizardData.name, date: wizardData.date,
-              type: wizardData.type, plan: 'free',
-              roomShape: wizardData.roomShape,
-              tables: [], guests: [], constraints: [], menu: null,
-            };
-            setEvents(prev => [...prev, ev]);
-            onOpenEvent(ev.id);
-          }}
-        />
-      )}
-      {showPricing && (
-        <PricingPage
-          user={user}
-          onClose={()=>setShowPricing(false)}
-          onPlanSelected={(planId)=>setShowPricing(false)}
-        />
-      )}
+      
+      
       {showVoucher && <VoucherModal onClose={() => setShowVoucher(false)} onApply={handleApplyVoucher} />}
       <div aria-live="polite" aria-atomic="true" style={{ position:"fixed", bottom:24, left:"50%", transform:"translateX(-50%)", zIndex:9999, pointerEvents:"none" }}>
         {saveToast && (
