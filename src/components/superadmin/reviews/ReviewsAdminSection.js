@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { useEffect, useState } from "react";
-import { useI18n } from "../../theme";
+import { useI18n } from "../../i18n";
 import { C } from "../../constants";
 import { Btn } from "../../components/UI";
 import { getFirebase } from "../../firebase";
