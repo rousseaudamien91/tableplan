@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { useI18n } from "../../theme";
+import { useI18n } from "../../i18n";
 import { C } from "../../constants";
 
 export default function StatsSection({
