@@ -1,9 +1,16 @@
 /* eslint-disable */
 import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Btn, Field, Input } from "../UI";
+
+// i18n (nouveau système)
+import { useI18n, LANG_FLAGS, LANG_NAMES } from "../../i18n";
+
+// constantes (plans, vouchers)
 import { PRICING_PLANS, VOUCHERS } from "../../constants";
-import { useI18n } from "../../theme";
+
+// UI
+import { Btn, Field, Input } from "../UI";
+
 
 export default function PricingPage({ events, setEvents, paypalEmail }) {
   const { t } = useI18n();
