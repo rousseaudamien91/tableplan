@@ -1,7 +1,15 @@
 /* eslint-disable */
 import { useState } from "react";
-import { C, useI18n } from "../../theme";
+
+// i18n (nouveau système)
+import { useI18n, LANG_FLAGS, LANG_NAMES } from "../../i18n";
+
+// constantes (couleurs, vouchers, plans)
+import { C, VOUCHERS, PLANS } from "../../constants";
+
+// UI
 import { Btn } from "../../components/UI";
+
 
 function AccountsSection({
   users,
