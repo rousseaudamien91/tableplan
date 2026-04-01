@@ -1,8 +1,15 @@
 /* eslint-disable */
 import { useState } from "react";
-import { C, useI18n } from "../theme";
+
+// i18n (nouveau système)
+import { useI18n, LANG_FLAGS, LANG_NAMES } from "../i18n";
+
+// constantes (couleurs, plans, vouchers)
+import { C, VOUCHERS, PLANS } from "../constants";
+
+// UI + utils
 import { Btn, Modal, Field, Input } from "./UI";
-import { VOUCHERS, PLANS } from "../constants";
+
 
 // ═══════════════════════════════════════════════════════════════
 // VOUCHER MODAL — Code promotionnel
