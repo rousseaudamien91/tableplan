@@ -31,6 +31,13 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
   const [showPricing, setShowPricing] = useState(false);
   const [saveToast, setSaveToast] = useState(false);
 
+  // Guard : user peut être undefined pendant le chargement Firebase
+  if (!user) return (
+    <div style={{ minHeight:"100vh", background:"#120C08", display:"flex", alignItems:"center", justifyContent:"center" }}>
+      <div style={{ color:"rgba(255,255,255,0.3)", fontSize:14 }}>⏳ Chargement...</div>
+    </div>
+  );
+
   function createEvent() {
     if (!newEv.name) return;
     // Pas de limite sur le nombre d'événements — accès libre
@@ -58,14 +65,14 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
         <span style={{ fontSize:20, color:"#C9973A", letterSpacing:1 }}>🪑 TableMaître</span>
         <div style={{flex:1}}/>
         <div style={{ display:"flex", alignItems:"center", gap:12 }}>
-          {user.photoURL ? (
-            <img src={user.photoURL} alt={user.name} style={{ width:32,height:32,borderRadius:"50%",objectFit:"cover",border:`2px solid ${C.gold}44` }}/>
+          {(user && user.photoURL) ? (
+            <img src={user.photoURL} alt={user && user.name || ""} style={{ width:32,height:32,borderRadius:"50%",objectFit:"cover",border:`2px solid ${C.gold}44` }}/>
           ) : (
             <div style={{ width:32,height:32,borderRadius:"50%",background:C.gold+"33",display:"flex",alignItems:"center",justifyContent:"center",color:"#C9973A",fontSize:13,fontWeight:700 }}>
-              {user.avatar}
+              {user && user.avatar || "?"}
             </div>
           )}
-          <span style={{ color:"rgba(255,255,255,0.45)", fontSize:13 }}>{user.name.split(" ")[0]}</span>
+          <span style={{ color:"rgba(255,255,255,0.45)", fontSize:13 }}>{user && user.name ? user.name.split(" ")[0] : ""}</span>
           {/* Sélecteur de langue */}
           <div style={{ position:"relative" }}>
             <select
@@ -99,7 +106,7 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
         {/* Hero */}
         <div style={{ marginBottom:48, textAlign:"center" }}>
           <h1 style={{ fontSize:36, fontWeight:400, margin:"0 0 8px", letterSpacing:1 }}>{t.myEvents}</h1>
-          <p style={{ color:"rgba(255,255,255,0.45)", margin:0, fontSize:14 }}>{t.welcome}, {user.name}</p>
+          <p style={{ color:"rgba(255,255,255,0.45)", margin:0, fontSize:14 }}>{t.welcome}, {user && user.name || ""}</p>
         </div>
 
         <div style={{ display:"flex", gap:12, marginBottom:24, alignItems:"center" }}>
