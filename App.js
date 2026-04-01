@@ -1,340 +1,213 @@
 /* eslint-disable */
 import { useState, useEffect } from "react";
-import { C, useI18n } from "./theme";
-import { INITIAL_EVENTS } from "./constants";
-import LoginScreen from "./components/LoginScreen";
-import Dashboard from "./components/Dashboard";
-import EventEditor from "./components/EventEditor";
-import SuperAdminPanel from "./components/SuperAdmin";
-import GuestJoinPage from "./components/GuestJoinPage";
+import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
+import { db } from "./firebase";
+import { doc, setDoc, getDoc, collection, onSnapshot, query, where } from "firebase/firestore";
+
+import Dashboard     from "./components/Dashboard";
+import EventEditor   from "./components/EventEditor/EventEditor";
+import LoginScreen   from "./components/LoginScreen";
+import { useI18n }  from "./theme";
 
 // ═══════════════════════════════════════════════════════════════
-// FIREBASE CONFIG
+// APP — Gestion Auth Firebase + routing simple (pas de react-router)
 // ═══════════════════════════════════════════════════════════════
 
-import { getFirebase } from "./firebase";
-
-// ═══════════════════════════════════════════════════════════════
-// FIREBASE AUTH HOOK
-// ═══════════════════════════════════════════════════════════════
-
-function useFirebaseAuth() {
-  const [fbUser, setFbUser] = useState(undefined); // undefined = chargement, null = déconnecté
-  useEffect(() => {
-    let unsub;
-    // Attendre que Firebase soit disponible (scripts CDN chargés)
-    const tryInit = () => {
-      const fb = getFirebase();
-      if (!fb) {
-        // Firebase pas encore prêt, réessayer dans 200ms
-        setTimeout(tryInit, 200);
-        return;
-      }
-      unsub = fb.auth.onAuthStateChanged(u => setFbUser(u ?? null));
-    };
-    tryInit();
-    return () => { if (unsub) unsub(); };
-  }, []);
-  return fbUser;
-}
-
-async function saveEventToFirestore(userId, ev) {
-  try {
-    const fb = getFirebase();
-    if (!fb) return;
-    await fb.db.collection("users").doc(userId).collection("events").doc(String(ev.id)).set(ev);
-  } catch(e) { console.error("Save error:", e); }
-}
-
-async function deleteEventFromFirestore(userId, evId) {
-  try {
-    const fb = getFirebase();
-    if (!fb) return;
-    await fb.db.collection("users").doc(userId).collection("events").doc(String(evId)).delete();
-  } catch(e) { console.error("Delete error:", e); }
-}
-
-async function loadEventsFromFirestore(userId) {
-  try {
-    const fb = getFirebase();
-    if (!fb) return [];
-    const snap = await fb.db.collection("users").doc(userId).collection("events").get();
-    return snap.docs.map(d => d.data());
-  } catch(e) { console.error("Load error:", e); return []; }
-}
-
-// ═══════════════════════════════════════════════════════════════
-// LOADING SCREEN
-// ═══════════════════════════════════════════════════════════════
-
-
-// ═══════════════════════════════════════════════════════════════
-// LOADING SCREEN
-// ═══════════════════════════════════════════════════════════════
-
-function LoadingScreen() {
-  return (
-    <div style={{ minHeight:"100vh", background:`radial-gradient(ellipse at 30% 40%, #2a1a0e, #120C08)`, display:"flex", alignItems:"center", justifyContent:"center", flexDirection:"column", gap:16 }}>
-      <div style={{ fontSize:48 }}>🪑</div>
-      <div style={{ color:"#C9973A", fontSize:18, letterSpacing:2, fontFamily:"Georgia,serif" }}>TableMaître</div>
-      <div style={{ color:"#8A7355", fontSize:13 }}>Loading…</div>
-    </div>
-  );
-}
-
-// ═══════════════════════════════════════════════════════════════
-// ROOT APP
-// ═══════════════════════════════════════════════════════════════
-
-// ═══════════════════════════════════════════════════════════════
-// PAGE PUBLIQUE INVITÉ (?join=eventId)
-// ═══════════════════════════════════════════════════════════════
-
-// ═══════════════════════════════════════════════════════════════
-// APP — Composant racine
-// ═══════════════════════════════════════════════════════════════
+const SUPERADMIN_EMAIL = "rousseau.damien.91@gmail.com";
 
 export default function App() {
-  const fbUser = useFirebaseAuth();
-  const [events, setEvents] = useState([]);
-  const [eventsLoaded, setEventsLoaded] = useState(false);
-  const [guestMode, setGuestMode] = useState(false);
-  const [selectedEventId, setSelectedEventId] = useState(null);
-  const [view, setView] = useState("dashboard");
-  const [lightMode, setLightMode] = useState(false);
+  const [fbUser,         setFbUser]         = useState(undefined); // undefined = loading, null = non connecté
+  const [user,           setUser]           = useState(null);
+  const [events,         setEvents]         = useState([]);
+  const [eventsLoaded,   setEventsLoaded]   = useState(false);
+  const [view,           setView]           = useState("dashboard");
+  const [selectedEventId,setSelectedEventId] = useState(null);
+  const [guestMode,      setGuestMode]      = useState(false);
+  const [lightMode,      setLightMode]      = useState(false);
 
-  // PWA Service Worker
-  useEffect(() => {
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/sw.js").catch(() => {});
-    }
-  }, []);
   const { t, lang, setLang } = useI18n(fbUser?.uid);
 
-  // Thème
-  // Rappel J-7 — notifications browser
+  // ── Auth state ──────────────────────────────────────────────
   useEffect(() => {
-    if (!events || !events.length) return;
-    if (!("Notification" in window)) return;
-    if (Notification.permission === "default") Notification.requestPermission();
-    var today = new Date();
-    events.forEach(function(ev) {
-      if (!ev.date) return;
-      var diffDays = Math.round((new Date(ev.date) - today) / (1000*60*60*24));
-      if (diffDays === 7 || diffDays === 3 || diffDays === 1) {
-        var key = "notif_" + ev.id + "_d" + diffDays;
-        if (!localStorage.getItem(key)) {
-          localStorage.setItem(key, "1");
-          if (Notification.permission === "granted") {
-            new Notification("🪑 TableMaître — " + ev.name, {
-              body: diffDays === 1 ? "C'est demain ! Votre plan est-il prêt ?" : "Dans " + diffDays + " jours — Finalisez votre plan de table.",
-            });
-          }
-        }
+    const auth = getAuth();
+    const unsub = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        const role = firebaseUser.email === SUPERADMIN_EMAIL ? "superadmin" : "admin";
+        const userObj = {
+          id:          firebaseUser.uid,
+          name:        firebaseUser.displayName || firebaseUser.email,
+          email:       firebaseUser.email,
+          photoURL:    firebaseUser.photoURL || null,
+          avatar:      (firebaseUser.displayName || "U")[0].toUpperCase(),
+          role,
+          plan:        "free",
+          subscriptionStatus: "active",
+        };
+        setFbUser(firebaseUser);
+        setUser(userObj);
+      } else {
+        setFbUser(null);
+        setUser(null);
+        setEvents([]);
+        setEventsLoaded(false);
       }
     });
-  }, [events]);
+    return unsub;
+  }, []);
 
+  // ── Charger les événements Firestore ────────────────────────
   useEffect(() => {
-    document.body.style.background = lightMode ? "#F5F0E8" : "#120C08";
-    document.body.style.color = lightMode ? "#2A1A0E" : "#F5EAD4";
-    // Accessibilité : focus visible pour navigation clavier
-    const styleId = 'a11y-focus-style';
-    if (!document.getElementById(styleId)) {
-      const style = document.createElement('style');
-      style.id = styleId;
-      style.textContent = `
-        *:focus-visible {
-          outline: 3px solid #C9973A !important;
-          outline-offset: 3px !important;
-          border-radius: 4px;
-        }
-        button:focus-visible, a:focus-visible {
-          outline: 3px solid #C9973A !important;
-          outline-offset: 3px !important;
-        }
-      `;
-      document.head.appendChild(style);
-    }
-  }, [lightMode]);
+    if (!fbUser || guestMode) return;
+    const q = query(collection(db, "events"), where("ownerId", "==", fbUser.uid));
+    const unsub = onSnapshot(q, (snap) => {
+      const evs = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      setEvents(evs);
+      setEventsLoaded(true);
+    });
+    return unsub;
+  }, [fbUser, guestMode]);
 
-  // Chargement temps réel via Firestore onSnapshot
-  useEffect(() => {
-    if (!fbUser) { setEvents([]); setEventsLoaded(false); return; }
-    setEventsLoaded(false);
-    // Utiliser window.firebase directement (SDK CDN déjà chargé)
-    const trySubscribe = () => {
-      if (!window.firebase || !window.firebase.firestore) {
-        setTimeout(trySubscribe, 200);
-        return;
-      }
-      const db = window.firebase.firestore();
-      const unsub = db
-        .collection("users").doc(fbUser.uid).collection("events")
-        .onSnapshot(function(snap) {
-          const evs = snap.docs.map(function(d){ return d.data(); });
-          setEvents(evs);
-          setEventsLoaded(true);
-        }, function(err) {
-          console.error("Snapshot error:", err);
-          setEventsLoaded(true);
-        });
-      window.__eventsUnsub = unsub;
-    };
-    trySubscribe();
-    return function(){ if (window.__eventsUnsub) { window.__eventsUnsub(); window.__eventsUnsub = null; } };
-  }, [fbUser]);
-
-  const selectedEvent = events.find(e => e.id === selectedEventId);
-
-  // Connexion Google
-  const handleGoogleLogin = async () => {
-    const fb = getFirebase();
-    if (!fb) { alert("Firebase non disponible"); return; }
+  // ── Sauvegarder un événement ─────────────────────────────────
+  async function saveEvent(ev) {
+    if (!fbUser || guestMode) return;
     try {
-      await fb.auth.signInWithPopup(new window.firebase.auth.GoogleAuthProvider());
-    } catch(e) { console.error("Login error:", e); }
-  };
+      await setDoc(doc(db, "events", String(ev.id)), ev);
+    } catch (e) {
+      console.error("Erreur sauvegarde:", e);
+    }
+  }
 
-  // Mode démo (guest) — session temporaire sans Firebase
-  const handleGuestLogin = () => {
+  // ── Login Google ──────────────────────────────────────────────
+  async function handleGoogleLogin() {
+    const auth     = getAuth();
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+    } catch (e) {
+      console.error("Login error:", e);
+    }
+  }
+
+  // ── Login Guest (démo) ────────────────────────────────────────
+  function handleGuestLogin() {
     const guestEvent = {
-      id: "guest-demo",
-      ownerId: "guest",
-      name: "Mon événement démo",
-      date: new Date().toISOString().slice(0,10),
-      type: "mariage",
-      plan: "guest",
-      roomShape: [{x:60,y:60},{x:740,y:60},{x:740,y:520},{x:60,y:520}],
-      tables: [{id:"t1",number:1,capacity:5,shape:"round",label:"Table 1",x:300,y:280,guests:[]}],
-      guests: [],
-      constraints: [],
-      menu: null,
+      id:         "guest-demo",
+      ownerId:    "guest",
+      name:       "Mon événement démo",
+      date:       new Date().toISOString().slice(0, 10),
+      type:       "mariage",
+      plan:       "guest",
+      roomShape:  [{x:60,y:60},{x:740,y:60},{x:740,y:520},{x:60,y:520}],
+      tables:     [{id:"t1",number:1,capacity:5,shape:"round",label:"Table 1",x:300,y:280,guests:[]}],
+      guests:     [],
+      constraints:[],
+      menu:       null,
+    };
+    const guestUser = {
+      id:       "guest",
+      name:     "Visiteur",
+      email:    "",
+      photoURL: null,
+      avatar:   "👤",
+      role:     "guest",
+      plan:     "guest",
+      subscriptionStatus: "guest",
     };
     setEvents([guestEvent]);
     setEventsLoaded(true);
     setGuestMode(true);
-  };
+    setUser(guestUser);
+    setFbUser({ uid: "guest" });
+  }
 
-  // Déconnexion
-  const handleLogout = async () => {
+  // ── Déconnexion ───────────────────────────────────────────────
+  async function handleLogout() {
     if (guestMode) {
       setGuestMode(false);
+      setFbUser(null);
+      setUser(null);
       setEvents([]);
       setEventsLoaded(false);
-      setSelectedEventId(null);
       setView("dashboard");
+      setSelectedEventId(null);
       return;
     }
-    const fb = getFirebase();
-    if (fb) await fb.auth.signOut();
-    setSelectedEventId(null);
+    const auth = getAuth();
+    await signOut(auth);
     setView("dashboard");
-    setEvents([]);
-  };
+    setSelectedEventId(null);
+  }
 
-  // Ouvrir un événement
-  const handleOpenEvent = (id) => { setSelectedEventId(id); setView("event"); };
-
-  // Mise à jour + sauvegarde auto Firestore
-  const [editorSaveToast, setEditorSaveToast] = useState(false);
-  const handleUpdateEvent = (updatedEv) => {
+  // ── Mise à jour événement ─────────────────────────────────────
+  function handleUpdateEvent(updatedEv) {
     setEvents(prev => prev.map(e => e.id === updatedEv.id ? updatedEv : e));
-    if (fbUser) {
-      saveEventToFirestore(fbUser.uid, updatedEv);
-      setEditorSaveToast(true);
-      setTimeout(() => setEditorSaveToast(false), 2000);
-    }
-  };
+    if (fbUser && !guestMode) saveEvent(updatedEv);
+  }
 
-  // Création d'événement avec sauvegarde
-  const handleSetEvents = (updater) => {
-    setEvents(prev => {
-      const next = typeof updater === "function" ? updater(prev) : updater;
-      // Sauvegarder les nouveaux/modifiés
-      if (fbUser) {
-        const prevIds = new Set(prev.map(e => e.id));
-        next.forEach(ev => {
-          if (!prevIds.has(ev.id) || JSON.stringify(prev.find(e=>e.id===ev.id)) !== JSON.stringify(ev)) {
-            saveEventToFirestore(fbUser.uid, ev);
-          }
-        });
-        // Supprimer les supprimés
-        const nextIds = new Set(next.map(e => e.id));
-        prev.forEach(ev => {
-          if (!nextIds.has(ev.id)) deleteEventFromFirestore(fbUser.uid, ev.id);
-        });
-        // sauvegarde cloud notifiée dans Dashboard
-      }
-      return next;
-    });
-  };
+  // ── Navigation ────────────────────────────────────────────────
+  function handleOpenEvent(id) {
+    setSelectedEventId(id);
+    setView("event");
+  }
 
-  // Construire l'objet user à partir de fbUser
-  const guestUser = guestMode ? {
-    id: "guest",
-    email: "demo@tablema.fr",
-    name: "Mode démo",
-    avatar: "👤",
-    photoURL: null,
-    role: "admin",
-    projectIds: ["guest-demo"],
-    subscriptionStatus: "guest",
-    plan: "guest",
-  } : null;
+  const selectedEvent = events.find(e => e.id === selectedEventId) || null;
 
-  const user = fbUser ? {
-    id: fbUser.uid,
-    email: fbUser.email,
-    name: fbUser.displayName || fbUser.email,
-    avatar: (fbUser.displayName || fbUser.email || "?").slice(0,2).toUpperCase(),
-    photoURL: fbUser.photoURL,
-    role: fbUser.email === "rousseau.damien.91@gmail.com" ? "superadmin" : "admin",
-    projectIds: events.map(e => e.id),
-  } : null;
+  // ── États de chargement ───────────────────────────────────────
+  if (fbUser === undefined) {
+    return (
+      <div style={{ minHeight:"100vh", background:"#120C08", display:"flex", alignItems:"center", justifyContent:"center" }}>
+        <div style={{ color:"rgba(255,255,255,0.3)", fontSize:14 }}>⏳ Chargement...</div>
+      </div>
+    );
+  }
 
-  // Page publique invité (?join=eventId) — accessible sans connexion
-  var joinId = typeof window !== "undefined" ? new URLSearchParams(window.location.search).get("join") : null;
-  if (joinId) return <GuestJoinPage eventId={joinId} />;
+  // ── Non connecté ──────────────────────────────────────────────
+  if (!fbUser) {
+    return (
+      <LoginScreen
+        onLogin={handleGoogleLogin}
+        onGuestLogin={handleGuestLogin}
+      />
+    );
+  }
 
-  // États de chargement
-  if (fbUser === undefined && !guestMode) return <LoadingScreen />;
+  // ── Chargement events ─────────────────────────────────────────
+  if (!eventsLoaded && !guestMode) {
+    return (
+      <div style={{ minHeight:"100vh", background:"#120C08", display:"flex", alignItems:"center", justifyContent:"center" }}>
+        <div style={{ color:"rgba(255,255,255,0.3)", fontSize:14 }}>⏳ Chargement des événements...</div>
+      </div>
+    );
+  }
 
-  // Non connecté → écran de connexion Google
-  if (!fbUser && !guestMode) return <LoginScreen onLogin={handleGoogleLogin} onGuestLogin={handleGuestLogin} />;
+  // ── EventEditor ───────────────────────────────────────────────
+  if (view === "event" && selectedEvent) {
+    return (
+      <EventEditor
+        ev={selectedEvent}
+        onUpdate={handleUpdateEvent}
+        onBack={() => setView("dashboard")}
+        user={user}
+        t={t}
+        guestMode={guestMode}
+      />
+    );
+  }
 
-  // Chargement des events en cours
-  if (!eventsLoaded && !guestMode) return <LoadingScreen />;
-
-  if (view === "guestForm" && selectedEvent) return (
-    <GuestForm event={selectedEvent} onBack={() => setView("event")} />
-  );
-
-  if (view === "event" && selectedEvent) return (
-    <EventEditor
-      ev={selectedEvent}
-      onUpdate={handleUpdateEvent}
-      onBack={() => { setView("dashboard"); setSelectedEventId(null); }}
-      saveToast={editorSaveToast}
-      t={t}
-    />
-  );
-
-  const activeUser = guestUser || user;
-
+  // ── Dashboard ─────────────────────────────────────────────────
   return (
     <Dashboard
-      user={activeUser}
+      user={user}
       events={events}
-      setEvents={handleSetEvents}
+      setEvents={setEvents}
       onLogout={handleLogout}
       onOpenEvent={handleOpenEvent}
-      guestMode={guestMode}
       lightMode={lightMode}
-      onToggleTheme={() => setLightMode(l => !l)}
+      onToggleTheme={() => setLightMode(m => !m)}
       t={t}
       lang={lang}
       setLang={setLang}
+      guestMode={guestMode}
     />
   );
 }
