@@ -10,7 +10,6 @@ import { C, VOUCHERS, PLANS } from "../../constants";
 // UI
 import { Btn } from "../../components/UI";
 
-
 function AccountsSection({
   users,
   setUsers,
@@ -215,8 +214,7 @@ function AccountsSection({
         <div
           style={{
             display: "grid",
-            gridTemplateColumns:
-              "2fr 1fr 1fr 1fr 1fr 1fr auto",
+            gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 1fr auto",
             gap: 12,
             padding: "12px 20px",
             borderBottom: "1px solid rgba(255,255,255,0.06)",
@@ -249,8 +247,7 @@ function AccountsSection({
         {filteredUsers.map((u) => {
           const plan = SUBSCRIPTION_PLANS[u.plan] || SUBSCRIPTION_PLANS.free;
           const sColor =
-            STATUS_COLORS[u.subscriptionStatus] ||
-            STATUS_COLORS.trial;
+            STATUS_COLORS[u.subscriptionStatus] || STATUS_COLORS.trial;
           const isSoon = soon(u.subscriptionEnd);
 
           return (
@@ -258,13 +255,11 @@ function AccountsSection({
               key={u.id}
               style={{
                 display: "grid",
-                gridTemplateColumns:
-                  "2fr 1fr 1fr 1fr 1fr 1fr auto",
+                gridTemplateColumns: "2fr 1fr 1fr 1fr 1fr 1fr auto",
                 gap: 12,
                 padding: "14px 20px",
                 alignItems: "center",
-                borderBottom:
-                  "1px solid rgba(255,255,255,0.04)",
+                borderBottom: "1px solid rgba(255,255,255,0.04)",
               }}
               onMouseEnter={(e) =>
                 (e.currentTarget.style.background =
