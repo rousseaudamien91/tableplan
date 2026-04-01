@@ -1,64 +1,8 @@
 /* eslint-disable */
-import { useState } from "react";
 
 // ═══════════════════════════════════════════════════════════════
-// TRANSLATIONS (FR + EN + ES + DE + IT)
+// COLORS
 // ═══════════════════════════════════════════════════════════════
-
-import fr from "./fr";
-import en from "./en";
-import es from "./es";
-import de from "./de";
-import it from "./it";
-
-export const TRANSLATIONS = { fr, en, es, de, it };
-
-// ═══════════════════════════════════════════════════════════════
-// LANG DETECTION + HOOK
-// ═══════════════════════════════════════════════════════════════
-
-function detectLang() {
-  const saved = localStorage.getItem("tableMaitreLang");
-  if (saved && TRANSLATIONS[saved]) return saved;
-
-  const nav = navigator.language || navigator.languages?.[0] || "fr";
-  const code = nav.slice(0, 2).toLowerCase();
-
-  return TRANSLATIONS[code] ? code : "en";
-}
-
-export function useI18n() {
-  const [lang, setLangState] = useState(detectLang);
-
-  const setLang = (l) => {
-    localStorage.setItem("tableMaitreLang", l);
-    setLangState(l);
-    document.documentElement.lang = l;
-  };
-
-  const t = TRANSLATIONS[lang] || TRANSLATIONS.en;
-  return { t, lang, setLang };
-}
-
-// ═══════════════════════════════════════════════════════════════
-// CONSTANTS
-// ═══════════════════════════════════════════════════════════════
-
-export const LANG_FLAGS = {
-  fr: "🇫🇷",
-  en: "🇬🇧",
-  es: "🇪🇸",
-  de: "🇩🇪",
-  it: "🇮🇹",
-};
-
-export const LANG_NAMES = {
-  fr: "Français",
-  en: "English",
-  es: "Español",
-  de: "Deutsch",
-  it: "Italiano",
-};
 
 export const C = {
   dark: "#120C08",
@@ -75,6 +19,10 @@ export const C = {
   border: "rgba(201,151,58,0.2)",
 };
 
+// ═══════════════════════════════════════════════════════════════
+// THEMES
+// ═══════════════════════════════════════════════════════════════
+
 export const THEMES_CONFIG = {
   mariage: { label: "Mariage", icon: "💍", color: "#C9973A" },
   gala: { label: "Gala / Soirée", icon: "🥂", color: "#8B7EC8" },
@@ -83,6 +31,10 @@ export const THEMES_CONFIG = {
   autre: { label: "Autre", icon: "🎊", color: "#C9973A" },
 };
 
+// ═══════════════════════════════════════════════════════════════
+// DIET OPTIONS
+// ═══════════════════════════════════════════════════════════════
+
 export const DIET_OPTIONS = [
   { id: "standard", label: "Standard", icon: "🍽️", color: C.muted },
   { id: "vegetarien", label: "Végétarien", icon: "🥗", color: "#4CAF50" },
@@ -90,14 +42,21 @@ export const DIET_OPTIONS = [
   { id: "sans-gluten", label: "Sans gluten", icon: "🌾", color: "#FF9800" },
 ];
 
+// ═══════════════════════════════════════════════════════════════
+// USERS / EVENTS
+// ═══════════════════════════════════════════════════════════════
+
 export const INITIAL_USERS = [];
+export const INITIAL_EVENTS = [];
+
+// ═══════════════════════════════════════════════════════════════
+// PLANS
+// ═══════════════════════════════════════════════════════════════
 
 export const PLANS = {
   free: { label: "Gratuit", price: 0, maxEvents: 1, maxGuests: 30 },
   pro: { label: "Pro", price: 9.9, maxEvents: 999, maxGuests: 999 },
 };
-
-export const INITIAL_EVENTS = [];
 
 // ═══════════════════════════════════════════════════════════════
 // PRICING + VOUCHERS
