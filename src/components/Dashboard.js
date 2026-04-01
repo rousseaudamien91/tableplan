@@ -5,7 +5,7 @@ import OnboardingWizard from "./OnboardingWizard";
 import VoucherModal from "./VoucherModal";
 import { THEMES_CONFIG } from "../theme";
 import { C } from "../theme";
-import Modal from "./ui/Modal";
+import Modal from "./ui/Modal.jsx";
 import Field from "./ui/Field";
 import Input from "./ui/Input";
 import Btn from "./ui/Btn";
