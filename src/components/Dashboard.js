@@ -1,12 +1,19 @@
 /* eslint-disable */
 import { useState } from "react";
-import { C, useI18n } from "../theme";
-import { LANG_FLAGS, LANG_NAMES, THEMES_CONFIG, PLANS } from "../constants";
+
+// i18n (nouveau système)
+import { useI18n, LANG_FLAGS, LANG_NAMES } from "../i18n";
+
+// constantes (couleurs, thèmes, plans)
+import { C, THEMES_CONFIG, PLANS } from "../constants";
+
+// UI + utils
 import { Btn, Badge, Modal, Field, Input, Select } from "./UI";
 import { uid } from "../utils";
 import VoucherModal from "./VoucherModal";
 import PricingPage from "./PricingPage";
 import OnboardingWizard from "./OnboardingWizard";
+
 
 // ═══════════════════════════════════════════════════════════════
 // DASHBOARD — Liste des événements
