@@ -1,17 +1,15 @@
 /* eslint-disable */
 import { useState } from "react";
 
-// Import des fichiers de langue
-import fr from "./fr";
-import en from "./en";
-import es from "./es";
-import de from "./de";
-import it from "./it";
+// Import corrects (depuis le même dossier)
+import fr from "./fr.js";
+import en from "./en.js";
+import es from "./es.js";
+import de from "./de.js";
+import it from "./it.js";
 
-// Table des traductions
 export const TRANSLATIONS = { fr, en, es, de, it };
 
-// Détection automatique
 function detectLang() {
   const saved = localStorage.getItem("tableMaitreLang");
   if (saved && TRANSLATIONS[saved]) return saved;
@@ -20,7 +18,6 @@ function detectLang() {
   return TRANSLATIONS[nav] ? nav : "en";
 }
 
-// Hook principal
 export function useI18n() {
   const [lang, setLangState] = useState(detectLang);
 
@@ -37,7 +34,6 @@ export function useI18n() {
   };
 }
 
-// Flags et noms
 export const LANG_FLAGS = {
   fr: "🇫🇷",
   en: "🇬🇧",
