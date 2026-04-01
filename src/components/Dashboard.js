@@ -1,6 +1,8 @@
 /* eslint-disable */
 import { useState } from "react";
-import { useTheme, EVENT_THEMES, C } from "../theme";
+import { useTheme, C } from "../theme";
+import { EVENT_THEMES } from "../theme/eventThemes";
+
 
 import PricingPage from "./pricing/PricingPage";
 import OnboardingWizard from "./OnboardingWizard";
