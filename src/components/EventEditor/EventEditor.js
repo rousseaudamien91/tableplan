@@ -1,12 +1,24 @@
 /* eslint-disable */
 import { useState } from "react";
+
+// i18n
 import { useI18n } from "../../i18n";
-import { Btn } from "../UI";
+
+// UI premium
+import Btn from "../ui/Btn";
+
+// FloorPlan
 import { FloorPlan, RoomShapeEditor } from "../FloorPlan";
+
+// constantes
 import { C } from "../../constants";
+
+// thème
+import { useTheme } from "../../theme";
 
 export default function EventEditor({ ev, onUpdate }) {
   const { t } = useI18n();
+  const { theme } = useTheme();
 
   const [selectedTable, setSelectedTable] = useState(null);
   const [highlightAvailable, setHighlightAvailable] = useState(false);
@@ -27,28 +39,46 @@ export default function EventEditor({ ev, onUpdate }) {
   };
 
   return (
-    <div style={{ padding: 20, color: "white" }}>
-      <h2 style={{ marginBottom: 20 }}>{t.eventSettings}</h2>
+    <div
+      style={{
+        padding: 24,
+        color: theme.text,
+        transition: theme.transition,
+      }}
+    >
+      <h2 style={{ marginBottom: 20, fontWeight: 800 }}>
+        {t.eventSettings}
+      </h2>
 
+      {/* ROOM SHAPE */}
       <div
         style={{
-          background: C.mid,
+          background: theme.card,
           padding: 20,
-          borderRadius: 12,
+          borderRadius: 14,
           marginBottom: 30,
-          border: "1px solid rgba(255,255,255,0.1)",
+          border: `1px solid ${theme.border}`,
+          boxShadow: theme.shadow,
         }}
       >
-        <h3 style={{ marginBottom: 12 }}>{t.tabRoom}</h3>
-        <RoomShapeEditor shape={ev.roomShape || []} onChange={updateRoomShape} />
+        <h3 style={{ marginBottom: 12, fontWeight: 700 }}>
+          {t.tabRoom}
+        </h3>
+
+        <RoomShapeEditor
+          shape={ev.roomShape || []}
+          onChange={updateRoomShape}
+        />
       </div>
 
+      {/* FLOOR PLAN */}
       <div
         style={{
-          background: C.mid,
+          background: theme.card,
           padding: 20,
-          borderRadius: 12,
-          border: "1px solid rgba(255,255,255,0.1)",
+          borderRadius: 14,
+          border: `1px solid ${theme.border}`,
+          boxShadow: theme.shadow,
         }}
       >
         <div
@@ -56,12 +86,13 @@ export default function EventEditor({ ev, onUpdate }) {
             display: "flex",
             justifyContent: "space-between",
             marginBottom: 12,
+            alignItems: "center",
           }}
         >
-          <h3>{t.tabPlanDetail}</h3>
+          <h3 style={{ fontWeight: 700 }}>{t.tabPlanDetail}</h3>
 
           <Btn
-            small
+            size="sm"
             variant={highlightAvailable ? "primary" : "ghost"}
             onClick={() => setHighlightAvailable((v) => !v)}
           >
