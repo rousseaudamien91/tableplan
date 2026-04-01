@@ -1,76 +1,118 @@
-import React, { useEffect } from "react";
+/* eslint-disable */
+import { useEffect, useState } from "react";
+import { useTheme } from "../../theme";
 
-export default function Modal({ open, onClose, title, children }) {
-  // Fermer avec ESC
+export default function Modal({
+  title,
+  onClose,
+  children,
+  width = 520,
+  open = false,
+}) {
+  const { theme } = useTheme();
+  const [visible, setVisible] = useState(open);
+
+  // Animation d’apparition / disparition
   useEffect(() => {
-    function handleKey(e) {
-      if (e.key === "Escape") onClose?.();
+    if (open) {
+      setVisible(true);
+    } else {
+      // délai pour laisser l’animation se jouer
+      setTimeout(() => setVisible(false), 180);
     }
-    if (open) document.addEventListener("keydown", handleKey);
-    return () => document.removeEventListener("keydown", handleKey);
-  }, [open, onClose]);
+  }, [open]);
 
-  if (!open) return null;
+  if (!open && !visible) return null;
 
   return (
     <div
       style={{
         position: "fixed",
         inset: 0,
-        background: "rgba(0,0,0,0.55)",
-        backdropFilter: "blur(4px)",
+        zIndex: 1000,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        zIndex: 9999,
-        padding: 20,
+        background: open
+          ? "rgba(0,0,0,0.55)"
+          : "rgba(0,0,0,0.0)",
+        backdropFilter: open ? "blur(6px)" : "blur(0px)",
+        transition: "all .25s ease",
       }}
-      onClick={onClose}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) onClose();
+      }}
     >
       <div
         style={{
-          background: "#1a1a24",
-          borderRadius: 14,
-          padding: "24px 28px",
-          width: "100%",
-          maxWidth: 420,
-          boxShadow: "0 8px 40px rgba(0,0,0,0.4)",
-          border: "1px solid rgba(255,255,255,0.08)",
-          animation: "fadeIn 0.2s ease-out",
+          background: theme.card,
+          border: `1px solid ${theme.border}`,
+          borderRadius: 16,
+          padding: "28px 32px",
+          width: "90%",
+          maxWidth: width,
+          maxHeight: "88vh",
+          overflowY: "auto",
+          boxShadow: theme.shadow,
+          position: "relative",
+          transform: open ? "translateY(0px)" : "translateY(20px)",
+          opacity: open ? 1 : 0,
+          transition: "all .25s ease",
         }}
-        onClick={(e) => e.stopPropagation()}
       >
-        {title && (
-          <div
+        {/* Header */}
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: 22,
+            paddingBottom: 16,
+            borderBottom: `1px solid ${theme.border}`,
+          }}
+        >
+          <h2
             style={{
+              margin: 0,
               fontSize: 18,
               fontWeight: 700,
-              marginBottom: 16,
-              color: "#fff",
+              color: theme.text,
+              letterSpacing: 0.3,
             }}
           >
             {title}
-          </div>
-        )}
+          </h2>
 
-        <div>{children}</div>
+          <button
+            onClick={onClose}
+            style={{
+              background: "transparent",
+              border: `1px solid ${theme.border}`,
+              borderRadius: 8,
+              width: 32,
+              height: 32,
+              cursor: "pointer",
+              color: theme.textMuted,
+              fontSize: 18,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              transition: "all .2s ease",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = theme.primary + "22";
+              e.currentTarget.style.color = theme.primary;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "transparent";
+              e.currentTarget.style.color = theme.textMuted;
+            }}
+          >
+            ✕
+          </button>
+        </div>
 
-        <button
-          onClick={onClose}
-          style={{
-            marginTop: 20,
-            width: "100%",
-            padding: "10px 14px",
-            borderRadius: 10,
-            border: "none",
-            background: "rgba(255,255,255,0.08)",
-            color: "#fff",
-            cursor: "pointer",
-            fontWeight: 600,
-          }}
-        >
-          Fermer
-        </button>
+        {children}
       </div>
     </div>
   );
