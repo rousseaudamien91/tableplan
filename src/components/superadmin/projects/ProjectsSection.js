@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { useI18n } from "../../theme";
+import { useI18n } from "../../i18n";
 import { Btn, Badge } from "../../components/UI";
 import { C } from "../../constants";
 import { THEMES_CONFIG } from "../../constants";
