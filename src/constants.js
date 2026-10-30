@@ -26,6 +26,7 @@ export const THEMES_CONFIG = {
   gala:         { label: "Gala / Soirée", icon: "🥂", color: "#8B7EC8" },
   anniversaire: { label: "Anniversaire",  icon: "🎂", color: "#E8845A" },
   conference:   { label: "Conférence",    icon: "🎤", color: "#4A9B7F" },
+  loto:         { label: "Loto / Quine",  icon: "🎱", color: "#D35400" },
   autre:        { label: "Autre",         icon: "🎊", color: "#C9973A" },
 };
 
@@ -89,11 +90,8 @@ export const PRICING_PLANS = {
   full:   { label: "Plan Complet",   price: 39, description: "Invités illimités"   },
 };
 
-export const VOUCHERS = {
-  PROMO10: { discount: 10,  description: "Réduction de 10%",     maxUses: 999 },
-  PROMO20: { discount: 20,  description: "Réduction de 20%",     maxUses: 999 },
-  FULL100: { discount: 100, description: "Accès complet gratuit", maxUses: 10  },
-};
+// Codes promo : plus jamais dans le code du site (lisible par tous). Voir src/offres.js et firestore.rules.
+export const VOUCHERS = {};
 
 export const INITIAL_USERS  = [];
 export const INITIAL_EVENTS = [];

@@ -19,6 +19,11 @@ export const EVENT_THEMES = {
     color: "#C9973A",
     icon: "🌙",
   },
+  loto: {
+    label: "Loto / Quine",
+    color: "#D35400",
+    icon: "🎱",
+  },
   autre: {
     label: "Autre",
     color: "#9CA3AF",

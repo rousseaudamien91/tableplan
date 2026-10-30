@@ -17,7 +17,8 @@ module.exports = function(app) {
     }
     try {
       const fetch = require("node-fetch");
-      const apiKey = process.env.ANTHROPIC_API_KEY || process.env.REACT_APP_ANTHROPIC_API_KEY;
+      // Jamais de REACT_APP_… pour une clé : ces variables sont intégrées au site publié.
+      const apiKey = process.env.ANTHROPIC_API_KEY;
       if (!apiKey) {
         res.status(500).json({ error: "ANTHROPIC_API_KEY non définie. Ajoutez-la dans un fichier .env à la racine." });
         return;

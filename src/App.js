@@ -2,7 +2,8 @@
 import { useState, useEffect } from "react";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 import { db } from "./firebase";
-import { collection, onSnapshot, query, where, setDoc, doc } from "firebase/firestore";
+import { collection, onSnapshot, setDoc, doc } from "firebase/firestore";
+import { useEntitlement, offreDe } from "./offres";
 
 import Dashboard   from "./components/Dashboard";
 import EventEditor from "./components/EventEditor/EventEditor";
@@ -59,9 +60,9 @@ export default function App() {
   // ── Chargement Firestore ──
   useEffect(() => {
     if (!fbUser || guestMode) return;
-    const q = query(collection(db, "events"), where("ownerId", "==", fbUser.uid));
+    // Chemin protégé par firestore.rules : chacun ne lit que ses propres événements
     const unsub = onSnapshot(
-      q,
+      collection(db, "users", fbUser.uid, "events"),
       (snap) => {
         setEvents(snap.docs.map(d => ({ id: d.id, ...d.data() })));
         setEventsLoaded(true);
@@ -74,10 +75,21 @@ export default function App() {
     return unsub;
   }, [fbUser, guestMode]);
 
+  const entitlement = useEntitlement(fbUser && !guestMode ? fbUser.uid : null);
+  const offre       = offreDe(entitlement.plan);
+  const [saveError, setSaveError] = useState("");
+
   async function saveEvent(ev) {
     if (!fbUser || guestMode) return;
-    try { await setDoc(doc(db, "events", String(ev.id)), ev); }
-    catch(e) { console.error("Save error:", e); }
+    try {
+      await setDoc(doc(db, "users", fbUser.uid, "events", String(ev.id)), { ...ev, ownerId: fbUser.uid });
+      setSaveError("");
+    } catch(e) {
+      console.error("Save error:", e);
+      setSaveError(e.code === "permission-denied"
+        ? "Enregistrement refusé : la limite de votre formule est atteinte."
+        : "Enregistrement impossible (connexion ?). Vos dernières modifications ne sont pas sauvegardées.");
+    }
   }
 
   async function handleGoogleLogin() {
@@ -112,6 +124,12 @@ export default function App() {
   }
 
   function handleUpdateEvent(updatedEv) {
+    var nbInvites = (updatedEv.guests || []).length;
+    if (!guestMode && nbInvites > offre.maxGuests) {
+      setSaveError("Formule " + offre.label + " : " + offre.maxGuests + " invités maximum. "
+        + "Passez à une formule supérieure ou utilisez un code promo depuis le tableau de bord.");
+      return;
+    }
     setEvents(prev => prev.map(e => e.id === updatedEv.id ? updatedEv : e));
     if (fbUser && !guestMode) saveEvent(updatedEv);
   }
@@ -142,20 +160,28 @@ export default function App() {
     </div>
   );
 
+  const bandeauErreur = saveError ? (
+    <div role="alert" onClick={() => setSaveError("")} style={{position:"fixed",bottom:16,left:"50%",transform:"translateX(-50%)",zIndex:10000,
+      background:"#7f1d1d",color:"#fff",padding:"12px 18px",borderRadius:10,fontSize:14,maxWidth:"90vw",cursor:"pointer",boxShadow:"0 4px 20px rgba(0,0,0,.4)"}}>
+      ⚠️ {saveError} <span style={{opacity:.6,marginLeft:8}}>✕</span>
+    </div>
+  ) : null;
+
   if (view === "event" && selectedEvent) return (
-    <EventEditor
+    <>{bandeauErreur}<EventEditor
       ev={selectedEvent} onUpdate={handleUpdateEvent}
       onBack={() => setView("dashboard")}
-      user={user} t={t} guestMode={guestMode}
-    />
+      user={user} t={t} guestMode={guestMode} offre={offre}
+    /></>
   );
 
   return (
-    <Dashboard
+    <>{bandeauErreur}<Dashboard
       user={user} events={events} setEvents={setEvents}
+      entitlement={entitlement} offre={offre} onSaveEvent={saveEvent}
       onLogout={handleLogout} onOpenEvent={handleOpenEvent}
       lightMode={lightMode} onToggleTheme={() => setLightMode(m => !m)}
       t={t} lang={lang} setLang={setLang} guestMode={guestMode}
-    />
+    /></>
   );
 }

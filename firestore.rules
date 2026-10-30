@@ -1,0 +1,86 @@
+rules_version = '2';
+// Règles de sécurité TableMaître — à publier dans la console Firebase (Firestore > Règles).
+// Ce sont elles qui protègent les données, les limites des formules et les codes promo :
+// le code du site n'est qu'une interface, il peut être contourné.
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+
+    function isAdmin() {
+      return signedIn()
+        && request.auth.token.email == 'rousseau.damien.91@gmail.com'
+        && request.auth.token.email_verified == true;
+    }
+
+    function entPath(uid) { return /databases/$(database)/documents/entitlements/$(uid); }
+    function hasPlan(uid, p) { return exists(entPath(uid)) && get(entPath(uid)).data.plan == p; }
+
+    // Doit rester aligné avec OFFRES dans src/offres.js (10 / 50 / 2000 invités)
+    function guestsAllowed(uid) {
+      let n = request.resource.data.get('guests', []).size();
+      return n <= 10
+        || (n <= 50 && (hasPlan(uid, 'medium') || hasPlan(uid, 'full')))
+        || (n <= 2000 && hasPlan(uid, 'full'));
+    }
+
+    // ── Événements : chacun ne voit et ne modifie que les siens ──
+    match /users/{uid}/events/{eventId} {
+      allow read, delete: if signedIn() && request.auth.uid == uid;
+      allow create, update: if signedIn() && request.auth.uid == uid && guestsAllowed(uid);
+    }
+
+    // ── Codes promo : invisibles pour les utilisateurs, gérés par l'administrateur ──
+    // Document vouchers/{CODE} : { plan: 'full'|'medium', maxUses: int, uses: int, active: bool }
+    match /vouchers/{code} {
+      allow read, create, delete: if isAdmin();
+      allow update: if isAdmin() || (
+        signedIn()
+        && resource.data.active == true
+        && resource.data.uses < resource.data.maxUses
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['uses'])
+        && request.resource.data.uses == resource.data.uses + 1
+        // ne compte que si, dans la même écriture, le compte reçoit ses droits avec ce code
+        && !exists(entPath(request.auth.uid))
+        && existsAfter(entPath(request.auth.uid))
+        && getAfter(entPath(request.auth.uid)).data.code == code
+      );
+    }
+
+    // ── Droits du compte : obtenus par un code promo valide, ou accordés par l'administrateur ──
+    match /entitlements/{uid} {
+      allow read: if signedIn() && (request.auth.uid == uid || isAdmin());
+      allow create: if isAdmin() || (
+        signedIn() && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(['plan', 'code', 'source', 'at'])
+        && request.resource.data.source == 'voucher'
+        && request.resource.data.code is string
+        && exists(/databases/$(database)/documents/vouchers/$(request.resource.data.code))
+        && get(/databases/$(database)/documents/vouchers/$(request.resource.data.code)).data.plan == request.resource.data.plan
+        // le compteur du code doit être incrémenté dans la même écriture (voir vouchers)
+        && getAfter(/databases/$(database)/documents/vouchers/$(request.resource.data.code)).data.uses
+           == get(/databases/$(database)/documents/vouchers/$(request.resource.data.code)).data.uses + 1
+      );
+      allow update, delete: if isAdmin();
+    }
+
+    // ── Avis clients : publiés après validation par l'administrateur ──
+    match /reviews/{reviewId} {
+      allow read: if resource.data.approved == true || isAdmin();
+      allow create: if signedIn()
+        && request.resource.data.keys().hasOnly(['userId', 'userName', 'score', 'comment', 'createdAt', 'approved'])
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.approved == false
+        && request.resource.data.score is int
+        && request.resource.data.score >= 0 && request.resource.data.score <= 10
+        && request.resource.data.comment is string && request.resource.data.comment.size() <= 1000
+        && request.resource.data.userName is string && request.resource.data.userName.size() <= 100;
+      allow update, delete: if isAdmin();
+    }
+
+    // Tout le reste est fermé.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

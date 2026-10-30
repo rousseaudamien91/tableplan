@@ -14,8 +14,9 @@ import NPSWidget from "./reviews/NPSWidget";
 // DASHBOARD — Liste des événements
 // ═══════════════════════════════════════════════════════════════
 
-function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, onToggleTheme, t, lang, setLang, guestMode }) {
-  const [appliedVoucher, setAppliedVoucher] = useState(null);
+function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, onToggleTheme, t, lang, setLang, guestMode, entitlement, offre, onSaveEvent }) {
+  const [codeMessage, setCodeMessage] = useState("");
+  const sauver = function(ev){ if (onSaveEvent) onSaveEvent(ev); };
   const [showVoucher, setShowVoucher] = useState(false);
   const [showNew, setShowNew] = useState(false);
   const [showOnboarding, setShowOnboarding] = useState(false);
@@ -66,17 +67,20 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
     const ev = {
       id: Date.now(), ownerId: user.id,
       name: newEv.name, date: newEv.date || new Date().toISOString().slice(0,10),
-      type: newEv.type, plan: appliedVoucher ? "pro" : "free",
+      type: newEv.type,
       roomShape:[{x:60,y:60},{x:740,y:60},{x:740,y:520},{x:60,y:520}],
       tables:[], guests:[], constraints:[], menu:null,
     };
     setEvents(prev=>[...prev,ev]);
+    sauver(ev);
     onOpenEvent(ev.id);
     setShowNew(false);
   }
 
-  const handleApplyVoucher = (code, voucher) => {
-    setAppliedVoucher({ code, ...voucher });
+  const handleCodeUtilise = (plan) => {
+    var o = { full: "Complet", medium: "Essentiel" }[plan] || plan;
+    setCodeMessage("Code accepté : formule " + o + " activée sur votre compte.");
+    setTimeout(function(){ setCodeMessage(""); }, 6000);
   };
 
 
@@ -118,7 +122,9 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
             onClick={() => setShowVoucher(true)}
             style={{ padding:"6px 14px", background:"none", border:"1px solid rgba(201,151,58,0.4)", borderRadius:8, color:"#C9973A", cursor:"pointer", fontSize:12, fontFamily:"Georgia,serif", display:"flex", alignItems:"center", gap:6 }}
           >
-            🎟️ Code promo{appliedVoucher && <span style={{background:"linear-gradient(135deg,#C9973A,#F0C97A)",color:C.dark,borderRadius:4,padding:"1px 6px",fontSize:11,fontWeight:700}}>✓</span>}
+            🎟️ {entitlement && entitlement.plan !== "free"
+              ? <span>Formule {offre ? offre.label : ""} <span style={{background:"linear-gradient(135deg,#C9973A,#F0C97A)",color:C.dark,borderRadius:4,padding:"1px 6px",fontSize:11,fontWeight:700}}>✓</span></span>
+              : <span>Code promo · {offre ? offre.label + " (" + offre.maxGuests + " invités)" : ""}</span>}
           </button>
           <Btn variant="muted" small onClick={onLogout}>Déconnexion</Btn>
         </div>
@@ -186,7 +192,7 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
                       <span style={{ fontSize:11, background:"rgba(39,174,96,0.15)", border:"1px solid rgba(39,174,96,0.3)", color:"#27AE60", borderRadius:6, padding:"1px 7px", fontWeight:700 }}>✅ Complet</span>
                     )}
                   </h3>
-                  <button onClick={e=>{e.stopPropagation();const copy={...ev,id:Date.now(),name:ev.name+" (copie)",ownerId:user.id};setEvents(prev=>[...prev,copy]);}}
+                  <button onClick={e=>{e.stopPropagation();const copy={...ev,id:Date.now(),name:ev.name+" (copie)",ownerId:user.id};setEvents(prev=>[...prev,copy]);sauver(copy);}}
                     title={t.duplicateEvent || "Dupliquer cet événement"}
                     aria-label={t.duplicateEvent ? `${t.duplicateEvent}: ${ev.name}` : `Dupliquer l'événement ${ev.name}`}
                     style={{background:"none",border:"1px solid rgba(201,151,58,0.15)",borderRadius:8,color:"rgba(255,255,255,0.45)",cursor:"pointer",fontSize:12,padding:"3px 8px",fontFamily:"inherit"}}>
@@ -251,11 +257,12 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
             const ev = {
               id: Date.now(), ownerId: user.id,
               name: wizardData.name, date: wizardData.date,
-              type: wizardData.type, plan: 'free',
+              type: wizardData.type,
               roomShape: wizardData.roomShape,
               tables: [], guests: [], constraints: [], menu: null,
             };
             setEvents(prev => [...prev, ev]);
+            sauver(ev);
             onOpenEvent(ev.id);
           }}
         />
@@ -269,7 +276,7 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
       )}
       
       
-      {showVoucher && <VoucherModal onClose={() => setShowVoucher(false)} onApply={handleApplyVoucher} />}
+      {showVoucher && <VoucherModal user={user} entitlement={entitlement} onClose={() => setShowVoucher(false)} onApply={handleCodeUtilise} />}
       <div aria-live="polite" aria-atomic="true" style={{ position:"fixed", bottom:24, left:"50%", transform:"translateX(-50%)", zIndex:9999, pointerEvents:"none" }}>
         {saveToast && (
           <div style={{ background:"#1E1208", border:`1px solid ${C.green}`, borderRadius:10, padding:"10px 20px", display:"flex", alignItems:"center", gap:8, boxShadow:"0 4px 20px rgba(0,0,0,0.4)", fontSize:13, color:C.green }}>
@@ -278,14 +285,10 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
         )}
       </div>
 
-      {appliedVoucher && (
-        <div style={{ position:"fixed", bottom:24, right:24, background:"#18182a", border:`1px solid ${C.green}`, borderRadius:12, padding:"12px 20px", zIndex:500, display:"flex", alignItems:"center", gap:10, boxShadow:"0 4px 20px rgba(0,0,0,0.4)" }}>
+      {codeMessage && (
+        <div role="status" style={{ position:"fixed", bottom:24, right:24, background:"#18182a", border:`1px solid ${C.green}`, borderRadius:12, padding:"12px 20px", zIndex:500, display:"flex", alignItems:"center", gap:10, boxShadow:"0 4px 20px rgba(0,0,0,0.4)" }}>
           <span style={{fontSize:18}}>🎟️</span>
-          <div>
-            <div style={{color:C.green, fontSize:12, fontWeight:700}}>Code appliqué : {appliedVoucher.code}</div>
-            <div style={{color:"rgba(255,255,255,0.45)", fontSize:11}}>{appliedVoucher.description}</div>
-          </div>
-          <button onClick={() => setAppliedVoucher(null)} style={{background:"none",border:"none",color:"rgba(255,255,255,0.45)",cursor:"pointer",fontSize:16,padding:0}}>×</button>
+          <div style={{color:C.green, fontSize:13, fontWeight:700}}>{codeMessage}</div>
         </div>
       )}
       <Modal open={showNew} onClose={()=>setShowNew(false)} title="Nouvel événement">

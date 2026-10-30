@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { getAuth } from "firebase/auth";
 import { useState, useRef, useEffect } from "react";
 import { C } from "../../constants";
 
@@ -105,12 +106,14 @@ export default function AiAssistant({ ev, open, onClose }) {
     setMessages(newMessages);
 
     try {
+      // Le serveur exige un utilisateur connecté (jeton Firebase) et choisit lui-même le modèle.
+      var current = getAuth().currentUser;
+      if (!current) throw new Error("non connecté");
+      var token = await current.getIdToken();
       var response = await fetch("/api/ai", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
         body: JSON.stringify({
-          model: "claude-sonnet-4-20250514",
-          max_tokens: 1000,
           system: SYSTEM_PROMPT(ev),
           messages: newMessages.map(function(m) {
             return { role: m.role, content: m.content };
@@ -121,7 +124,8 @@ export default function AiAssistant({ ev, open, onClose }) {
       var data = await response.json();
       var reply = data.content && data.content[0] && data.content[0].text
         ? data.content[0].text
-        : "Désolé, je n'ai pas pu générer une réponse.";
+        : (response.status === 401 ? "Connectez-vous avec Google pour utiliser l'assistant."
+          : data.error ? "❌ " + data.error : "Désolé, je n'ai pas pu générer une réponse.");
 
       setMessages(function(prev){ return [...prev, { role:"assistant", content:reply }]; });
     } catch(e) {

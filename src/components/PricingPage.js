@@ -1,7 +1,9 @@
 /* eslint-disable */
 import { useState } from "react";
 import { C } from "../theme";
-import { VOUCHERS } from "../constants";
+// Les codes promo ne sont plus vérifiés ici (ils étaient lisibles dans le site) :
+// ils passent par « Code promo » dans le tableau de bord, validé par les règles Firestore.
+const VOUCHERS = {};
 
 // ─── Tarification par événement ───────────────────────────────
 // Gratuit  : 0–10 invités
@@ -237,48 +239,9 @@ function PricingPage({ user, eventName, guestCount, onClose, onPlanSelected }) {
           })}
         </div>
 
-        {/* Code promo */}
-        <div style={{
-          background:"#18182a", border:"1px solid rgba(201,151,58,0.2)",
-          borderRadius:14, padding:"18px 20px", marginBottom:16,
-          display:"flex", alignItems:"center", gap:12, flexWrap:"wrap",
-        }}>
-          <span style={{ fontSize:18 }}>🎟️</span>
-          <span style={{ fontSize:13, color:"rgba(255,255,255,0.6)", flex:"0 0 auto" }}>Code promo :</span>
-
-          {appliedVoucher ? (
-            <div style={{ display:"flex", alignItems:"center", gap:10, flex:1 }}>
-              <div style={{ padding:"6px 14px", background:"rgba(39,174,96,0.15)", border:"1px solid rgba(39,174,96,0.3)", borderRadius:8, fontSize:13 }}>
-                <span style={{ fontFamily:"monospace", color:C.green, fontWeight:700 }}>{appliedVoucher.code}</span>
-                <span style={{ color:"rgba(255,255,255,0.5)", marginLeft:8 }}>-{appliedVoucher.discount}%</span>
-              </div>
-              <button onClick={removeVoucher} style={{ background:"none", border:"none", color:"rgba(255,255,255,0.3)", cursor:"pointer", fontSize:16 }}>✕</button>
-            </div>
-          ) : (
-            <div style={{ display:"flex", gap:8, flex:1, minWidth:240 }}>
-              <input
-                value={voucherInput}
-                onChange={e => { setVoucherInput(e.target.value.toUpperCase()); setVoucherError(""); }}
-                onKeyDown={e => e.key === "Enter" && applyVoucher()}
-                placeholder="BIENVENUE"
-                style={{
-                  flex:1, padding:"8px 12px", background:"#13131e",
-                  border:`1px solid ${voucherError ? "#e05252" : "rgba(201,151,58,0.2)"}`,
-                  borderRadius:8, color:"#ffffff", fontSize:13,
-                  fontFamily:"monospace", outline:"none", letterSpacing:1,
-                }}
-              />
-              <button onClick={applyVoucher} style={{
-                padding:"8px 16px", background:"rgba(201,151,58,0.15)",
-                border:"1px solid rgba(201,151,58,0.3)", borderRadius:8,
-                color:"#C9973A", cursor:"pointer", fontSize:13, fontWeight:700, fontFamily:"inherit",
-              }}>Appliquer</button>
-            </div>
-          )}
-
-          {voucherError && (
-            <span style={{ fontSize:12, color:"#e05252", width:"100%" }}>{voucherError}</span>
-          )}
+        {/* Code promo : saisi dans le tableau de bord (bouton « Code promo »), vérifié côté serveur */}
+        <div style={{ background:"#18182a", border:"1px solid rgba(201,151,58,0.2)", borderRadius:14, padding:"14px 20px", marginBottom:16, fontSize:13, color:"rgba(255,255,255,0.6)" }}>
+          🎟️ Vous avez un code promo ? Fermez cette fenêtre et utilisez le bouton « Code promo » en haut du tableau de bord.
         </div>
 
         {/* Footer */}
