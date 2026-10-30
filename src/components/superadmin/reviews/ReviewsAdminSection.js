@@ -1,7 +1,7 @@
 /* eslint-disable */
 import { useEffect, useState } from "react";
 import { C } from "../../../constants";
-import { Btn } from "../../UI";
+import { Btn } from "../UI";
 import { getFirebase } from "../../../firebase";
 
 // Traductions inline (sans dépendance à i18n externe)

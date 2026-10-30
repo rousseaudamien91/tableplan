@@ -1,132 +1,40 @@
 import React from "react";
-import Modal from "../../Modal";
-import Field from "../../Field";
-import Input from "../../Input";
-import Btn from "../../Btn";
+import Modal from "../../ui/Modal";
+import Field from "../../ui/Field";
+import Input from "../../ui/Input";
+import Btn from "../../ui/Btn";
 import { C } from "../../../constants";
 
-export default function ConstraintModal({
-  open,
-  onClose,
-  newConstraint,
-  setNewConstraint,
-  updateEv
-}) {
-  const reset = () =>
-    setNewConstraint({
-      label: "",
-      icon: "⚠️",
-      color: "#E84A6A",
-      notes: ""
-    });
-
-  const handleAdd = () => {
-    updateEv(ev => ({
-      ...ev,
-      constraints: [...(ev.constraints || []), { ...newConstraint, id: Date.now() }]
-    }));
-    reset();
-    onClose();
-  };
-
+export default function ConstraintModal({ open, onClose, newConstraint, setNewConstraint, updateEv, ev, t }) {
+  var guests = ev && ev.guests ? ev.guests : [];
   return (
-    <Modal
-      open={open}
-      onClose={() => {
-        reset();
-        onClose();
-      }}
-      title="Ajouter une contrainte"
-    >
-      <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-
-        <Field label="TITRE *">
-          <Input
-            value={newConstraint.label}
-            onChange={e =>
-              setNewConstraint({ ...newConstraint, label: e.target.value })
-            }
-            placeholder="ex: Allergie aux arachides, Mobilité réduite…"
-          />
-        </Field>
-
-        <Field label="ICÔNE">
-          <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
-            {["⚠️","🚫","♿","🧒","🥜","🍤","🐟","🌾","🍷","🔥","💊","🩺"].map(ic => (
-              <button
-                key={ic}
-                onClick={() =>
-                  setNewConstraint({ ...newConstraint, icon: ic })
-                }
-                style={{
-                  width: 38,
-                  height: 38,
-                  borderRadius: 8,
-                  fontSize: 20,
-                  background:
-                    newConstraint.icon === ic ? C.gold + "33" : C.mid,
-                  border: `2px solid ${
-                    newConstraint.icon === ic ? C.gold : C.border
-                  }`,
-                  cursor: "pointer"
-                }}
-              >
-                {ic}
+    <Modal open={open} onClose={onClose} title={t&&t.constraints||"Contraintes de placement"}>
+      <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
+        <Field label="TYPE">
+          <div style={{ display:"flex", gap:8 }}>
+            {[["apart","🚫 Séparer"],["together","❤️ Ensemble"]].map(([v,l])=>(
+              <button key={v} onClick={()=>setNewConstraint({...newConstraint,type:v})} style={{ flex:1, padding:"8px", borderRadius:8, border:`2px solid ${newConstraint.type===v?C.gold:C.border}`, background:newConstraint.type===v?C.gold+"22":C.mid, cursor:"pointer", fontSize:12, fontWeight:700, fontFamily:"inherit", color:newConstraint.type===v?C.gold:"rgba(255,255,255,0.45)" }}>
+                {l}
               </button>
             ))}
           </div>
         </Field>
-
-        <Field label="COULEUR">
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-            {[
-              "#E84A6A",
-              "#C9973A",
-              "#4CAF50",
-              "#2196F3",
-              "#9C27B0",
-              "#FF9800",
-              "#8B7EC8"
-            ].map(col => (
-              <button
-                key={col}
-                onClick={() =>
-                  setNewConstraint({ ...newConstraint, color: col })
-                }
-                style={{
-                  width: 28,
-                  height: 28,
-                  borderRadius: "50%",
-                  background: col,
-                  border: `3px solid ${
-                    newConstraint.color === col ? "#fff" : "transparent"
-                  }`,
-                  cursor: "pointer",
-                  padding: 0
-                }}
-              />
-            ))}
-          </div>
+        <Field label="INVITÉ A">
+          <select value={newConstraint.guestA} onChange={e=>setNewConstraint({...newConstraint,guestA:e.target.value})} style={{ width:"100%", padding:"8px 12px", background:"#13131e", border:`1px solid ${C.border}`, borderRadius:8, color:"#fff", fontSize:13, fontFamily:"inherit" }}>
+            <option value="">— Choisir —</option>
+            {guests.map(g=><option key={g.id} value={g.id}>{g.name}</option>)}
+          </select>
         </Field>
-
-        <Field label="NOTES (optionnel)">
-          <Input
-            value={newConstraint.notes}
-            onChange={e =>
-              setNewConstraint({ ...newConstraint, notes: e.target.value })
-            }
-            placeholder="Détails supplémentaires…"
-          />
+        <Field label="INVITÉ B">
+          <select value={newConstraint.guestB} onChange={e=>setNewConstraint({...newConstraint,guestB:e.target.value})} style={{ width:"100%", padding:"8px 12px", background:"#13131e", border:`1px solid ${C.border}`, borderRadius:8, color:"#fff", fontSize:13, fontFamily:"inherit" }}>
+            <option value="">— Choisir —</option>
+            {guests.map(g=><option key={g.id} value={g.id}>{g.name}</option>)}
+          </select>
         </Field>
-
-        <Btn
-          disabled={!newConstraint.label.trim()}
-          onClick={handleAdd}
-          style={{ marginTop: 4 }}
-        >
-          Ajouter la contrainte
-        </Btn>
-
+        <Field label="NOTE (optionnel)">
+          <Input value={newConstraint.note} onChange={e=>setNewConstraint({...newConstraint,note:e.target.value})} placeholder="Raison de la contrainte…" />
+        </Field>
+        <Btn onClick={updateEv} disabled={!newConstraint.guestA||!newConstraint.guestB}>Ajouter</Btn>
       </div>
     </Modal>
   );

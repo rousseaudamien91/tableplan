@@ -1,59 +1,23 @@
 import React from "react";
-import Modal from "../../Modal";
-import Btn from "../../Btn";
-import { C } from "../../../constants";
+import Modal from "../../ui/Modal";
+import Btn from "../../ui/Btn";
 
 export default function QRModal({ open, onClose, eventId }) {
-  const eventUrl = `${window.location.origin}/event/${eventId}`;
-
-  const copyLink = () => {
-    navigator.clipboard.writeText(eventUrl);
-  };
-
+  var url = typeof window !== "undefined" ? `${window.location.origin}/join/${eventId}` : "";
   return (
-    <Modal open={open} onClose={onClose} title="QR Code de l'événement">
-      <div style={{ display:"flex", flexDirection:"column", gap:20, alignItems:"center" }}>
-
-        {/* QR CODE */}
-        <div
-          style={{
-            padding:20,
-            background:"#fff",
-            borderRadius:12
-          }}
-        >
-          <img
-            src={`https://api.qrserver.com/v1/create-qr-code/?size=240x240&data=${encodeURIComponent(eventUrl)}`}
-            alt="QR Code"
-            style={{ width:240, height:240 }}
-          />
+    <Modal open={open} onClose={onClose} title="📱 QR Code invité">
+      <div style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:20, padding:"8px 0" }}>
+        <div style={{ background:"#fff", padding:16, borderRadius:12 }}>
+          <div style={{ width:160, height:160, background:"#f5f5f5", display:"flex", alignItems:"center", justifyContent:"center", fontSize:12, color:"#999", textAlign:"center" }}>
+            QR Code<br/>{eventId}
+          </div>
         </div>
-
-        {/* LIEN */}
-        <div
-          style={{
-            width:"100%",
-            padding:"10px 14px",
-            background:C.mid,
-            border:`1px solid ${C.border}`,
-            borderRadius:8,
-            fontSize:13,
-            color:"rgba(255,255,255,0.65)",
-            wordBreak:"break-all",
-            textAlign:"center"
-          }}
-        >
-          {eventUrl}
+        <div style={{ fontSize:12, color:"rgba(255,255,255,0.45)", textAlign:"center", wordBreak:"break-all" }}>
+          {url}
         </div>
-
-        {/* BOUTONS */}
-        <div style={{ display:"flex", gap:12 }}>
-          <Btn onClick={copyLink}>Copier le lien</Btn>
-          <Btn onClick={onClose} style={{ background:"#333" }}>
-            Fermer
-          </Btn>
-        </div>
-
+        <Btn onClick={()=>navigator.clipboard&&navigator.clipboard.writeText(url)}>
+          📋 Copier le lien
+        </Btn>
       </div>
     </Modal>
   );

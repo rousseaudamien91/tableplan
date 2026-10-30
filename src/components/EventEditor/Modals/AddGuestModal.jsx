@@ -1,98 +1,89 @@
-import React from "react";
-import Modal from "../../Modal";
-import Field from "../../Field";
-import Input from "../../Input";
-import Btn from "../../Btn";
+/* eslint-disable */
+import Modal  from "../../ui/Modal";
+import Field  from "../../ui/Field";
+import Input  from "../../ui/Input";
+import Btn    from "../../ui/Btn";
 import { DIET_OPTIONS, C } from "../../../constants";
+import { getRolesForType } from "../roles";
 
-export default function AddGuestModal({ open, onClose, newGuest, setNewGuest, addGuest, t }) {
+export default function AddGuestModal({ open, onClose, newGuest, setNewGuest, addGuest, t, evType }) {
+  var roles = getRolesForType(evType || "autre");
+
   return (
-    <Modal open={open} onClose={onClose} title="Ajouter un invité">
+    <Modal open={open} onClose={onClose} title={t&&t.addGuest||"Ajouter un invité"}>
       <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-        
-        <Field label={t.fieldName}>
-          <Input
-            value={newGuest.name}
-            onChange={e=>setNewGuest({...newGuest,name:e.target.value})}
-            placeholder="Prénom Nom"
-          />
+
+        {/* Nom */}
+        <Field label={t&&t.fieldName||t&&t.fieldName||"NOM *"}>
+          <Input value={newGuest.name} onChange={e=>setNewGuest({...newGuest,name:e.target.value})} placeholder="Prénom Nom"
+            onKeyDown={e=>e.key==="Enter" && newGuest.name && addGuest()} />
         </Field>
 
-        <Field label={t.fieldEmail}>
-          <Input
-            type="email"
-            value={newGuest.email}
-            onChange={e=>setNewGuest({...newGuest,email:e.target.value})}
-            placeholder="email@example.fr"
-          />
+        {/* Email */}
+        <Field label={t&&t.fieldEmail||t&&t.fieldEmail||"EMAIL"}>
+          <Input type="email" value={newGuest.email||""} onChange={e=>setNewGuest({...newGuest,email:e.target.value})} placeholder="email@example.fr" />
         </Field>
 
-        <Field label="RÉGIME ALIMENTAIRE">
+        {/* Téléphone */}
+        <Field label={t&&t.phone||"TÉLÉPHONE"}>
+          <Input value={newGuest.phone||""} onChange={e=>setNewGuest({...newGuest,phone:e.target.value})} placeholder="+33 6 12 34 56 78" />
+        </Field>
+
+        {/* Rôle */}
+        <Field label={t&&t.guestRole||"RÔLE / FONCTION"}>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:6 }}>
+            {/* Option aucun rôle */}
+            <button onClick={()=>setNewGuest({...newGuest,role:""})} style={{
+              padding:"7px 10px", borderRadius:8, gridColumn:"1/-1",
+              border:"1px solid "+(!newGuest.role?"rgba(255,255,255,0.3)":C.border),
+              background:!newGuest.role?"rgba(255,255,255,0.06)":C.mid,
+              cursor:"pointer", fontSize:11, fontFamily:"inherit",
+              color:!newGuest.role?"rgba(255,255,255,0.7)":"rgba(255,255,255,0.3)",
+            }}>— Aucun rôle spécial</button>
+            {roles.map(function(r) {
+              var active = newGuest.role === r.id;
+              return (
+                <button key={r.id} onClick={()=>setNewGuest({...newGuest,role:r.id})} style={{
+                  padding:"7px 10px", borderRadius:8,
+                  border:"2px solid "+(active?r.color:C.border),
+                  background:active?r.color+"22":C.mid,
+                  cursor:"pointer", fontSize:11, fontWeight:active?700:400, fontFamily:"inherit",
+                  color:active?r.color:"rgba(255,255,255,0.45)",
+                  display:"flex", alignItems:"center", gap:5,
+                }}>
+                  {r.icon} {r.label}
+                </button>
+              );
+            })}
+          </div>
+        </Field>
+
+        {/* Régime */}
+        <Field label={t&&t.guestDiet||"RÉGIME ALIMENTAIRE"}>
           <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:6 }}>
             {DIET_OPTIONS.map(ditem=>(
-              <button
-                key={ditem.id}
-                onClick={()=>setNewGuest({...newGuest,diet:ditem.id})}
-                style={{
-                  padding:"7px 10px",
-                  borderRadius:8,
-                  border:`2px solid ${newGuest.diet===ditem.id?ditem.color:C.border}`,
-                  background:newGuest.diet===ditem.id?ditem.color+"22":C.mid,
-                  cursor:"pointer",
-                  fontSize:12,
-                  fontWeight:700,
-                  fontFamily:"inherit",
-                  color:newGuest.diet===ditem.id?ditem.color:"rgba(255,255,255,0.45)",
-                  display:"flex",
-                  alignItems:"center",
-                  gap:6,
-                }}
-              >
+              <button key={ditem.id} onClick={()=>setNewGuest({...newGuest,diet:ditem.id})} style={{
+                padding:"7px 10px", borderRadius:8,
+                border:"2px solid "+(newGuest.diet===ditem.id?ditem.color:C.border),
+                background:newGuest.diet===ditem.id?ditem.color+"22":C.mid,
+                cursor:"pointer", fontSize:11, fontWeight:newGuest.diet===ditem.id?700:400,
+                fontFamily:"inherit", color:newGuest.diet===ditem.id?ditem.color:"rgba(255,255,255,0.45)",
+                display:"flex", alignItems:"center", gap:6,
+              }}>
                 {ditem.icon} {ditem.label}
               </button>
             ))}
           </div>
         </Field>
 
-        <Field label="RÔLE / FONCTION">
-          <select
-            value={newGuest.role||""}
-            onChange={e=>setNewGuest({...newGuest,role:e.target.value})}
-            style={{
-              width:"100%",
-              padding:"8px 12px",
-              background:"#13131e",
-              border:"1px solid "+C.border,
-              borderRadius:8,
-              color:"#ffffff",
-              fontSize:13,
-              fontFamily:"inherit"
-            }}
-          >
-            <option value="">— Aucun rôle spécial —</option>
-            <option value="marie1">💍 Marié(e) 1</option>
-            <option value="marie2">💍 Marié(e) 2</option>
-            <option value="temoin">🎖 Témoin</option>
-            <option value="famille_proche">👨‍👩‍👧 Famille proche</option>
-            <option value="ami_proche">⭐ Ami proche</option>
-            <option value="enfant">🧒 Enfant</option>
-            <option value="vip">🌟 VIP</option>
-            <option value="prestataire">🔧 Prestataire</option>
-          </select>
+        {/* Notes */}
+        <Field label={t&&t.guestNotes||t&&t.guestNotes||"NOTES"}>
+          <Input value={newGuest.notes||""} onChange={e=>setNewGuest({...newGuest,notes:e.target.value})} placeholder="Allergies, mobilité réduite, info utile…" />
         </Field>
 
-        <Field label="NOTES / ALLERGIES">
-          <Input
-            value={newGuest.notes}
-            onChange={e=>setNewGuest({...newGuest,notes:e.target.value})}
-            placeholder="Allergies, mobilité réduite…"
-          />
-        </Field>
-
-        <Btn onClick={addGuest} style={{marginTop:4}}>
-          Ajouter l'invité
+        <Btn onClick={addGuest} disabled={!newGuest.name.trim()} style={{marginTop:4}}>
+          {t&&t.addGuest||t&&t.addGuestBtn||"Ajouter l'invité"}
         </Btn>
-
       </div>
     </Modal>
   );

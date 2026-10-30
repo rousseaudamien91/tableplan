@@ -1,115 +1,18 @@
 import React, { useState } from "react";
-import { Modal, Btn } from "../../UI";
-import { C } from "../../../constants";
+import Modal from "../../ui/Modal";
+import Btn from "../../ui/Btn";
 
-export default function ImportModal({
-  open,
-  onClose,
-  onImport,
-  title = "Importer des données"
-}) {
-  const [file, setFile] = useState(null);
-  const [preview, setPreview] = useState(null);
-
-  const reset = () => {
-    setFile(null);
-    setPreview(null);
-  };
-
-  const handleFile = async (e) => {
-    const f = e.target.files[0];
-    if (!f) return;
-
-    setFile(f);
-
-    const text = await f.text();
-    const rows = text.split("\n").map((r) => r.split(","));
-    setPreview(rows.slice(0, 5));
-  };
-
-  const handleImport = () => {
-    if (!file) return;
-
-    file.text().then((text) => {
-      const rows = text.split("\n").map((r) => r.split(","));
-      onImport(rows);
-      reset();
-      onClose();
-    });
-  };
-
+export default function ImportModal({ open, onClose, onImport, title }) {
+  const [text, setText] = useState("");
   return (
-    <Modal
-      open={open}
-      onClose={() => {
-        reset();
-        onClose();
-      }}
-      title={title}
-    >
-      <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
-        <label
-          style={{
-            padding: "14px 18px",
-            background: C.mid,
-            border: `1px dashed ${C.border}`,
-            borderRadius: 10,
-            cursor: "pointer",
-            textAlign: "center",
-            color: "rgba(255,255,255,0.65)",
-            fontSize: 14,
-          }}
-        >
-          {file ? "Fichier sélectionné ✔" : "Cliquez pour choisir un fichier CSV"}
-          <input
-            type="file"
-            accept=".csv"
-            onChange={handleFile}
-            style={{ display: "none" }}
-          />
-        </label>
-
-        {preview && (
-          <div
-            style={{
-              background: "#1a1a25",
-              borderRadius: 10,
-              padding: 12,
-              border: `1px solid ${C.border}`,
-              maxHeight: 200,
-              overflow: "auto",
-            }}
-          >
-            {preview.map((row, i) => (
-              <div
-                key={i}
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: `repeat(${row.length}, 1fr)`,
-                  gap: 6,
-                  padding: "4px 0",
-                  borderBottom: "1px solid rgba(255,255,255,0.05)",
-                }}
-              >
-                {row.map((cell, j) => (
-                  <div
-                    key={j}
-                    style={{
-                      fontSize: 12,
-                      color: "rgba(255,255,255,0.65)",
-                    }}
-                  >
-                    {cell}
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        )}
-
-        <Btn disabled={!file} onClick={handleImport} style={{ marginTop: 4 }}>
-          Importer
-        </Btn>
+    <Modal open={open} onClose={onClose} title={title||"Importer des données"}>
+      <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
+        <textarea
+          value={text} onChange={e=>setText(e.target.value)}
+          rows={8} placeholder="Collez vos données ici (CSV, JSON…)"
+          style={{ width:"100%", padding:"10px 12px", background:"#13131e", border:"1px solid rgba(201,151,58,0.2)", borderRadius:8, color:"#fff", fontSize:12, fontFamily:"monospace", resize:"vertical", boxSizing:"border-box" }}
+        />
+        <Btn onClick={()=>{ onImport&&onImport(text); onClose(); }}>Importer</Btn>
       </div>
     </Modal>
   );

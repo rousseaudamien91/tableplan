@@ -1,14 +1,9 @@
 /* eslint-disable */
 import { useState, useEffect } from "react";
-
-// i18n (nouveau système)
-import { useI18n, LANG_FLAGS, LANG_NAMES } from "../i18n";
-
-// constantes (couleurs, thèmes, plans)
-import { C, PLANS, INITIAL_USERS, THEMES_CONFIG, VOUCHERS } from "../constants";
-
-// UI + utils
+import { C } from "../theme";
+import { useI18n } from "../i18n";
 import { Btn, Badge, Modal, Field, Input, Select } from "./UI";
+import { PLANS, INITIAL_USERS, THEMES_CONFIG, VOUCHERS } from "../constants";
 import { uid } from "../utils";
 
 const SUBSCRIPTION_PLANS = {

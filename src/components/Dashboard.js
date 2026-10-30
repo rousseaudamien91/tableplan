@@ -1,12 +1,14 @@
 /* eslint-disable */
-import { useState } from "react";
-import { C, useI18n, LANG_FLAGS, LANG_NAMES } from "../theme";
+import { useState, useEffect } from "react";
+import { C } from "../theme";
+import { useI18n, LANG_FLAGS, LANG_NAMES } from "../i18n";
 import { THEMES_CONFIG, PLANS } from "../constants";
 import { Btn, Badge, Modal, Field, Input, Select } from "./UI";
 import { uid } from "../utils";
 import VoucherModal from "./VoucherModal";
 import PricingPage from "./PricingPage";
 import OnboardingWizard from "./OnboardingWizard";
+import NPSWidget from "./reviews/NPSWidget";
 
 // ═══════════════════════════════════════════════════════════════
 // DASHBOARD — Liste des événements
@@ -31,12 +33,32 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
   const [showPricing, setShowPricing] = useState(false);
   const [saveToast, setSaveToast] = useState(false);
 
+  // NPS — afficher après 2 jours d'utilisation et au moins 1 event
+  var npsKey = "tm_nps_" + (user && user.id);
+  var firstSeenKey = "tm_first_" + (user && user.id);
+  if (!localStorage.getItem(firstSeenKey)) {
+    localStorage.setItem(firstSeenKey, Date.now().toString());
+  }
+  var firstSeen   = parseInt(localStorage.getItem(firstSeenKey) || "0");
+  var daysSince   = (Date.now() - firstSeen) / (1000 * 60 * 60 * 24);
+  var showNPS     = !guestMode
+    && !localStorage.getItem(npsKey)
+    && daysSince >= 2
+    && myEventsRaw.length >= 1;
+
   // Guard : user peut être undefined pendant le chargement Firebase
   if (!user) return (
     <div style={{ minHeight:"100vh", background:"#120C08", display:"flex", alignItems:"center", justifyContent:"center" }}>
       <div style={{ color:"rgba(255,255,255,0.3)", fontSize:14 }}>⏳ Chargement...</div>
     </div>
   );
+
+  function highlight(text, query) {
+    if (!query || !text) return text;
+    var idx = text.toLowerCase().indexOf(query.toLowerCase());
+    if (idx === -1) return text;
+    return text.slice(0, idx) + "**" + text.slice(idx, idx+query.length) + "**" + text.slice(idx+query.length);
+  }
 
   function createEvent() {
     if (!newEv.name) return;
@@ -126,8 +148,8 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
         {myEvents.length===0 && (
           <div style={{ textAlign:"center", padding:"80px 20px", color:"rgba(255,255,255,0.45)" }}>
             <div style={{ fontSize:56, marginBottom:16 }}>🪑</div>
-            <p style={{ fontSize:18 }}>Aucun événement pour le moment</p>
-            <Btn onClick={()=>setShowNew(true)} style={{ marginTop:20 }}>Créer mon premier événement</Btn>
+            <p style={{ fontSize:18 }}>{t.noEvents || t.noEvents || "Aucun événement pour le moment"}</p>
+            <div style={{display:'flex',gap:10,justifyContent:'center',marginTop:20}}><Btn onClick={()=>setShowOnboarding(true)}>🚀 {t.createFirst||"Créer mon premier événement"}</Btn></div>
           </div>
         )}
 
@@ -150,10 +172,23 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
                   <Badge color={theme.color}>{theme.label}</Badge>
                 </div>
                 <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", marginBottom:4 }}>
-                  <h3 style={{ color:"#ffffff", margin:0, fontSize:18, fontWeight:400 }}>{ev.name}</h3>
+                  <h3 style={{ color:"#ffffff", margin:0, fontSize:18, fontWeight:400, display:"flex", alignItems:"center", gap:8 }}>
+                    {globalSearch ? (function(){
+                        var idx = ev.name.toLowerCase().indexOf(globalSearch.toLowerCase());
+                        if (idx === -1) return ev.name;
+                        return [
+                          ev.name.slice(0, idx),
+                          <mark key="m" style={{background:"rgba(201,151,58,0.4)",color:"#fff",borderRadius:2,padding:"0 1px"}}>{ev.name.slice(idx,idx+globalSearch.length)}</mark>,
+                          ev.name.slice(idx+globalSearch.length)
+                        ];
+                      })() : ev.name}
+                    {(ev.guests||[]).length > 0 && (ev.guests||[]).every(function(g){ return g.tableId; }) && (
+                      <span style={{ fontSize:11, background:"rgba(39,174,96,0.15)", border:"1px solid rgba(39,174,96,0.3)", color:"#27AE60", borderRadius:6, padding:"1px 7px", fontWeight:700 }}>✅ Complet</span>
+                    )}
+                  </h3>
                   <button onClick={e=>{e.stopPropagation();const copy={...ev,id:Date.now(),name:ev.name+" (copie)",ownerId:user.id};setEvents(prev=>[...prev,copy]);}}
-                    title="Dupliquer cet événement"
-                    aria-label={`Dupliquer l'événement ${ev.name}`}
+                    title={t.duplicateEvent || "Dupliquer cet événement"}
+                    aria-label={t.duplicateEvent ? `${t.duplicateEvent}: ${ev.name}` : `Dupliquer l'événement ${ev.name}`}
                     style={{background:"none",border:"1px solid rgba(201,151,58,0.15)",borderRadius:8,color:"rgba(255,255,255,0.45)",cursor:"pointer",fontSize:12,padding:"3px 8px",fontFamily:"inherit"}}>
                     <span aria-hidden="true">⧉</span>
                   </button>
@@ -162,7 +197,7 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
                   {ev.date}
                   {(() => {
                     const days = Math.ceil((new Date(ev.date) - new Date()) / 86400000);
-                    if (days < 0) return <span style={{color:"rgba(255,255,255,0.45)",marginLeft:8}}>— passé</span>;
+                    if (days < 0) return <span style={{color:"rgba(255,255,255,0.45)",marginLeft:8}}>{t.past || "passé"}</span>;
                     if (days === 0) return <span style={{color:C.green,marginLeft:8,fontWeight:700}}>• Aujourd'hui !</span>;
                     if (days <= 7) return <span style={{color:C.red,marginLeft:8,fontWeight:700}}>• {t ? t.inDays : "In"} {days}{t ? t.days : "d"}</span>;
                     if (days <= 30) return <span style={{color:"#E8845A",marginLeft:8}}>• {t ? t.inDays : "In"} {days}{t ? t.days : "d"}</span>;
@@ -198,6 +233,15 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
           })}
         </div>
       </div>
+
+      {/* NPS WIDGET — après 2 jours + 1 event */}
+      {showNPS && (
+        <NPSWidget
+          user={user}
+          onClose={function(){ localStorage.setItem(npsKey, "1"); }}
+          t={t}
+        />
+      )}
 
       {showOnboarding && (
         <OnboardingWizard
@@ -246,9 +290,9 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
       )}
       <Modal open={showNew} onClose={()=>setShowNew(false)} title="Nouvel événement">
         <div style={{ display:"flex", flexDirection:"column", gap:14 }}>
-          <Field label="NOM DE L'ÉVÉNEMENT *"><Input value={newEv.name} onChange={e=>setNewEv({...newEv,name:e.target.value})} placeholder="Mariage Dupont × Martin"/></Field>
+          <Field label={t.eventName ? t.eventName.toUpperCase()+" *" : "NOM DE L'ÉVÉNEMENT *"}><Input value={newEv.name} onChange={e=>setNewEv({...newEv,name:e.target.value})} placeholder={t.onboardingPlaceholder || "Mariage Dupont × Martin"}/></Field>
           <Field label={t.settingDate}><Input type="date" value={newEv.date} onChange={e=>setNewEv({...newEv,date:e.target.value})}/></Field>
-          <Field label="TYPE D'ÉVÉNEMENT">
+          <Field label={t.eventType ? t.eventType.toUpperCase() : "TYPE D'ÉVÉNEMENT"}>
             <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:8 }}>
               {Object.entries(THEMES_CONFIG).map(([k,v])=>(
                 <button key={k} onClick={()=>setNewEv({...newEv,type:k})} style={{
@@ -260,7 +304,7 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
               ))}
             </div>
           </Field>
-          <Btn onClick={createEvent} style={{marginTop:4}}>Créer l'événement</Btn>
+          <Btn onClick={createEvent} style={{marginTop:4}}>{t.createEvent || "Créer l'événement"}</Btn>
         </div>
       {/* ── BANDEAU SOUSCRIPTION ── */}
 

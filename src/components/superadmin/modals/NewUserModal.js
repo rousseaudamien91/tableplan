@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Field, Input, Select, Btn } from "../../UI";
+import { Field, Input, Select, Btn } from "../UI";
 import { SUBSCRIPTION_PLANS } from "../../../constants";
 
 export default function NewUserModal({ open, onClose, newUser, setNewUser, createUser }) {
