@@ -14,7 +14,8 @@ import NPSWidget from "./reviews/NPSWidget";
 // DASHBOARD — Liste des événements
 // ═══════════════════════════════════════════════════════════════
 
-function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, onToggleTheme, t, lang, setLang, guestMode, entitlement, offre, onSaveEvent }) {
+function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, onToggleTheme, t, lang, setLang, guestMode, entitlement, offre, onSaveEvent, onDeleteEvent }) {
+  const [showCorbeille, setShowCorbeille] = useState(false);
   const [codeMessage, setCodeMessage] = useState("");
   const sauver = function(ev){ if (onSaveEvent) onSaveEvent(ev); };
   const [showVoucher, setShowVoucher] = useState(false);
@@ -23,7 +24,24 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
   const [newEv, setNewEv] = useState({ name:"", date:"", type:"mariage" });
 
   const [globalSearch, setGlobalSearch] = useState("");
-  var myEventsRaw = events.filter(function(ev2){ return ev2.ownerId === user.id; });
+  var myEventsRaw = events.filter(function(ev2){ return ev2.ownerId === user.id && !ev2.deleted; });
+  // Corbeille : un événement supprimé reste restaurable ; la suppression définitive est une action à part
+  var corbeille = events.filter(function(ev2){ return ev2.ownerId === user.id && ev2.deleted; });
+  function mettreACorbeille(ev) {
+    if (!window.confirm("Mettre « " + ev.name + " » à la corbeille ? Vous pourrez le restaurer.")) return;
+    var maj = { ...ev, deleted: true, deletedAt: new Date().toISOString() };
+    setEvents(function(prev){ return prev.map(function(e){ return e.id === ev.id ? maj : e; }); });
+    sauver(maj);
+  }
+  function restaurer(ev) {
+    var maj = { ...ev, deleted: false, deletedAt: null };
+    setEvents(function(prev){ return prev.map(function(e){ return e.id === ev.id ? maj : e; }); });
+    sauver(maj);
+  }
+  function supprimerDefinitivement(ev) {
+    if (!window.confirm("Supprimer définitivement « " + ev.name + " » ? Cette action est irréversible.")) return;
+    if (onDeleteEvent) onDeleteEvent(ev);
+  }
   var myEvents = !globalSearch ? myEventsRaw : myEventsRaw.filter(function(ev2){
     var q = globalSearch.toLowerCase();
     return ev2.name.toLowerCase().includes(q) ||
@@ -198,6 +216,14 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
                     style={{background:"none",border:"1px solid rgba(201,151,58,0.15)",borderRadius:8,color:"rgba(255,255,255,0.45)",cursor:"pointer",fontSize:12,padding:"3px 8px",fontFamily:"inherit"}}>
                     <span aria-hidden="true">⧉</span>
                   </button>
+                  {!guestMode && (
+                    <button onClick={e=>{e.stopPropagation();mettreACorbeille(ev);}}
+                      title="Mettre à la corbeille"
+                      aria-label={"Mettre à la corbeille : " + ev.name}
+                      style={{background:"none",border:"1px solid rgba(224,82,82,0.25)",borderRadius:8,color:"rgba(255,255,255,0.45)",cursor:"pointer",fontSize:12,padding:"3px 8px",fontFamily:"inherit",marginLeft:6}}>
+                      <span aria-hidden="true">🗑</span>
+                    </button>
+                  )}
                 </div>
                 <p style={{ color:"rgba(255,255,255,0.45)", margin:"0 0 16px", fontSize:12 }}>
                   {ev.date}
@@ -238,6 +264,27 @@ function Dashboard({ user, events, setEvents, onLogout, onOpenEvent, lightMode, 
             );
           })}
         </div>
+
+        {corbeille.length > 0 && (
+          <div style={{ marginTop:32 }}>
+            <button onClick={() => setShowCorbeille(v => !v)}
+              style={{ background:"none", border:"1px solid rgba(255,255,255,0.12)", borderRadius:8, color:"rgba(255,255,255,0.55)", cursor:"pointer", fontSize:13, padding:"6px 14px", fontFamily:"inherit" }}>
+              🗑 Corbeille ({corbeille.length}) {showCorbeille ? "▲" : "▼"}
+            </button>
+            {showCorbeille && (
+              <div style={{ marginTop:12, display:"flex", flexDirection:"column", gap:8 }}>
+                {corbeille.map(ev => (
+                  <div key={ev.id} style={{ display:"flex", alignItems:"center", gap:12, background:"#18182a", border:"1px solid rgba(255,255,255,0.06)", borderRadius:10, padding:"10px 14px" }}>
+                    <span style={{ flex:1, color:"rgba(255,255,255,0.7)", fontSize:14 }}>{ev.name}</span>
+                    <span style={{ color:"rgba(255,255,255,0.35)", fontSize:12 }}>{ev.deletedAt ? "supprimé le " + ev.deletedAt.slice(0,10) : ""}</span>
+                    <Btn variant="muted" small onClick={() => restaurer(ev)}>Restaurer</Btn>
+                    <Btn variant="muted" small onClick={() => supprimerDefinitivement(ev)}>Supprimer définitivement</Btn>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* NPS WIDGET — après 2 jours + 1 event */}

@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "firebase/auth";
 import { db } from "./firebase";
-import { collection, onSnapshot, setDoc, doc } from "firebase/firestore";
+import { collection, onSnapshot, setDoc, deleteDoc, doc } from "firebase/firestore";
 import { useEntitlement, offreDe } from "./offres";
 
 import Dashboard   from "./components/Dashboard";
@@ -89,6 +89,17 @@ export default function App() {
       setSaveError(e.code === "permission-denied"
         ? "Enregistrement refusé : la limite de votre formule est atteinte."
         : "Enregistrement impossible (connexion ?). Vos dernières modifications ne sont pas sauvegardées.");
+    }
+  }
+
+  async function deleteEvent(ev) {
+    if (!fbUser || guestMode) return;
+    try {
+      await deleteDoc(doc(db, "users", fbUser.uid, "events", String(ev.id)));
+      setEvents(prev => prev.filter(e => e.id !== ev.id));
+    } catch(e) {
+      console.error("Delete error:", e);
+      setSaveError("Suppression impossible (connexion ?).");
     }
   }
 
@@ -181,7 +192,7 @@ export default function App() {
   return (
     <>{bandeauErreur}<Dashboard
       user={user} events={events} setEvents={setEvents}
-      entitlement={entitlement} offre={offre} onSaveEvent={saveEvent}
+      entitlement={entitlement} offre={offre} onSaveEvent={saveEvent} onDeleteEvent={deleteEvent}
       onLogout={handleLogout} onOpenEvent={handleOpenEvent}
       lightMode={lightMode} onToggleTheme={() => setLightMode(m => !m)}
       t={t} lang={lang} setLang={setLang} guestMode={guestMode}
