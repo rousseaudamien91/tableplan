@@ -52,7 +52,7 @@ npm start          # http://localhost:3000
 npm run build
 ```
 
-## Audit du 30 octobre 2026 : ce qui a été corrigé (branche `reprise-claude`)
+## Audit du 30 octobre 2026 : ce qui a été corrigé (en production le 30/10)
 
 - **Rien n'était sauvegardé** : l'appli écrivait dans `events/…`, refusé par les règles ; tout était perdu au rechargement. Les événements sont maintenant dans `users/{uid}/events/…`.
 - **Codes promo lisibles dans le site** (dont `FULL100`, accès complet gratuit) et limite d'usage jamais vérifiée : supprimés du code, remplacés par la collection `vouchers` protégée.
@@ -60,6 +60,9 @@ npm run build
 - **Relais IA ouvert** (`api/ai.js` : clé Anthropic utilisable par n'importe qui, n'importe quel modèle, ouvert à tous les sites). Il n'était pas encore déployé. Il est maintenant réservé aux comptes connectés, avec modèle et longueur imposés.
 - Version locale du 3 avril (assistant IA, invitations, éditeur découpé) intégrée : elle n'avait jamais été poussée. Code mort retiré (ancien éditeur de 2 294 lignes, seconde page de tarifs, panneau super-admin non branché).
 - Nouveau type d'événement **Loto / Quine**.
+- Vercel construit en mode CI (avertissements ESLint = erreurs) : la version du 3 avril n'avait jamais pu être déployée. ESLint est désactivé au build via [.env](.env) (aucun secret dans ce fichier).
+
+Vérifié en production le 30/10 : site sans aucun code promo, `/api/ai` refuse sans jeton (401), événement créé puis retrouvé après rechargement, ancien code `FULL100` refusé, code à usage unique accepté puis épuisé (`uses` 1/1), formule « Complet » affichée.
 
 ## Reste à faire
 
