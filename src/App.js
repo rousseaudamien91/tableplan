@@ -125,7 +125,10 @@ export default function App() {
 
   function handleUpdateEvent(updatedEv) {
     var nbInvites = (updatedEv.guests || []).length;
-    if (!guestMode && nbInvites > offre.maxGuests) {
+    var avant     = events.find(e => e.id === updatedEv.id);
+    var nbAvant   = avant ? (avant.guests || []).length : 0;
+    // Même logique que firestore.rules : au-delà de la formule, on peut modifier mais pas ajouter d'invités
+    if (!guestMode && nbInvites > offre.maxGuests && nbInvites > nbAvant) {
       setSaveError("Formule " + offre.label + " : " + offre.maxGuests + " invités maximum. "
         + "Passez à une formule supérieure ou utilisez un code promo depuis le tableau de bord.");
       return;

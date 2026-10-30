@@ -27,7 +27,12 @@ service cloud.firestore {
     // ── Événements : chacun ne voit et ne modifie que les siens ──
     match /users/{uid}/events/{eventId} {
       allow read, delete: if signedIn() && request.auth.uid == uid;
-      allow create, update: if signedIn() && request.auth.uid == uid && guestsAllowed(uid);
+      allow create: if signedIn() && request.auth.uid == uid && guestsAllowed(uid);
+      // Un événement existant reste toujours modifiable tant qu'on n'ajoute pas d'invités au-delà de la formule
+      // (comptes créés avant les limites, formule non renouvelée…) : personne n'est bloqué sur ses données.
+      allow update: if signedIn() && request.auth.uid == uid
+        && (guestsAllowed(uid)
+            || request.resource.data.get('guests', []).size() <= resource.data.get('guests', []).size());
     }
 
     // ── Codes promo : invisibles pour les utilisateurs, gérés par l'administrateur ──
