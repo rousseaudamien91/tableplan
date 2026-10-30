@@ -1,70 +1,69 @@
-# Getting Started with Create React App
+# TableMaître (tableplan)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Application web de plans de table pour événements : mariages, galas, anniversaires, conférences, lotos. Elle gère les invités, les tables, le plan de salle, le budget, les tâches, le menu et l'export PDF.
 
-## Available Scripts
+- **Pile technique** : React 18 (Create React App + craco), Firebase (authentification Google, Firestore), Vercel (hébergement et fonction `/api/ai`).
+- **En ligne** : https://tableplan-seven.vercel.app (déployé depuis la branche `main`).
+- **Firebase** : projet `tableplan-c4a6b` (offre gratuite Spark).
 
-In the project directory, you can run:
+## Sécurité : où elle se joue
 
-### `npm start`
+Le code du site s'exécute dans le navigateur et peut être contourné. Tout ce qui doit être garanti est vérifié par les **règles Firestore** ([firestore.rules](firestore.rules)), à publier dans la console Firebase (Firestore > Règles) après chaque modification.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+| Sujet | Garanti par |
+|---|---|
+| Chacun ne voit et ne modifie que ses événements (`users/{uid}/events/{id}`) | règles Firestore |
+| Nombre d'invités par formule (10 / 50 / 2 000) | règles Firestore (`guestsAllowed`) + contrôle dans l'appli |
+| Codes promo : invisibles, usage limité, formule accordée | règles Firestore (`vouchers`, `entitlements`) |
+| Assistant IA réservé aux comptes connectés, modèle imposé | [api/ai.js](api/ai.js) (vérification du jeton Firebase) |
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Formules et codes promo
 
-### `npm test`
+Les formules sont définies dans [src/offres.js](src/offres.js) et doivent rester alignées avec `guestsAllowed()` dans les règles :
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+| Formule | Prix (par compte, pour l'instant) | Invités par événement |
+|---|---|---|
+| Gratuit | 0 € | 10 |
+| Essentiel (`medium`) | 20 € | 50 |
+| Complet (`full`) | 39 € | 2 000 |
 
-### `npm run build`
+**Créer un code promo** (console Firebase > Firestore > Données, en tant qu'administrateur) : collection `vouchers`, identifiant du document = le code en MAJUSCULES (6 à 40 caractères, lettres, chiffres, tirets ; choisir un code long et imprévisible), champs :
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| Champ | Type | Exemple |
+|---|---|---|
+| `plan` | string | `full` ou `medium` |
+| `maxUses` | number | `1` (usage unique) |
+| `uses` | number | `0` |
+| `active` | boolean | `true` |
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+L'utilisateur le saisit via le bouton « Code promo » du tableau de bord (compte Google requis). Un compte ne peut utiliser qu'un seul code. Pour désactiver un code : `active = false`.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+**Accorder une formule à la main** (par exemple après un paiement PayPal) : collection `entitlements`, document = UID de l'utilisateur (console Firebase > Authentication), champs `plan` (`medium`/`full`), `source` = `admin`.
 
-### `npm run eject`
+## Assistant IA
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+Variables d'environnement Vercel : `ANTHROPIC_API_KEY` (obligatoire), `AI_MODEL` (facultatif, défaut `claude-haiku-4-5`). Sans clé, l'assistant répond « non configuré ». Ne jamais mettre de clé dans une variable `REACT_APP_…` : elles sont intégrées au site publié.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Développement
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+npm install --legacy-peer-deps
+npm start          # http://localhost:3000
+npm run build
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## Audit du 30 octobre 2026 : ce qui a été corrigé (branche `reprise-claude`)
 
-## Learn More
+- **Rien n'était sauvegardé** : l'appli écrivait dans `events/…`, refusé par les règles ; tout était perdu au rechargement. Les événements sont maintenant dans `users/{uid}/events/…`.
+- **Codes promo lisibles dans le site** (dont `FULL100`, accès complet gratuit) et limite d'usage jamais vérifiée : supprimés du code, remplacés par la collection `vouchers` protégée.
+- **Formule choisie par le navigateur** (bouton « Activer » sans vérification de paiement) et limites jamais appliquées : limites désormais imposées par les règles.
+- **Relais IA ouvert** (`api/ai.js` : clé Anthropic utilisable par n'importe qui, n'importe quel modèle, ouvert à tous les sites). Il n'était pas encore déployé. Il est maintenant réservé aux comptes connectés, avec modèle et longueur imposés.
+- Version locale du 3 avril (assistant IA, invitations, éditeur découpé) intégrée : elle n'avait jamais été poussée. Code mort retiré (ancien éditeur de 2 294 lignes, seconde page de tarifs, panneau super-admin non branché).
+- Nouveau type d'événement **Loto / Quine**.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Reste à faire
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- **Paiement** : aujourd'hui, un lien PayPal.me sans vérification ; la formule est accordée à la main (`entitlements`). À terme : Stripe Checkout + webhook (nécessite un compte Stripe et l'offre Firebase Blaze ou une fonction Vercel avec compte de service).
+- **Page d'invitation des invités** (`/join/…`) : utilise l'ancienne API Firebase et n'est pas couverte par les règles ; à refaire (lien partagé en lecture seule).
+- **Panneau super-admin** : retiré car non branché ; à reconstruire sur les règles (`isAdmin`) si besoin.
+- Prix par événement (prévu par la page de tarifs) ou par compte (actuel) : décision commerciale à prendre.
